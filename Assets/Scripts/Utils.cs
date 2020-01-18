@@ -10,6 +10,9 @@ public static class Utils
         if (!comp)
         {
             Debug.LogError($"Expected component '{typeof(T).Name}' on object {o.name}");
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
         return comp;
     }
