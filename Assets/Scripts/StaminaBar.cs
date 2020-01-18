@@ -6,27 +6,27 @@ using UnityEngine.UI;
 public class StaminaBar : MonoBehaviour
 {
     public const float STAMINA_MAX = 1f;
-
+    public float speed;
     private float staminaAmount;
     private Image staminaBarImage;
-    // private Stamina stamina;
+
     private void Awake() {
-        staminaBarImage = transform.Find("stamina").GetComponent<Image>();
+        staminaBarImage = Utils.GetRequiredComponent<Image>(this);
         staminaBarImage.fillAmount = 1f;
-   
+        speed = 0.1f;
 
     }
     void Update(){
-        //Testing stuff
-        // if (Input.GetKeyDown("space")){
-        //     print("pressed space");
-        //     IEnumerator decreaseCoroutine = decreaseStaminaBy(.1f);
-        //     StartCoroutine(decreaseCoroutine);
-        // } if (Input.GetKeyDown("up")){
-        //     print("pressed f");
-        //     IEnumerator increaseCoroutine = increaseStaminaBy(.5f);
-        //     StartCoroutine(increaseCoroutine);
-        // }
+        // Testing stuff
+        if (Input.GetKeyDown("space")){
+            print("pressed space");
+            IEnumerator decreaseCoroutine = decreaseStaminaBy(.1f);
+            StartCoroutine(decreaseCoroutine);
+        } if (Input.GetKeyDown("up")){
+            print("pressed up");
+            IEnumerator increaseCoroutine = increaseStaminaBy(.5f);
+            StartCoroutine(increaseCoroutine);
+        }
     }
 
     public IEnumerator decreaseStaminaBy(float percent) {
@@ -38,7 +38,7 @@ public class StaminaBar : MonoBehaviour
             fillAmount = staminaBarImage.fillAmount;
         }
         while (fillAmount <= staminaBarImage.fillAmount){
-            staminaBarImage.fillAmount -= 0.001f;
+            staminaBarImage.fillAmount -= speed;
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -52,7 +52,7 @@ public class StaminaBar : MonoBehaviour
             fillAmount = STAMINA_MAX;
         }
         while (fillAmount >= staminaBarImage.fillAmount){
-            staminaBarImage.fillAmount += 0.001f;
+            staminaBarImage.fillAmount += speed;
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }

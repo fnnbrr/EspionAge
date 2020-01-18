@@ -205,7 +205,6 @@ GameObject:
   - component: {fileID: 202720036}
   - component: {fileID: 202720035}
   - component: {fileID: 202720034}
-  - component: {fileID: 202720037}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -294,18 +293,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &202720037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 202720032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c3cd21480d774a38a238731302c4322, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &298561031
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +509,7 @@ GameObject:
   - component: {fileID: 1067965785}
   - component: {fileID: 1067965787}
   - component: {fileID: 1067965786}
+  - component: {fileID: 1067965788}
   m_Layer: 5
   m_Name: stamina
   m_TagString: Untagged
@@ -584,6 +572,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1067965784}
   m_CullTransparentMesh: 0
+--- !u!114 &1067965788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067965784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c3cd21480d774a38a238731302c4322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2034120827
 GameObject:
   m_ObjectHideFlags: 0
