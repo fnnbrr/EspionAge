@@ -10,6 +10,9 @@ public class PlayerManager : MonoBehaviour
     public bool CanRest
     {
         get { return _canRest; }
-        set { _canRest = value; }
+        set {
+            GameManager.Instance.EnableCanRestUI(value);
+            _canRest = value; 
+        }
     }
 }
