@@ -18,15 +18,15 @@ public class StaminaBar : MonoBehaviour
     }
     void Update(){
         // Testing stuff
-        if (Input.GetKeyDown("space")){
-            print("pressed space");
-            IEnumerator decreaseCoroutine = decreaseStaminaBy(.1f);
-            StartCoroutine(decreaseCoroutine);
-        } if (Input.GetKeyDown("up")){
-            print("pressed up");
-            IEnumerator increaseCoroutine = increaseStaminaBy(.5f);
-            StartCoroutine(increaseCoroutine);
-        }
+        // if (Input.GetKeyDown("space")){
+        //     print("pressed space");
+        //     IEnumerator decreaseCoroutine = decreaseStaminaBy(.1f);
+        //     StartCoroutine(decreaseCoroutine);
+        // } if (Input.GetKeyDown("up")){
+        //     print("pressed up");
+        //     IEnumerator increaseCoroutine = increaseStaminaBy(.5f);
+        //     StartCoroutine(increaseCoroutine);
+        // }
     }
 
     public IEnumerator decreaseStaminaBy(float percent) {
