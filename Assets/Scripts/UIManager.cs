@@ -7,6 +7,7 @@ public class UIManager : Singleton<UIManager>
 {
     public GameObject canRestUI;
     public TextMeshProUGUI restText;
+    public StaminaBar staminaBar;
 
     private string defaultRestText;
     private void Start()

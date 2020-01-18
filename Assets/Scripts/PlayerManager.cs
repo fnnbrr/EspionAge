@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stamina")]
-    public StaminaBar staminaBar;
     public float staminaIncrease = 0.1f;
     public float staminaDecrease = 0.001f;
 
@@ -40,10 +39,10 @@ public class PlayerManager : MonoBehaviour
 
     void HandleIncreaseStamina()
     {
-        StartCoroutine(staminaBar.IncreaseStaminaBy(staminaIncrease));
+        StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease));
     }
     public void HandleDecreaseStamina()
     {
-        StartCoroutine(staminaBar.DecreaseStaminaBy(staminaDecrease));
+        StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease));
     }
 }
