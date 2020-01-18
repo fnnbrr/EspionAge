@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 10f;
     public float turnSpeed = 20f;
     public float canMoveRotationThreshold = 0.1f;
+    public float staminaDecrease = 0.01f;
+
+    public StaminaBar staminaBar;
 
     private Rigidbody m_Rigidbody;
 
@@ -53,6 +56,8 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         m_Rigidbody.MovePosition(m_Rigidbody.position + m_Movement * movementSpeed * Time.fixedDeltaTime);
+
+        StartCoroutine(staminaBar.DecreaseStaminaBy(staminaDecrease));
     }
 
 

@@ -6,17 +6,19 @@ using UnityEngine.UI;
 public class StaminaBar : MonoBehaviour
 {
     public const float STAMINA_MAX = 1f;
-    public float speed;
-    private float staminaAmount;
+    public float speed = 0.001f;
+
     private Image staminaBarImage;
 
-    private void Awake() {
+    private void Awake() 
+    {
         staminaBarImage = Utils.GetRequiredComponent<Image>(this);
         staminaBarImage.fillAmount = 1f;
-        speed = 0.1f;
 
     }
-    void Update(){
+
+    //void Update()
+    //{
         // Testing stuff
         // if (Input.GetKeyDown("space")){
         //     print("pressed space");
@@ -27,31 +29,31 @@ public class StaminaBar : MonoBehaviour
         //     IEnumerator increaseCoroutine = increaseStaminaBy(.5f);
         //     StartCoroutine(increaseCoroutine);
         // }
-    }
+    //}
 
-    public IEnumerator decreaseStaminaBy(float percent) {
-        float percentClamped = Mathf.Clamp(percent, 0, 1);
+    public IEnumerator DecreaseStaminaBy(float percent) 
+    {
+        float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
         float decreaseBy = percentClamped * STAMINA_MAX;
-        
-        float fillAmount = staminaBarImage.fillAmount - decreaseBy; 
-        if (fillAmount <= 0){ 
-            fillAmount = staminaBarImage.fillAmount;
-        }
-        while (fillAmount <= staminaBarImage.fillAmount){
+
+        float fillAmount = Mathf.Max(0f, staminaBarImage.fillAmount - decreaseBy);
+
+        while (fillAmount <= staminaBarImage.fillAmount)
+        {
             staminaBarImage.fillAmount -= speed;
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
 
-    public IEnumerator increaseStaminaBy(float percent) {
-        float percentClamped = Mathf.Clamp(percent, 0, 1);
+    public IEnumerator IncreaseStaminaBy(float percent) 
+    {
+        float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
         float increaseBy = percentClamped * STAMINA_MAX;
-        
-        float fillAmount = staminaBarImage.fillAmount + increaseBy; 
-        if (fillAmount >= STAMINA_MAX){ 
-            fillAmount = STAMINA_MAX;
-        }
-        while (fillAmount >= staminaBarImage.fillAmount){
+
+        float fillAmount = Mathf.Min(STAMINA_MAX, staminaBarImage.fillAmount - increaseBy);
+
+        while (fillAmount >= staminaBarImage.fillAmount)
+        {
             staminaBarImage.fillAmount += speed;
             yield return new WaitForSeconds(Time.deltaTime);
         }

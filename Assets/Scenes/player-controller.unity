@@ -920,7 +920,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c3cd21480d774a38a238731302c4322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
+  speed: 0.001
 --- !u!114 &1841378375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1310,6 +1310,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2998625688478654436, guid: 072a7e727d2161b44935a789713af3c0,
+        type: 3}
+      propertyPath: staminaBar
+      value: 
+      objectReference: {fileID: 1841378374}
+    - target: {fileID: 2998625688478654436, guid: 072a7e727d2161b44935a789713af3c0,
+        type: 3}
+      propertyPath: staminaDecrease
+      value: 0.001
       objectReference: {fileID: 0}
     - target: {fileID: 2998625688478654463, guid: 072a7e727d2161b44935a789713af3c0,
         type: 3}
