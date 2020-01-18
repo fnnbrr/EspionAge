@@ -4,5 +4,12 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public bool CanRest { get; set; }
+    [SerializeField]
+    private bool _canRest;
+
+    public bool CanRest
+    {
+        get { return _canRest; }
+        set { _canRest = value; }
+    }
 }
