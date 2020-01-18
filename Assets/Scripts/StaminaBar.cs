@@ -50,7 +50,7 @@ public class StaminaBar : MonoBehaviour
         float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
         float increaseBy = percentClamped * STAMINA_MAX;
 
-        float fillAmount = Mathf.Min(STAMINA_MAX, staminaBarImage.fillAmount - increaseBy);
+        float fillAmount = Mathf.Min(STAMINA_MAX, staminaBarImage.fillAmount + increaseBy);
 
         while (fillAmount >= staminaBarImage.fillAmount)
         {

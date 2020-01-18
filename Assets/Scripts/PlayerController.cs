@@ -7,18 +7,16 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 10f;
     public float turnSpeed = 20f;
     public float canMoveRotationThreshold = 0.1f;
-    public float staminaDecrease = 0.01f;
 
-    public StaminaBar staminaBar;
+    private Rigidbody rb;
+    private PlayerManager playerManager;
 
-    private Rigidbody m_Rigidbody;
-
-    private Vector3 m_Movement;
-    private Quaternion m_Rotation;
+    private Vector3 movement;
 
     void Start()
     {
-        m_Rigidbody = Utils.GetRequiredComponent<Rigidbody>(this);
+        rb = Utils.GetRequiredComponent<Rigidbody>(this);
+        playerManager = Utils.GetRequiredComponent<PlayerManager>(this);
     }
 
     void FixedUpdate()
@@ -26,13 +24,13 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        m_Movement.Set(horizontal, 0f, vertical);
-        m_Movement.Normalize();
+        movement.Set(horizontal, 0f, vertical);
+        movement.Normalize();
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;    // to be used later for animations and such
 
-        HandleControl(m_Movement);
+        HandleControl(movement);
     }
 
     void HandleControl(Vector3 movementDirection)
@@ -50,14 +48,14 @@ public class PlayerController : MonoBehaviour
 
     void HandleRotation(Vector3 desiredForward)
     {
-        m_Rigidbody.MoveRotation(Quaternion.LookRotation(desiredForward));
+        rb.MoveRotation(Quaternion.LookRotation(desiredForward));
     }
 
     void HandleMovement()
     {
-        m_Rigidbody.MovePosition(m_Rigidbody.position + m_Movement * movementSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
 
-        StartCoroutine(staminaBar.DecreaseStaminaBy(staminaDecrease));
+        playerManager.HandleDecreaseStamina();
     }
 
 
