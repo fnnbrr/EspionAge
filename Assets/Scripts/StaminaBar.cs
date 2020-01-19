@@ -19,7 +19,6 @@ public class StaminaBar : MonoBehaviour
     {
         staminaBarImage = Utils.GetRequiredComponent<Image>(this);
         staminaBarImage.fillAmount = 1f;
-
     }
 
     public IEnumerator DecreaseStaminaBy(float percent) 
