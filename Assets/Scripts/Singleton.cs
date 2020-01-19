@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// https://wiki.unity3d.com/index.php/Singleton
 /// Inherit from this base class to create a singleton.
 /// e.g. public class MyClassName : Singleton<MyClassName> {}
 /// </summary>
