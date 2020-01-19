@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stamina")]
-    public StaminaBar staminaBar;
-    public float staminaChange = 0.001f;
+    public float staminaIncrease = 0.1f;
+    public float staminaDecrease = 0.001f;
 
     [SerializeField]
     private bool _canRest;
@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     {
         get { return _canRest; }
         set {
-            GameManager.Instance.EnableCanRestUI(value);
+            UIManager.Instance.EnableCanRestUI(value);
             _canRest = value; 
         }
     }
@@ -29,20 +29,20 @@ public class PlayerManager : MonoBehaviour
             {
                 HandleIncreaseStamina();
             }
-            GameManager.Instance.UpdateRestingText(isResting);
+            UIManager.Instance.UpdateRestingText(isResting);
         }
         else
         {
-            GameManager.Instance.UpdateRestingText(false);
+            UIManager.Instance.UpdateRestingText(false);
         }
     }
 
     void HandleIncreaseStamina()
     {
-        StartCoroutine(staminaBar.IncreaseStaminaBy(staminaChange));
+        StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease));
     }
     public void HandleDecreaseStamina()
     {
-        StartCoroutine(staminaBar.DecreaseStaminaBy(staminaChange));
+        StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease));
     }
 }

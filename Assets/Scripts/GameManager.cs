@@ -1,28 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.Rendering.PostProcessing;
 
 public class GameManager : Singleton<GameManager>
 {
-    public GameObject canRestUI;
-    public TextMeshProUGUI restText;
+    [Header("Post Processing")]
+    public PostProcessVolume globalVolume;
+    private Vignette vignette;
 
-    private string defaultRestText;
     private void Start()
     {
-        defaultRestText = restText.text;
+        globalVolume.profile.TryGetSettings(out vignette);
+        UIManager.Instance.staminaBar.OnChange += UpdateVignette;
     }
 
-    //// TEMP FUNCTION - Move to UIManager later
-    public void EnableCanRestUI(bool toEnable)
+    void UpdateVignette(float fillAmount)
     {
-        canRestUI.SetActive(toEnable);
-    }
-
-    // TEMP FUNCTION - Move to UIManager later
-    public void UpdateRestingText(bool isResting)
-    {
-        restText.text = (isResting ? "Resting..." : defaultRestText);
+        vignette.intensity.value = StaminaBar.STAMINA_MAX - fillAmount;
     }
 }
