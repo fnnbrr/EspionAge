@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+[System.Serializable]
+public class PlayerCameraBlendingOptions
+{
+    public bool active = false;
+    public CinemachineVirtualCamera camera;
+}
+
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stamina")]
     public float staminaIncrease = 0.1f;
     public float staminaDecrease = 0.001f;
 
-    [Header("Player Camera")]
-    public CinemachineVirtualCamera playerCamera;
+    public PlayerCameraBlendingOptions playerCameraBlending;
 
     [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
     private bool _canRest;
@@ -30,7 +36,8 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        animator = Utils.GetRequiredComponent<Animator>(this);
+        // We do not care about having an animator otherwise, for the PlayerManager
+        animator = playerCameraBlending.active ? Utils.GetRequiredComponent<Animator>(this) : null;
 
         MinigameManager.Instance.OnMinigameComplete += HandleMinigameComplete;
     }
@@ -48,13 +55,10 @@ public class PlayerManager : MonoBehaviour
             } 
             else
             {
-                if (Input.GetKeyDown(KeyCode.P) && !isInMinigame)
+                // Temporary Controls for Minigame
+                if (Input.GetKeyDown(KeyCode.P))
                 {
-                    isInMinigame = true;
-                    // Temporary Controls for Minigame
-                    // The player being in a resting state will also trigger the state-driven camera to also zoom into the player
-                    animator.SetBool(Constants.ANIMATION_PLAYER_ISRESTING, true);
-                    StartCoroutine(WaitForCameraSwitch());
+                    HandleTriggerStartMinigame();
                 }
             }
         }
@@ -64,21 +68,44 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    void SetRestingAnimation(bool setTo)
+    {
+        if (playerCameraBlending.active)
+        {
+            animator.SetBool(Constants.ANIMATION_PLAYER_ISRESTING, setTo);
+        }
+    }
+
     IEnumerator WaitForCameraSwitch()
     {
         // https://forum.unity.com/threads/how-can-i-tell-when-ive-reached-my-active-virtual-cam-blend-has-completed.498544/
         // Because we blend between two cameras, the player cam is live only until the blending has completed
-        while (CinemachineCore.Instance.IsLive(playerCamera))
+        if (playerCameraBlending.active)
         {
-            yield return new WaitForSeconds(Time.deltaTime);
+            while (CinemachineCore.Instance.IsLive(playerCameraBlending.camera))
+            {
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
         }
         MinigameManager.Instance.LoadRandomMinigame();
     }
 
     void HandleMinigameComplete()
     {
-        animator.SetBool(Constants.ANIMATION_PLAYER_ISRESTING, false);
+        SetRestingAnimation(false);
         isInMinigame = false;
+    }
+
+    void HandleTriggerStartMinigame()
+    {
+        if (!isInMinigame)
+        {
+            isInMinigame = true;
+
+            // The player being in a resting state will also trigger the state-driven camera to also zoom into the player
+            SetRestingAnimation(true);
+            StartCoroutine(WaitForCameraSwitch());
+        }
     }
 
     void HandleIncreaseStamina()
