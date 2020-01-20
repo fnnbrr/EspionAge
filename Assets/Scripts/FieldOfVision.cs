@@ -15,6 +15,9 @@ public class FieldOfVision : MonoBehaviour
 	public List<Transform> visibleTargets = new List<Transform>();
 
 	public float meshResolution;
+	public int edgeResolveInterations;
+	public float edgeDstThreshold;
+
 	public MeshFilter viewMeshFilter;
 	Mesh viewMesh;
 
@@ -26,7 +29,7 @@ public class FieldOfVision : MonoBehaviour
 		StartCoroutine("FindTargetsWithDelay", .2f);
 	}
 
-    void Update ()
+    void LateUpdate ()
 	{
 		DrawFieldOfView();
 	}
@@ -41,19 +44,24 @@ public class FieldOfVision : MonoBehaviour
 		}
 	}
 
+
 	void FindVisibleTargets()
 	{
 		visibleTargets.Clear();
 		Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
+        // Check for all colliders within view radius
 		for (int i = 0; i < targetsInViewRadius.Length; i++)
 		{
 			Transform target = targetsInViewRadius[i].transform;
 			Vector3 dirToTarget = (target.position - transform.position).normalized;
+
+            // Checks if collider is within the view angle
 			if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
 			{
 				float dstToTarget = Vector3.Distance(transform.position, target.position);
 
+                // Checks that a raycast can hit a target
 				if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
 				{
 					visibleTargets.Add(target);
@@ -64,17 +72,38 @@ public class FieldOfVision : MonoBehaviour
 		}
 	}
 
+    //Draws Mesh
     void DrawFieldOfView()
 	{
 		int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
 		float stepAngleSize = viewAngle / stepCount;
 		List<Vector3> viewPoints = new List<Vector3>();
+		ViewCastInfo oldViewCast = new ViewCastInfo(); 
 
         for (int i = 0; i <= stepCount; i++)
 		{
 			float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
 			ViewCastInfo newViewCast = ViewCast(angle);
+
+			if (i > 0)
+			{
+				bool edgeDstThresholdExceeded = Mathf.Abs(oldViewCast.dst - newViewCast.dst) > edgeDstThreshold;
+                if(oldViewCast.hit != newViewCast.hit || (oldViewCast.hit && newViewCast.hit && edgeDstThresholdExceeded))
+				{
+					EdgeInfo edge = FindEdge(oldViewCast, newViewCast);
+                    if(edge.pointA != Vector3.zero)
+					{
+						viewPoints.Add(edge.pointA);
+					}
+                    if(edge.pointB != Vector3.zero)
+					{
+						viewPoints.Add(edge.pointB);
+					}
+				}
+			}
+
 			viewPoints.Add(newViewCast.point);
+			oldViewCast = newViewCast;
 		}
 
 
@@ -101,6 +130,36 @@ public class FieldOfVision : MonoBehaviour
 		viewMesh.triangles = triangles;
 		viewMesh.RecalculateNormals();
 
+	}
+
+    //Used to smooth field view by locating edge of raycast
+    EdgeInfo FindEdge(ViewCastInfo minViewCast, ViewCastInfo MaxViewCast)
+	{
+		float minAngle = minViewCast.angle;
+		float maxAngle = MaxViewCast.angle;
+		Vector3 minPoint = Vector3.zero;
+		Vector3 maxPoint = Vector3.zero;
+
+        for (int i = 0; i<edgeResolveInterations; i++)
+		{
+			float angle = (minAngle + maxAngle) / 2;
+			ViewCastInfo newViewCast = ViewCast(angle);
+
+			bool edgeDstThresholdExceeded = Mathf.Abs(minViewCast.dst - newViewCast.dst) > edgeDstThreshold;
+
+			if (newViewCast.hit == minViewCast.hit && !edgeDstThresholdExceeded)
+			{
+				minAngle = angle;
+				minPoint = newViewCast.point;
+			}
+            else
+			{
+				maxAngle = angle;
+				maxPoint = newViewCast.point;
+			}
+		}
+
+		return new EdgeInfo(minPoint, maxPoint);
 	}
 
     ViewCastInfo ViewCast(float globalAngle)
@@ -143,4 +202,15 @@ public class FieldOfVision : MonoBehaviour
 		}
 	}
 
+    public struct EdgeInfo
+	{
+		public Vector3 pointA;
+		public Vector3 pointB;
+
+        public EdgeInfo(Vector3 _pointA, Vector3 _pointB)
+		{
+			pointA = _pointA;
+			pointB = _pointB;
+		}
+	}
 }
