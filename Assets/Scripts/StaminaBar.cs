@@ -5,31 +5,21 @@ using UnityEngine.UI;
 
 public class StaminaBar : MonoBehaviour
 {
-    public const float STAMINA_MAX = 1f;
     public float speed = 0.001f;
 
+    // Events for others to subscribe to OnChange events
+    public delegate void ChangedAction(float fillAmount);
+    public event ChangedAction OnChange;
+
+    [HideInInspector] 
+    public const float STAMINA_MAX = 1f;
     private Image staminaBarImage;
 
     private void Awake() 
     {
         staminaBarImage = Utils.GetRequiredComponent<Image>(this);
         staminaBarImage.fillAmount = 1f;
-
     }
-
-    //void Update()
-    //{
-        // Testing stuff
-        // if (Input.GetKeyDown("space")){
-        //     print("pressed space");
-        //     IEnumerator decreaseCoroutine = decreaseStaminaBy(.1f);
-        //     StartCoroutine(decreaseCoroutine);
-        // } if (Input.GetKeyDown("up")){
-        //     print("pressed up");
-        //     IEnumerator increaseCoroutine = increaseStaminaBy(.5f);
-        //     StartCoroutine(increaseCoroutine);
-        // }
-    //}
 
     public IEnumerator DecreaseStaminaBy(float percent) 
     {
@@ -40,7 +30,7 @@ public class StaminaBar : MonoBehaviour
 
         while (fillAmount <= staminaBarImage.fillAmount)
         {
-            staminaBarImage.fillAmount -= speed;
+            UpdateFillAmount(staminaBarImage.fillAmount - speed);
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -54,9 +44,17 @@ public class StaminaBar : MonoBehaviour
 
         while (fillAmount >= staminaBarImage.fillAmount)
         {
-            staminaBarImage.fillAmount += speed;
+            UpdateFillAmount(staminaBarImage.fillAmount + speed);
             yield return new WaitForSeconds(Time.deltaTime);
         }
+    }
+
+    void UpdateFillAmount(float newFill)
+    {
+        // Update the fill amount
+        staminaBarImage.fillAmount = newFill;
+
+        OnChange?.Invoke(newFill);
     }
 
 

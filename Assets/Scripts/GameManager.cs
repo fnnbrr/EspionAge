@@ -1,28 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.Rendering.PostProcessing;
 
 public class GameManager : Singleton<GameManager>
 {
-    public GameObject canRestUI;
-    public TextMeshProUGUI restText;
+    [Header("Post Processing")]
+    public PostProcessVolume globalVolume;
+    private Vignette vignette;
+    
+    private MotionBlur motionBlur;
+    public float startShutterAngle = 1f;
+    public float endShutterAngle = 360f;
 
-    private string defaultRestText;
     private void Start()
     {
-        defaultRestText = restText.text;
+        globalVolume.profile.TryGetSettings(out vignette);
+        globalVolume.profile.TryGetSettings(out motionBlur);
+        UIManager.Instance.staminaBar.OnChange += UpdateVignette;
+        UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
     }
 
-    //// TEMP FUNCTION - Move to UIManager later
-    public void EnableCanRestUI(bool toEnable)
+    void UpdateVignette(float fillAmount)
     {
-        canRestUI.SetActive(toEnable);
+        vignette.intensity.value = StaminaBar.STAMINA_MAX - fillAmount;
     }
-
-    // TEMP FUNCTION - Move to UIManager later
-    public void UpdateRestingText(bool isResting)
+    
+    void UpdateMotionBlur(float fillAmount)
     {
-        restText.text = (isResting ? "Resting..." : defaultRestText);
+        // We have end --> start because: fillAmount == 0 means no stamina (end state), and == 1 means full (start state)
+        motionBlur.shutterAngle.value = Mathf.Lerp(endShutterAngle, startShutterAngle, fillAmount / StaminaBar.STAMINA_MAX);
     }
 }

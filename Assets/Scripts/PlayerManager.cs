@@ -5,44 +5,53 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stamina")]
-    public StaminaBar staminaBar;
-    public float staminaChange = 0.001f;
+    public float staminaIncrease = 0.1f;
+    public float staminaDecrease = 0.001f;
 
-    [SerializeField]
+    [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
     private bool _canRest;
 
     public bool CanRest
     {
         get { return _canRest; }
         set {
-            GameManager.Instance.EnableCanRestUI(value);
+            UIManager.Instance.EnableCanRestUI(value);
             _canRest = value; 
         }
     }
 
     private void Update()
     {
-        if (CanRest && Input.GetKey(KeyCode.E))
+        if (CanRest)
         {
             bool isResting = Input.GetKey(KeyCode.E);
+            UIManager.Instance.UpdateRestingText(isResting);
+
             if (isResting)
             {
                 HandleIncreaseStamina();
+            } 
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    // Temporary Controls for Minigame
+                    MinigameManager.Instance.LoadRandomMinigame();
+                }
             }
-            GameManager.Instance.UpdateRestingText(isResting);
         }
         else
         {
-            GameManager.Instance.UpdateRestingText(false);
+            UIManager.Instance.UpdateRestingText(false);
         }
     }
 
     void HandleIncreaseStamina()
     {
-        StartCoroutine(staminaBar.IncreaseStaminaBy(staminaChange));
+        StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease));
     }
     public void HandleDecreaseStamina()
     {
-        StartCoroutine(staminaBar.DecreaseStaminaBy(staminaChange));
+        StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease));
     }
 }
