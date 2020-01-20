@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class StaminaBar : MonoBehaviour
 {
+    public Image staminaFillImage;
     public float speed = 0.001f;
 
     // Events for others to subscribe to OnChange events
@@ -13,12 +14,10 @@ public class StaminaBar : MonoBehaviour
 
     [HideInInspector] 
     public const float STAMINA_MAX = 1f;
-    private Image staminaBarImage;
 
     private void Awake() 
     {
-        staminaBarImage = Utils.GetRequiredComponent<Image>(this);
-        staminaBarImage.fillAmount = 1f;
+        staminaFillImage.fillAmount = 1f;
     }
 
     public IEnumerator DecreaseStaminaBy(float percent) 
@@ -26,11 +25,11 @@ public class StaminaBar : MonoBehaviour
         float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
         float decreaseBy = percentClamped * STAMINA_MAX;
 
-        float fillAmount = Mathf.Max(0f, staminaBarImage.fillAmount - decreaseBy);
+        float fillAmount = Mathf.Max(0f, staminaFillImage.fillAmount - decreaseBy);
 
-        while (fillAmount <= staminaBarImage.fillAmount)
+        while (fillAmount <= staminaFillImage.fillAmount)
         {
-            UpdateFillAmount(staminaBarImage.fillAmount - speed);
+            UpdateFillAmount(staminaFillImage.fillAmount - speed);
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -40,11 +39,11 @@ public class StaminaBar : MonoBehaviour
         float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
         float increaseBy = percentClamped * STAMINA_MAX;
 
-        float fillAmount = Mathf.Min(STAMINA_MAX, staminaBarImage.fillAmount + increaseBy);
+        float fillAmount = Mathf.Min(STAMINA_MAX, staminaFillImage.fillAmount + increaseBy);
 
-        while (fillAmount >= staminaBarImage.fillAmount)
+        while (fillAmount >= staminaFillImage.fillAmount)
         {
-            UpdateFillAmount(staminaBarImage.fillAmount + speed);
+            UpdateFillAmount(staminaFillImage.fillAmount + speed);
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
@@ -52,11 +51,8 @@ public class StaminaBar : MonoBehaviour
     void UpdateFillAmount(float newFill)
     {
         // Update the fill amount
-        staminaBarImage.fillAmount = newFill;
+        staminaFillImage.fillAmount = newFill;
 
         OnChange?.Invoke(newFill);
     }
-
-
-    
 }
