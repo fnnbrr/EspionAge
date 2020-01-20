@@ -14,8 +14,11 @@ public class NursePatrol : MonoBehaviour
 
     public Transform[] points;
     public bool chase = true;
+<<<<<<< HEAD
     [SerializeField] NurseStates currentState;
     public Transform targetTransform;
+=======
+>>>>>>> 3d86b1b0be74da4a7a6ec9ae029b85e5387fdce0
 
     private int destPoint = 0;
     private NavMeshAgent agent;
@@ -91,6 +94,8 @@ public class NursePatrol : MonoBehaviour
         // Choose the next destination point when the agent gets
         // close to the current one.
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        {
             GotoNextPoint();
+        }
     }
 }

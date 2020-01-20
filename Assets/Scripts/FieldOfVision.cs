@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FieldOfVision : MonoBehaviour
 {
+	public static NursePatrol nursePatrol;
+
 	public float viewRadius;
 	[Range(0, 360)]
 	public float viewAngle;
@@ -212,6 +214,7 @@ public class FieldOfVision : MonoBehaviour
 		}
 	}
 
+<<<<<<< HEAD
     public struct EdgeInfo
 	{
 		public Vector3 pointA;
@@ -223,4 +226,6 @@ public class FieldOfVision : MonoBehaviour
 			pointB = _pointB;
 		}
 	}
+=======
+>>>>>>> 3d86b1b0be74da4a7a6ec9ae029b85e5387fdce0
 }
