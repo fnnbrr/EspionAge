@@ -59,7 +59,15 @@ sysinfo.txt
 crashlytics-build.properties
 
 # FMOD Ignore
+/Assets/StreamingAssets/*.bank
+/Assets/StreamingAssets/*.bank.meta
 /Assets/Plugins/FMOD/Resources/FMODStudioCache.asset
 /Assets/Plugins/FMOD/Resources/FMODStudioCache.asset.meta
 fmod.log
 fmod_editor.log
+
+# FMOD studio (In folder FMOD)
+/FMOD/**.user
+/FMOD/**.unsaved
+/FMOD/**.cache
+/FMOD/**.restore
