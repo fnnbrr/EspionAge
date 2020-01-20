@@ -74,7 +74,6 @@ public class FieldOfVision : MonoBehaviour
                     // Code for finding target here
 					if (nursePatrol.chase)
 					{
-						Debug.Log("Chase Target!");
 						nursePatrol.ChaseTarget();
 					}
 				}

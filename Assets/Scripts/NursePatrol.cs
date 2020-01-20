@@ -36,6 +36,10 @@ public class NursePatrol : MonoBehaviour
         if (currentState == NurseStates.Patrolling)
         {
             GotoNextPoint();
+        } 
+        if (currentState == NurseStates.Chasing) 
+        {
+            ChaseTarget();
         }
     }
 
@@ -75,8 +79,6 @@ public class NursePatrol : MonoBehaviour
     // Follows Target if they are in the field of vision of the nurse, called in FieldOfVision.cs
     public void ChaseTarget()
     {
-        Debug.Log("NURSE Chase Target!");
-        Debug.Log(transform.position);
         Vector3 targetPosition = targetTransform.position;
         Vector3 dirToTarget = transform.position - targetPosition;
         Vector3 newPos = transform.position - dirToTarget;
