@@ -6,6 +6,9 @@ using UnityEngine.AI;
 public class NursePatrol : MonoBehaviour
 {
     public Transform[] points;
+    public GameObject spy;
+    public float agentChaseDistance = 10.0f;
+    public bool chase = true;
 
     private int destPoint = 0;
     private NavMeshAgent agent;
@@ -60,9 +63,22 @@ public class NursePatrol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        float distance = Vector3.Distance(transform.position, spy.transform.position);
+        // Chase spy
+        if (distance < agentChaseDistance && chase)
+        {
+            Vector3 dirToSpy = transform.position - spy.transform.position;
+            Vector3 newPos = transform.position - dirToSpy;
+
+            agent.SetDestination(newPos);
+        }
         // Choose the next destination point when the agent gets
         // close to the current one.
+
         if (!agent.pathPending && agent.remainingDistance < 0.5f)
             GotoNextPoint();
+        
+
     }
 }
