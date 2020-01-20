@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class NursePatrol : MonoBehaviour
 {
+    enum NurseStates
+    {
+        Patrolling,
+        Chasing
+    }
+
     public Transform[] points;
+    public bool chase = true;
+    [SerializeField] NurseStates currentState;
+    public Transform targetTransform;
 
     private int destPoint = 0;
     private NavMeshAgent agent;
@@ -20,8 +30,13 @@ public class NursePatrol : MonoBehaviour
         // between points (ie, the agent doesn't slow down as it
         // approaches a destination point).
         agent.autoBraking = false;
+        // Current state will be set to patrolling
+        currentState = NurseStates.Patrolling;
 
-        GotoNextPoint();
+        if (currentState == NurseStates.Patrolling)
+        {
+            GotoNextPoint();
+        }
     }
 
     // Cycles through points start->end, then end->start
@@ -55,6 +70,19 @@ public class NursePatrol : MonoBehaviour
                 destPoint += 2;
             }
         }
+    }
+
+    // Follows Target if they are in the field of vision of the nurse, called in FieldOfVision.cs
+    public void ChaseTarget()
+    {
+        Debug.Log("NURSE Chase Target!");
+        Debug.Log(transform.position);
+        Vector3 targetPosition = targetTransform.position;
+        Vector3 dirToTarget = transform.position - targetPosition;
+        Vector3 newPos = transform.position - dirToTarget;
+
+        // agent.SetDestination(newPos);
+        agent.destination = newPos;
     }
 
     // Update is called once per frame
