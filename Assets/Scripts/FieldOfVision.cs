@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FieldOfVision : MonoBehaviour
 {
+	public static NursePatrol nursePatrol;
+
 	public float viewRadius;
 	[Range(0, 360)]
 	public float viewAngle;
@@ -24,6 +26,8 @@ public class FieldOfVision : MonoBehaviour
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
 		StartCoroutine("FindTargetsWithDelay", .2f);
+
+		nursePatrol = gameObject.GetComponent<NursePatrol>();
 	}
 
     void Update ()
@@ -59,6 +63,10 @@ public class FieldOfVision : MonoBehaviour
 					visibleTargets.Add(target);
 					Debug.Log("Found Target!");
                     // Code for finding target here
+					if (nursePatrol.chase)
+					{
+						nursePatrol.ChaseTarget(target.position);
+					}
 				}
 			}
 		}
