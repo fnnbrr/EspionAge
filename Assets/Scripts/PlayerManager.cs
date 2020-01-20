@@ -8,7 +8,7 @@ public class PlayerManager : MonoBehaviour
     public float staminaIncrease = 0.1f;
     public float staminaDecrease = 0.001f;
 
-    [SerializeField]
+    [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
     private bool _canRest;
 
     public bool CanRest
@@ -22,14 +22,23 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        if (CanRest && Input.GetKey(KeyCode.E))
+        if (CanRest)
         {
             bool isResting = Input.GetKey(KeyCode.E);
+            UIManager.Instance.UpdateRestingText(isResting);
+
             if (isResting)
             {
                 HandleIncreaseStamina();
+            } 
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    // Temporary Controls for Minigame
+                    MinigameManager.Instance.LoadRandomMinigame();
+                }
             }
-            UIManager.Instance.UpdateRestingText(isResting);
         }
         else
         {
