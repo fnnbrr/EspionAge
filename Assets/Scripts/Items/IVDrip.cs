@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class IVDrip : MonoBehaviour
 {
-    bool itemHeld;
+    private bool itemHeld;
+
+    public float distanceFromCenter = 3.0f;
     public float minInteractionTime = 1.0f;
     private float lastInteractionTime;
 
@@ -51,8 +53,12 @@ public class IVDrip : MonoBehaviour
 	{
         itemHeld = true;
         lastInteractionTime = Time.time;
+
         gameObject.transform.parent = player;
         gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
+        SetHeldPosition(player);
+        //Effect()
 	}
 
  
@@ -64,13 +70,28 @@ public class IVDrip : MonoBehaviour
         gameObject.GetComponent<Rigidbody>().isKinematic = false;
     }
 
+    // While item is held, apply its effect (if any)
     void Effect()
 	{
 
 	}
 
-    void SetHeldPosition()
+    void SetHeldPosition(Transform player)
     {
+        Vector3 rightSidePosition = new Vector3(player.position.x, gameObject.transform.position.y, player.position.z) + player.right * distanceFromCenter;
+        Vector3 leftSidePosition = new Vector3(player.position.x, gameObject.transform.position.y, player.position.z) - player.right * distanceFromCenter;
 
+        float rightSideDis = Vector3.Distance(rightSidePosition, gameObject.transform.position);
+        float leftSideDis = Vector3.Distance(leftSidePosition, gameObject.transform.position);
+
+        if (rightSideDis < leftSideDis)
+        {
+            gameObject.transform.position = rightSidePosition;
+        }
+        else
+        {
+            gameObject.transform.position = leftSidePosition;
+        }
+            
     }
 }
