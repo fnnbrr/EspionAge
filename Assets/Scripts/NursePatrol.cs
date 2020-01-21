@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class NursePatrol : MonoBehaviour
 {
-    public GameObject Patrol_Waypoints;
+    public Transform Patrol_Waypoints;
 
     private List<Transform> points = new List<Transform>();
     private int destPoint = 0;
@@ -17,7 +17,7 @@ public class NursePatrol : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
 
-        foreach (Transform Waypoint in Patrol_Waypoints.transform)
+        foreach (Transform Waypoint in Patrol_Waypoints)
         {
             points.Add(Waypoint);
         }
