@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2998625688478654436}
   - component: {fileID: 539325392}
   - component: {fileID: 877161553782133187}
+  - component: {fileID: 1352118445427997489}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -90,6 +91,7 @@ MonoBehaviour:
   movementSpeed: 3
   turnSpeed: 2
   canMoveRotationThreshold: 1
+  consideredMovementThreshold: 0.1
 --- !u!114 &539325392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104,8 +106,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   staminaIncrease: 0.1
   staminaDecrease: 0.001
-  usesAnimationCameraBlending: 0
-  playerCamera: {fileID: 0}
+  playerCameraBlending:
+    active: 1
+    camera: {fileID: 0}
   _canRest: 0
 --- !u!114 &877161553782133187
 MonoBehaviour:
@@ -120,6 +123,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ListenerNumber: -1
+--- !u!95 &1352118445427997489
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2998625688478654463}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fd7d7d8727ad2d948b442e16463029dc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &5625193745113308704
 PrefabInstance:
   m_ObjectHideFlags: 0

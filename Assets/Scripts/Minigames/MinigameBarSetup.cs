@@ -32,6 +32,7 @@ public class MinigameBarSetup : MonoBehaviour
 
     public enum MinigameStaminaType
     {
+        None,
         Time,
         Target
     }
@@ -46,7 +47,11 @@ public class MinigameBarSetup : MonoBehaviour
 
     void UpdateListOfChildren()
     {
-        if (staminaType != MinigameStaminaType.Target)
+        if (staminaType == MinigameStaminaType.None)
+        {
+            return;
+        }
+        else if (staminaType == MinigameStaminaType.Time)
         {
             childImages.Clear();
             foreach (Transform child in staminaFillTransform)

@@ -14,7 +14,7 @@ public class ExampleMinigame_EndMinigame : MonoBehaviour
             } 
             else
             {
-                Debug.Log("You're probably testing this minigame alone, so this means you reached the end! (if not, we have a problem...)");
+                Debug.Log($"You would have gained {MinigameStaminaManager.Instance.GetCurrentStamina()} stamina!");
             }
         }
     }
