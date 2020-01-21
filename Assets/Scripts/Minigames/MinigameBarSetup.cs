@@ -16,8 +16,11 @@ class MinigameInstantiateLater
 }
 
 [ExecuteAlways]
-public class MinigameBarController : MonoBehaviour
+public class MinigameBarSetup : MonoBehaviour
 {
+    public Transform staminaFillTransform;
+
+    [Header("Preset Assets")]
     public GameObject segmentBasePrefab;
 
     public Sprite startSegmentSprite;
@@ -45,7 +48,7 @@ public class MinigameBarController : MonoBehaviour
         if (staminaType != MinigameStaminaType.Target)
         {
             childImages.Clear();
-            foreach (Transform child in transform)
+            foreach (Transform child in staminaFillTransform)
             {
                 // because we cannot destroy objects in OnValidate, we wait until the end of the frame for this:
                 // https://answers.unity.com/questions/1318576/destroy-child-objects-onvalidate.html
@@ -57,10 +60,10 @@ public class MinigameBarController : MonoBehaviour
             List<MinigameInstantiateLater> toInstantiateLater = new List<MinigameInstantiateLater>();
 
             List<Image> list = new List<Image>();
-            Image[] kids = GetComponentsInChildren<Image>(true);
+            Image[] kids = staminaFillTransform.GetComponentsInChildren<Image>(true);
             foreach (Image k in kids)
             {
-                if (k.transform.parent == transform)
+                if (k.transform.parent == staminaFillTransform)
                 {
                     list.Add(k);
                 }
@@ -146,7 +149,7 @@ public class MinigameBarController : MonoBehaviour
 
     private Image ImageCreateImage(Sprite sprite, string name)
     {
-        GameObject segment = Instantiate(segmentBasePrefab, transform);
+        GameObject segment = Instantiate(segmentBasePrefab, staminaFillTransform);
         segment.name = name;
         Image segmentImage = segment.GetComponent<Image>();
         segmentImage.sprite = sprite;

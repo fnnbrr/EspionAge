@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3327051291406557470}
   - component: {fileID: 3327051291406557471}
   - component: {fileID: 3327051291406557459}
-  - component: {fileID: 3327051291406557456}
   m_Layer: 5
   m_Name: StaminaFill
   m_TagString: Untagged
@@ -100,26 +99,6 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &3327051291406557456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3327051291406557458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8e7730c28d082b459c7cc35435914d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  segmentBasePrefab: {fileID: 5265048518621903704, guid: 473e77feb2d226345a0d5a41e11b69eb,
-    type: 3}
-  startSegmentSprite: {fileID: 21300000, guid: 16bd5ecfcbb888e48878eb7b874e1282, type: 3}
-  middleSegmentSprite: {fileID: 21300000, guid: 76c1bc5c11e589d45a40ba0b86f850aa,
-    type: 3}
-  endSegmentSprite: {fileID: 21300000, guid: 89a88d67160272644b599935893cfbef, type: 3}
-  staminaType: 0
-  childImages: []
 --- !u!1 &3327051291649199639
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,6 +184,7 @@ GameObject:
   - component: {fileID: 3327051292521422764}
   - component: {fileID: 3327051292521422766}
   - component: {fileID: 3327051292521422767}
+  - component: {fileID: 6436133764801222840}
   m_Layer: 5
   m_Name: MinigameBar
   m_TagString: Untagged
@@ -268,3 +248,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6436133764801222840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3327051292521422765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e7730c28d082b459c7cc35435914d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staminaFillTransform: {fileID: 3327051291406557469}
+  segmentBasePrefab: {fileID: 5265048518621903704, guid: 473e77feb2d226345a0d5a41e11b69eb,
+    type: 3}
+  startSegmentSprite: {fileID: 21300000, guid: 16bd5ecfcbb888e48878eb7b874e1282, type: 3}
+  middleSegmentSprite: {fileID: 21300000, guid: 76c1bc5c11e589d45a40ba0b86f850aa,
+    type: 3}
+  endSegmentSprite: {fileID: 21300000, guid: 89a88d67160272644b599935893cfbef, type: 3}
+  staminaType: 0
+  childImages: []
