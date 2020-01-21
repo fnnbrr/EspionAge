@@ -1162,6 +1162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1806743219}
   - component: {fileID: 1806743220}
+  - component: {fileID: 1806743221}
   m_Layer: 0
   m_Name: MinigameStaminaManager
   m_TagString: Untagged
@@ -1195,11 +1196,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89a7781609865ce40a033c04f1e45faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minigameBarSetup: {fileID: 5321919451948905875}
+  minigameBarSetup: {fileID: 0}
   barImage: {fileID: 1111258253}
   timeModeType: 0
   staminaChangeAmountPerSecond: 0.2
   maxTime: 5
+--- !u!114 &1806743221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806743218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e7730c28d082b459c7cc35435914d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staminaFillTransform: {fileID: 5321919451948905875}
+  segmentBasePrefab: {fileID: 5265048518621903704, guid: 473e77feb2d226345a0d5a41e11b69eb,
+    type: 3}
+  startSegmentSprite: {fileID: 21300000, guid: 16bd5ecfcbb888e48878eb7b874e1282, type: 3}
+  middleSegmentSprite: {fileID: 21300000, guid: 76c1bc5c11e589d45a40ba0b86f850aa,
+    type: 3}
+  endSegmentSprite: {fileID: 21300000, guid: 89a88d67160272644b599935893cfbef, type: 3}
+  staminaType: 0
+  segmentSprite: {fileID: 0}
+  childImages: []
 --- !u!1 &1874954730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1472,18 +1495,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d2e5dffcb2d36664cbaef6a77bea3756, type: 3}
---- !u!114 &5321919451948905875 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6436133764801222840, guid: d2e5dffcb2d36664cbaef6a77bea3756,
+--- !u!224 &5321919451948905875 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3327051291406557469, guid: d2e5dffcb2d36664cbaef6a77bea3756,
     type: 3}
   m_PrefabInstance: {fileID: 5321919451948905874}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8e7730c28d082b459c7cc35435914d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7491542329616607806 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3327051292521422764, guid: d2e5dffcb2d36664cbaef6a77bea3756,

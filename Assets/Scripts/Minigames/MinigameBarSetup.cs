@@ -36,6 +36,7 @@ public class MinigameBarSetup : MonoBehaviour
         Target
     }
     public MinigameStaminaType staminaType;
+    public Sprite segmentSprite;
     public List<Image> childImages;
 
     private void OnValidate()
@@ -153,6 +154,12 @@ public class MinigameBarSetup : MonoBehaviour
         segment.name = name;
         Image segmentImage = segment.GetComponent<Image>();
         segmentImage.sprite = sprite;
+        
+        if (staminaType.Equals(MinigameStaminaType.Target))
+        {
+            Image segmentSubSprite = segmentImage.gameObject.GetComponentInChildren<Image>();
+            segmentSubSprite.sprite = segmentSprite;
+        }
         return segmentImage;
     }
 }

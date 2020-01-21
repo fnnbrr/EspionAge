@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MinigameStaminaManager : MonoBehaviour
+public class MinigameStaminaManager : Singleton<MinigameStaminaManager>
 {
-    public MinigameBarSetup minigameBarSetup;
     public Image barImage;
-
     private const float MAX_FILL = 1f;
 
     public enum TimeModeType
@@ -24,18 +22,32 @@ public class MinigameStaminaManager : MonoBehaviour
     // For whenever we add options for the target mode
     //[Header("Target Mode Options")]
 
+    private MinigameBarSetup minigameBarSetup;
+
     private void Start()
     {
-        switch (timeModeType)
+        minigameBarSetup = Utils.GetRequiredComponent<MinigameBarSetup>(this);
+
+        switch (minigameBarSetup.staminaType)
         {
-            case TimeModeType.SpecifyStaminaDecrease:
-                SetStamina(MAX_FILL);
+            case MinigameBarSetup.MinigameStaminaType.Time:
+                switch (timeModeType)
+                {
+                    case TimeModeType.SpecifyStaminaDecrease:
+                        SetStamina(MAX_FILL);
+                        break;
+                    case TimeModeType.SpecifyStaminaIncrease:
+                        SetStamina(0f);
+                        break;
+                    case TimeModeType.SpecifyMaxTime:
+                        SetStamina(MAX_FILL);
+                        break;
+                    default:
+                        break;
+                }
                 break;
-            case TimeModeType.SpecifyStaminaIncrease:
+            case MinigameBarSetup.MinigameStaminaType.Target:
                 SetStamina(0f);
-                break;
-            case TimeModeType.SpecifyMaxTime:
-                SetStamina(MAX_FILL);
                 break;
             default:
                 break;
@@ -44,20 +56,34 @@ public class MinigameStaminaManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        switch(timeModeType)
+        switch(minigameBarSetup.staminaType)
         {
-            case TimeModeType.SpecifyStaminaDecrease:
-                IncreaseStaminaBy(-staminaChangeAmountPerSecond * Time.fixedDeltaTime);
+            case MinigameBarSetup.MinigameStaminaType.Time:
+                switch (timeModeType)
+                {
+                    case TimeModeType.SpecifyStaminaDecrease:
+                        IncreaseStaminaBy(-staminaChangeAmountPerSecond * Time.fixedDeltaTime);
+                        break;
+                    case TimeModeType.SpecifyStaminaIncrease:
+                        IncreaseStaminaBy(staminaChangeAmountPerSecond * Time.fixedDeltaTime);
+                        break;
+                    case TimeModeType.SpecifyMaxTime:
+                        IncreaseStaminaBy(-MAX_FILL / maxTime * Time.fixedDeltaTime);
+                        break;
+                    default:
+                        break;
+                }
                 break;
-            case TimeModeType.SpecifyStaminaIncrease:
-                IncreaseStaminaBy(staminaChangeAmountPerSecond * Time.fixedDeltaTime);
-                break;
-            case TimeModeType.SpecifyMaxTime:
-                IncreaseStaminaBy(-MAX_FILL / maxTime * Time.fixedDeltaTime);
+            case MinigameBarSetup.MinigameStaminaType.Target:
                 break;
             default:
                 break;
         }
+    }
+
+    int GetNumberOfSegments()
+    {
+        return minigameBarSetup.childImages.Count;
     }
 
     void SetStamina(float setTo)
@@ -68,5 +94,10 @@ public class MinigameStaminaManager : MonoBehaviour
     void IncreaseStaminaBy(float increaseBy)
     {
         barImage.fillAmount += increaseBy;
+    }
+
+    public void IncreaseStaminaBySegments(int numOfSegments)
+    {
+        IncreaseStaminaBy(MAX_FILL / GetNumberOfSegments() * numOfSegments);
     }
 }
