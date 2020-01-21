@@ -19,6 +19,9 @@ public class FieldOfVision : MonoBehaviour
 	public float edgeDstThreshold;
 
 	public MeshFilter viewMeshFilter;
+
+	public NursePatrol nursePatrol;
+
 	Mesh viewMesh;
 
 	void Start()
@@ -27,6 +30,8 @@ public class FieldOfVision : MonoBehaviour
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
 		StartCoroutine("FindTargetsWithDelay", .2f);
+
+		nursePatrol = GetComponent<NursePatrol>();
 	}
 
     void LateUpdate ()
@@ -67,6 +72,10 @@ public class FieldOfVision : MonoBehaviour
 					visibleTargets.Add(target);
 					Debug.Log("Found Target!");
                     // Code for finding target here
+					if (nursePatrol.chase)
+					{
+						nursePatrol.ChaseTarget();
+					}
 				}
 			}
 		}
