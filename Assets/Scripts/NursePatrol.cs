@@ -12,11 +12,12 @@ public class NursePatrol : MonoBehaviour
         Chasing
     }
 
-    public Transform[] points;
+    public Transform Patrol_Waypoints;
     public bool chase = true;
     [SerializeField] NurseStates currentState;
     public Transform targetTransform;
 
+    private List<Transform> points = new List<Transform>();
     private int destPoint = 0;
     private NavMeshAgent agent;
     private bool moving_forward = true;
@@ -25,6 +26,11 @@ public class NursePatrol : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        foreach (Transform Waypoint in Patrol_Waypoints)
+        {
+            points.Add(Waypoint);
+        }
 
         // Disabling auto-braking allows for continuous movement
         // between points (ie, the agent doesn't slow down as it
@@ -46,8 +52,8 @@ public class NursePatrol : MonoBehaviour
     // Cycles through points start->end, then end->start
     void GotoNextPoint()
     {
-        // Returns if no points have been set up
-        if (points.Length == 0)
+        // Returns if only the starting position is present
+        if (points.Count < 2)
             return;
 
         // Set the agent to go to the currently selected destination.
@@ -57,7 +63,7 @@ public class NursePatrol : MonoBehaviour
         if (moving_forward)
         {
             destPoint += 1;
-            if (destPoint == points.Length)
+            if (destPoint == points.Count)
             {
                 moving_forward = false;
                 destPoint -= 2;
