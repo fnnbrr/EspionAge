@@ -13,9 +13,10 @@ public class MinigameManager : Singleton<MinigameManager>
 
     private bool isInMinigame = false;
     private Scene currentMinigameScene;
+    private float lastGainedStamina;
 
     // Public events that can be subscribed to
-    public delegate void MinigameCompleteAction();
+    public delegate void MinigameCompleteAction(float gainedStamina);
     public event MinigameCompleteAction OnMinigameComplete;
 
     public bool IsInMinigame()
@@ -62,13 +63,15 @@ public class MinigameManager : Singleton<MinigameManager>
         SetActiveAllObjectsInScene(SceneManager.GetActiveScene(), false);
     }
 
-    public void UnloadCurrentMinigame()
+    public void UnloadCurrentMinigame(float gainedStamina)
     {
         if (!IsInMinigame())
         {
             Debug.LogError($"Not in minigame, cannot unload: isInMinigame={isInMinigame}, currentMinigameScene.isValid()={currentMinigameScene.IsValid()}");
             return;
         }
+
+        lastGainedStamina = gainedStamina;
 
         SceneManager.sceneUnloaded += OnMinigameSceneUnloaded;
         SceneManager.UnloadSceneAsync(currentMinigameScene);
@@ -90,7 +93,7 @@ public class MinigameManager : Singleton<MinigameManager>
         SetActiveAllObjectsInScene(SceneManager.GetActiveScene(), true);
 
         // Alert anyone waiting for the minigame to be complete
-        OnMinigameComplete?.Invoke();
+        OnMinigameComplete?.Invoke(lastGainedStamina);
     }
 
     private void SetActiveAllObjectsInScene(Scene scene, bool active)

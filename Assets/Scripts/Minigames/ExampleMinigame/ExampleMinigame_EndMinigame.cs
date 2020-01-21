@@ -10,7 +10,7 @@ public class ExampleMinigame_EndMinigame : MonoBehaviour
         {
             if (MinigameManager.Instance.IsInMinigame())
             {
-                MinigameManager.Instance.UnloadCurrentMinigame();
+                MinigameManager.Instance.UnloadCurrentMinigame(MinigameStaminaManager.Instance.GetCurrentStamina());
             } 
             else
             {

@@ -81,6 +81,11 @@ public class MinigameStaminaManager : Singleton<MinigameStaminaManager>
         }
     }
 
+    public float GetCurrentStamina()
+    {
+        return barImage.fillAmount;
+    }
+
     int GetNumberOfSegments()
     {
         return minigameBarSetup.childImages.Count;
