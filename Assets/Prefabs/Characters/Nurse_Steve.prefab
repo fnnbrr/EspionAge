@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 263059888}
   - component: {fileID: 263059887}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Viewing_Cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,12 +25,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 263059885}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.73200005, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3862208129692031435}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &263059888
 MeshFilter:
@@ -57,7 +57,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87,14 +87,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3862208129692031435}
-  - component: {fileID: 3862208129692031432}
-  - component: {fileID: 3862208129692031433}
   - component: {fileID: 3862208129692031430}
   - component: {fileID: 2450668294617206675}
   - component: {fileID: 5835305656985638988}
   - component: {fileID: 8073768096790006290}
   m_Layer: 0
-  m_Name: Nurse
+  m_Name: Nurse_Steve
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -108,60 +106,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3862208129692031431}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.7, y: 3, z: -5.4}
+  m_LocalPosition: {x: 0, y: 2.73, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
+  - {fileID: 7709794213399941687}
   - {fileID: 263059886}
-  - {fileID: 6059229514702837419}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3862208129692031432
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3862208129692031431}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3862208129692031433
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3862208129692031431}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: b6c3fbc32cd78f24cbcb02301487f704, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
 --- !u!136 &3862208129692031430
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -173,9 +125,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 2.26433
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.31965527, z: 0}
 --- !u!195 &2450668294617206675
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -185,7 +137,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3862208129692031431}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.47
   m_Speed: 10
   m_Acceleration: 100
   avoidancePriority: 50
@@ -194,8 +146,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
+  m_Height: 2.08
+  m_BaseOffset: 0.76
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &5835305656985638988
@@ -210,10 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd9598d4e3cacb49b1021fd8b165e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  points:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  Patrol_Waypoints: {fileID: 0}
 --- !u!114 &8073768096790006290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,11 +182,13 @@ MonoBehaviour:
     m_Bits: 256
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   visibleTargets: []
   meshResolution: 1
+  edgeResolveInterations: 4
+  edgeDstThreshold: 0.5
   viewMeshFilter: {fileID: 263059888}
---- !u!1001 &1255380515527425457
+--- !u!1001 &3423866236558735661
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -252,7 +203,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 4e95de46452541f4882ab87eab4a4477,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.97
+      value: -0.82
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 4e95de46452541f4882ab87eab4a4477,
         type: 3}
@@ -282,7 +233,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 4e95de46452541f4882ab87eab4a4477,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 4e95de46452541f4882ab87eab4a4477,
         type: 3}
@@ -317,13 +268,18 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 4e95de46452541f4882ab87eab4a4477,
         type: 3}
       propertyPath: m_Name
-      value: Nurse_Steve (MAIN)
+      value: Nurse_Steve
+      objectReference: {fileID: 0}
+    - target: {fileID: 8850187036931288173, guid: 4e95de46452541f4882ab87eab4a4477,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e95de46452541f4882ab87eab4a4477, type: 3}
---- !u!4 &6059229514702837419 stripped
+--- !u!4 &7709794213399941687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 4e95de46452541f4882ab87eab4a4477,
     type: 3}
-  m_PrefabInstance: {fileID: 1255380515527425457}
+  m_PrefabInstance: {fileID: 3423866236558735661}
   m_PrefabAsset: {fileID: 0}
