@@ -2417,9 +2417,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Press E to Rest
-
-    Press P to Play'
+  m_text: Press F to Play
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4068,6 +4066,10 @@ PrefabInstance:
     - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
       propertyPath: staminaDecrease
       value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
+      propertyPath: dangerRadius
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 2998625688478654433, guid: 072a7e727d2161b44935a789713af3c0,
         type: 3}

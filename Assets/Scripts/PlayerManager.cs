@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Stamina")]
     public float staminaIncrease = 0.1f;
     public float staminaDecrease = 0.001f;
+    public float dangerRadius = 100.0f;
 
     [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
     private bool _canRest;
@@ -22,36 +23,58 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (CanRest && Input.GetKeyDown(KeyCode.F))
+        {
+            // Temporary Controls for Minigame
+            MinigameManager.Instance.LoadRandomMinigame();   
+        }
+    }
+
+    private void FixedUpdate()
+    {
         if (CanRest)
         {
-            bool isResting = Input.GetKey(KeyCode.E);
-            UIManager.Instance.UpdateRestingText(isResting);
-
-            if (isResting)
-            {
-                HandleIncreaseStamina();
-            } 
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    // Temporary Controls for Minigame
-                    MinigameManager.Instance.LoadRandomMinigame();
-                }
-            }
+            HandleIncreaseStamina(1.0f);
         }
+
         else
         {
-            UIManager.Instance.UpdateRestingText(false);
+            float minDistance = distToClosestEnemy();
+
+            if (minDistance >= dangerRadius)
+            {
+                HandleDecreaseStamina(minDistance - dangerRadius);
+            }
+            else
+            {
+                HandleIncreaseStamina(dangerRadius - minDistance);
+            }
         }
     }
 
-    void HandleIncreaseStamina()
+    private float distToClosestEnemy()
     {
-        StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease));
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float minDistance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject enemy in enemies)
+        {
+            Vector3 diff = enemy.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < minDistance)
+            {
+                minDistance = curDistance;
+            }
+        }
+        return minDistance;
     }
-    public void HandleDecreaseStamina()
+
+    void HandleIncreaseStamina(float multiplier)
     {
-        StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease));
+        StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * staminaIncrease));
+    }
+    public void HandleDecreaseStamina(float multiplier)
+    {
+        StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(multiplier * staminaDecrease));
     }
 }
