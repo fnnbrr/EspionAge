@@ -13,6 +13,11 @@ public class MinigameManager : Singleton<MinigameManager>
 
     private bool isInMinigame = false;
     private Scene currentMinigameScene;
+    private float lastGainedStamina;
+
+    // Public events that can be subscribed to
+    public delegate void MinigameCompleteAction(float gainedStamina);
+    public event MinigameCompleteAction OnMinigameComplete;
 
     public bool IsInMinigame()
     {
@@ -23,7 +28,7 @@ public class MinigameManager : Singleton<MinigameManager>
     {
         return minigameScenes[Random.Range(0, minigameScenes.Length)];
     }
-
+    
     public void LoadRandomMinigame()
     {
         if (minigameScenes.Length == 0)
@@ -58,13 +63,15 @@ public class MinigameManager : Singleton<MinigameManager>
         SetActiveAllObjectsInScene(SceneManager.GetActiveScene(), false);
     }
 
-    public void UnloadCurrentMinigame()
+    public void UnloadCurrentMinigame(float gainedStamina)
     {
         if (!IsInMinigame())
         {
             Debug.LogError($"Not in minigame, cannot unload: isInMinigame={isInMinigame}, currentMinigameScene.isValid()={currentMinigameScene.IsValid()}");
             return;
         }
+
+        lastGainedStamina = gainedStamina;
 
         SceneManager.sceneUnloaded += OnMinigameSceneUnloaded;
         SceneManager.UnloadSceneAsync(currentMinigameScene);
@@ -84,6 +91,9 @@ public class MinigameManager : Singleton<MinigameManager>
         //    - possible fix... keep track of objects that were already inactive and just make sure they are not reactivated later...?
         //    - we can also just add those specific objects in the ignore list and then they will not be an issue at all
         SetActiveAllObjectsInScene(SceneManager.GetActiveScene(), true);
+
+        // Alert anyone waiting for the minigame to be complete
+        OnMinigameComplete?.Invoke(lastGainedStamina);
     }
 
     private void SetActiveAllObjectsInScene(Scene scene, bool active)

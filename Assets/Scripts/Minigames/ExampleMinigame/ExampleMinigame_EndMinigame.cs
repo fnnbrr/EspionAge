@@ -10,11 +10,11 @@ public class ExampleMinigame_EndMinigame : MonoBehaviour
         {
             if (MinigameManager.Instance.IsInMinigame())
             {
-                MinigameManager.Instance.UnloadCurrentMinigame();
+                MinigameManager.Instance.UnloadCurrentMinigame(MinigameStaminaManager.Instance.GetCurrentStamina());
             } 
             else
             {
-                Debug.Log("You're probably testing this minigame alone, so this means you reached the end! (if not, we have a problem...)");
+                Debug.Log($"You would have gained {MinigameStaminaManager.Instance.GetCurrentStamina()} stamina!");
             }
         }
     }
