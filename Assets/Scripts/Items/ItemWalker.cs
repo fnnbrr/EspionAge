@@ -12,7 +12,9 @@ public class ItemWalker : Item
     public override void AcquireItem(Transform player)
     {
         base.AcquireItem(player);
-        gameObject.GetComponent<BoxCollider>().isTrigger = false;
+
+        // Collider of child that is the exact shape of the item
+        this.gameObject.transform.GetChild(0).gameObject.GetComponent<BoxCollider>().isTrigger = false;
         SetHeldPosition(player);
         //Effect()
     }
@@ -21,7 +23,7 @@ public class ItemWalker : Item
     public override void DropItem()
     {
         base.DropItem();
-        gameObject.GetComponent<BoxCollider>().isTrigger = true;
+        this.gameObject.transform.GetChild(0).gameObject.GetComponent<BoxCollider>().isTrigger = true;
     }
 
     // While item is held, apply its effect (if any)

@@ -13,7 +13,7 @@ public class ItemIVDrip : Item
     public override void AcquireItem(Transform player)
 	{
         base.AcquireItem(player);
-        gameObject.GetComponent<CapsuleCollider>().isTrigger = false;
+        this.gameObject.transform.GetChild(0).gameObject.GetComponent<CapsuleCollider>().isTrigger = false;
 
         SetHeldPosition(player);
         //Effect()
@@ -23,7 +23,7 @@ public class ItemIVDrip : Item
     public override void DropItem()
 	{
         base.DropItem();
-        gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        this.gameObject.transform.GetChild(0).gameObject.GetComponent<CapsuleCollider>().isTrigger = false;
     }
 
     // While item is held, apply its effect (if any)
