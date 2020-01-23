@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 10f;
     public float turnSpeed = 20f;
     public float canMoveRotationThreshold = 0.1f;
+    public float consideredMovementThreshold = 0.1f;
 
     private Rigidbody rb;
     private PlayerManager playerManager;
@@ -55,8 +56,11 @@ public class PlayerController : MonoBehaviour
     {
         rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
 
-        playerManager.HandleDecreaseStamina();
+        // We only want to decrease stamina if the input is over a certain threshold (gets buggy otherwise)
+        // TODO: Change this to sqrMagnitude for efficency increase, but this is easier to conceptualize for now
+        if (movement.magnitude > consideredMovementThreshold)
+        {
+            playerManager.HandleDecreaseStamina();
+        }
     }
-
-
 }

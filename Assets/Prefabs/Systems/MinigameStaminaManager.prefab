@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5247984735750709103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5247984735750709102}
+  - component: {fileID: 5247984735750709097}
+  - component: {fileID: 5247984735750709096}
+  m_Layer: 0
+  m_Name: MinigameStaminaManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5247984735750709102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5247984735750709103}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5247984735750709097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5247984735750709103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89a7781609865ce40a033c04f1e45faf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barImage: {fileID: 0}
+  timeModeType: 0
+  staminaChangeAmountPerSecond: 0.2
+  maxTime: 5
+--- !u!114 &5247984735750709096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5247984735750709103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e7730c28d082b459c7cc35435914d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staminaFillTransform: {fileID: 0}
+  segmentBasePrefab: {fileID: 5265048518621903704, guid: 473e77feb2d226345a0d5a41e11b69eb,
+    type: 3}
+  startSegmentSprite: {fileID: 21300000, guid: 16bd5ecfcbb888e48878eb7b874e1282, type: 3}
+  middleSegmentSprite: {fileID: 21300000, guid: 76c1bc5c11e589d45a40ba0b86f850aa,
+    type: 3}
+  endSegmentSprite: {fileID: 21300000, guid: 89a88d67160272644b599935893cfbef, type: 3}
+  staminaType: 0
+  segmentSprite: {fileID: 0}
+  childImages: []
