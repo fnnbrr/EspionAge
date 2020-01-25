@@ -59,7 +59,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (CanRest)
         {
-            HandleIncreaseStamina(1.0f);
+            HandleIncreaseStamina();
         }
 
         else
@@ -68,7 +68,7 @@ public class PlayerManager : MonoBehaviour
 
             if (minDistance >= dangerRadius)
             {
-                HandleDecreaseStamina(minDistance - dangerRadius);
+                HandleDecreaseStamina();
             }
             else
             {
