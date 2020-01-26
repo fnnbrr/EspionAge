@@ -26,8 +26,7 @@ public class GameManager : Singleton<GameManager>
 
     void UpdateVignette(float fillAmount)
     {
-        // Disabling for now - Finnbarr
-        //vignette.intensity.value = StaminaBar.STAMINA_MAX - fillAmount;
+        vignette.intensity.value = 0.66f * fillAmount;
     }
     
     void UpdateMotionBlur(float fillAmount)
