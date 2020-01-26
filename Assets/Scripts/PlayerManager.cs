@@ -15,6 +15,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Stamina")]
     public float staminaIncrease = 0.1f;
     public float staminaDecrease = 0.001f;
+    public float dangerRadius = 100.0f;
 
     public PlayerCameraBlendingOptions playerCameraBlending;
 
@@ -47,17 +48,32 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (CanRest && Input.GetKeyDown(KeyCode.F))
+        {
+            // Temporary Controls for Minigame
+            MinigameManager.Instance.LoadRandomMinigame();   
+        }
+    }
+
+    private void FixedUpdate()
+    {
         if (CanRest)
         {
-            bool isResting = Input.GetKey(KeyCode.E);
-            UIManager.Instance.UpdateRestingText(isResting);
+            HandleIncreaseStamina();
+        }
 
-            if (isResting)
+        else
+        {
+            float minDistance = distToClosestEnemy();
+
+            if (minDistance >= dangerRadius)
             {
-                HandleIncreaseStamina();
-            } 
+                HandleDecreaseStamina();
+            }
             else
             {
+                //HandleIncreaseStamina(dangerRadius - minDistance);
+
                 // Temporary Controls for Minigame
                 if (Input.GetKeyDown(KeyCode.P))
                 {
@@ -65,10 +81,23 @@ public class PlayerManager : MonoBehaviour
                 }
             }
         }
-        else
+    }
+
+    private float distToClosestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float minDistance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject enemy in enemies)
         {
-            UIManager.Instance.UpdateRestingText(false);
+            Vector3 diff = enemy.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < minDistance)
+            {
+                minDistance = curDistance;
+            }
         }
+        return minDistance;
     }
 
     // Note: Might need to do more testing if this is actually doing anything considerable...
