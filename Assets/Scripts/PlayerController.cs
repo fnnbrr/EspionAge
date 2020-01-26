@@ -58,9 +58,9 @@ public class PlayerController : MonoBehaviour
 
         // We only want to decrease stamina if the input is over a certain threshold (gets buggy otherwise)
         // TODO: Change this to sqrMagnitude for efficency increase, but this is easier to conceptualize for now
-        if (movement.magnitude > consideredMovementThreshold)
-        {
-            playerManager.HandleDecreaseStamina();
-        }
+        //if (movement.magnitude > consideredMovementThreshold)
+        //{
+        //    playerManager.HandleDecreaseStamina();
+        //}
     }
 }

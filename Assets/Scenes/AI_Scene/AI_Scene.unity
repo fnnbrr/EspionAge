@@ -2803,7 +2803,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956112874}
-  m_LocalRotation: {x: -0.00033679808, y: 0.99963504, z: 0.014976005, w: 0.022480467}
+  m_LocalRotation: {x: -0.00033679802, y: 0.99963504, z: 0.014976026, w: 0.022480434}
   m_LocalPosition: {x: -0.43441963, y: -0.342, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -3810,6 +3810,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: StaminaBar
       objectReference: {fileID: 0}
+    - target: {fileID: 1938650238673145329, guid: b68fb134beb523441a58d0f3b9770ce2,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b68fb134beb523441a58d0f3b9770ce2, type: 3}
 --- !u!224 &1570746190 stripped
@@ -4196,10 +4201,10 @@ PrefabInstance:
     - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
       propertyPath: playerCameraBlending.camera
       value: 
-      objectReference: {fileID: 1553467828}
+      objectReference: {fileID: 0}
     - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
       propertyPath: playerCameraBlending.active
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
       propertyPath: staminaDecrease
@@ -4209,12 +4214,14 @@ PrefabInstance:
       propertyPath: dangerRadius
       value: 1000
       objectReference: {fileID: 0}
+    - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
+      propertyPath: staminaIncrease
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 2998625688478654433, guid: 072a7e727d2161b44935a789713af3c0,
         type: 3}
       propertyPath: m_Enabled
       value: 0
-      propertyPath: staminaIncrease
-      value: 0.005
       objectReference: {fileID: 0}
     - target: {fileID: 2998625688478654435, guid: 072a7e727d2161b44935a789713af3c0,
         type: 3}

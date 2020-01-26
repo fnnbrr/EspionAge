@@ -13,9 +13,9 @@ public class PlayerCameraBlendingOptions
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stamina")]
-    public float staminaIncrease = 0.1f;
+    public float staminaIncrease = 0.01f;
     public float staminaDecrease = 0.001f;
-    public float dangerRadius = 100.0f;
+    public float dangerRadius = 1000.0f;
 
     public PlayerCameraBlendingOptions playerCameraBlending;
 
@@ -57,29 +57,19 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (CanRest)
+        HandleDecreaseStamina();
+
+        float minDistance = distToClosestEnemy();
+
+        if (minDistance < dangerRadius)
         {
-            HandleIncreaseStamina();
+            HandleIncreaseStamina((dangerRadius - minDistance) / dangerRadius);
         }
 
-        else
+        // Temporary Controls for Minigame
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            float minDistance = distToClosestEnemy();
-
-            if (minDistance >= dangerRadius)
-            {
-                HandleDecreaseStamina();
-            }
-            else
-            {
-                //HandleIncreaseStamina(dangerRadius - minDistance);
-
-                // Temporary Controls for Minigame
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    HandleTriggerStartMinigame();
-                }
-            }
+            HandleTriggerStartMinigame();
         }
     }
 
@@ -160,9 +150,9 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void HandleIncreaseStamina()
+    void HandleIncreaseStamina(float multiplier)
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * staminaIncrease)));
     }
 
     void HandleIncreaseStaminaBy(float value, float speed)
