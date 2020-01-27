@@ -22,16 +22,31 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        Vector3 relativeForward = CleanForwardVector(CameraManager.Instance.GetActiveCameraTransform().forward);
+        Vector3 relativeRight = CalculateRightVector(relativeForward);
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        movement.Set(horizontal, 0f, vertical);
+        movement = relativeForward * vertical + relativeRight * horizontal;
         movement.Normalize();
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;    // to be used later for animations and such
 
         HandleControl(movement);
+    }
+
+    private Vector3 CleanForwardVector(Vector3 forwardVector)
+    {
+        forwardVector.y = 0f;
+        return forwardVector.normalized;
+    }
+
+    private Vector3 CalculateRightVector(Vector3 forwardVector)
+    {
+        // The vector perpendicular to the forward vector and this transform's up, must be the relative right vector
+        return -Vector3.Cross(forwardVector, transform.up).normalized;
     }
 
     void HandleControl(Vector3 movementDirection)
