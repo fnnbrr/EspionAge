@@ -12,9 +12,9 @@ public class PlayerCameraBlendingOptions
 
 public class PlayerManager : MonoBehaviour
 {
-    [Header("Stamina")]
-    public float staminaIncrease = 0.01f;
-    public float staminaDecrease = 0.005f;
+    [Header("Awakeness")]
+    public float awakenessIncrease = 0.01f;
+    public float awakenessDecrease = 0.005f;
     public float dangerRadius = 1000.0f;
 
     public PlayerCameraBlendingOptions playerCameraBlending;
@@ -57,13 +57,13 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        HandleDecreaseStamina();
+        HandleDecreaseAwakeness();
 
-        float minDistance = distToClosestEnemy();
+        float minDistance = DistToClosestEnemy();
 
         if (minDistance < dangerRadius)
         {
-            HandleIncreaseStamina((dangerRadius - minDistance) / dangerRadius);
+            HandleIncreaseAwakeness((dangerRadius - minDistance) / dangerRadius);
         }
 
         // Temporary Controls for Minigame
@@ -73,7 +73,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private float distToClosestEnemy()
+    private float DistToClosestEnemy()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         float minDistance = Mathf.Infinity;
@@ -134,7 +134,7 @@ public class PlayerManager : MonoBehaviour
     void HandleMinigameComplete(float gainedStamina)
     {
         SetRestingAnimation(false);
-        HandleIncreaseStaminaBy(gainedStamina, 0.5f);
+        HandleIncreaseAwakenessBy(gainedStamina, 0.5f);
         isInMinigame = false;
     }
 
@@ -150,18 +150,18 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void HandleIncreaseStamina(float multiplier)
+    void HandleIncreaseAwakeness(float multiplier)
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * staminaIncrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * awakenessIncrease)));
     }
 
-    void HandleIncreaseStaminaBy(float value, float speed)
+    void HandleIncreaseAwakenessBy(float value, float speed)
     {
         spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(value, speed)));
     }
 
-    public void HandleDecreaseStamina()
+    public void HandleDecreaseAwakeness()
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(awakenessDecrease)));
     }
 }
