@@ -14,7 +14,7 @@ public class PlayerManager : MonoBehaviour
 {
     [Header("Stamina")]
     public float staminaIncrease = 0.01f;
-    public float staminaDecrease = 0.001f;
+    public float staminaDecrease = 0.005f;
     public float dangerRadius = 1000.0f;
 
     public PlayerCameraBlendingOptions playerCameraBlending;

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float movementSpeed = 10f;
-    public float turnSpeed = 20f;
+    public float baseMovementSpeed = 5f;
+    public float baseTurnSpeed = 2f;
     public float canMoveRotationThreshold = 0.1f;
     public float consideredMovementThreshold = 0.1f;
-
+    
+    [HideInInspector] public float movementSpeed;
+    [HideInInspector] public float turnSpeed;
     private Rigidbody rb;
     private PlayerManager playerManager;
 
@@ -16,6 +18,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        movementSpeed = baseMovementSpeed;
+        turnSpeed = baseTurnSpeed;
         rb = Utils.GetRequiredComponent<Rigidbody>(this);
         playerManager = Utils.GetRequiredComponent<PlayerManager>(this);
     }
@@ -54,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        rb.MovePosition(rb.position + movement * movementSpeed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + movement * (movementSpeed * Time.fixedDeltaTime));
 
         // We only want to decrease stamina if the input is over a certain threshold (gets buggy otherwise)
         // TODO: Change this to sqrMagnitude for efficency increase, but this is easier to conceptualize for now
