@@ -22,6 +22,12 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        // early exit, since we cannot do relative-to-camera player movement otherwise
+        if (!CameraManager.Instance.IsActiveCameraValid())
+        {
+            return;
+        }
+
         Vector3 relativeForward = CleanForwardVector(CameraManager.Instance.GetActiveCameraTransform().forward);
         Vector3 relativeRight = CalculateRightVector(relativeForward);
 
