@@ -14,7 +14,7 @@ public class RestArea : MonoBehaviour
         {
             // Tell the player that they can rest
             PlayerManager playerManager = GetPlayerManager(other.gameObject);
-            playerManager.CanRest = true;
+            //playerManager.CanRest = true;
         }
     }
 
@@ -24,7 +24,7 @@ public class RestArea : MonoBehaviour
         {
             // Tell the player they can no longer rest
             PlayerManager playerManager = GetPlayerManager(other.gameObject);
-            playerManager.CanRest = false;
+            //playerManager.CanRest = false;
         }
     }
 }

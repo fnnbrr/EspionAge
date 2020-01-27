@@ -9,31 +9,11 @@ public class PlayerManager : MonoBehaviour
     public float awakenessDecrease = 0.005f;
     public float dangerRadius = 1000.0f;
 
-    [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
-    private bool _canRest;
-
-    public bool CanRest
-    {
-        get { return _canRest; }
-        set {
-            UIManager.Instance.EnableCanRestUI(value);
-            _canRest = value; 
-        }
-    }
     private List<Coroutine> spawnedCoroutines;
 
     private void Start()
     {
         spawnedCoroutines = new List<Coroutine>();
-    }
-
-    private void Update()
-    {
-        if (CanRest && Input.GetKeyDown(KeyCode.F))
-        {
-            // Temporary Controls for Minigame
-            MinigameManager.Instance.LoadRandomMinigame();   
-        }
     }
 
     private void FixedUpdate()
@@ -45,12 +25,6 @@ public class PlayerManager : MonoBehaviour
         if (minDistance < dangerRadius)
         {
             HandleIncreaseAwakeness((dangerRadius - minDistance) / dangerRadius);
-        }
-
-        // Temporary Controls for Minigame
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            HandleTriggerStartMinigame();
         }
     }
 
