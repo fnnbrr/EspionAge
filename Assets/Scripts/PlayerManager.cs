@@ -1,22 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
-
-[System.Serializable]
-public class PlayerCameraBlendingOptions
-{
-    public bool active = false;
-    public CinemachineVirtualCamera camera;
-}
 
 public class PlayerManager : MonoBehaviour
 {
     [Header("Stamina")]
     public float staminaIncrease = 0.1f;
     public float staminaDecrease = 0.001f;
-
-    public PlayerCameraBlendingOptions playerCameraBlending;
 
     [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
     private bool _canRest;
@@ -29,19 +19,10 @@ public class PlayerManager : MonoBehaviour
             _canRest = value; 
         }
     }
-
-    private bool isInMinigame = false;
-
-    private Animator animator;
     private List<Coroutine> spawnedCoroutines;
 
     private void Start()
     {
-        // We do not care about having an animator otherwise, for the PlayerManager
-        animator = playerCameraBlending.active ? Utils.GetRequiredComponent<Animator>(this) : null;
-
-        MinigameManager.Instance.OnMinigameComplete += HandleMinigameComplete;
-
         spawnedCoroutines = new List<Coroutine>();
     }
 
@@ -56,14 +37,6 @@ public class PlayerManager : MonoBehaviour
             {
                 HandleIncreaseStamina();
             } 
-            else
-            {
-                // Temporary Controls for Minigame
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    HandleTriggerStartMinigame();
-                }
-            }
         }
         else
         {
@@ -89,56 +62,9 @@ public class PlayerManager : MonoBehaviour
 
     }
 
-    void SetRestingAnimation(bool setTo)
-    {
-        if (playerCameraBlending.active)
-        {
-            animator.SetBool(Constants.ANIMATION_PLAYER_ISRESTING, setTo);
-        }
-    }
-
-    IEnumerator WaitForCameraSwitch()
-    {
-        // https://forum.unity.com/threads/how-can-i-tell-when-ive-reached-my-active-virtual-cam-blend-has-completed.498544/
-        // Because we blend between two cameras, the player cam is live only until the blending has completed
-        if (playerCameraBlending.active)
-        {
-            while (CinemachineCore.Instance.IsLive(playerCameraBlending.camera))
-            {
-                yield return new WaitForSeconds(Time.deltaTime);
-            }
-        }
-        StopAllSpawnedCoroutines();
-        MinigameManager.Instance.LoadRandomMinigame();
-    }
-
-    void HandleMinigameComplete(float gainedStamina)
-    {
-        SetRestingAnimation(false);
-        HandleIncreaseStaminaBy(gainedStamina, 0.5f);
-        isInMinigame = false;
-    }
-
-    void HandleTriggerStartMinigame()
-    {
-        if (!isInMinigame)
-        {
-            isInMinigame = true;
-
-            // The player being in a resting state will also trigger the state-driven camera to also zoom into the player
-            SetRestingAnimation(true);
-            StartCoroutine(WaitForCameraSwitch());
-        }
-    }
-
     void HandleIncreaseStamina()
     {
         spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease)));
-    }
-
-    void HandleIncreaseStaminaBy(float value, float speed)
-    {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(value, speed)));
     }
 
     public void HandleDecreaseStamina()
