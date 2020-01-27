@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    [Header("Stamina")]
-    public float staminaIncrease = 0.1f;
-    public float staminaDecrease = 0.001f;
+    [Header("Awakeness")]
+    public float awakenessIncrease = 0.01f;
+    public float awakenessDecrease = 0.005f;
+    public float dangerRadius = 1000.0f;
 
     [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
     private bool _canRest;
@@ -28,20 +29,46 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
-        if (CanRest)
+        if (CanRest && Input.GetKeyDown(KeyCode.F))
         {
-            bool isResting = Input.GetKey(KeyCode.E);
-            UIManager.Instance.UpdateRestingText(isResting);
+            // Temporary Controls for Minigame
+            MinigameManager.Instance.LoadRandomMinigame();   
+        }
+    }
 
-            if (isResting)
-            {
-                HandleIncreaseStamina();
-            } 
-        }
-        else
+    private void FixedUpdate()
+    {
+        HandleDecreaseAwakeness();
+
+        float minDistance = DistToClosestEnemy();
+
+        if (minDistance < dangerRadius)
         {
-            UIManager.Instance.UpdateRestingText(false);
+            HandleIncreaseAwakeness((dangerRadius - minDistance) / dangerRadius);
         }
+
+        // Temporary Controls for Minigame
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            HandleTriggerStartMinigame();
+        }
+    }
+
+    private float DistToClosestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float minDistance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject enemy in enemies)
+        {
+            Vector3 diff = enemy.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < minDistance)
+            {
+                minDistance = curDistance;
+            }
+        }
+        return minDistance;
     }
 
     // Note: Might need to do more testing if this is actually doing anything considerable...
@@ -62,13 +89,18 @@ public class PlayerManager : MonoBehaviour
 
     }
 
-    void HandleIncreaseStamina()
+    void HandleIncreaseAwakeness(float multiplier)
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * awakenessIncrease)));
     }
 
-    public void HandleDecreaseStamina()
+    void HandleIncreaseAwakenessBy(float value, float speed)
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(value, speed)));
+    }
+
+    public void HandleDecreaseAwakeness()
+    {
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(awakenessDecrease)));
     }
 }
