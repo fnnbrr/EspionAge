@@ -12,12 +12,12 @@ public class NursePatrol : MonoBehaviour
         Chasing
     }
 
-    public Transform Patrol_Waypoints;
+    public Transform patrolWaypoints;
     public bool chase = true;
-    [SerializeField] NurseStates currentState;
+    [SerializeField] NurseStates currentState = NurseStates.Patrolling;
     public Transform targetTransform;
 
-    private List<Transform> points = new List<Transform>();
+    private List<Vector3> points = new List<Vector3>();
     private int destPoint = 0;
     private NavMeshAgent agent;
     private bool moving_forward = true;
@@ -27,26 +27,24 @@ public class NursePatrol : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
 
-        foreach (Transform Waypoint in Patrol_Waypoints)
+        if (patrolWaypoints)
         {
-            points.Add(Waypoint);
+            foreach (Transform childWaypoint in patrolWaypoints)
+            {
+                points.Add(childWaypoint.position);
+            }
         }
 
         // Disabling auto-braking allows for continuous movement
         // between points (ie, the agent doesn't slow down as it
         // approaches a destination point).
         agent.autoBraking = false;
-        // Current state will be set to patrolling
-        currentState = NurseStates.Patrolling;
+    }
 
-        if (currentState == NurseStates.Patrolling)
-        {
-            GotoNextPoint();
-        } 
-        if (currentState == NurseStates.Chasing) 
-        {
-            ChaseTarget();
-        }
+    public void SetPoints(List<Vector3> newPoints)
+    {
+        points.Clear();
+        points = new List<Vector3>(newPoints);
     }
 
     // Cycles through points start->end, then end->start
@@ -54,10 +52,12 @@ public class NursePatrol : MonoBehaviour
     {
         // Returns if only the starting position is present
         if (points.Count < 2)
+        {
             return;
+        }
 
         // Set the agent to go to the currently selected destination.
-        agent.destination = points[destPoint].position;
+        agent.destination = points[destPoint];
 
         // Cycle to next point (patrolling forwards)
         if (moving_forward)
@@ -98,7 +98,7 @@ public class NursePatrol : MonoBehaviour
     {
         // Choose the next destination point when the agent gets
         // close to the current one.
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < 0.5f)
         {
             GotoNextPoint();
         }
