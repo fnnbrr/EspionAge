@@ -6,6 +6,9 @@ using UnityEngine.AI;
 public class NursePatrol : MonoBehaviour
 {
     public Transform patrolWaypoints;
+
+    [Header("Chase")]
+    public bool chase = true;
     public Transform targetTransform;
 
     enum NurseStates
