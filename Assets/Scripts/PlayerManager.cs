@@ -12,10 +12,10 @@ public class PlayerCameraBlendingOptions
 
 public class PlayerManager : MonoBehaviour
 {
-    [Header("Stamina")]
-    public float staminaIncrease = 0.1f;
-    public float staminaDecrease = 0.001f;
-    public float dangerRadius = 100.0f;
+    [Header("Awakeness")]
+    public float awakenessIncrease = 0.01f;
+    public float awakenessDecrease = 0.005f;
+    public float dangerRadius = 1000.0f;
 
     public PlayerCameraBlendingOptions playerCameraBlending;
 
@@ -57,33 +57,23 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (CanRest)
+        HandleDecreaseAwakeness();
+
+        float minDistance = DistToClosestEnemy();
+
+        if (minDistance < dangerRadius)
         {
-            HandleIncreaseStamina();
+            HandleIncreaseAwakeness((dangerRadius - minDistance) / dangerRadius);
         }
 
-        else
+        // Temporary Controls for Minigame
+        if (Input.GetKeyDown(KeyCode.P))
         {
-            float minDistance = distToClosestEnemy();
-
-            if (minDistance >= dangerRadius)
-            {
-                HandleDecreaseStamina();
-            }
-            else
-            {
-                //HandleIncreaseStamina(dangerRadius - minDistance);
-
-                // Temporary Controls for Minigame
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    HandleTriggerStartMinigame();
-                }
-            }
+            HandleTriggerStartMinigame();
         }
     }
 
-    private float distToClosestEnemy()
+    private float DistToClosestEnemy()
     {
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         float minDistance = Mathf.Infinity;
@@ -144,7 +134,7 @@ public class PlayerManager : MonoBehaviour
     void HandleMinigameComplete(float gainedStamina)
     {
         SetRestingAnimation(false);
-        HandleIncreaseStaminaBy(gainedStamina, 0.5f);
+        HandleIncreaseAwakenessBy(gainedStamina, 0.5f);
         isInMinigame = false;
     }
 
@@ -160,18 +150,18 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void HandleIncreaseStamina()
+    void HandleIncreaseAwakeness(float multiplier)
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * awakenessIncrease)));
     }
 
-    void HandleIncreaseStaminaBy(float value, float speed)
+    void HandleIncreaseAwakenessBy(float value, float speed)
     {
         spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(value, speed)));
     }
 
-    public void HandleDecreaseStamina()
+    public void HandleDecreaseAwakeness()
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(awakenessDecrease)));
     }
 }

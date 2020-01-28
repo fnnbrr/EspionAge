@@ -17,7 +17,7 @@ public class StaminaBar : MonoBehaviour
 
     private void Awake() 
     {
-        staminaFillImage.fillAmount = 1f;
+        staminaFillImage.fillAmount = 0.0f;
     }
 
     // No custom decrease function needed so it was no implemented (like below)
