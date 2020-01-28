@@ -14,6 +14,14 @@ public class CameraZone : MonoBehaviour
     public float disabledFogAlpha = 0f;
     public float fadeSpeed = 0.1f;
 
+    private void Start()
+    {
+        fogs.ForEach(fog =>
+        {
+            fog.gameObject.SetActive(true);
+        });
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Constants.TAG_PLAYER))
