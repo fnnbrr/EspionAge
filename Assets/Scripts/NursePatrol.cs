@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 public class NursePatrol : MonoBehaviour
 {
+    public Transform patrolWaypoints;
+    public Transform targetTransform;
+
     enum NurseStates
     {
         Patrolling,
         Chasing
     }
-
-    public Transform patrolWaypoints;
-    public bool chase = true;
+    [Header("For Debugging")]
     [SerializeField] NurseStates currentState = NurseStates.Patrolling;
-    public Transform targetTransform;
 
-    private List<Vector3> points = new List<Vector3>();
-    private int destPoint = 0;
     private NavMeshAgent agent;
-    private bool moving_forward = true;
+    private List<Vector3> points = new List<Vector3>();
+    private int destinationCount;
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +48,8 @@ public class NursePatrol : MonoBehaviour
     // Cycles through points start->end, then end->start
     void GotoNextPoint()
     {
+        currentState = NurseStates.Patrolling;
+
         // Returns if only the starting position is present
         if (points.Count < 2)
         {
@@ -57,40 +57,20 @@ public class NursePatrol : MonoBehaviour
         }
 
         // Set the agent to go to the currently selected destination.
-        agent.destination = points[destPoint];
-
-        // Cycle to next point (patrolling forwards)
-        if (moving_forward)
-        {
-            destPoint += 1;
-            if (destPoint == points.Count)
-            {
-                moving_forward = false;
-                destPoint -= 2;
-            }
-        }
-
-        // Cycle to next point (patrolling backwards)
-        else
-        {
-            destPoint -= 1;
-            if (destPoint == -1)
-            {
-                moving_forward = true;
-                destPoint += 2;
-            }
-        }
+        agent.SetDestination(points[Utils.PingPong(destinationCount, points.Count - 1)]);
+        destinationCount++;
     }
 
     // Follows Target if they are in the field of vision of the nurse, called in FieldOfVision.cs
     public void ChaseTarget()
     {
+        currentState = NurseStates.Chasing;
+
         Vector3 targetPosition = targetTransform.position;
         Vector3 dirToTarget = transform.position - targetPosition;
         Vector3 newPos = transform.position - dirToTarget;
 
-        // agent.SetDestination(newPos);
-        agent.destination = newPos;
+        agent.SetDestination(newPos);
     }
 
     // Update is called once per frame

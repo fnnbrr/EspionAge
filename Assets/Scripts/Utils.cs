@@ -46,4 +46,19 @@ public static class Utils
         }
         return comp;
     }
+
+    public static int PingPong(int t, int length)
+    {
+        int q = t / length;
+        int r = t % length;
+
+        if ((q % 2) == 0)
+        {
+            return r;
+        }
+        else
+        {
+            return length - r;
+        }
+    }
 }
