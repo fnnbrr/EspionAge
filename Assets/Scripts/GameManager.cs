@@ -14,6 +14,11 @@ public class GameManager : Singleton<GameManager>
     public bool testStartMission = false;
     public GameObject missionPrefab;
 
+    public bool testStopMission = false;
+    public float afterSeconds;
+
+    private IMission startedMission;
+
     private void Start()
     {
         if (!player)
@@ -30,7 +35,21 @@ public class GameManager : Singleton<GameManager>
         //   - (like Dialogue eventually will)
         if (testStartMission && missionPrefab)
         {
-            MissionManager.Instance.StartMission(missionPrefab);
+            startedMission = MissionManager.Instance.StartMission(missionPrefab);
+        }
+        ////////////////////////////////////////////////////
+    }
+
+    private void Update()
+    {
+        ////////////////////////////////////////////////////
+        // TOOD: REMOVE ONCE DIALOGUE IS IMPLEMENTED
+        // - This is here instead of the MissionManager to test calling this from another class
+        if (startedMission != null && testStopMission && missionPrefab && Time.time >= afterSeconds)
+        {
+            MissionManager.Instance.EndMission(startedMission);
+
+            startedMission = null;
         }
         ////////////////////////////////////////////////////
     }

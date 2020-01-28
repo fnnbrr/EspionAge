@@ -68,10 +68,20 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
         SpawnEnemies(startEnemies);
     }
 
-    private void OnDisable()
+    private void Cleanup()
     {
         DestroyGameObjects(instantiatedMissionInteractables);
         DestroyGameObjects(instantiatedEnemies.Where(e => e).Select(e => e.gameObject).ToList());
+    }
+
+    private void OnDisable()
+    {
+        Cleanup();
+    }
+
+    private void OnDestroy()
+    {
+        Cleanup();
     }
 
     private void SpawnInteractables(List<MissionInteractable> interactables)
