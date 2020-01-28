@@ -4,30 +4,27 @@ using UnityEngine;
 
 public static class Utils
 {
+    public static void StopPlayMode()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+    public static void LogErrorAndStopPlayMode(string errorMessage)
+    {
+        Debug.LogError(errorMessage);
+        StopPlayMode();
+    }
+
     public static T GetRequiredComponent<T>(MonoBehaviour o) where T : Component
     {
-        T comp = o.GetComponent<T>();
-        if (!comp)
-        {
-            Debug.LogError($"Expected component '{typeof(T).Name}' on object {o.name}");
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        }
-        return comp;
+        return GetRequiredComponent<T>(o, $"Expected component '{typeof(T).Name}' on object {o.name}");
     }
 
     public static T GetRequiredComponent<T>(GameObject o) where T : Component
     {
-        T comp = o.GetComponent<T>();
-        if (!comp)
-        {
-            Debug.LogError($"Expected component '{typeof(T).Name}' on object {o.name}");
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        }
-        return comp;
+        return GetRequiredComponent<T>(o, $"Expected component '{typeof(T).Name}' on object {o.name}");
     }
 
     public static T GetRequiredComponent<T>(MonoBehaviour o, string customError) where T : Component
@@ -35,10 +32,7 @@ public static class Utils
         T comp = o.GetComponent<T>();
         if (!comp)
         {
-            Debug.LogError(customError);
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
+            LogErrorAndStopPlayMode(customError);
         }
         return comp;
     }
@@ -48,11 +42,23 @@ public static class Utils
         T comp = o.GetComponent<T>();
         if (!comp)
         {
-            Debug.LogError(customError);
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
+            LogErrorAndStopPlayMode(customError);
         }
         return comp;
+    }
+
+    public static int PingPong(int t, int length)
+    {
+        int q = t / length;
+        int r = t % length;
+
+        if ((q % 2) == 0)
+        {
+            return r;
+        }
+        else
+        {
+            return length - r;
+        }
     }
 }

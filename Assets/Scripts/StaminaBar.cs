@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class StaminaBar : MonoBehaviour
 {
-    public float speed = 0.001f;
+    public Image staminaFillImage;
+    public float changePerSecond = 0.1f;
 
     // Events for others to subscribe to OnChange events
     public delegate void ChangedAction(float fillAmount);
@@ -13,50 +14,60 @@ public class StaminaBar : MonoBehaviour
 
     [HideInInspector] 
     public const float STAMINA_MAX = 1f;
-    private Image staminaBarImage;
 
     private void Awake() 
     {
-        staminaBarImage = Utils.GetRequiredComponent<Image>(this);
-        staminaBarImage.fillAmount = 1f;
+        staminaFillImage.fillAmount = 0.0f;
     }
 
-    public IEnumerator DecreaseStaminaBy(float percent) 
+    // No custom decrease function needed so it was no implemented (like below)
+    public IEnumerator DecreaseStaminaBy(float percent)
     {
         float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
         float decreaseBy = percentClamped * STAMINA_MAX;
 
-        float fillAmount = Mathf.Max(0f, staminaBarImage.fillAmount - decreaseBy);
+        float goalFillAmount = Mathf.Max(0f, staminaFillImage.fillAmount - decreaseBy);
+        float toDecrease = staminaFillImage.fillAmount - goalFillAmount;
 
-        while (fillAmount <= staminaBarImage.fillAmount)
-        {
-            UpdateFillAmount(staminaBarImage.fillAmount - speed);
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
+        return ChangeStaminaGeneral(toDecrease, -changePerSecond);
     }
 
-    public IEnumerator IncreaseStaminaBy(float percent) 
+    // Default IncreaseStaminaBy function, using the public changePerSecond field
+    public IEnumerator IncreaseStaminaBy(float percent)
+    {
+        return IncreaseStaminaBy(percent, changePerSecond);
+    }
+
+    // Allowing custom speed (specifically) for minigames, due to large increases being common
+    public IEnumerator IncreaseStaminaBy(float percent, float speed) 
     {
         float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
         float increaseBy = percentClamped * STAMINA_MAX;
 
-        float fillAmount = Mathf.Min(STAMINA_MAX, staminaBarImage.fillAmount + increaseBy);
+        float goalFillAmount = Mathf.Min(STAMINA_MAX, staminaFillImage.fillAmount + increaseBy);
+        float toAdd = goalFillAmount - staminaFillImage.fillAmount;
 
-        while (fillAmount >= staminaBarImage.fillAmount)
+        return ChangeStaminaGeneral(toAdd, speed);
+    }
+
+    // Shortens the code, and keeps the main Coroutine loop logic in one place for updating the fillAmount
+    IEnumerator ChangeStaminaGeneral(float difference, float speed)
+    {
+        float currentSum = 0f;
+        while (currentSum <= difference)
         {
-            UpdateFillAmount(staminaBarImage.fillAmount + speed);
-            yield return new WaitForSeconds(Time.deltaTime);
+            float change = speed * Time.fixedDeltaTime;
+            UpdateFillAmount(staminaFillImage.fillAmount + change);
+            currentSum += Mathf.Abs(change);  // because the change can be negative
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
     }
 
     void UpdateFillAmount(float newFill)
     {
         // Update the fill amount
-        staminaBarImage.fillAmount = newFill;
+        staminaFillImage.fillAmount = newFill;
 
         OnChange?.Invoke(newFill);
     }
-
-
-    
 }

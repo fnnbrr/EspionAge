@@ -4,54 +4,77 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    [Header("Stamina")]
-    public float staminaIncrease = 0.1f;
-    public float staminaDecrease = 0.001f;
+    [Header("Awakeness")]
+    public float awakenessIncrease = 0.01f;
+    public float awakenessDecrease = 0.005f;
+    public float dangerRadius = 1000.0f;
 
-    [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
-    private bool _canRest;
+    private List<Coroutine> spawnedCoroutines;
 
-    public bool CanRest
+    private void Start()
     {
-        get { return _canRest; }
-        set {
-            UIManager.Instance.EnableCanRestUI(value);
-            _canRest = value; 
+        spawnedCoroutines = new List<Coroutine>();
+    }
+
+    private void FixedUpdate()
+    {
+        HandleDecreaseAwakeness();
+
+        float minDistance = DistToClosestEnemy();
+
+        if (minDistance < dangerRadius)
+        {
+            HandleIncreaseAwakeness((dangerRadius - minDistance) / dangerRadius);
         }
     }
 
-    private void Update()
+    private float DistToClosestEnemy()
     {
-        if (CanRest)
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float minDistance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject enemy in enemies)
         {
-            bool isResting = Input.GetKey(KeyCode.E);
-            UIManager.Instance.UpdateRestingText(isResting);
-
-            if (isResting)
+            Vector3 diff = enemy.transform.position - position;
+            float curDistance = diff.sqrMagnitude;
+            if (curDistance < minDistance)
             {
-                HandleIncreaseStamina();
-            } 
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    // Temporary Controls for Minigame
-                    MinigameManager.Instance.LoadRandomMinigame();
-                }
+                minDistance = curDistance;
             }
         }
-        else
-        {
-            UIManager.Instance.UpdateRestingText(false);
-        }
+        return minDistance;
     }
 
-    void HandleIncreaseStamina()
+    // Note: Might need to do more testing if this is actually doing anything considerable...
+    //  but better safe than sorry to make sure coroutines we spawn are no longer running when we enter a minigame
+    void StopAllSpawnedCoroutines()
     {
-        StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(staminaIncrease));
+        // No loose coroutines in MY house!
+        foreach (Coroutine c in spawnedCoroutines)
+        {
+            StopCoroutine(c);
+        }
+        spawnedCoroutines.Clear();
     }
-    public void HandleDecreaseStamina()
+
+    private void OnDisable()
     {
-        StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(staminaDecrease));
+        StopAllSpawnedCoroutines();
+
+    }
+
+    void HandleIncreaseAwakeness(float multiplier)
+    {
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * awakenessIncrease)));
+    }
+
+    void HandleIncreaseAwakenessBy(float value, float speed)
+    {
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(value, speed)));
+    }
+
+    public void HandleDecreaseAwakeness()
+    {
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(awakenessDecrease)));
     }
 }

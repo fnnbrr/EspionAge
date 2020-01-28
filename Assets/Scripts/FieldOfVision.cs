@@ -70,7 +70,7 @@ public class FieldOfVision : MonoBehaviour
 				if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
 				{
 					visibleTargets.Add(target);
-					Debug.Log("Found Target!");
+
                     // Code for finding target here
 					if (nursePatrol.chase)
 					{

@@ -1,34 +1,71 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 public class GameManager : Singleton<GameManager>
 {
-    [Header("Post Processing")]
-    public PostProcessVolume globalVolume;
-    private Vignette vignette;
-    
-    private MotionBlur motionBlur;
-    public float startShutterAngle = 1f;
-    public float endShutterAngle = 360f;
+    public GameObject player;
+
+    private PlayerManager playerManager;
+    private PlayerController playerController;
+
+    // TODO: Remove below once Dialogue + Triggering Mission start is implemented
+    [Header("Remove below once we have dialogue")]
+    public bool testStartMission = false;
+    public GameObject missionPrefab;
+
+    public bool testStopMission = false;
+    public float afterSeconds;
+
+    private IMission startedMission;
 
     private void Start()
     {
-        globalVolume.profile.TryGetSettings(out vignette);
-        globalVolume.profile.TryGetSettings(out motionBlur);
-        UIManager.Instance.staminaBar.OnChange += UpdateVignette;
-        UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
+        if (!player)
+        {
+            Utils.LogErrorAndStopPlayMode("GameManager expects a reference to a main player GameObject!");
+        }
+
+        playerManager = player.GetComponent<PlayerManager>();
+        playerController = player.GetComponent<PlayerController>();
+
+        ////////////////////////////////////////////////////
+        // TOOD: REMOVE ONCE DIALOGUE IS IMPLEMENTED
+        // - This is here instead of the MissionManager to test calling this from another class
+        //   - (like Dialogue eventually will)
+        if (testStartMission && missionPrefab)
+        {
+            startedMission = MissionManager.Instance.StartMission(missionPrefab);
+        }
+        ////////////////////////////////////////////////////
     }
 
-    void UpdateVignette(float fillAmount)
+    private void Update()
     {
-        vignette.intensity.value = StaminaBar.STAMINA_MAX - fillAmount;
+        ////////////////////////////////////////////////////
+        // TOOD: REMOVE ONCE DIALOGUE IS IMPLEMENTED
+        // - This is here instead of the MissionManager to test calling this from another class
+        if (startedMission != null && testStopMission && missionPrefab && Time.time >= afterSeconds)
+        {
+            MissionManager.Instance.EndMission(startedMission);
+
+            startedMission = null;
+        }
+        ////////////////////////////////////////////////////
     }
-    
-    void UpdateMotionBlur(float fillAmount)
+
+    public Transform GetPlayerTransform()
     {
-        // We have end --> start because: fillAmount == 0 means no stamina (end state), and == 1 means full (start state)
-        motionBlur.shutterAngle.value = Mathf.Lerp(endShutterAngle, startShutterAngle, fillAmount / StaminaBar.STAMINA_MAX);
+        return player.transform;
+    }
+
+    public PlayerManager GetPlayerManager()
+    {
+        return playerManager;
+    }
+
+    public PlayerController GetPlayerController()
+    {
+        return playerController;
     }
 }

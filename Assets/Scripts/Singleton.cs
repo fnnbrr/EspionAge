@@ -52,6 +52,13 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
+    // NOTE: This is a custom edit for this project to allow for the deconstruction and later reconstruction of Singletons.
+    //  This happens especially with our Minigame system.
+    private void OnEnable()
+    {
+        m_ShuttingDown = false;
+    }
+
     private void OnApplicationQuit()
     {
         m_ShuttingDown = true;
