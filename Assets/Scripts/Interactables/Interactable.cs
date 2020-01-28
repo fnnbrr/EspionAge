@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Application;
 using UnityEngine;
@@ -7,6 +8,9 @@ public class Interactable : MonoBehaviour, IInteractable
 {
     private Animator interactableAnim;
     private bool interactableOn = false;
+
+    public delegate void OnInteractEventHandler(Interactable source);
+    public event OnInteractEventHandler OnInteractEnd;
 
     // Start is called before the first frame update
     protected void Start()
@@ -28,8 +32,7 @@ public class Interactable : MonoBehaviour, IInteractable
         {
             if (!interactableOn)
             {
-                interactableAnim.SetTrigger("FadeIn");
-                interactableOn = true;
+                ShowInteractUI();
             }
         }
     }
@@ -38,8 +41,7 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER"))
         {
-            interactableAnim.SetTrigger("FadeOut");
-            interactableOn = false;
+            HideInteractUI();
         }
     }
 
@@ -60,10 +62,17 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
-
+    // Handle the dialogue for this interactable
     public virtual void OnInteract()
     {
         Debug.Log("Interacted");
+
+        // Signal interact end after the dialogue is handled
+        if(OnInteractEnd != null)
+        {
+            // Need to pass in the refernce to this object so that mission manager can now what object was interacted with
+            OnInteractEnd(this);
+        }
     }
 
 
@@ -74,4 +83,15 @@ public class Interactable : MonoBehaviour, IInteractable
         player.transform.rotation = Quaternion.Euler(0f, dirToFace.y, 0f);
     }
 
+    private void ShowInteractUI()
+    {
+        interactableAnim.SetTrigger("FadeIn");
+        interactableOn = true;
+    }
+
+    private void HideInteractUI()
+    {
+        interactableAnim.SetTrigger("FadeOut");
+        interactableOn = false;
+    }
 }
