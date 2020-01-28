@@ -466,7 +466,7 @@ PrefabInstance:
         type: 3}
       propertyPath: targetTransform
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1920200226}
     - target: {fileID: 7709794213399941687, guid: c25cc09436afc144b9aebed31127a2ac,
         type: 3}
       propertyPath: m_RootOrder
@@ -2631,7 +2631,7 @@ PrefabInstance:
         type: 3}
       propertyPath: targetTransform
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1920200226}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c25cc09436afc144b9aebed31127a2ac, type: 3}
 --- !u!4 &1086516030 stripped
@@ -2762,56 +2762,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1098559572}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1108514197
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1108514198}
-  - component: {fileID: 1108514199}
-  m_Layer: 0
-  m_Name: MinigameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1108514198
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108514197}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1535613229}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1108514199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1108514197}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8035fc3eb16c517448a892592e455b71, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  minigameScenes:
-  - sceneAsset: {fileID: 102900000, guid: fcfad8e438eeda54bb3bf9d2d331d830, type: 3}
-    sceneName: Scenes/Minigames/ExampleMinigame
-  - sceneAsset: {fileID: 102900000, guid: d66cffcfa8d07e642943c5873856ca59, type: 3}
-    sceneName: Scenes/Minigames/ExampleMinigameTarget
-  persistentGameObjectRoots:
-  - {fileID: 1535613228}
 --- !u!1 &1139025786
 GameObject:
   m_ObjectHideFlags: 3
@@ -4151,7 +4101,6 @@ Transform:
   m_Children:
   - {fileID: 1370031065}
   - {fileID: 1733351692}
-  - {fileID: 1108514198}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4463,7 +4412,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813896530}
-  m_LocalRotation: {x: -0.00033679802, y: 0.99963504, z: 0.014976026, w: 0.022480434}
+  m_LocalRotation: {x: -0.00033679808, y: 0.99963504, z: 0.014976005, w: 0.022480467}
   m_LocalPosition: {x: 25.96558, y: 0, z: 22.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

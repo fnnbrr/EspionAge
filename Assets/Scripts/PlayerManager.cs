@@ -1,14 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Cinemachine;
-
-[System.Serializable]
-public class PlayerCameraBlendingOptions
-{
-    public bool active = false;
-    public CinemachineVirtualCamera camera;
-}
 
 public class PlayerManager : MonoBehaviour
 {
@@ -17,42 +9,11 @@ public class PlayerManager : MonoBehaviour
     public float awakenessDecrease = 0.005f;
     public float dangerRadius = 1000.0f;
 
-    public PlayerCameraBlendingOptions playerCameraBlending;
-
-    [SerializeField]  // this allows us to see the field update in the inspector (helps for debugging) 
-    private bool _canRest;
-
-    public bool CanRest
-    {
-        get { return _canRest; }
-        set {
-            UIManager.Instance.EnableCanRestUI(value);
-            _canRest = value; 
-        }
-    }
-
-    private bool isInMinigame = false;
-
-    private Animator animator;
     private List<Coroutine> spawnedCoroutines;
 
     private void Start()
     {
-        // We do not care about having an animator otherwise, for the PlayerManager
-        animator = playerCameraBlending.active ? Utils.GetRequiredComponent<Animator>(this) : null;
-
-        MinigameManager.Instance.OnMinigameComplete += HandleMinigameComplete;
-
         spawnedCoroutines = new List<Coroutine>();
-    }
-
-    private void Update()
-    {
-        if (CanRest && Input.GetKeyDown(KeyCode.F))
-        {
-            // Temporary Controls for Minigame
-            MinigameManager.Instance.LoadRandomMinigame();   
-        }
     }
 
     private void FixedUpdate()
@@ -64,12 +25,6 @@ public class PlayerManager : MonoBehaviour
         if (minDistance < dangerRadius)
         {
             HandleIncreaseAwakeness((dangerRadius - minDistance) / dangerRadius);
-        }
-
-        // Temporary Controls for Minigame
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            HandleTriggerStartMinigame();
         }
     }
 
@@ -106,48 +61,6 @@ public class PlayerManager : MonoBehaviour
     {
         StopAllSpawnedCoroutines();
 
-    }
-
-    void SetRestingAnimation(bool setTo)
-    {
-        if (playerCameraBlending.active)
-        {
-            animator.SetBool(Constants.ANIMATION_PLAYER_ISRESTING, setTo);
-        }
-    }
-
-    IEnumerator WaitForCameraSwitch()
-    {
-        // https://forum.unity.com/threads/how-can-i-tell-when-ive-reached-my-active-virtual-cam-blend-has-completed.498544/
-        // Because we blend between two cameras, the player cam is live only until the blending has completed
-        if (playerCameraBlending.active)
-        {
-            while (CinemachineCore.Instance.IsLive(playerCameraBlending.camera))
-            {
-                yield return new WaitForSeconds(Time.deltaTime);
-            }
-        }
-        StopAllSpawnedCoroutines();
-        MinigameManager.Instance.LoadRandomMinigame();
-    }
-
-    void HandleMinigameComplete(float gainedStamina)
-    {
-        SetRestingAnimation(false);
-        HandleIncreaseAwakenessBy(gainedStamina, 0.5f);
-        isInMinigame = false;
-    }
-
-    void HandleTriggerStartMinigame()
-    {
-        if (!isInMinigame)
-        {
-            isInMinigame = true;
-
-            // The player being in a resting state will also trigger the state-driven camera to also zoom into the player
-            SetRestingAnimation(true);
-            StartCoroutine(WaitForCameraSwitch());
-        }
     }
 
     void HandleIncreaseAwakeness(float multiplier)
