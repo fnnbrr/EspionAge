@@ -1,4 +1,4 @@
-﻿Shader "Unlit/testshader"
+﻿Shader "Unlit/PingShader"
 {
     Properties
     {
@@ -86,16 +86,14 @@
                 float centeredX = i.uv.x - 0.5;
                 float centeredY = i.uv.y - 0.5;
 
-                //float distance = sqrt(centeredX * centeredX + centeredY * centeredY);
-                //float clamped = clamp(distance, 0.0, 1.0);
-                //clip(0.1 - clamped);
-                /*float2 InMinMax = float2(0.0, sqrt(2.0));
-                float2 OutMinMax = float2(0.0, 1.0);
-                float remapped = OutMinMax.x + (distance - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);*/
-                //clip(0.5 - distance);
-
+                // The AlphaMask uses the original UV coordinates
+                // The MainTex however uses our new, warped cylinder tunnel UV coordinates
                 fixed4 col = tex2D(_MainTex, uv) * tex2D(_AlphaMask, i.uv);
-                clip(1 - sqrt(centeredX * centeredX + centeredY * centeredY) - 0.5); // clip anything outside of the circle
+
+                // Clip anything outside of the circle this square creates
+                clip(1 - sqrt(centeredX * centeredX + centeredY * centeredY) - 0.5);
+
+                // Apply the color and return
                 return col * _Color;
             }
             ENDCG
