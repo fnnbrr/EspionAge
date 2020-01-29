@@ -88,9 +88,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3862208129692031435}
   - component: {fileID: 3862208129692031430}
-  - component: {fileID: 2450668294617206675}
   - component: {fileID: 5835305656985638988}
   - component: {fileID: 8073768096790006290}
+  - component: {fileID: 2450668294617206675}
   - component: {fileID: 4186571339833994720}
   m_Layer: 0
   m_Name: Nurse_Steve
@@ -130,28 +130,6 @@ CapsuleCollider:
   m_Height: 2.26433
   m_Direction: 1
   m_Center: {x: 0, y: 0.31965527, z: 0}
---- !u!195 &2450668294617206675
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3862208129692031431}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.47
-  m_Speed: 10
-  m_Acceleration: 100
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2.08
-  m_BaseOffset: 0.76
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &5835305656985638988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,6 +175,28 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
   spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
   flashingSpeed: 2
+--- !u!195 &2450668294617206675
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.47
+  m_Speed: 10
+  m_Acceleration: 100
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2.08
+  m_BaseOffset: 0.76
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &4186571339833994720
 MonoBehaviour:
   m_ObjectHideFlags: 0
