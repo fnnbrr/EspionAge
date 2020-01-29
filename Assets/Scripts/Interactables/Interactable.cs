@@ -33,7 +33,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER"))
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {
             if (!interactableOn)
             {
@@ -45,7 +45,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER") && interactableOn)
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER) && interactableOn)
         {
             HideInteractUI();
         }
@@ -54,10 +54,10 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER"))
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {
             // User chooses to interact with the item
-            if (Input.GetButtonDown("Interact"))
+            if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
             {
                 FaceInteractable(other.gameObject);
 
@@ -90,16 +90,15 @@ public class Interactable : MonoBehaviour, IInteractable
     }
 
 
-    ///////// WILL CHANGE ANIMATION LATER (FADE IN/OUT FOR NOW)
     private void ShowInteractUI()
     {
-        interactableAnim.SetTrigger("PopIn");
+        interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
         interactableOn = true;
     }
 
     private void HideInteractUI()
     {
-        interactableAnim.SetTrigger("PopDown");
+        interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
         interactableOn = false;
     }
 }
