@@ -3,94 +3,77 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 public class NursePatrol : MonoBehaviour
 {
+    public Transform patrolWaypoints;
+
+    [Header("Chase")]
+    public bool chase = true;
+    public Transform targetTransform;
+
     enum NurseStates
     {
         Patrolling,
         Chasing
     }
+    [Header("For Debugging")]
+    [SerializeField] NurseStates currentState = NurseStates.Patrolling;
 
-    public Transform Patrol_Waypoints;
-    public bool chase = true;
-    [SerializeField] NurseStates currentState;
-    public Transform targetTransform;
-
-    private List<Transform> points = new List<Transform>();
-    private int destPoint = 0;
     private NavMeshAgent agent;
-    private bool moving_forward = true;
+    private List<Vector3> points = new List<Vector3>();
+    private int destinationCount;
 
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
 
-        foreach (Transform Waypoint in Patrol_Waypoints)
+        if (patrolWaypoints)
         {
-            points.Add(Waypoint);
+            foreach (Transform childWaypoint in patrolWaypoints)
+            {
+                points.Add(childWaypoint.position);
+            }
         }
 
         // Disabling auto-braking allows for continuous movement
         // between points (ie, the agent doesn't slow down as it
         // approaches a destination point).
         agent.autoBraking = false;
-        // Current state will be set to patrolling
-        currentState = NurseStates.Patrolling;
+    }
 
-        if (currentState == NurseStates.Patrolling)
-        {
-            GotoNextPoint();
-        } 
-        if (currentState == NurseStates.Chasing) 
-        {
-            ChaseTarget();
-        }
+    public void SetPoints(List<Vector3> newPoints)
+    {
+        points.Clear();
+        points = new List<Vector3>(newPoints);
     }
 
     // Cycles through points start->end, then end->start
     void GotoNextPoint()
     {
+        currentState = NurseStates.Patrolling;
+
         // Returns if only the starting position is present
         if (points.Count < 2)
+        {
             return;
+        }
 
         // Set the agent to go to the currently selected destination.
-        agent.destination = points[destPoint].position;
-
-        // Cycle to next point (patrolling forwards)
-        if (moving_forward)
-        {
-            destPoint += 1;
-            if (destPoint == points.Count)
-            {
-                moving_forward = false;
-                destPoint -= 2;
-            }
-        }
-
-        // Cycle to next point (patrolling backwards)
-        else
-        {
-            destPoint -= 1;
-            if (destPoint == -1)
-            {
-                moving_forward = true;
-                destPoint += 2;
-            }
-        }
+        agent.SetDestination(points[Utils.PingPong(destinationCount, points.Count - 1)]);
+        destinationCount++;
     }
 
     // Follows Target if they are in the field of vision of the nurse, called in FieldOfVision.cs
     public void ChaseTarget()
     {
+        currentState = NurseStates.Chasing;
+
         Vector3 targetPosition = targetTransform.position;
         Vector3 dirToTarget = transform.position - targetPosition;
         Vector3 newPos = transform.position - dirToTarget;
 
-        // agent.SetDestination(newPos);
-        agent.destination = newPos;
+        agent.SetDestination(newPos);
     }
 
     // Update is called once per frame
@@ -98,7 +81,7 @@ public class NursePatrol : MonoBehaviour
     {
         // Choose the next destination point when the agent gets
         // close to the current one.
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
+        if (agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < 0.5f)
         {
             GotoNextPoint();
         }
