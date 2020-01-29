@@ -18,23 +18,38 @@ public class FieldOfVision : MonoBehaviour
 	public int edgeResolveInterations;
 	public float edgeDstThreshold;
 
-	public MeshFilter viewMeshFilter;
-
 	public NursePatrol nursePatrol;
 
-	Mesh viewMesh;
+	[Header("View Mesh Options")]
+	public GameObject viewMeshObject;
+	public Material defaultMaterial;
+	public Material spottedMaterial;
+	public float flashingSpeed;
+	private Mesh viewMesh;
+	private MeshFilter viewMeshFilter;
+	private MeshRenderer viewMeshRenderer;
 
 	void Start()
 	{
+		nursePatrol = Utils.GetRequiredComponent<NursePatrol>(this);
+
+		viewMeshFilter = Utils.GetRequiredComponent<MeshFilter>(viewMeshObject);
 		viewMesh = new Mesh();
 		viewMesh.name = "View Mesh";
 		viewMeshFilter.mesh = viewMesh;
-		StartCoroutine("FindTargetsWithDelay", .2f);
 
-		nursePatrol = GetComponent<NursePatrol>();
+		viewMeshRenderer = Utils.GetRequiredComponent<MeshRenderer>(viewMeshObject);
+		viewMeshRenderer.material = defaultMaterial;
+
+		StartCoroutine(FindTargetsWithDelay(.2f));
 	}
 
-    void LateUpdate ()
+	private void FixedUpdate()
+	{
+		UpdateViewColor();
+	}
+
+	void LateUpdate ()
 	{
 		DrawFieldOfView();
 	}
@@ -78,6 +93,24 @@ public class FieldOfVision : MonoBehaviour
 					}
 				}
 			}
+		}
+	}
+
+	void UpdateViewColor()
+	{
+		if (visibleTargets.Count == 0)
+		{
+			viewMeshRenderer.material = defaultMaterial;
+		}
+		else
+		{
+			viewMeshRenderer.material = spottedMaterial;
+
+			viewMeshRenderer.material.color = Color.Lerp(
+				Color.black,
+				spottedMaterial.color,
+				Mathf.PingPong(Time.time * flashingSpeed, 1f)
+			);
 		}
 	}
 

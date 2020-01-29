@@ -164,10 +164,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bd9598d4e3cacb49b1021fd8b165e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Patrol_Waypoints: {fileID: 0}
+  patrolWaypoints: {fileID: 0}
   chase: 1
-  currentState: 0
   targetTransform: {fileID: 0}
+  currentState: 0
 --- !u!114 &8073768096790006290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,8 +192,11 @@ MonoBehaviour:
   meshResolution: 1
   edgeResolveInterations: 4
   edgeDstThreshold: 0.5
-  viewMeshFilter: {fileID: 263059888}
-  nursePatrol: {fileID: 0}
+  nursePatrol: {fileID: 5835305656985638988}
+  viewMeshObject: {fileID: 263059885}
+  defaultMaterial: {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
+  spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
+  flashingSpeed: 2
 --- !u!114 &4186571339833994720
 MonoBehaviour:
   m_ObjectHideFlags: 0
