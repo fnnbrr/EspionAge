@@ -12,20 +12,14 @@ public class Interactable : MonoBehaviour, IInteractable
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
+
     // Start is called before the first frame update
     protected void Start()
     {
         interactableAnim = GetComponentInChildren<Animator>();
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    // Show Interactable to player
+ 
     protected void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER"))
@@ -36,6 +30,7 @@ public class Interactable : MonoBehaviour, IInteractable
             }
         }
     }
+
 
     protected void OnTriggerExit(Collider other)
     {
@@ -62,17 +57,16 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
+
     // Handle the dialogue for this interactable
     public virtual void OnInteract()
     {
         Debug.Log("Interacted");
 
+        // Start Dialogue
+
         // Signal interact end after the dialogue is handled
-        if(OnInteractEnd != null)
-        {
-            // Need to pass in the refernce to this object so that mission manager can now what object was interacted with
-            OnInteractEnd(this);
-        }
+        OnInteractEnd?.Invoke(this);
     }
 
 
@@ -81,8 +75,11 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         Vector3 dirToFace = this.gameObject.transform.position + player.transform.position;
         player.transform.rotation = Quaternion.Euler(0f, dirToFace.y, 0f);
+        // TODO: Animation of facing the interactable
     }
 
+
+    ///////// WILL CHANGE ANIMATION LATER (FADE IN/OUT FOR NOW)
     private void ShowInteractUI()
     {
         interactableAnim.SetTrigger("FadeIn");
