@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Application;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
     private Animator interactableAnim;
+    private RectTransform interactTransform;
     private bool interactableOn = false;
 
     public delegate void OnInteractEventHandler(Interactable source);
@@ -17,9 +17,20 @@ public class Interactable : MonoBehaviour, IInteractable
     protected void Start()
     {
         interactableAnim = GetComponentInChildren<Animator>();
+        interactTransform = GetComponentInChildren<RectTransform>();
     }
 
- 
+    protected void Update()
+    {
+        //Ensures text is always facing the camera
+        if(interactableOn)
+        {
+            //TODO: Not sure if this works with 2 cameras?? Wait until later (using x negative scaling for now)
+            interactTransform.LookAt(Camera.main.transform);
+        }
+    }
+
+
     protected void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER"))
@@ -34,7 +45,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER") && interactableOn)
         {
             HideInteractUI();
         }
@@ -43,15 +54,15 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerStay(Collider other)
     {
-        // Show interactable button in the UI
-
-        //
         if (other.gameObject.layer == LayerMask.NameToLayer("PLAYER"))
         {
             // User chooses to interact with the item
             if (Input.GetButtonDown("Interact"))
             {
                 FaceInteractable(other.gameObject);
+
+                //Collapse interact button text
+                //HideInteractUI();
                 OnInteract();
             }
         }
@@ -73,7 +84,7 @@ public class Interactable : MonoBehaviour, IInteractable
     // Changes the rotation of the player to face the interactable object
     public void FaceInteractable(GameObject player)
     {
-        Vector3 dirToFace = this.gameObject.transform.position + player.transform.position;
+        Vector3 dirToFace = transform.position + player.transform.position;
         player.transform.rotation = Quaternion.Euler(0f, dirToFace.y, 0f);
         // TODO: Animation of facing the interactable
     }
@@ -82,13 +93,13 @@ public class Interactable : MonoBehaviour, IInteractable
     ///////// WILL CHANGE ANIMATION LATER (FADE IN/OUT FOR NOW)
     private void ShowInteractUI()
     {
-        interactableAnim.SetTrigger("FadeIn");
+        interactableAnim.SetTrigger("PopIn");
         interactableOn = true;
     }
 
     private void HideInteractUI()
     {
-        interactableAnim.SetTrigger("FadeOut");
+        interactableAnim.SetTrigger("PopDown");
         interactableOn = false;
     }
 }

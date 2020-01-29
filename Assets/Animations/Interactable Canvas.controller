@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FadeInStart
+  m_Name: PopUpStart
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -56,7 +56,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FadeOut
+  m_Name: PopDown
   m_Speed: -1
   m_CycleOffset: 0
   m_Transitions:
@@ -113,13 +113,13 @@ AnimatorController:
   m_Name: Interactable Canvas
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: FadeIn
+  - m_Name: PopIn
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: FadeOut
+  - m_Name: PopDown
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -147,7 +147,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: FadeIn
+    m_ConditionEvent: PopIn
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8068878783467573647}
@@ -172,7 +172,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: FadeOut
+    m_ConditionEvent: PopDown
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1290504581339538686}
