@@ -7,7 +7,7 @@ public class CameraManager : Singleton<CameraManager>
 {
     public CinemachineBrain brain;
 
-    // Cinemachine does not have built-in events for OnBlendingStart / OnBlendingComplete so we have our own events for that
+    // No events for OnBlendingStart / OnBlendingComplete so we have to make our own
     public delegate void BlendingStartAction(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera);
     public delegate void BlendingCompleteAction(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera);
     public event BlendingStartAction OnBlendingStart;
@@ -50,7 +50,8 @@ public class CameraManager : Singleton<CameraManager>
             return;  // early exit, because we cannot blend between the same cameras??
         }
 
-        OnBlendingStart?.Invoke(fromCamera, blendToCamera);  // alert all listeners that we started blending some camera
+        // alert all listeners that we started blending some camera
+        OnBlendingStart?.Invoke(fromCamera, blendToCamera);
 
         // Set the camera for this zone to active
         blendToCamera.gameObject.SetActive(true);
@@ -58,13 +59,14 @@ public class CameraManager : Singleton<CameraManager>
         // Whatever the current active camera is, deactivate it
         fromCamera.gameObject.SetActive(false);
 
-        // The CinemachineBrain in the scene should handle the blending between these two cameras if we set up a custom blend already
+        // The CinemachineBrain in the scene handles blending between the cameras 
+        // - (if we set up a custom blend already)
 
         StartCoroutine(WaitForBlendFinish(fromCamera, blendToCamera));
     }
 
     // This is just here so we can alert listeners that we have finished blending
-    //  and it seems like the only way to do this is to keep checking if the last camera is still live or not
+    //  checking if the last camera is still live or not seems like the only way
     private IEnumerator WaitForBlendFinish(CinemachineVirtualCamera waitForCamera, CinemachineVirtualCamera toCamera)
     {
         while(CinemachineCore.Instance.IsLive(waitForCamera))
@@ -72,7 +74,8 @@ public class CameraManager : Singleton<CameraManager>
             yield return null;  // same as FixedUpdate
         }
 
-        OnBlendingComplete?.Invoke(waitForCamera, toCamera);  // alert all listeners that we stopped blending some camera
+        // alert all listeners that we stopped blending some camera
+        OnBlendingComplete?.Invoke(waitForCamera, toCamera);
 
         yield return null;
     }
