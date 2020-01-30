@@ -26,14 +26,8 @@ public class Interactable : MonoBehaviour, IInteractable
         //Ensures text is always facing the camera
         if(interactableOn)
         {
-            //TODO: Not sure if this works with 2 cameras?? Wait until later (using x negative scaling for now)
-            interactTransform.LookAt(Camera.main.transform);
-
-            // Ensures player game object has been assigned
-            if (player is null)
-            {
-                Debug.Log("Player refernce not found");
-            }
+            // Interact Text always faces towards camera
+            interactTransform.LookAt(CameraManager.Instance.GetActiveCameraTransform());
 
             // User chooses to interact with the item
             if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
@@ -88,11 +82,16 @@ public class Interactable : MonoBehaviour, IInteractable
     // Changes the rotation of the player to face the interactable object
     public void FaceInteractable()
     {
+        // Ensures player game object has been assigned
+        if (player is null)
+        {
+            Debug.LogError("Player refernce not found");
+        }
+
         Vector3 dirToFace = transform.position - player.transform.position;
         dirToFace.y = 0f;
 
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
-        Debug.Log(rotation);
 
         player.transform.rotation = Quaternion.Slerp(player.transform.rotation, rotation, 1);
         // TODO: Animation of facing the interactable
