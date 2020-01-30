@@ -92,7 +92,7 @@ public class FieldOfVision : MonoBehaviour
 		}
 
 		// Can also do stuff with visibleTargets.Count
-		nursePatrol.SetTargetsInRange(visibleTargets.Count);
+		nursePatrol.HandleTargetsInRange(visibleTargets.Count);
 	}
 
 	void UpdateViewColor()

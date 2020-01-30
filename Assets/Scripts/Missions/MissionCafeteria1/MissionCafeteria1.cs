@@ -145,6 +145,10 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             SpawnEnemies(missionInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
         }
 
+        // Probably TEMP solution for after interacting
+        // - will probably have to call something in Interactable to initiate some destroy sequence
+        // - this way be something like a coroutine which will animate the fade away and then destroy the object
+        // - nice animation for fading away the entire object would be cool as well (POLISH)
         Destroy(interactable.gameObject);
     }
 }

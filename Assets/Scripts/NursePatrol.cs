@@ -48,7 +48,7 @@ public class NursePatrol : MonoBehaviour
         points = new List<Vector3>(newPoints);
     }
 
-    public void SetTargetsInRange(int numTargetsInRange)
+    public void HandleTargetsInRange(int numTargetsInRange)
     {
         if (chase && numTargetsInRange > 0 && currentState != NurseStates.Chasing)
         {
