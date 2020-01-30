@@ -86,6 +86,7 @@ public class Interactable : MonoBehaviour, IInteractable
         if (player is null)
         {
             Debug.LogError("Player refernce not found");
+            return;
         }
 
         Vector3 dirToFace = transform.position - player.transform.position;
