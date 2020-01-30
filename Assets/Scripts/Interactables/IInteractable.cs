@@ -6,5 +6,5 @@ using UnityEngine;
 public interface IInteractable
 {
     void OnInteract();
-    void FaceInteractable(GameObject player);
+    void FaceInteractable();
 }
