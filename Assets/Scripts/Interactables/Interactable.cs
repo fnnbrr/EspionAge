@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
+    private GameObject player;
     private Animator interactableAnim;
     private RectTransform interactTransform;
+
     private bool interactableOn = false;
-    private GameObject player;
+    private bool playerRotating;
+    
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
@@ -94,10 +97,30 @@ public class Interactable : MonoBehaviour, IInteractable
 
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
-        player.transform.rotation = Quaternion.Slerp(player.transform.rotation, rotation, 1);
-        // TODO: Animation of facing the interactable
+        // Animation of facing the interactable
+        if (!playerRotating)
+        {
+            StartCoroutine(RotateAnimation(rotation, player.GetComponent<PlayerController>().turnSpeed));
+        }
 
+    }
 
+    private IEnumerator RotateAnimation(Quaternion desiredRotation, float turnSpeed)
+    {
+        playerRotating = true;
+        Quaternion startRotation = player.transform.rotation;
+
+        float t = 0;
+    
+        while (Mathf.Abs(Mathf.DeltaAngle(player.transform.eulerAngles.y, desiredRotation.eulerAngles.y)) > 1.0f)
+        {
+            player.transform.rotation = Quaternion.Slerp(startRotation, desiredRotation, t);
+            t += Time.deltaTime * turnSpeed;
+
+            yield return null;
+        }
+
+        playerRotating = false;
     }
 
 
