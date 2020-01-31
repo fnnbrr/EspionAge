@@ -17,6 +17,6 @@ public static class Constants
 
     public const string ASSET_PATH_MISSIONCAFETERIA1 = "Assets/Prefabs/Missions/MissionCafeteria1.prefab";
 
-    public const string CHEATS_STARTMISSIONCAFETERIA1 = "Cheats/Mission/StartMissionCafeteria1";
-    public const string CHEATS_ENDMISSIONCAFETERIA1 = "Cheats/Mission/EndMissionCafeteria1";
+    public const string CHEATS_STARTMISSIONCAFETERIA1 = "Cheats/MissionCafeteria1/Start";
+    public const string CHEATS_ENDMISSIONCAFETERIA1 = "Cheats/MissionCafeteria1/End";
 }
