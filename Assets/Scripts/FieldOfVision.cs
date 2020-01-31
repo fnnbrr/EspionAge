@@ -86,14 +86,13 @@ public class FieldOfVision : MonoBehaviour
 				{
 					visibleTargets.Add(target);
 
-                    // Code for finding target here
-					if (nursePatrol.chase)
-					{
-						nursePatrol.ChaseTarget();
-					}
+                    // Code for finding target here can go here
 				}
 			}
 		}
+
+		// Can also do stuff with visibleTargets.Count
+		nursePatrol.HandleTargetsInRange(visibleTargets.Count);
 	}
 
 	void UpdateViewColor()

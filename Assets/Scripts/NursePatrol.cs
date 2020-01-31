@@ -11,13 +11,13 @@ public class NursePatrol : MonoBehaviour
     public bool chase = true;
     public Transform targetTransform;
 
-    enum NurseStates
+    public enum NurseStates
     {
         Patrolling,
         Chasing
     }
     [Header("For Debugging")]
-    [SerializeField] NurseStates currentState = NurseStates.Patrolling;
+    [SerializeField] public NurseStates currentState = NurseStates.Patrolling;
 
     private NavMeshAgent agent;
     private List<Vector3> points = new List<Vector3>();
@@ -48,11 +48,23 @@ public class NursePatrol : MonoBehaviour
         points = new List<Vector3>(newPoints);
     }
 
+    public void HandleTargetsInRange(int numTargetsInRange)
+    {
+        if (chase && numTargetsInRange > 0 && currentState != NurseStates.Chasing)
+        {
+            ChaseTarget();
+            currentState = NurseStates.Chasing;
+        }
+        else if (numTargetsInRange == 0 && currentState != NurseStates.Patrolling)
+        {
+            GotoNextPoint();
+            currentState = NurseStates.Patrolling;
+        }
+    }
+
     // Cycles through points start->end, then end->start
     void GotoNextPoint()
     {
-        currentState = NurseStates.Patrolling;
-
         // Returns if only the starting position is present
         if (points.Count < 2)
         {
@@ -64,11 +76,8 @@ public class NursePatrol : MonoBehaviour
         destinationCount++;
     }
 
-    // Follows Target if they are in the field of vision of the nurse, called in FieldOfVision.cs
     public void ChaseTarget()
     {
-        currentState = NurseStates.Chasing;
-
         Vector3 targetPosition = targetTransform.position;
         Vector3 dirToTarget = transform.position - targetPosition;
         Vector3 newPos = transform.position - dirToTarget;
@@ -76,14 +85,22 @@ public class NursePatrol : MonoBehaviour
         agent.SetDestination(newPos);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Choose the next destination point when the agent gets
-        // close to the current one.
         if (agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < 0.5f)
         {
-            GotoNextPoint();
+            switch (currentState)
+            {
+                case NurseStates.Patrolling:
+                    // Choose the next destination point when the agent gets close to the current one.
+                    GotoNextPoint();
+                    break;
+                case NurseStates.Chasing:
+                    ChaseTarget();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

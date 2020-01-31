@@ -38,7 +38,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
 
     private List<GameObject> instantiatedMissionInteractables;
     private List<NursePatrol> instantiatedEnemies;
-    //private int interactedCount = 0;  // TODO: Uncomment where Interactable support is added
+    private int interactedCount = 0;
 
     // TODO: Remove all properties below when interactables are implemented
     [Header("Remove below once we have interactables")]
@@ -90,9 +90,10 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
         interactables.ForEach(i =>
         {
             GameObject interactableGameObject = Instantiate(i.prefab, i.position, Quaternion.Euler(i.rotation));
+            Interactable interactable = Utils.GetRequiredComponent<Interactable>(interactableGameObject);
 
             // Here we register for the event that 
-            // interactableGameObject.GetComponent<INTERACTBLE_SCRIPT>().EVENT_NAME += HandleInteractedWith;
+            interactable.OnInteractEnd += HandleInteractedWith;
 
             instantiatedMissionInteractables.Add(interactableGameObject);  // TODO: make this a list of type INTERACTBLE_SCRIPT instead
         });
@@ -132,19 +133,22 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
         });
     }
 
-    /*
-    // TODO: Connect with future Interactable system (Justine & Chadley)
-    private void HandleInteractedWith(INTERACTABLE_SCRIPT interactable)
+    private void HandleInteractedWith(Interactable interactable)
     {
         interactedCount++;
 
         if (interactedCount == missionInteractables.Count())
         {
             // Logic based on the interactable object for spawning
-            int interactableIndex = instantiatedMissionInteractables.IndexOf(interactable);
+            int interactableIndex = instantiatedMissionInteractables.IndexOf(interactable.gameObject);
 
             SpawnEnemies(missionInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
         }
+
+        // Probably TEMP solution for after interacting
+        // - will probably have to call something in Interactable to initiate some destroy sequence
+        // - this way be something like a coroutine which will animate the fade away and then destroy the object
+        // - nice animation for fading away the entire object would be cool as well (POLISH)
+        Destroy(interactable.gameObject);
     }
-    */
 }
