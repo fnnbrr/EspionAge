@@ -44,6 +44,11 @@ public class MissionManager : Singleton<MissionManager>
         }
     }
 
+    public InProgressMissionContainer GetActiveMission<T>()
+    {
+        return activeMissions.Find(m => m.mission is T);
+    }
+
     public void EndMission(IMission mission)
     {
         InProgressMissionContainer container = activeMissions.Find(m => m.mission == mission);
