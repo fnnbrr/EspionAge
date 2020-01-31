@@ -98,29 +98,27 @@ public class Interactable : MonoBehaviour, IInteractable
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
         // Animation of facing the interactable
-        if (!playerRotating)
-        {
-            StartCoroutine(RotateAnimation(rotation, player.GetComponent<PlayerController>().turnSpeed));
-        }
+        // Possible issue to prevent another coroutine being called if player is already rotating
+        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed));
 
     }
 
-    private IEnumerator RotateAnimation(Quaternion desiredRotation, float turnSpeed)
+    // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
+    // isRotating is used in the 
+    private IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed)
     {
-        playerRotating = true;
-        Quaternion startRotation = player.transform.rotation;
+        Quaternion startRotation = obj.transform.rotation;
 
         float t = 0;
     
-        while (Mathf.Abs(Mathf.DeltaAngle(player.transform.eulerAngles.y, desiredRotation.eulerAngles.y)) > 1.0f)
+        while (Mathf.Abs(Mathf.DeltaAngle(obj.transform.eulerAngles.y, desiredRotation.eulerAngles.y)) > 1.0f)
         {
-            player.transform.rotation = Quaternion.Slerp(startRotation, desiredRotation, t);
+            obj.transform.rotation = Quaternion.Slerp(startRotation, desiredRotation, t);
             t += Time.deltaTime * turnSpeed;
 
             yield return null;
         }
 
-        playerRotating = false;
     }
 
 
