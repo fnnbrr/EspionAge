@@ -19,4 +19,6 @@ public static class Constants
 
     public const string CHEATS_STARTMISSIONCAFETERIA1 = "Cheats/MissionCafeteria1/Start";
     public const string CHEATS_ENDMISSIONCAFETERIA1 = "Cheats/MissionCafeteria1/End";
+
+    public const string SCENE_MAIN = "MAIN";
 }
