@@ -15,6 +15,8 @@ public static class Constants
 
     public static string INPUT_INTERACTABLE_GETDOWN = "Interact";
 
-    public const string CHEATS_ASSET_PATH_STARTMISSIONCAFETERIA1 = "Cheats/Mission/StartMissionCafeteria1";
-    public const string CHEATS_ASSET_PATH_ENDMISSIONCAFETERIA1 = "Cheats/Mission/EndMissionCafeteria1";
+    public const string ASSET_PATH_MISSIONCAFETERIA1 = "Assets/Prefabs/Missions/MissionCafeteria1.prefab";
+
+    public const string CHEATS_STARTMISSIONCAFETERIA1 = "Cheats/Mission/StartMissionCafeteria1";
+    public const string CHEATS_ENDMISSIONCAFETERIA1 = "Cheats/Mission/EndMissionCafeteria1";
 }
