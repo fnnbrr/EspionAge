@@ -1444,6 +1444,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2106701514365979955, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6082208488114296760, guid: ecc89aba5fc8aa2489158b0ac877315b,
         type: 3}
       propertyPath: m_Name
@@ -1503,6 +1508,56 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488165770046, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: m_AllowRoll
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247681, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247681, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247681, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: EmissionModule.rateOverDistance.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247681, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247681, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247684, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247686, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247686, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: m_AllowRoll
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082208488219247687, guid: ecc89aba5fc8aa2489158b0ac877315b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.1
       objectReference: {fileID: 0}
     - target: {fileID: 6082208488468813759, guid: ecc89aba5fc8aa2489158b0ac877315b,
         type: 3}
