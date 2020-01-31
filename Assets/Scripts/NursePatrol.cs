@@ -76,7 +76,6 @@ public class NursePatrol : MonoBehaviour
         destinationCount++;
     }
 
-    // Follows Target if they are in the field of vision of the nurse, called in FieldOfVision.cs
     public void ChaseTarget()
     {
         Vector3 targetPosition = targetTransform.position;
@@ -86,7 +85,6 @@ public class NursePatrol : MonoBehaviour
         agent.SetDestination(newPos);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < 0.5f)
