@@ -6,23 +6,15 @@ using UnityEngine;
 public class Interactable : MonoBehaviour, IInteractable
 {
     private GameObject player;
-    private Animator interactableAnim;
-    private RectTransform interactTransform;
+    public Animator interactableAnim;
+    public RectTransform interactTransform;
 
     private bool interactableOn = false;
-    private bool playerRotating;
     
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
-
-    // Start is called before the first frame update
-    protected void Start()
-    {
-        interactableAnim = GetComponentInChildren<Animator>();
-        interactTransform = GetComponentInChildren<RectTransform>();
-    }
 
     protected void Update()
     {
