@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private PlayerManager playerManager;
 
     private Vector3 movement;
+    public bool CanMove { get; set; } = true;
 
     void Start()
     {
@@ -22,10 +23,18 @@ public class PlayerController : MonoBehaviour
         turnSpeed = baseTurnSpeed;
         rb = Utils.GetRequiredComponent<Rigidbody>(this);
         playerManager = Utils.GetRequiredComponent<PlayerManager>(this);
+
+        CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
+        CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
     }
 
     void FixedUpdate()
     {
+        if (!CanMove)
+        {
+            return;
+        }
+
         // early exit, since we cannot do relative-to-camera player movement otherwise
         if (!CameraManager.Instance.IsActiveCameraValid())
         {
@@ -80,5 +89,15 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         rb.MovePosition(rb.position + movement * (movementSpeed * Time.fixedDeltaTime));
+    }
+
+    private void HandleCameraOnBlendingStart(Cinemachine.CinemachineVirtualCamera fromCamera, Cinemachine.CinemachineVirtualCamera toCamera)
+    {
+        CanMove = false;
+    }
+
+    private void HandleCameraOnBlendingComplete(Cinemachine.CinemachineVirtualCamera fromCamera, Cinemachine.CinemachineVirtualCamera toCamera)
+    {
+        CanMove = true;
     }
 }
