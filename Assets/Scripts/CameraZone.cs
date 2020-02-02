@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Cinemachine;
-using System.Linq;
 
-public class CameraZone : MonoBehaviour
+public class CameraZone : MonoBehaviour 
 {
     public CinemachineVirtualCamera mainCamera;
     
@@ -16,26 +16,35 @@ public class CameraZone : MonoBehaviour
 
     private void Start()
     {
-        fogs.ForEach(fog =>
+        if (GameManager.Instance.enableFog)
         {
-            fog.gameObject.SetActive(true);
-        });
+            fogs.ForEach(fog =>
+            {
+                fog.gameObject.SetActive(true);
+            });
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Constants.TAG_PLAYER))
+        if (GameManager.Instance.enableFog)
         {
-            CameraManager.Instance.BlendTo(mainCamera);
-            StartCoroutine(FadeFog(enabledFogAlpha, disabledFogAlpha));
+            if (other.CompareTag(Constants.TAG_PLAYER))
+            {
+                CameraManager.Instance.BlendTo(mainCamera);
+                StartCoroutine(FadeFog(enabledFogAlpha, disabledFogAlpha));
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(Constants.TAG_PLAYER))
+        if (GameManager.Instance.enableFog)
         {
-            StartCoroutine(FadeFog(disabledFogAlpha, enabledFogAlpha));
+            if (other.CompareTag(Constants.TAG_PLAYER))
+            {
+                StartCoroutine(FadeFog(disabledFogAlpha, enabledFogAlpha));
+            }
         }
     }
 
