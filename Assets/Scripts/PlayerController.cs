@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -24,8 +25,11 @@ public class PlayerController : MonoBehaviour
         rb = Utils.GetRequiredComponent<Rigidbody>(this);
         playerManager = Utils.GetRequiredComponent<PlayerManager>(this);
 
-        CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
-        CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
+        if (CameraManager.Instance)
+        {
+            CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
+            CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
+        }
     }
 
     void FixedUpdate()
@@ -91,12 +95,12 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(rb.position + movement * (movementSpeed * Time.fixedDeltaTime));
     }
 
-    private void HandleCameraOnBlendingStart(Cinemachine.CinemachineVirtualCamera fromCamera, Cinemachine.CinemachineVirtualCamera toCamera)
+    private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
         CanMove = false;
     }
 
-    private void HandleCameraOnBlendingComplete(Cinemachine.CinemachineVirtualCamera fromCamera, Cinemachine.CinemachineVirtualCamera toCamera)
+    private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
         CanMove = true;
     }
