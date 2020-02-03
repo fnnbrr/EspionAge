@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 263059885}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.73200005, z: 0}
+  m_LocalPosition: {x: 0, y: 1.3333334, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3862208129692031435}
@@ -127,9 +127,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2.26433
+  m_Height: 2.184714
   m_Direction: 1
-  m_Center: {x: 0, y: 0.31965527, z: 0}
+  m_Center: {x: 0, y: 1.1675085, z: 0}
 --- !u!114 &5835305656985638988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +145,7 @@ MonoBehaviour:
   patrolWaypoints: {fileID: 0}
   chase: 1
   targetTransform: {fileID: 0}
+  waypointPauseSec: 1
   currentState: 0
 --- !u!114 &8073768096790006290
 MonoBehaviour:
@@ -194,7 +195,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2.08
-  m_BaseOffset: 0.76
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &4186571339833994720
@@ -388,7 +389,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 4e95de46452541f4882ab87eab4a4477,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.82
+      value: -0.039
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 4e95de46452541f4882ab87eab4a4477,
         type: 3}
@@ -454,11 +455,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Nurse_Steve
-      objectReference: {fileID: 0}
-    - target: {fileID: 8850187036931288173, guid: 4e95de46452541f4882ab87eab4a4477,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e95de46452541f4882ab87eab4a4477, type: 3}

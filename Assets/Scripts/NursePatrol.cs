@@ -10,6 +10,8 @@ public class NursePatrol : MonoBehaviour
     [Header("Chase")]
     public bool chase = true;
     public Transform targetTransform;
+    public float waypointPauseSec = 1.0f;
+    private float waypointPauseTimer;
 
     public enum NurseStates
     {
@@ -27,6 +29,7 @@ public class NursePatrol : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        waypointPauseTimer = waypointPauseSec;
 
         if (patrolWaypoints)
         {
@@ -62,6 +65,19 @@ public class NursePatrol : MonoBehaviour
         }
     }
 
+    bool WaypointPauseComplete()
+    {
+        waypointPauseTimer -= Time.deltaTime;
+        if (waypointPauseTimer > 0)
+        {
+            agent.SetDestination(transform.position);
+            return false;
+        }
+
+        waypointPauseTimer = waypointPauseSec;
+        return true;
+    }
+    
     // Cycles through points start->end, then end->start
     void GotoNextPoint()
     {
@@ -93,7 +109,10 @@ public class NursePatrol : MonoBehaviour
             {
                 case NurseStates.Patrolling:
                     // Choose the next destination point when the agent gets close to the current one.
-                    GotoNextPoint();
+                    if (WaypointPauseComplete())
+                    {
+                        GotoNextPoint();
+                    }
                     break;
                 case NurseStates.Chasing:
                     ChaseTarget();
