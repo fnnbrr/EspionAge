@@ -16,13 +16,10 @@ public class CameraZone : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance.enableFog)
+        fogs.ForEach(fog =>
         {
-            fogs.ForEach(fog =>
-            {
-                fog.gameObject.SetActive(true);
-            });
-        }
+            fog.gameObject.SetActive(GameManager.Instance.enableFog);
+        });
     }
 
     private void OnTriggerEnter(Collider other)
