@@ -121,7 +121,7 @@ public class Interactable : MonoBehaviour, IInteractable
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
     }
 
-    private void HideInteractUI()
+    protected void HideInteractUI()
     {
         interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
