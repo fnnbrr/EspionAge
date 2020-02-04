@@ -11,9 +11,14 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Throwables")]
     public Transform throwPosition;
-    public float throwMultiplier = 1f;
+    public float throwMultiplier = 0.08f;
+    public float angleIncreaseSpeed = 45f;
+    public float minThrowAngle = 0f;
+    public float maxThrowAngle = 90f;
+
     private LaunchArcRenderer launchArcRenderer;
     private List<GameObject> currentThrowables;
+    private float startThrowTime;
 
     private List<Coroutine> spawnedCoroutines;
 
@@ -45,9 +50,21 @@ public class PlayerManager : MonoBehaviour
 
     private void HandleThrowInput()
     {
-        if (launchArcRenderer && currentThrowables.Count > 0 && Input.GetButtonDown(Constants.INPUT_THROW_GETDOWN))
+        if (launchArcRenderer && currentThrowables.Count > 0)
         {
-            ThrowNext();
+            if (Input.GetButtonDown(Constants.INPUT_THROW_GETDOWN))
+            {
+                startThrowTime = Time.time;
+            }
+            if (Input.GetButton(Constants.INPUT_THROW_GETDOWN))
+            {
+                startThrowTime += angleIncreaseSpeed * Time.deltaTime;
+                launchArcRenderer.RenderArc(Mathf.PingPong(startThrowTime, maxThrowAngle - minThrowAngle) + minThrowAngle);
+            }
+            if (Input.GetButtonUp(Constants.INPUT_THROW_GETDOWN))
+            {
+                ThrowNext();
+            }
         }
     }
 
@@ -69,11 +86,16 @@ public class PlayerManager : MonoBehaviour
         Rigidbody currentRigidbody = current.GetComponent<Rigidbody>();
         if (currentRigidbody)
         {
+            // Display the object, center at the throw point, remove parent, then throw in the same path of the current launch arc
+            // - the force angle is partly from just testing and playing with the values
             current.SetActive(true);
             current.transform.localPosition = Vector3.zero;
             current.transform.parent = null;
             currentRigidbody.AddForce(Quaternion.AngleAxis((launchArcRenderer.angle % 180f) - 90, launchArcRenderer.transform.forward) * launchArcRenderer.transform.up * launchArcRenderer.velocity * throwMultiplier, ForceMode.Impulse);
         }
+
+        // Reset the angle to 0, which also means the line renderer will not be visible
+        launchArcRenderer.RenderArc(0f);
     }
 
     private float DistToClosestEnemy()

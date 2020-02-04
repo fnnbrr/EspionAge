@@ -38896,6 +38896,14 @@ PrefabInstance:
       propertyPath: throwMultiplier
       value: 0.08
       objectReference: {fileID: 0}
+    - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
+      propertyPath: maxThrowAngle
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 539325392, guid: 072a7e727d2161b44935a789713af3c0, type: 3}
+      propertyPath: angleIncreaseSpeed
+      value: 45
+      objectReference: {fileID: 0}
     - target: {fileID: 2998625688478654433, guid: 072a7e727d2161b44935a789713af3c0,
         type: 3}
       propertyPath: m_Enabled
@@ -40466,7 +40474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 10
-  angle: 20
+  angle: 0
   resolution: 10
 --- !u!43 &2147123818
 Mesh:

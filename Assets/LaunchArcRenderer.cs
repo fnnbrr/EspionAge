@@ -39,6 +39,12 @@ public class LaunchArcRenderer : MonoBehaviour
         lr.positionCount = resolution + 1;
         lr.SetPositions(CalculateArcArray());
     }
+    
+    public void RenderArc(float newAngle)
+    {
+        angle = newAngle;
+        RenderArc();
+    }
 
     Vector3[] CalculateArcArray()
     {
