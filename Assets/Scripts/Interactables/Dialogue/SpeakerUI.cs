@@ -8,6 +8,7 @@ public class SpeakerUI : MonoBehaviour
 {
     public TMP_Text dialogue;
     public GameObject textBoxContainer;
+    public GameObject canvas;
     
     private Vector3 textPosition;
 
@@ -18,7 +19,7 @@ public class SpeakerUI : MonoBehaviour
 
     void Start()
     {
-        this.Hide();
+        Hide();
     }
 
     public void Update()
@@ -29,11 +30,11 @@ public class SpeakerUI : MonoBehaviour
 
     public void Show()
     {
-        gameObject.SetActive(true);
+        canvas.SetActive(true);
     }
 
     public void Hide()
     {
-        gameObject.SetActive(false);
+        canvas.SetActive(false);
     }
 }

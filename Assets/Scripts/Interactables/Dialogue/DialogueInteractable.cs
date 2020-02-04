@@ -18,13 +18,8 @@ public class DialogueInteractable : Interactable
         birdieBubble = birdie.transform.GetChild(1).gameObject; 
         npcBubble = this.transform.GetChild(1).gameObject;
 
-        // speakerUIBirdie = birdie.GetComponentInChildren<SpeakerUI>();
-
-        speakerUIBirdie = birdieBubble.GetComponent<SpeakerUI>();
-        speakerUINPC = npcBubble.GetComponent<SpeakerUI>();
-
-        // speakerUILeft = birdie.GetComponentInChildren<SpeakerUI>.gameObject; 
-        // speakerUIRight = GetComponentInChildren<SpeakerUI>.gameObject;
+        speakerUIBirdie = birdie.GetComponentInChildren<SpeakerUI>();
+        speakerUINPC = GetComponentInChildren<SpeakerUI>();
 
         HideInteractUI();
         AdvanceConversation();
