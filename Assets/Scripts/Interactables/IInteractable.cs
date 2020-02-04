@@ -5,6 +5,6 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    void OnInteract();
+    void OnInteract(GameObject birdie);
     void FaceInteractable();
 }

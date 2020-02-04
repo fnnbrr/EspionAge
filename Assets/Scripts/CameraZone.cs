@@ -24,11 +24,11 @@ public class CameraZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (GameManager.Instance.enableFog)
+        if (other.CompareTag(Constants.TAG_PLAYER))
         {
-            if (other.CompareTag(Constants.TAG_PLAYER))
+            CameraManager.Instance.BlendTo(mainCamera);
+            if (GameManager.Instance.enableFog)
             {
-                CameraManager.Instance.BlendTo(mainCamera);
                 StartCoroutine(FadeFog(enabledFogAlpha, disabledFogAlpha));
             }
         }

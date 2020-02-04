@@ -34,7 +34,7 @@ public class Interactable : MonoBehaviour, IInteractable
             {
                 FaceInteractable();
 
-                OnInteract();
+                OnInteract(player);
             }
      
         }
@@ -68,7 +68,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
 
     // Handle the dialogue for this interactable
-    public virtual void OnInteract()
+    public virtual void OnInteract(GameObject birdie)
     {
         Debug.Log("Interacted");
 
