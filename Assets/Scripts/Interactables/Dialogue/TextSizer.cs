@@ -24,22 +24,41 @@ public class TextSizer : MonoBehaviour
     protected Vector2 lastSize;
     protected bool forceRefresh = false;
  
-    protected virtual float MinX { get {
+    protected virtual float MinX 
+    { 
+        get 
+        {
             if ((controlAxes & Mode.Horizontal) != 0) return minSize.x;
             return GetComponent<RectTransform>().rect.width - padding.x;
-        } }
-    protected virtual float MinY { get {
+        } 
+    }
+
+    protected virtual float MinY 
+    { 
+        get 
+        {
             if ((controlAxes & Mode.Vertical) != 0) return minSize.y;
             return GetComponent<RectTransform>().rect.height - padding.y;
-        } }
-    protected virtual float MaxX { get {
+        } 
+    }
+
+    protected virtual float MaxX 
+    { 
+        get 
+        {
             if ((controlAxes & Mode.Horizontal) != 0) return maxSize.x;
             return GetComponent<RectTransform>().rect.width - padding.x;
-        } }
-    protected virtual float MaxY { get {
+        } 
+    }
+
+    protected virtual float MaxY 
+    { 
+        get 
+        {
             if ((controlAxes & Mode.Vertical) != 0) return maxSize.y;
             return GetComponent<RectTransform>().rect.height - padding.y;
-        } }
+        } 
+    }
  
     protected virtual void Update ()
     {
@@ -75,4 +94,5 @@ public class TextSizer : MonoBehaviour
     {
         minSize = new Vector2(containerRect.rect.width, containerRect.rect.height);
     }
+    
 }
