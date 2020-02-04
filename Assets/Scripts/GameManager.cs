@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public GameObject player;
+    public bool enableFog = false;
 
     private PlayerManager playerManager;
     private PlayerController playerController;

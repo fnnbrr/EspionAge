@@ -76,7 +76,6 @@ public class Interactable : MonoBehaviour, IInteractable
         OnInteractEnd?.Invoke(this);
     }
 
-
     // Changes the rotation of the player to face the interactable object
     public void FaceInteractable()
     {
@@ -122,7 +121,7 @@ public class Interactable : MonoBehaviour, IInteractable
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
     }
 
-    protected void HideInteractUI()
+    private void HideInteractUI()
     {
         interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);

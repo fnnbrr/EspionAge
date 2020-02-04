@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private PlayerManager playerManager;
 
     private Vector3 movement;
+    public bool CanMove { get; set; } = true;
 
     void Start()
     {
@@ -22,10 +24,21 @@ public class PlayerController : MonoBehaviour
         turnSpeed = baseTurnSpeed;
         rb = Utils.GetRequiredComponent<Rigidbody>(this);
         playerManager = Utils.GetRequiredComponent<PlayerManager>(this);
+
+        if (CameraManager.Instance)
+        {
+            CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
+            CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
+        }
     }
 
     void FixedUpdate()
     {
+        if (!CanMove)
+        {
+            return;
+        }
+
         // early exit, since we cannot do relative-to-camera player movement otherwise
         if (!CameraManager.Instance.IsActiveCameraValid())
         {
@@ -80,5 +93,15 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         rb.MovePosition(rb.position + movement * (movementSpeed * Time.fixedDeltaTime));
+    }
+
+    private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        CanMove = false;
+    }
+
+    private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        CanMove = true;
     }
 }
