@@ -6,6 +6,8 @@ using UnityEngine;
 public class Interactable : MonoBehaviour, IInteractable
 {
     private GameObject player;
+
+    // Must attach in instances in the inspector
     public Animator interactableAnim;
     public RectTransform interactTransform;
 
@@ -96,7 +98,6 @@ public class Interactable : MonoBehaviour, IInteractable
     }
 
     // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
-    // isRotating is used in the 
     private IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed)
     {
         Quaternion startRotation = obj.transform.rotation;

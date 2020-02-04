@@ -5,16 +5,14 @@ using UnityEngine;
 [System.Serializable]
 public class ProgressManager: Singleton<ProgressManager>
 {
-    // This is done in Mission Manager
+    // Comments below is done in Mission Manager
         // Keep track of all obtained missions
-        // Mission is obtained when from an interactable
+        // Mission is obtained from an interactable
         // Missions should also be an interactable which checks if mission is obtained (must talk with group)
 
     // Should communicate with Dialogue System on what dialogue should show when interacting with same interactable
     // Needed to communicate with the dialogue system
     public List<InProgressMissionContainer> completedMissions;
-
-    // Mission manager would have a collectible as a prefab that would be able to unlock upon mission complete
      
     [HideInInspector]
     public bool allStampsUnlocked = false;
@@ -79,10 +77,11 @@ public class ProgressManager: Singleton<ProgressManager>
         return availableStamps;
     }
 
-    //public void AddCompletedMission(InProgressMissionContainer completedMission)
-    //{
-    //    completedMissions.Add(completedMission);
-    //}
+    // To be called in Mission Manager when mission is completed
+    public void AddCompletedMission(InProgressMissionContainer completedMission)
+    {
+        completedMissions.Add(completedMission);
+    }
 
     // TODO: Save/Load Progress (Look into Scriptable Objects)
 }
