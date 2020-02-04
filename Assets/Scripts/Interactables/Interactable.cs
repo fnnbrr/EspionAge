@@ -15,7 +15,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
 
     // Start is called before the first frame update
-    protected void Start()
+    public virtual void Start()
     {
         interactableAnim = GetComponentInChildren<Animator>();
         interactTransform = GetComponentInChildren<RectTransform>();
@@ -34,7 +34,7 @@ public class Interactable : MonoBehaviour, IInteractable
             {
                 FaceInteractable();
 
-                OnInteract();
+                OnInteract(player);
             }
      
         }
@@ -66,14 +66,15 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
-
     // Handle the dialogue for this interactable
-    public virtual void OnInteract()
+    public virtual void OnInteract(GameObject birdie)
     {
         Debug.Log("Interacted");
 
         // Start Dialogue
-
+        
+        // We cannot access the OnInteractEnd event from a derived class, must do this:
+        // https://l.messenger.com/l.php?u=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F4496799%2Fevent-can-only-appear-on-the-left-hand-side-of-or&h=AT00_XXqKtlm4qXzLotgXnPjPO2iqiYBcQtVkl_JrXtqEMBYJjmljCKHzEILlPthSMNjJjKHvn4aRXioteTvEvlrFo3wdk8hteIEUndnUco_OVnh6qiDClK7Hf7rkeyT_-oYgI1-21-b4yIuh22-2rkt
         // Signal interact end after the dialogue is handled
         OnInteractEnd?.Invoke(this);
     }
@@ -106,7 +107,7 @@ public class Interactable : MonoBehaviour, IInteractable
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
     }
 
-    private void HideInteractUI()
+    protected void HideInteractUI()
     {
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public struct Line
 {
-    public Speaker speaker;
+    public bool isBirdie;
 
     [TextArea(2, 5)]
     public string text;
@@ -14,7 +14,5 @@ public struct Line
 [CreateAssetMenu(fileName = "New Conversation", menuName = "Conversation")]
 public class Conversation : ScriptableObject
 {
-    public Speaker Birdie;
-    public Speaker NPC;
     public Line[] lines;
 }
