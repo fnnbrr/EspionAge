@@ -6,8 +6,6 @@ public class DialogueInteractable : Interactable
 {
     public Conversation conversation;
 
-    private GameObject npcBubble;
-    private GameObject birdieBubble;
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
@@ -15,9 +13,6 @@ public class DialogueInteractable : Interactable
 
     public override void OnInteract(GameObject birdie)
     {
-        birdieBubble = birdie.transform.GetChild(1).gameObject; 
-        npcBubble = this.transform.GetChild(1).gameObject;
-
         speakerUIBirdie = birdie.GetComponentInChildren<SpeakerUI>();
         speakerUINPC = GetComponentInChildren<SpeakerUI>();
 
