@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCInteractable : Interactable
+public class DialogueInteractable : Interactable
 {
-    // Handle the dialogue for this interactable
-    // In the future I want to incorporate Dialogue Display into this class 
-    public DialogueDisplay dialogue;
-
     public Conversation conversation;
 
-    public GameObject BirdieBubble;
-    public GameObject NPCBubble;
-
+    private GameObject NPCBubble;
+    private GameObject BirdieBubble;
     private SpeakerUI speakerUILeft;
     private SpeakerUI speakerUIRight;
 
@@ -20,15 +15,15 @@ public class NPCInteractable : Interactable
 
     public override void OnInteract(GameObject birdie)
     {
-        BirdieBubble = birdie.transform.GetChild(1).gameObject;
+        BirdieBubble = birdie.transform.GetChild(1).gameObject; 
+        NPCBubble = this.transform.GetChild(1).gameObject;
 
         speakerUILeft = BirdieBubble.GetComponent<SpeakerUI>();
         speakerUIRight = NPCBubble.GetComponent<SpeakerUI>();
 
-        print("dialogue enabled");
         HideInteractUI();
-
         AdvanceConversation();
+
         base.OnInteract(birdie);
     }
 
@@ -46,13 +41,11 @@ public class NPCInteractable : Interactable
             speakerUILeft.Hide();
             speakerUIRight.Hide();
             activeLineIndex = 0;
-            
         }
     }
 
     void DisplayLine() {
         Line line = conversation.lines[activeLineIndex];
-        // Speaker npc = line.speaker;
         bool isBirdie = line.isBirdie;
 
         if (isBirdie)
@@ -61,7 +54,6 @@ public class NPCInteractable : Interactable
         } 
         else {
             SetDialogue(speakerUIRight, speakerUILeft, line.text);
-            
         }
     }
 

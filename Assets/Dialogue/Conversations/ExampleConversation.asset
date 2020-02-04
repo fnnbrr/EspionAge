@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85ee462f4b7334f118fe3d0f9f6176c1, type: 3}
-  m_Name: New Conversation
+  m_Name: ExampleConversation
   m_EditorClassIdentifier: 
-  Birdie: {fileID: 0}
-  NPC: {fileID: 0}
-  lines: []
+  lines:
+  - isBirdie: 0
+    text: hey
+  - isBirdie: 1
+    text: what
