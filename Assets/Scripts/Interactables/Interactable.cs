@@ -5,21 +5,18 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
-    private Animator interactableAnim;
-    private RectTransform interactTransform;
-    private bool interactableOn = false;
     private GameObject player;
+
+    // Must attach in instances in the inspector
+    public Animator interactableAnim;
+    public RectTransform interactTransform;
+
+    private bool interactableOn = false;
+    
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
-
-    // Start is called before the first frame update
-    protected void Start()
-    {
-        interactableAnim = GetComponentInChildren<Animator>();
-        interactTransform = GetComponentInChildren<RectTransform>();
-    }
 
     protected void Update()
     {
@@ -94,20 +91,39 @@ public class Interactable : MonoBehaviour, IInteractable
 
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
-        player.transform.rotation = Quaternion.Slerp(player.transform.rotation, rotation, 1);
-        // TODO: Animation of facing the interactable
+        // Animation of facing the interactable
+        // Possible issue to prevent another coroutine being called if player is already rotating
+        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed));
 
+    }
+
+    // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
+    private IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed)
+    {
+        Quaternion startRotation = obj.transform.rotation;
+
+        float t = 0;
+    
+        while (Mathf.Abs(Mathf.DeltaAngle(obj.transform.eulerAngles.y, desiredRotation.eulerAngles.y)) > 1.0f)
+        {
+            obj.transform.rotation = Quaternion.Slerp(startRotation, desiredRotation, t);
+            t += Time.deltaTime * turnSpeed;
+
+            yield return null;
+        }
 
     }
 
 
     private void ShowInteractUI()
     {
+        interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
     }
 
     private void HideInteractUI()
     {
+        interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
     }
 }
