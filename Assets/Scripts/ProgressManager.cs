@@ -6,46 +6,64 @@ using UnityEngine;
 public class ProgressManager: Singleton<ProgressManager>
 {
     // This is done in Mission Manager
-    // Keep track of all obtained missions
-    // Mission is obtained when from an interactable
-    // Missions should also be an interactable which checks if mission is obtained (must talk with group)
+        // Keep track of all obtained missions
+        // Mission is obtained when from an interactable
+        // Missions should also be an interactable which checks if mission is obtained (must talk with group)
 
-    // Dialogue should differ based on if they obtained the mission or not (most likely called in Interactable)
-    // Keep track of completed missions
     // Should communicate with Dialogue System on what dialogue should show when interacting with same interactable
-    private List<InProgressMissionContainer> completedMissions;
+    // Needed to communicate with the dialogue system
+    public List<InProgressMissionContainer> completedMissions;
 
     // Mission manager would have a collectible as a prefab that would be able to unlock upon mission complete
      
     [HideInInspector]
-    public bool allStamps = false;
+    public bool allStampsUnlocked = false;
 
-    // List of collectibles needed to be able to add stamps in the inspector
-    public List<Collectible> stampCollectibles;
-    public Dictionary<Collectible, bool> stampsUnlockStatus;
+    public List<Collectible> stampCollectibles;                        // List of collectibles needed to be able to add stamps in the inspector
+    public Dictionary<Collectible, bool> stampsUnlockStatus;           // Use a dictinoary to keep track of what stamps are unlocked
+
 
     void Start()
     {
+        stampsUnlockStatus = new Dictionary<Collectible, bool>();
+
+        // All stamp collectibles are set to locked (false) at beginning of game
         foreach(Collectible stamp in stampCollectibles)
         {
             stampsUnlockStatus.Add(stamp, false);
         }
+
+        completedMissions = new List<InProgressMissionContainer>();
     }
 
-    // Change this to unlock stamp collectible that checks if stamp exists and unlocks it (should be called elsewhere)
+  
     public void UnlockStampCollectible(Collectible stamp)
     {
         if(!stampsUnlockStatus.ContainsKey(stamp))
         {
             Debug.Log("Cannot find stamp collectible from all unlockable stamps");
+            return; 
         }
         else
         {
             stampsUnlockStatus[stamp] = true;
+            Debug.Log("Unlocked " + stamp.collectibleName);
+
+            if(HasUnlockedAllStamps())
+            {
+                allStampsUnlocked = true;
+            }
         }
     }
 
-    // Returns all currently unlocked stamps
+
+    public bool HasUnlockedAllStamps()
+    {
+        return !stampsUnlockStatus.ContainsValue(false);
+    }
+
+
+    // Returns a list of all currently unlocked stamps
     public List<Collectible> GetUnlockedStamps()
     {
         List<Collectible> availableStamps = new List<Collectible>();
@@ -61,5 +79,10 @@ public class ProgressManager: Singleton<ProgressManager>
         return availableStamps;
     }
 
-    // Save/Load Progress (Look into Scriptable Objects)
+    //public void AddCompletedMission(InProgressMissionContainer completedMission)
+    //{
+    //    completedMissions.Add(completedMission);
+    //}
+
+    // TODO: Save/Load Progress (Look into Scriptable Objects)
 }
