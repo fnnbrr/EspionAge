@@ -6,20 +6,25 @@ public class DialogueInteractable : Interactable
 {
     public Conversation conversation;
 
-    private GameObject NPCBubble;
-    private GameObject BirdieBubble;
-    private SpeakerUI speakerUILeft;
-    private SpeakerUI speakerUIRight;
+    private GameObject npcBubble;
+    private GameObject birdieBubble;
+    private SpeakerUI speakerUIBirdie;
+    private SpeakerUI speakerUINPC;
 
     private int activeLineIndex = 0;
 
     public override void OnInteract(GameObject birdie)
     {
-        BirdieBubble = birdie.transform.GetChild(1).gameObject; 
-        NPCBubble = this.transform.GetChild(1).gameObject;
+        birdieBubble = birdie.transform.GetChild(1).gameObject; 
+        npcBubble = this.transform.GetChild(1).gameObject;
 
-        speakerUILeft = BirdieBubble.GetComponent<SpeakerUI>();
-        speakerUIRight = NPCBubble.GetComponent<SpeakerUI>();
+        // speakerUIBirdie = birdie.GetComponentInChildren<SpeakerUI>();
+
+        speakerUIBirdie = birdieBubble.GetComponent<SpeakerUI>();
+        speakerUINPC = npcBubble.GetComponent<SpeakerUI>();
+
+        // speakerUILeft = birdie.GetComponentInChildren<SpeakerUI>.gameObject; 
+        // speakerUIRight = GetComponentInChildren<SpeakerUI>.gameObject;
 
         HideInteractUI();
         AdvanceConversation();
@@ -38,8 +43,8 @@ public class DialogueInteractable : Interactable
         {
             //Once the conversation is over 
             //what happens 
-            speakerUILeft.Hide();
-            speakerUIRight.Hide();
+            speakerUIBirdie.Hide();
+            speakerUINPC.Hide();
             activeLineIndex = 0;
         }
     }
@@ -50,10 +55,10 @@ public class DialogueInteractable : Interactable
 
         if (isBirdie)
         {
-            SetDialogue(speakerUILeft, speakerUIRight, line.text);
+            SetDialogue(speakerUIBirdie, speakerUINPC, line.text);
         } 
         else {
-            SetDialogue(speakerUIRight, speakerUILeft, line.text);
+            SetDialogue(speakerUINPC, speakerUIBirdie, line.text);
         }
     }
 

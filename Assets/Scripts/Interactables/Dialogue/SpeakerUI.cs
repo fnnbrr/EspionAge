@@ -11,22 +11,20 @@ public class SpeakerUI : MonoBehaviour
     
     private Vector3 textPosition;
 
-    void Start()
-    {
-        this.Hide();
-    }
-
     public string Dialogue
     {
         set { dialogue.text = value;}
     }
 
+    void Start()
+    {
+        this.Hide();
+    }
+
     public void Update()
     {
-
-        textPosition = Camera.main.WorldToScreenPoint(this.transform.position);
+        textPosition = Camera.main.WorldToScreenPoint(transform.position);
         textBoxContainer.transform.position = textPosition;
-
     }
 
     public void Show()
