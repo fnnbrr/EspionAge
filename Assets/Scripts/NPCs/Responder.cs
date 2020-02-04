@@ -3,42 +3,46 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-public class NurseRespond : MonoBehaviour
+public class Responder : Chaser
 {
+    [Header("Responder")]
     public Transform responsePoint;
     public SphereCollider wanderBounds;
-
-    [Header("Chase")]
-    public bool chase = true;
-    public Transform targetTransform;
     public float waypointPauseSec = 1.0f;
     private float waypointPauseTimer;
 
-    public enum NurseStates
+    public enum ActionStates
     {
         Responding,
         Wandering,
         Chasing
     }
     [Header("For Debugging")]
-    [SerializeField] public NurseStates currentState = NurseStates.Responding;
-
-    private NavMeshAgent agent;
+    [SerializeField] public ActionStates currentState = ActionStates.Responding;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        base.Start();
         waypointPauseTimer = waypointPauseSec;
 
         agent.SetDestination(responsePoint.position);
-
-        // Disabling auto-braking allows for continuous movement
-        // between points (ie, the agent doesn't slow down as it
-        // approaches a destination point).
-        agent.autoBraking = false;
     }
 
+    public override void HandleTargetsInRange(int numTargetsInRange)
+    {
+        if (chase && numTargetsInRange > 0 && currentState != ActionStates.Chasing)
+        {
+            ChaseTarget();
+            currentState = ActionStates.Chasing;
+        }
+        else if (numTargetsInRange == 0 && currentState == ActionStates.Chasing)
+        {
+            GotoNextPoint();
+            currentState = ActionStates.Wandering;
+        }
+    }
+    
     bool WaypointPauseComplete()
     {
         waypointPauseTimer -= Time.deltaTime;
@@ -57,19 +61,9 @@ public class NurseRespond : MonoBehaviour
         float wanderRadius = wanderBounds.radius;
         Vector3 randomMovement = Random.insideUnitSphere * wanderRadius + wanderBounds.center;
 
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(randomMovement, out navHit, wanderRadius, -1);
+        NavMesh.SamplePosition(randomMovement, out NavMeshHit navHit, wanderRadius, -1);
  
         agent.SetDestination(navHit.position);
-    }
-
-    public void ChaseTarget()
-    {
-        Vector3 targetPosition = targetTransform.position;
-        Vector3 dirToTarget = transform.position - targetPosition;
-        Vector3 newPos = transform.position - dirToTarget;
-
-        agent.SetDestination(newPos);
     }
 
     void Update()
@@ -78,18 +72,18 @@ public class NurseRespond : MonoBehaviour
         {
             switch (currentState)
             {
-                case NurseStates.Wandering:
+                case ActionStates.Wandering:
                     // Choose the next destination point when the agent gets close to the current one.
                     if (WaypointPauseComplete())
                     {
                         GotoNextPoint();
                     }
                     break;
-                case NurseStates.Chasing:
+                case ActionStates.Chasing:
                     ChaseTarget();
                     break;
-                case NurseStates.Responding:
-                    currentState = NurseStates.Wandering;
+                case ActionStates.Responding:
+                    currentState = ActionStates.Wandering;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

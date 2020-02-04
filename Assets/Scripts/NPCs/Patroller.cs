@@ -1,34 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class NursePatrol : MonoBehaviour
+public class Patroller : Chaser
 {
+    [Header("Patroller")]
     public Transform patrolWaypoints;
-
-    [Header("Chase")]
-    public bool chase = true;
-    public Transform targetTransform;
     public float waypointPauseSec = 1.0f;
     private float waypointPauseTimer;
 
-    public enum NurseStates
+    public enum ActionStates
     {
         Patrolling,
         Chasing
     }
     [Header("For Debugging")]
-    [SerializeField] public NurseStates currentState = NurseStates.Patrolling;
+    [SerializeField] public ActionStates currentState = ActionStates.Patrolling;
 
-    private NavMeshAgent agent;
     private List<Vector3> points = new List<Vector3>();
     private int destinationCount;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        base.Start();
         waypointPauseTimer = waypointPauseSec;
 
         if (patrolWaypoints)
@@ -38,11 +32,6 @@ public class NursePatrol : MonoBehaviour
                 points.Add(childWaypoint.position);
             }
         }
-
-        // Disabling auto-braking allows for continuous movement
-        // between points (ie, the agent doesn't slow down as it
-        // approaches a destination point).
-        agent.autoBraking = false;
     }
 
     public void SetPoints(List<Vector3> newPoints)
@@ -51,17 +40,17 @@ public class NursePatrol : MonoBehaviour
         points = new List<Vector3>(newPoints);
     }
 
-    public void HandleTargetsInRange(int numTargetsInRange)
+    public override void HandleTargetsInRange(int numTargetsInRange)
     {
-        if (chase && numTargetsInRange > 0 && currentState != NurseStates.Chasing)
+        if (chase && numTargetsInRange > 0 && currentState != ActionStates.Chasing)
         {
             ChaseTarget();
-            currentState = NurseStates.Chasing;
+            currentState = ActionStates.Chasing;
         }
-        else if (numTargetsInRange == 0 && currentState != NurseStates.Patrolling)
+        else if (numTargetsInRange == 0 && currentState != ActionStates.Patrolling)
         {
             GotoNextPoint();
-            currentState = NurseStates.Patrolling;
+            currentState = ActionStates.Patrolling;
         }
     }
 
@@ -92,32 +81,21 @@ public class NursePatrol : MonoBehaviour
         destinationCount++;
     }
 
-    public void ChaseTarget()
-    {
-        Vector3 targetPosition = targetTransform.position;
-        Vector3 dirToTarget = transform.position - targetPosition;
-        Vector3 newPos = transform.position - dirToTarget;
-
-        agent.SetDestination(newPos);
-    }
-
     void Update()
     {
         if (agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < 0.5f)
         {
             switch (currentState)
             {
-                case NurseStates.Patrolling:
+                case ActionStates.Patrolling:
                     // Choose the next destination point when the agent gets close to the current one.
                     if (WaypointPauseComplete())
                     {
                         GotoNextPoint();
                     }
                     break;
-                case NurseStates.Chasing:
+                case ActionStates.Chasing:
                     ChaseTarget();
-                    break;
-                default:
                     break;
             }
         }

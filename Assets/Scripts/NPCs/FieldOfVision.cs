@@ -18,7 +18,7 @@ public class FieldOfVision : MonoBehaviour
 	public int edgeResolveInterations;
 	public float edgeDstThreshold;
 
-	public NursePatrol nursePatrol;
+	public Chaser chaser;
 
 	[Header("View Mesh Options")]
 	public GameObject viewMeshObject;
@@ -31,7 +31,7 @@ public class FieldOfVision : MonoBehaviour
 
 	void Start()
 	{
-		nursePatrol = Utils.GetRequiredComponent<NursePatrol>(this);
+		chaser = Utils.GetRequiredComponent<Chaser>(this);
 
 		viewMeshFilter = Utils.GetRequiredComponent<MeshFilter>(viewMeshObject);
 		viewMesh = new Mesh();
@@ -92,7 +92,7 @@ public class FieldOfVision : MonoBehaviour
 		}
 
 		// Can also do stuff with visibleTargets.Count
-		nursePatrol.HandleTargetsInRange(visibleTargets.Count);
+		chaser.HandleTargetsInRange(visibleTargets.Count);
 	}
 
 	void UpdateViewColor()
