@@ -2,14 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
 public class ProgressManager: Singleton<ProgressManager>
 {
-    // Comments below is done in Mission Manager
-        // Keep track of all obtained missions
-        // Mission is obtained from an interactable
-        // Missions should also be an interactable which checks if mission is obtained (must talk with group)
-
     // Should communicate with Dialogue System on what dialogue should show when interacting with same interactable
     // Needed to communicate with the dialogue system
     public List<InProgressMissionContainer> completedMissions;
