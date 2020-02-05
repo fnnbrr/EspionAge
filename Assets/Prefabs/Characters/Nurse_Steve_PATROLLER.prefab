@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: 4186571339833994720}
   - component: {fileID: 5638750586541568652}
   m_Layer: 0
-  m_Name: Nurse_Steve
+  m_Name: Nurse_Steve_PATROLLER
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,14 +142,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aa4d8b954fa3463184904c91f0af637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 10
+  viewRadius: 12
   viewAngle: 90
   targetMask:
     serializedVersion: 2
     m_Bits: 256
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 1024
   visibleTargets: []
   meshResolution: 1
   edgeResolveInterations: 4

@@ -199,6 +199,8 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             int interactableIndex = instantiatedMissionInteractables.IndexOf(interactable.gameObject);
 
             SpawnEnemies(missionCriticalInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
+
+            StartCoroutine(CameraManager.Instance.BlendToFarCameraForSeconds(2));
         }
 
         // Probably TEMP solution for after interacting
