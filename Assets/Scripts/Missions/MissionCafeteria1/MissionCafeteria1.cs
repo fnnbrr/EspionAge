@@ -37,7 +37,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     public List<MissionInteractable> missionInteractables;
 
     private List<GameObject> instantiatedMissionInteractables;
-    private List<NursePatrol> instantiatedEnemies;
+    private List<Patroller> instantiatedEnemies;
     private int interactedCount = 0;
 
     // TODO: Remove all properties below when interactables are implemented
@@ -48,7 +48,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     private void Awake()
     {
         instantiatedMissionInteractables = new List<GameObject>();
-        instantiatedEnemies = new List<NursePatrol>();
+        instantiatedEnemies = new List<Patroller>();
     }
 
     ////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             if (NavMesh.SamplePosition(enemy.spawnPosition, out NavMeshHit closestNavmeshHit, 10.0f, NavMesh.AllAreas))
             {
                 GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
-                NursePatrol patrol = Utils.GetRequiredComponent<NursePatrol>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a NursePatrol component!");
+                Patroller patrol = Utils.GetRequiredComponent<Patroller>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Patroller component!");
 
                 patrol.targetTransform = GameManager.Instance.GetPlayerTransform();
                 patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
