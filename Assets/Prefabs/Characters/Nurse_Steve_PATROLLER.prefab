@@ -88,10 +88,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3862208129692031435}
   - component: {fileID: 3862208129692031430}
-  - component: {fileID: 5835305656985638988}
   - component: {fileID: 8073768096790006290}
   - component: {fileID: 2450668294617206675}
   - component: {fileID: 4186571339833994720}
+  - component: {fileID: 5638750586541568652}
   m_Layer: 0
   m_Name: Nurse_Steve
   m_TagString: Enemy
@@ -130,23 +130,6 @@ CapsuleCollider:
   m_Height: 2.184714
   m_Direction: 1
   m_Center: {x: 0, y: 1.1675085, z: 0}
---- !u!114 &5835305656985638988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3862208129692031431}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bd9598d4e3cacb49b1021fd8b165e4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrolWaypoints: {fileID: 0}
-  chase: 1
-  targetTransform: {fileID: 0}
-  waypointPauseSec: 1
-  currentState: 0
 --- !u!114 &8073768096790006290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +154,6 @@ MonoBehaviour:
   meshResolution: 1
   edgeResolveInterations: 4
   edgeDstThreshold: 0.5
-  nursePatrol: {fileID: 5835305656985638988}
   viewMeshObject: {fileID: 263059885}
   defaultMaterial: {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
   spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
@@ -246,6 +228,24 @@ MonoBehaviour:
   m_UseImpactDirection: 0
   m_ScaleImpactWithMass: 0
   m_ScaleImpactWithSpeed: 0
+--- !u!114 &5638750586541568652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bbd1dc618b965549a3f827dce25aa6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chase: 1
+  targetTransform: {fileID: 0}
+  agent: {fileID: 0}
+  patrolWaypoints: {fileID: 0}
+  waypointPauseSec: 1
+  currentState: 0
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0

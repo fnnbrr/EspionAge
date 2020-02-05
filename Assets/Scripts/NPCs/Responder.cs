@@ -11,6 +11,11 @@ public class Responder : Chaser
     public float waypointPauseSec = 1.0f;
     private float waypointPauseTimer;
 
+    private Vector3 responsePointPosition;
+    private Vector3 wanderBoundsPosition;
+    private float wanderBoundsRadius;
+    private Vector3 wanderBoundsCenter = Vector3.zero;
+
     public enum ActionStates
     {
         Responding,
@@ -26,7 +31,21 @@ public class Responder : Chaser
         base.Start();
         waypointPauseTimer = waypointPauseSec;
 
-        agent.SetDestination(responsePoint.position);
+        if (responsePoint)
+        {
+            agent.SetDestination(responsePoint.position);
+        }
+        else
+        {
+            agent.SetDestination(responsePointPosition);
+        }
+
+        if (wanderBounds)
+        {
+            wanderBoundsPosition = wanderBounds.transform.position;
+            wanderBoundsRadius = wanderBounds.radius;
+            wanderBoundsCenter = wanderBounds.center;
+        }
     }
 
     public override void HandleTargetsInRange(int numTargetsInRange)
@@ -55,13 +74,23 @@ public class Responder : Chaser
         waypointPauseTimer = waypointPauseSec;
         return true;
     }
+
+    public void UpdateWanderParameters(Vector3 position, float radius)
+    {
+        wanderBoundsPosition = position;
+        wanderBoundsRadius = radius;
+    }
+
+    public void GoToPoint(Vector3 point)
+    {
+        responsePointPosition = point;
+    }
     
     void GotoNextPoint()
     {
-        float wanderRadius = wanderBounds.radius;
-        Vector3 randomMovement = Random.insideUnitSphere * wanderRadius + wanderBounds.center;
+        Vector3 randomMovement = wanderBoundsPosition + Random.insideUnitSphere * wanderBoundsRadius + wanderBoundsCenter;
 
-        if (!NavMesh.SamplePosition(randomMovement, out NavMeshHit navHit, wanderRadius, -1))
+        if (!NavMesh.SamplePosition(randomMovement, out NavMeshHit navHit, wanderBoundsRadius, -1))
         {
             throw new UnityException("NavMesh.SamplePosition failed");
         }

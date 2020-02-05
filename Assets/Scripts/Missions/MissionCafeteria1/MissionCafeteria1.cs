@@ -23,10 +23,31 @@ public class MissionEnemy
         public float stayTime;
     }
 
+    [System.Serializable]
+    public class ResponderWanderBounds
+    {
+        public Vector3 position;
+        public float radius;
+    }
+
+    public enum EnemyType
+    {
+        Patroller,
+        Responder
+    }
+    [SerializeField] public EnemyType enemyType;
+
+    [Header("Generic Enemy Settings")]
     public GameObject prefab;
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
-    public List<EnemyWaypoint> waypoints; 
+
+    [Header("Specific Patroller Settings")]
+    public List<EnemyWaypoint> waypoints;
+
+    [Header("Specific Responder Settings")]
+    public Vector3 startResponsePoint;
+    public ResponderWanderBounds wanderBounds;
 }
 
 public class MissionCafeteria1 : MonoBehaviour, IMission
@@ -37,7 +58,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     public List<MissionInteractable> missionInteractables;
 
     private List<GameObject> instantiatedMissionInteractables;
-    private List<Patroller> instantiatedEnemies;
+    private List<Chaser> instantiatedEnemies;
     private int interactedCount = 0;
 
     // TODO: Remove all properties below when interactables are implemented
@@ -48,7 +69,9 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     private void Awake()
     {
         instantiatedMissionInteractables = new List<GameObject>();
-        instantiatedEnemies = new List<Patroller>();
+
+        // TODO: this should probably be changed to a generic enemy type at some point
+        instantiatedEnemies = new List<Chaser>();
     }
 
     ////////////////////////////////////////////////////
@@ -108,12 +131,29 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             if (NavMesh.SamplePosition(enemy.spawnPosition, out NavMeshHit closestNavmeshHit, 10.0f, NavMesh.AllAreas))
             {
                 GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
-                Patroller patrol = Utils.GetRequiredComponent<Patroller>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Patroller component!");
 
-                patrol.targetTransform = GameManager.Instance.GetPlayerTransform();
-                patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+                switch (enemy.enemyType)
+                {
+                    case MissionEnemy.EnemyType.Patroller:
+                        Patroller patrol = Utils.GetRequiredComponent<Patroller>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Patroller component!");
 
-                instantiatedEnemies.Add(patrol);
+                        patrol.targetTransform = GameManager.Instance.GetPlayerTransform();
+                        patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+
+                        instantiatedEnemies.Add(patrol);
+                        break;
+                    case MissionEnemy.EnemyType.Responder:
+                        Responder responder = Utils.GetRequiredComponent<Responder>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Responder component!");
+
+                        responder.GoToPoint(enemy.startResponsePoint);
+                        responder.UpdateWanderParameters(enemy.wanderBounds.position, enemy.wanderBounds.radius);
+
+                        instantiatedEnemies.Add(responder);
+                        break;
+                    default:
+                        Debug.LogError($"Unknown enemy type: {enemy.enemyType}!");
+                        break;
+                }
             }
             else
             {
