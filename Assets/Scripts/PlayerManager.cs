@@ -15,9 +15,12 @@ public class PlayerManager : MonoBehaviour
     public float angleIncreaseSpeed = 45f;
     public float minThrowAngle = 0f;
     public float maxThrowAngle = 90f;
+    public float minThrowVelocity = 10f;
+    public float maxThrowVelocity = 20f;
 
     private LaunchArcRenderer launchArcRenderer;
     private List<GameObject> currentThrowables;
+    private bool isThrowing = false;
     private float startThrowTime;
 
     private List<Coroutine> spawnedCoroutines;
@@ -27,6 +30,8 @@ public class PlayerManager : MonoBehaviour
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
         currentThrowables = new List<GameObject>();
         spawnedCoroutines = new List<Coroutine>();
+
+        UIManager.Instance.staminaBar.OnChange += UpdateThrowVelocity;
     }
 
     private void Update()
@@ -36,8 +41,6 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.DrawRay(throwPosition.position, Quaternion.AngleAxis((launchArcRenderer.angle % 180f) - 90, launchArcRenderer.transform.forward) * launchArcRenderer.transform.up * launchArcRenderer.velocity * throwMultiplier);
-
         HandleDecreaseAwakeness();
 
         float minDistance = DistToClosestEnemy();
@@ -48,22 +51,42 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    private void UpdateThrowVelocity(float fillAmount)
+    {
+        launchArcRenderer.velocity = Mathf.Lerp(minThrowVelocity, maxThrowVelocity, fillAmount / StaminaBar.STAMINA_MAX);
+    }
+
     private void HandleThrowInput()
     {
         if (launchArcRenderer && currentThrowables.Count > 0)
         {
-            if (Input.GetButtonDown(Constants.INPUT_THROW_GETDOWN))
+            float throwAxisValue = Input.GetAxis(Constants.INPUT_THROW_GETDOWN);
+
+            // This means that we either just let go, or like were never pressing in the first place...
+            if (Mathf.Approximately(throwAxisValue, 0f))
             {
-                startThrowTime = Time.time;
+                // So we check if we were previously throwing (so this means we just let go)
+                if (isThrowing)
+                {
+                    // If so, then throw the object!!
+                    isThrowing = false;
+                    ThrowNext();
+                }
             }
-            if (Input.GetButton(Constants.INPUT_THROW_GETDOWN))
+            else
             {
-                startThrowTime += angleIncreaseSpeed * Time.deltaTime;
-                launchArcRenderer.RenderArc(Mathf.PingPong(startThrowTime, maxThrowAngle - minThrowAngle) + minThrowAngle);
-            }
-            if (Input.GetButtonUp(Constants.INPUT_THROW_GETDOWN))
-            {
-                ThrowNext();
+                // If we are holding the button, then ping pong the launch arc angle
+                if (isThrowing)
+                {
+                    startThrowTime += angleIncreaseSpeed * Time.deltaTime;
+                    launchArcRenderer.RenderArc(Mathf.PingPong(startThrowTime, maxThrowAngle - minThrowAngle) + minThrowAngle);
+                }
+                // Otherwise, we started holding just now, so let's record the start time and stuff
+                else
+                {
+                    isThrowing = true;
+                    startThrowTime = Time.time;
+                }
             }
         }
     }
