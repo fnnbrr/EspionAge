@@ -11,19 +11,19 @@ public class ProgressManager: Singleton<ProgressManager>
     [HideInInspector]
     public bool allStampsUnlocked = false;
 
-    public List<Collectible> stampCollectibles;                        // List of collectibles needed to be able to add stamps in the inspector
-    public Dictionary<Collectible, bool> stampsUnlockStatus;           // Use a dictinoary to keep track of what stamps are unlocked
+    public List<StampCollectible> stampCollectibles;                        // List of collectibles needed to be able to add stamps in the inspector
+    public Dictionary<StampCollectible, bool> stampsUnlockStatus;           // Use a dictinoary to keep track of what stamps are unlocked
 
-    public List<Collectible> bingoBallCollectibles;                    // List of collectibles needed to be able to add bingo balls in the inspector
-    public Dictionary<Collectible, bool> bingoBallsUnlockStatus;        // Keeps track of unlock status for bingo balls
+    public List<BingoBallCollectible> bingoBallCollectibles;                    // List of collectibles needed to be able to add bingo balls in the inspector
+    public Dictionary<BingoBallCollectible, bool> bingoBallsUnlockStatus;        // Keeps track of unlock status for bingo balls
 
 
     void Start()
     {
-        stampsUnlockStatus = new Dictionary<Collectible, bool>();
+        stampsUnlockStatus = new Dictionary<StampCollectible, bool>();
 
         // All stamp collectibles are set to locked (false) at beginning of game
-        foreach(Collectible stamp in stampCollectibles)
+        foreach(StampCollectible stamp in stampCollectibles)
         {
             stampsUnlockStatus.Add(stamp, false);
         }
@@ -32,7 +32,7 @@ public class ProgressManager: Singleton<ProgressManager>
     }
 
   
-    public void UnlockStampCollectible(Collectible stamp)
+    public void UnlockStampCollectible(StampCollectible stamp)
     {
         if(!stampsUnlockStatus.ContainsKey(stamp))
         {
@@ -59,11 +59,11 @@ public class ProgressManager: Singleton<ProgressManager>
 
 
     // Returns a list of all currently unlocked stamps
-    public List<Collectible> GetUnlockedStamps()
+    public List<StampCollectible> GetUnlockedStamps()
     {
-        List<Collectible> availableStamps = new List<Collectible>();
+        List<StampCollectible> availableStamps = new List<StampCollectible>();
 
-        foreach(KeyValuePair<Collectible, bool> stamp in stampsUnlockStatus)
+        foreach(KeyValuePair<StampCollectible, bool> stamp in stampsUnlockStatus)
         {
             if(stamp.Value)
             {
@@ -75,7 +75,7 @@ public class ProgressManager: Singleton<ProgressManager>
     }
 
 
-    public void UnlockBingoBallCollectible(Collectible bingoBall)
+    public void UnlockBingoBallCollectible(BingoBallCollectible bingoBall)
     {
         if (!bingoBallsUnlockStatus.ContainsKey(bingoBall))
         {
@@ -90,7 +90,7 @@ public class ProgressManager: Singleton<ProgressManager>
     }
 
 
-    public bool HasUnlockedBingoBall(Collectible bingoBall)
+    public bool HasUnlockedBingoBall(BingoBallCollectible bingoBall)
     {
         if(!bingoBallsUnlockStatus.ContainsKey(bingoBall))
         {
