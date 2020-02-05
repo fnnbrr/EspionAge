@@ -12,7 +12,7 @@ public abstract class Chaser : MonoBehaviour
     // Start is called before the first frame update
     public void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
 
         // Disabling auto-braking allows for continuous movement
         // between points (ie, the agent doesn't slow down as it

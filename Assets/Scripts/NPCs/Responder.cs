@@ -61,7 +61,10 @@ public class Responder : Chaser
         float wanderRadius = wanderBounds.radius;
         Vector3 randomMovement = Random.insideUnitSphere * wanderRadius + wanderBounds.center;
 
-        NavMesh.SamplePosition(randomMovement, out NavMeshHit navHit, wanderRadius, -1);
+        if (!NavMesh.SamplePosition(randomMovement, out NavMeshHit navHit, wanderRadius, -1))
+        {
+            throw new UnityException("NavMesh.SamplePosition failed");
+        }
  
         agent.SetDestination(navHit.position);
     }

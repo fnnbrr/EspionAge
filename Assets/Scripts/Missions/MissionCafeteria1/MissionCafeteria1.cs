@@ -108,7 +108,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             if (NavMesh.SamplePosition(enemy.spawnPosition, out NavMeshHit closestNavmeshHit, 10.0f, NavMesh.AllAreas))
             {
                 GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
-                Patroller patrol = Utils.GetRequiredComponent<Patroller>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a NursePatrol component!");
+                Patroller patrol = Utils.GetRequiredComponent<Patroller>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Patroller component!");
 
                 patrol.targetTransform = GameManager.Instance.GetPlayerTransform();
                 patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());

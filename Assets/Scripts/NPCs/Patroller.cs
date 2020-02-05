@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Patroller : Chaser
@@ -97,6 +98,8 @@ public class Patroller : Chaser
                 case ActionStates.Chasing:
                     ChaseTarget();
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
