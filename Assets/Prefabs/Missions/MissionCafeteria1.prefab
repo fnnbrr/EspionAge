@@ -60,7 +60,7 @@ MonoBehaviour:
     wanderBounds:
       position: {x: 0, y: 0, z: 0}
       radius: 0
-  missionInteractables:
+  missionCriticalInteractables:
   - prefab: {fileID: 889763838926089807, guid: ef467d744abab4d98b6af885c5c29893, type: 3}
     position: {x: 40.5, y: 5.5, z: 5}
     rotation: {x: 0, y: 0, z: 0}
@@ -68,22 +68,26 @@ MonoBehaviour:
     - enemyType: 1
       prefab: {fileID: 7003268395918406997, guid: 049751ea334d91849a1ca12394fe438d,
         type: 3}
-      spawnPosition: {x: -85, y: 3, z: -36}
+      spawnPosition: {x: -85, y: 0, z: -36}
       spawnRotation: {x: 0, y: 0, z: 0}
       waypoints: []
-      startResponsePoint: {x: 40, y: 2.77844, z: 4}
+      startResponsePoint: {x: 33, y: 0, z: 28}
       wanderBounds:
-        position: {x: 33, y: 0, z: 28}
+        position: {x: 0, y: 0, z: 0}
         radius: 30
     - enemyType: 1
       prefab: {fileID: 7003268395918406997, guid: 049751ea334d91849a1ca12394fe438d,
         type: 3}
-      spawnPosition: {x: -85, y: 3, z: 36}
+      spawnPosition: {x: -85, y: 0, z: 36}
       spawnRotation: {x: 0, y: 0, z: 0}
       waypoints: []
-      startResponsePoint: {x: 40, y: 2.77844, z: 4}
+      startResponsePoint: {x: 26, y: 0, z: -24}
       wanderBounds:
-        position: {x: 26, y: 0, z: -24}
+        position: {x: 0, y: 0, z: 0}
         radius: 30
+  missionObjects:
+  - prefab: {fileID: 889763838926089807, guid: ef467d744abab4d98b6af885c5c29893, type: 3}
+    position: {x: 37, y: 2, z: 40}
+    rotation: {x: 0, y: 0, z: 0}
   testOnCollectSpawning: 0
   interactableIndexToTest: 0

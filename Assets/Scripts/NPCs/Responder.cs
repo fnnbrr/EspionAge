@@ -31,14 +31,8 @@ public class Responder : Chaser
         base.Start();
         waypointPauseTimer = waypointPauseSec;
 
-        if (responsePoint)
-        {
-            agent.SetDestination(responsePoint.position);
-        }
-        else
-        {
-            agent.SetDestination(responsePointPosition);
-        }
+        // If transform is set, then we can use it's position, otherwise we use responsePointPosition (used in missions)
+        agent.SetDestination(responsePoint ? responsePoint.position : responsePointPosition);
 
         if (wanderBounds)
         {
@@ -75,15 +69,11 @@ public class Responder : Chaser
         return true;
     }
 
-    public void UpdateWanderParameters(Vector3 position, float radius)
+    public void InitailizeResponderParameters(Vector3 responsePoint, Vector3 wanderPoint, float wanderRadius)
     {
-        wanderBoundsPosition = position;
-        wanderBoundsRadius = radius;
-    }
-
-    public void GoToPoint(Vector3 point)
-    {
-        responsePointPosition = point;
+        responsePointPosition = responsePoint;
+        wanderBoundsPosition = wanderPoint;
+        wanderBoundsRadius = wanderRadius;
     }
     
     void GotoNextPoint()
