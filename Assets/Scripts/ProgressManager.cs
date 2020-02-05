@@ -11,16 +11,19 @@ public class ProgressManager: Singleton<ProgressManager>
     [HideInInspector]
     public bool allStampsUnlocked = false;
 
-    public List<Collectible> stampCollectibles;                        // List of collectibles needed to be able to add stamps in the inspector
-    public Dictionary<Collectible, bool> stampsUnlockStatus;           // Use a dictinoary to keep track of what stamps are unlocked
+    public List<StampCollectible> stampCollectibles;                        // List of collectibles needed to be able to add stamps in the inspector
+    public Dictionary<StampCollectible, bool> stampsUnlockStatus;           // Use a dictinoary to keep track of what stamps are unlocked
+
+    public List<BingoBallCollectible> bingoBallCollectibles;                    // List of collectibles needed to be able to add bingo balls in the inspector
+    public Dictionary<BingoBallCollectible, bool> bingoBallsUnlockStatus;        // Keeps track of unlock status for bingo balls
 
 
     void Start()
     {
-        stampsUnlockStatus = new Dictionary<Collectible, bool>();
+        stampsUnlockStatus = new Dictionary<StampCollectible, bool>();
 
         // All stamp collectibles are set to locked (false) at beginning of game
-        foreach(Collectible stamp in stampCollectibles)
+        foreach(StampCollectible stamp in stampCollectibles)
         {
             stampsUnlockStatus.Add(stamp, false);
         }
@@ -29,11 +32,11 @@ public class ProgressManager: Singleton<ProgressManager>
     }
 
   
-    public void UnlockStampCollectible(Collectible stamp)
+    public void UnlockStampCollectible(StampCollectible stamp)
     {
         if(!stampsUnlockStatus.ContainsKey(stamp))
         {
-            Debug.Log("Cannot find stamp collectible from all unlockable stamps");
+            Debug.LogError("Cannot find stamp collectible from all unlockable stamps");
             return; 
         }
         else
@@ -56,11 +59,11 @@ public class ProgressManager: Singleton<ProgressManager>
 
 
     // Returns a list of all currently unlocked stamps
-    public List<Collectible> GetUnlockedStamps()
+    public List<StampCollectible> GetUnlockedStamps()
     {
-        List<Collectible> availableStamps = new List<Collectible>();
+        List<StampCollectible> availableStamps = new List<StampCollectible>();
 
-        foreach(KeyValuePair<Collectible, bool> stamp in stampsUnlockStatus)
+        foreach(KeyValuePair<StampCollectible, bool> stamp in stampsUnlockStatus)
         {
             if(stamp.Value)
             {
@@ -70,6 +73,36 @@ public class ProgressManager: Singleton<ProgressManager>
 
         return availableStamps;
     }
+
+
+    public void UnlockBingoBallCollectible(BingoBallCollectible bingoBall)
+    {
+        if (!bingoBallsUnlockStatus.ContainsKey(bingoBall))
+        {
+            Debug.LogError("Cannot find stamp collectible from all unlockable bingo balls");
+            return;
+        }
+        else
+        {
+            bingoBallsUnlockStatus[bingoBall] = true;
+            Debug.Log("Unlocked " + bingoBall.collectibleName);
+        }
+    }
+
+
+    public bool HasUnlockedBingoBall(BingoBallCollectible bingoBall)
+    {
+        if(!bingoBallsUnlockStatus.ContainsKey(bingoBall))
+        {
+            Debug.LogError("Bingo ball does not exist");
+            return false;
+        }
+        else
+        {
+            return bingoBallsUnlockStatus[bingoBall];
+        }
+    }
+
 
     // To be called in Mission Manager when mission is completed
     public void AddCompletedMission(InProgressMissionContainer completedMission)
