@@ -14,6 +14,7 @@ public static class Constants
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
 
     public const string INPUT_INTERACTABLE_GETDOWN = "Interact";
+    public const string INPUT_THROW_GETDOWN = "Fire1";
 
     public const string ASSET_PATH_MISSIONCAFETERIA1 = "Assets/Prefabs/Missions/MissionCafeteria1.prefab";
 
