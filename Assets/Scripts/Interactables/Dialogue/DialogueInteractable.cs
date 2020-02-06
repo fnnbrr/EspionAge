@@ -11,15 +11,15 @@ public class DialogueInteractable : Interactable
 
     private int activeLineIndex = 0;
 
-    public override void OnInteract(GameObject birdie)
+    public override void OnInteract()
     {
-        speakerUIBirdie = birdie.GetComponentInChildren<SpeakerUI>();
+        speakerUIBirdie = player.GetComponentInChildren<SpeakerUI>();
         speakerUINPC = GetComponentInChildren<SpeakerUI>();
 
         HideInteractUI();
         AdvanceConversation();
 
-        base.OnInteract(birdie);
+        base.OnInteract();
     }
 
     void AdvanceConversation() {

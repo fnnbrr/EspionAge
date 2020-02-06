@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
-    private GameObject player;
+    // TODO: player has already been assigned on trigger enter so remove passing it in for all functions
+    protected GameObject player;
 
     // Must attach in instances in the inspector
     public Animator interactableAnim;
@@ -31,7 +32,7 @@ public class Interactable : MonoBehaviour, IInteractable
             {
                 FaceInteractable();
 
-                OnInteract(player);
+                OnInteract();
             }
      
         }
@@ -65,7 +66,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
 
     // Handle the dialogue for this interactable
-    public virtual void OnInteract(GameObject birdie)
+    public virtual void OnInteract()
     {
         Debug.Log("Interacted");
 
@@ -93,12 +94,13 @@ public class Interactable : MonoBehaviour, IInteractable
 
         // Animation of facing the interactable
         // Possible issue to prevent another coroutine being called if player is already rotating
-        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed));
+        player.GetComponent<PlayerController>().CanMove = false;
+        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed, () => UnfreezePlayer()));
 
     }
 
     // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
-    private IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed)
+    protected IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed, Action onFinishCallback)
     {
         Quaternion startRotation = obj.transform.rotation;
 
@@ -112,8 +114,19 @@ public class Interactable : MonoBehaviour, IInteractable
             yield return null;
         }
 
+        // Prevents the user from rotating/moving while doing the rotation animation
+        onFinishCallback();
     }
 
+    private void UnfreezePlayer()
+    {
+        if (player != null)
+        {
+            Debug.LogError("Trying to access a player that has not been assigned");
+        }
+
+        player.GetComponent<PlayerController>().CanMove = true;
+    }
 
     private void ShowInteractUI()
     {

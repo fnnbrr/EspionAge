@@ -22,7 +22,7 @@ public class NPCInteractable : DialogueInteractable
     private IMission startedMission;                                 // started mission needed to end mission
 
 
-    public override void OnInteract(GameObject player)
+    public override void OnInteract()
     {
         // Load the conversation of the NPC based on mission progress
         if (missionsOffered.Count == 0)
@@ -69,7 +69,19 @@ public class NPCInteractable : DialogueInteractable
             }
         }
 
+        NPCFacePlayer();
+        base.OnInteract();
+    }
 
-        base.OnInteract(player);
+
+    // Makes player face interactable when they are interacted with
+    public void NPCFacePlayer()
+    {
+        Vector3 dirToFace = player.transform.position - transform.position;
+        dirToFace.y = 0f;
+
+        Quaternion rotation = Quaternion.LookRotation(dirToFace);
+
+        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed, () => { return; }));
     }
 }
