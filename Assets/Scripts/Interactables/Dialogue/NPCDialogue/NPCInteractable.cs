@@ -19,7 +19,7 @@ public class NPCInteractable : DialogueInteractable
 
     public List<MissionNPC> missionsOffered;
     private MissionNPC currentMissionNPC;                            // Current Mission given by this NPC (should only be 1 per NPC)
-    private IMission startedMission;                                 // started mission needed to end mission
+    private AMission startedMission;                                 // started mission needed to end mission
 
 
     public override void OnInteract()
@@ -43,6 +43,8 @@ public class NPCInteractable : DialogueInteractable
                 // Start mission and store reference because needed to end mission
                 startedMission = MissionManager.Instance.StartMission(currentMissionNPC.missionPrefab);
                 ProgressManager.Instance.AddMission(startedMission);
+                startedMission.OnMissionComplete += HandleOnMissionComplete;
+                startedMission.OnMissionReset += HandleOnMissionReset;
 
                 conversation = currentMissionNPC.beforeConvo;
 
@@ -58,6 +60,10 @@ public class NPCInteractable : DialogueInteractable
                 // Ends current mission with NPC
                 MissionManager.Instance.EndMission(startedMission);
                 ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Closed);
+
+                // Unsubscribe
+                startedMission.OnMissionComplete -= HandleOnMissionComplete;
+                startedMission.OnMissionReset -= HandleOnMissionReset;
                 startedMission = null;
                 
                 conversation = currentMissionNPC.afterConvo;
@@ -71,6 +77,16 @@ public class NPCInteractable : DialogueInteractable
 
         NPCFacePlayer();
         base.OnInteract();
+    }
+
+    private void HandleOnMissionReset()
+    {
+        ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Started);
+    }
+
+    private void HandleOnMissionComplete()
+    {
+        ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Completed);
     }
 
 

@@ -7,7 +7,7 @@ public class ProgressManager: Singleton<ProgressManager>
     // Should communicate with Dialogue System on what dialogue should show when interacting with same interactable
     // Needed to communicate with the dialogue system
     //public List<IMission> Missions;
-    private Dictionary<IMission, MissionStatusCode> MissionsStatus;
+    private Dictionary<AMission, MissionStatusCode> MissionsStatus;
      
     [HideInInspector]
     public bool allStampsUnlocked = false;
@@ -31,7 +31,7 @@ public class ProgressManager: Singleton<ProgressManager>
             stampsUnlockStatus.Add(stamp, false);
         }
 
-        MissionsStatus = new Dictionary<IMission, MissionStatusCode>();
+        MissionsStatus = new Dictionary<AMission, MissionStatusCode>();
     }
 
   
@@ -108,14 +108,14 @@ public class ProgressManager: Singleton<ProgressManager>
 
 
     // To be called in Mission Manager when mission is completed
-    public void AddMission(IMission mission)
+    public void AddMission(AMission mission)
     {
         MissionsStatus.Add(mission, MissionStatusCode.Started);
     }
 
 
     // Updates the status of the mission 
-    public void UpdateMissionStatus(IMission mission, MissionStatusCode status)
+    public void UpdateMissionStatus(AMission mission, MissionStatusCode status)
     {
         if (!MissionsStatus.ContainsKey(mission))
         {
@@ -126,7 +126,7 @@ public class ProgressManager: Singleton<ProgressManager>
         MissionsStatus[mission] = status;
     }
 
-    public MissionStatusCode GetMissionStatus(IMission mission)
+    public MissionStatusCode GetMissionStatus(AMission mission)
     {
         return MissionsStatus[mission];
     }
