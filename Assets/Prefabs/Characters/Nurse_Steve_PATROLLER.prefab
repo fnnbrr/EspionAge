@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 2651794029040270326}
   - component: {fileID: 6515904890622739506}
   - component: {fileID: 7049685978079145166}
-  - component: {fileID: 5936780481275588733}
+  - component: {fileID: 6016702134282003319}
   m_Layer: 0
   m_Name: FMODCaughtParam
   m_TagString: Untagged
@@ -275,8 +275,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4848029577287680884}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6.696002, y: 6.696002, z: 6.696002}
+  m_LocalPosition: {x: 0, y: 0, z: 2.34}
+  m_LocalScale: {x: 4.65231, y: 4.65231, z: 4.65231}
   m_Children: []
   m_Father: {fileID: 3862208129692031435}
   m_RootOrder: 2
@@ -352,12 +352,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionTag: 
+  CollisionTag: Player
   Emitters:
   - Target: {fileID: 0}
     Params: []
-  TriggerEvent: 0
---- !u!114 &5936780481275588733
+  - Target: {fileID: 0}
+    Params:
+    - Name: playerCaught
+      Value: 1
+  TriggerEvent: 3
+--- !u!114 &6016702134282003319
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -369,11 +373,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollisionTag: 
+  CollisionTag: Player
   Emitters:
   - Target: {fileID: 0}
     Params: []
-  TriggerEvent: 0
+  - Target: {fileID: 0}
+    Params:
+    - Name: playerCaught
+      Value: 0
+  TriggerEvent: 4
 --- !u!1001 &3423866236558735661
 PrefabInstance:
   m_ObjectHideFlags: 0
