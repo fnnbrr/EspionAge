@@ -9,7 +9,9 @@ public abstract class Chaser : MonoBehaviour
     
     [HideInInspector] public NavMeshAgent agent;
 
-    // Start is called before the first frame update
+    public delegate void CollideWithPlayerAction();
+    public event CollideWithPlayerAction OnCollideWithPlayer;
+
     public void Start()
     {
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
@@ -30,5 +32,13 @@ public abstract class Chaser : MonoBehaviour
         Vector3 newPos = thisPosition - dirToTarget;
 
         agent.SetDestination(newPos);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
+        {
+            OnCollideWithPlayer();
+        }
     }
 }

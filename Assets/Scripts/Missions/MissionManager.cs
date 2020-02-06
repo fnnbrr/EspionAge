@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class InProgressMissionContainer
 {
-    public IMission mission;
+    public AMisson mission;
     public GameObject gameObject;
 
-    public InProgressMissionContainer(IMission _mission, GameObject _gameObject)
+    public InProgressMissionContainer(AMisson _mission, GameObject _gameObject)
     {
         mission = _mission;
         gameObject = _gameObject;
@@ -25,14 +25,14 @@ public class MissionManager : Singleton<MissionManager>
         activeMissions = new List<InProgressMissionContainer>();
     }
 
-    public IMission StartMission(GameObject missionPrefab)
+    public AMisson StartMission(GameObject missionPrefab)
     {
         GameObject createdMission = Instantiate(missionPrefab, Vector3.zero, Quaternion.identity, transform);
-        Component missionComponent = createdMission.GetComponent(typeof(IMission));
+        Component missionComponent = createdMission.GetComponent(typeof(AMisson));
 
-        if (missionComponent is IMission)
+        if (missionComponent is AMisson)
         {
-            IMission mission = missionComponent as IMission;
+            AMisson mission = missionComponent as AMisson;
 
             activeMissions.Add(new InProgressMissionContainer(mission, createdMission));
             return mission;
@@ -49,7 +49,7 @@ public class MissionManager : Singleton<MissionManager>
         return activeMissions.Find(m => m.mission is T);
     }
 
-    public void EndMission(IMission mission)
+    public void EndMission(AMisson mission)
     {
         InProgressMissionContainer container = activeMissions.Find(m => m.mission == mission);
 
