@@ -56,7 +56,7 @@ public class MissionEnemy
     public ResponderWanderBounds wanderBounds;
 }
 
-public class MissionCafeteria1 : MonoBehaviour, IMission
+public class MissionCafeteria1 : AMisson
 {
     public Vector3 respawnPosition;
     public List<MissionEnemy> startEnemies;
@@ -206,11 +206,10 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
         // - or even start some simple "caught" dialog with the person who caught you
 
         UIManager.Instance.OnFadingComplete += OnFadingCompleteRestartMission;
-
-        // Fade out
         UIManager.Instance.FadeOut();
 
-        // RESET MISSION COMPLETE STATUS
+        // Tell any listeners (looking at you ProgressManager) that we need to reste whatever mission status
+        AlertMissionReset();
     }
 
     private void OnFadingCompleteRestartMission()
@@ -256,6 +255,8 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             SpawnEnemies(missionCriticalInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
 
             StartCoroutine(CameraManager.Instance.BlendToFarCameraForSeconds(2));
+
+            AlertMissionComplete();
         }
 
         // Probably TEMP solution for after interacting
