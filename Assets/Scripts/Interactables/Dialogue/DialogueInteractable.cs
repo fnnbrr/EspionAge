@@ -69,6 +69,12 @@ public class DialogueInteractable : Interactable
         } 
         else {
             SetDialogue(speakerUINPC, speakerUIBirdie, line.text);
+            Debug.Log($"Should hear something {conversation.npcVoice}");
+            if (!string.IsNullOrEmpty(conversation.npcVoice.Trim()))
+            {
+                Debug.Log($"Should REALLy hear something {conversation.npcVoice}");
+                FMODUnity.RuntimeManager.PlayOneShot(conversation.npcVoice, speakerUINPC.transform.position);
+            }
         }
     }
 
