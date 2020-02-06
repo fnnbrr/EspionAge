@@ -6,7 +6,8 @@ public class ProgressManager: Singleton<ProgressManager>
 {
     // Should communicate with Dialogue System on what dialogue should show when interacting with same interactable
     // Needed to communicate with the dialogue system
-    public List<InProgressMissionContainer> completedMissions;
+    //public List<IMission> Missions;
+    private Dictionary<IMission, MissionStatusCode> MissionsStatus;
      
     [HideInInspector]
     public bool allStampsUnlocked = false;
@@ -21,6 +22,8 @@ public class ProgressManager: Singleton<ProgressManager>
     void Start()
     {
         stampsUnlockStatus = new Dictionary<StampCollectible, bool>();
+        bingoBallsUnlockStatus = new Dictionary<BingoBallCollectible, bool>();
+
 
         // All stamp collectibles are set to locked (false) at beginning of game
         foreach(StampCollectible stamp in stampCollectibles)
@@ -28,7 +31,7 @@ public class ProgressManager: Singleton<ProgressManager>
             stampsUnlockStatus.Add(stamp, false);
         }
 
-        completedMissions = new List<InProgressMissionContainer>();
+        MissionsStatus = new Dictionary<IMission, MissionStatusCode>();
     }
 
   
@@ -105,10 +108,35 @@ public class ProgressManager: Singleton<ProgressManager>
 
 
     // To be called in Mission Manager when mission is completed
-    public void AddCompletedMission(InProgressMissionContainer completedMission)
+    public void AddMission(IMission mission)
     {
-        completedMissions.Add(completedMission);
+        MissionsStatus.Add(mission, MissionStatusCode.Started);
+    }
+
+
+    // Updates the status of the mission 
+    public void UpdateMissionStatus(IMission mission, MissionStatusCode status)
+    {
+        if (!MissionsStatus.ContainsKey(mission))
+        {
+            Debug.LogError("Trying to update a nonexistant mission");
+            return;
+        }
+
+        MissionsStatus[mission] = status;
+    }
+
+    public MissionStatusCode GetMissionStatus(IMission mission)
+    {
+        return MissionsStatus[mission];
     }
 
     // TODO: Save/Load Progress (Look into Scriptable Objects)
+}
+
+public enum MissionStatusCode
+{
+    Started,
+    Completed,
+    Closed
 }
