@@ -128,7 +128,7 @@ public class Interactable : MonoBehaviour, IInteractable
         player.GetComponent<PlayerController>().CanMove = true;
     }
 
-    private void ShowInteractUI()
+    protected void ShowInteractUI()
     {
         interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);

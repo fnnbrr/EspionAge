@@ -9,17 +9,28 @@ public class DialogueInteractable : Interactable
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
+    protected bool isConversing = false;
+
     private int activeLineIndex = 0;
 
-    public override void OnInteract()
+    public override void OnInteract()  
     {
-        speakerUIBirdie = player.GetComponentInChildren<SpeakerUI>();
-        speakerUINPC = GetComponentInChildren<SpeakerUI>();
+        if(!isConversing)
+        {
+            isConversing = true;
 
-        HideInteractUI();
-        AdvanceConversation();
+            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
 
-        base.OnInteract();
+            HideInteractUI();
+            AdvanceConversation();
+
+            base.OnInteract();
+        }
+        else
+        {
+            AdvanceConversation();
+        }
     }
 
     void AdvanceConversation() {
@@ -36,6 +47,9 @@ public class DialogueInteractable : Interactable
             speakerUIBirdie.Hide();
             speakerUINPC.Hide();
             activeLineIndex = 0;
+
+            isConversing = false;
+            ShowInteractUI();
         }
     }
 

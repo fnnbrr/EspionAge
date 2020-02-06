@@ -24,58 +24,66 @@ public class NPCInteractable : DialogueInteractable
 
     public override void OnInteract()
     {
-        // Load the conversation of the NPC based on mission progress
-        if (missionsOffered.Count == 0)
+        if(!isConversing)
         {
-            // Return a random default convo (Temporary until better system is set for default convos)
-            conversation = defaultConvos[Random.Range(0, defaultConvos.Count - 1)];
-        }
-        // NPC has mission to offer
-        else
-        {
-            // Start mission
-            if (startedMission == null)
+            // Load the conversation of the NPC based on mission progress
+            if (missionsOffered.Count == 0)
             {
-                // Obtainment of mission and removal of offered mission
-                currentMissionNPC = missionsOffered[0];
-                missionsOffered.RemoveAt(0);
-
-                // Start mission and store reference because needed to end mission
-                startedMission = MissionManager.Instance.StartMission(currentMissionNPC.missionPrefab);
-                ProgressManager.Instance.AddMission(startedMission);
-                startedMission.OnMissionComplete += HandleOnMissionComplete;
-                startedMission.OnMissionReset += HandleOnMissionReset;
-
-                conversation = currentMissionNPC.beforeConvo;
-
+                // Return a random default convo (Temporary until better system is set for default convos)
+                conversation = defaultConvos[Random.Range(0, defaultConvos.Count - 1)];
             }
-            // Mission started but not completed
-            else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
-            {
-                conversation = currentMissionNPC.duringConvo;
-            }
-            // Objective of mission has been completed but now talking to NPC to close mission
-            else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
-            {
-                // Ends current mission with NPC
-                MissionManager.Instance.EndMission(startedMission);
-                ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Closed);
-
-                // Unsubscribe
-                startedMission.OnMissionComplete -= HandleOnMissionComplete;
-                startedMission.OnMissionReset -= HandleOnMissionReset;
-                startedMission = null;
-                
-                conversation = currentMissionNPC.afterConvo;
-            }
+            // NPC has mission to offer
             else
             {
-                Debug.LogError("Should not be getting to here");
-                return;
-            }
-        }
+                // Start mission
+                if (startedMission == null)
+                {
+                    // Obtainment of mission and removal of offered mission
+                    currentMissionNPC = missionsOffered[0];
 
-        NPCFacePlayer();
+                    // Start mission and store reference because needed to end mission
+                    startedMission = MissionManager.Instance.StartMission(currentMissionNPC.missionPrefab);
+                    ProgressManager.Instance.AddMission(startedMission);
+                    startedMission.OnMissionComplete += HandleOnMissionComplete;
+                    startedMission.OnMissionReset += HandleOnMissionReset;
+
+                    conversation = currentMissionNPC.beforeConvo;
+
+                    Debug.Log("Start Mission");
+
+                }
+                // Mission started but not completed
+                else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
+                {
+                    conversation = currentMissionNPC.duringConvo;
+                    Debug.Log("Get to it!");
+                }
+                // Objective of mission has been completed but now talking to NPC to close mission
+                else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
+                {
+                    // Ends current mission with NPC
+                    MissionManager.Instance.EndMission(startedMission);
+                    ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Closed);
+
+                    // Unsubscribe
+                    startedMission.OnMissionComplete -= HandleOnMissionComplete;
+                    startedMission.OnMissionReset -= HandleOnMissionReset;
+                    startedMission = null;
+                    missionsOffered.RemoveAt(0);
+
+                    conversation = currentMissionNPC.afterConvo;
+
+                    Debug.Log("Mission Completed");
+                }
+                else
+                {
+                    Debug.LogError("Should not be getting to here");
+                    return;
+                }
+            }
+            NPCFacePlayer();
+        }
+        
         base.OnInteract();
     }
 
@@ -87,6 +95,7 @@ public class NPCInteractable : DialogueInteractable
     private void HandleOnMissionComplete()
     {
         ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Completed);
+        Debug.Log("Objective Complete");
     }
 
 
@@ -98,6 +107,6 @@ public class NPCInteractable : DialogueInteractable
 
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
-        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed, () => { return; }));
+        StartCoroutine(RotateAnimation(this.gameObject, rotation, player.GetComponent<PlayerController>().turnSpeed, () => { return; }));
     }
 }
