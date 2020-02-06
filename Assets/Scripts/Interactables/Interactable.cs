@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
-    // TODO: player has already been assigned on trigger enter so remove passing it in for all functions
     protected GameObject player;
 
     // Must attach in instances in the inspector
@@ -30,6 +29,7 @@ public class Interactable : MonoBehaviour, IInteractable
             // User chooses to interact with the item
             if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
             {
+                //TODO: Get FaceInteractable to work and not freeze player rotation
                 //FaceInteractable();
 
                 OnInteract();
@@ -99,6 +99,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     }
 
+    // TODO: see how to set a default null-ish value for Action, and just conditionally call it if its not null (so it's not necessary pass in a callback).
     // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
     protected IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed, Action onFinishCallback)
     {

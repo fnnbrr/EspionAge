@@ -15,7 +15,7 @@ public class DialogueInteractable : Interactable
 
     public override void OnInteract()  
     {
-        if(!isConversing)
+        if (!isConversing)
         {
             isConversing = true;
 

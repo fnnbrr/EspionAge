@@ -24,13 +24,13 @@ public class NPCInteractable : DialogueInteractable
 
     public override void OnInteract()
     {
-        if(!isConversing)
+        if (!isConversing)
         {
             // Load the conversation of the NPC based on mission progress
             if (missionsOffered.Count == 0)
             {
                 // Return a random default convo (Temporary until better system is set for default convos)
-                conversation = defaultConvos[Random.Range(0, defaultConvos.Count - 1)];
+                conversation = defaultConvos[Random.Range(0, defaultConvos.Count)];
             }
             // NPC has mission to offer
             else
