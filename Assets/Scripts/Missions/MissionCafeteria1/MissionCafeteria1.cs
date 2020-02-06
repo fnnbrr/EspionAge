@@ -5,11 +5,16 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-public class MissionInteractable
+public class MissionObject
 {
     public GameObject prefab;
     public Vector3 position;
     public Vector3 rotation;
+}
+
+[System.Serializable]
+public class MissionCriticalInteractable : MissionObject
+{
     public List<MissionEnemy> enemiesToSpawnIfLastCollected;
 }
 
@@ -23,10 +28,31 @@ public class MissionEnemy
         public float stayTime;
     }
 
+    [System.Serializable]
+    public class ResponderWanderBounds
+    {
+        public Vector3 position;
+        public float radius;
+    }
+
+    public enum EnemyType
+    {
+        Patroller,
+        Responder
+    }
+    [SerializeField] public EnemyType enemyType;
+
+    [Header("Generic Enemy Settings")]
     public GameObject prefab;
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
-    public List<EnemyWaypoint> waypoints; 
+
+    [Header("Specific Patroller Settings")]
+    public List<EnemyWaypoint> waypoints;
+
+    [Header("Specific Responder Settings")]
+    public Vector3 startResponsePoint;
+    public ResponderWanderBounds wanderBounds;
 }
 
 public class MissionCafeteria1 : MonoBehaviour, IMission
@@ -34,10 +60,12 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     public List<MissionEnemy> startEnemies;
 
     [Header("All lists below must be the same size!")]
-    public List<MissionInteractable> missionInteractables;
+    public List<MissionCriticalInteractable> missionCriticalInteractables;
+    public List<MissionObject> missionObjects;
 
+    private List<GameObject> instantiatedMissionObjects;
     private List<GameObject> instantiatedMissionInteractables;
-    private List<Patroller> instantiatedEnemies;
+    private List<Chaser> instantiatedEnemies;
     private int interactedCount = 0;
 
     // TODO: Remove all properties below when interactables are implemented
@@ -47,29 +75,34 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
 
     private void Awake()
     {
+        instantiatedMissionObjects = new List<GameObject>();
         instantiatedMissionInteractables = new List<GameObject>();
-        instantiatedEnemies = new List<Patroller>();
+
+        // TODO: this should probably be changed to a generic enemy type at some point
+        instantiatedEnemies = new List<Chaser>();
     }
 
     ////////////////////////////////////////////////////
     // TOOD: REMOVE ONCE INTERACTABLES ARE IMPLEMENTED
     private void Start()
     {
-        if (testOnCollectSpawning && interactableIndexToTest >= 0 && interactableIndexToTest < missionInteractables.Count)
+        if (testOnCollectSpawning && interactableIndexToTest >= 0 && interactableIndexToTest < missionCriticalInteractables.Count)
         {
-            SpawnEnemies(missionInteractables[interactableIndexToTest].enemiesToSpawnIfLastCollected);
+            SpawnEnemies(missionCriticalInteractables[interactableIndexToTest].enemiesToSpawnIfLastCollected);
         }
     }
     ////////////////////////////////////////////////////
 
     public void OnEnable()
     {
-        SpawnInteractables(missionInteractables);
+        SpawnObjects(missionObjects);
+        SpawnInteractables(missionCriticalInteractables);
         SpawnEnemies(startEnemies);
     }
 
     private void Cleanup()
     {
+        DestroyGameObjects(instantiatedMissionObjects);
         DestroyGameObjects(instantiatedMissionInteractables);
         DestroyGameObjects(instantiatedEnemies.Where(e => e).Select(e => e.gameObject).ToList());
     }
@@ -84,7 +117,16 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
         Cleanup();
     }
 
-    private void SpawnInteractables(List<MissionInteractable> interactables)
+    private void SpawnObjects(List<MissionObject> interactables)
+    {
+        // Instantiate all interactable objects
+        interactables.ForEach(i =>
+        {
+            instantiatedMissionObjects.Add(Instantiate(i.prefab, i.position, Quaternion.Euler(i.rotation)));
+        });
+    }
+
+    private void SpawnInteractables(List<MissionCriticalInteractable> interactables)
     {
         // Instantiate all interactable objects
         interactables.ForEach(i =>
@@ -92,12 +134,11 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             GameObject interactableGameObject = Instantiate(i.prefab, i.position, Quaternion.Euler(i.rotation));
             Interactable interactable = Utils.GetRequiredComponent<Interactable>(interactableGameObject);
 
-            // Here we register for the event that 
             interactable.OnInteractEnd += HandleInteractedWith;
-
-            instantiatedMissionInteractables.Add(interactableGameObject);  // TODO: make this a list of type INTERACTBLE_SCRIPT instead
+            instantiatedMissionInteractables.Add(interactableGameObject);
         });
     }
+
 
     private void SpawnEnemies(List<MissionEnemy> enemies)
     {
@@ -108,12 +149,27 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
             if (NavMesh.SamplePosition(enemy.spawnPosition, out NavMeshHit closestNavmeshHit, 10.0f, NavMesh.AllAreas))
             {
                 GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
-                Patroller patrol = Utils.GetRequiredComponent<Patroller>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Patroller component!");
+             
+                // All enemies will be chasers, so we need to set the target transform for all.
+                Chaser enemyComponent = Utils.GetRequiredComponent<Chaser>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Chaser component!");
+                enemyComponent.targetTransform = GameManager.Instance.GetPlayerTransform();
 
-                patrol.targetTransform = GameManager.Instance.GetPlayerTransform();
-                patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+                switch (enemy.enemyType)
+                {
+                    case MissionEnemy.EnemyType.Patroller:
+                        Patroller patrol = enemyComponent as Patroller;
+                        patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+                        break;
+                    case MissionEnemy.EnemyType.Responder:
+                        Responder responder = enemyComponent as Responder;
+                        responder.InitailizeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
+                        break;
+                    default:
+                        Debug.LogError($"Unknown enemy type: {enemy.enemyType}!");
+                        break;
+                }
 
-                instantiatedEnemies.Add(patrol);
+                instantiatedEnemies.Add(enemyComponent);
             }
             else
             {
@@ -137,12 +193,14 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     {
         interactedCount++;
 
-        if (interactedCount == missionInteractables.Count())
+        if (interactedCount == missionCriticalInteractables.Count())
         {
             // Logic based on the interactable object for spawning
             int interactableIndex = instantiatedMissionInteractables.IndexOf(interactable.gameObject);
 
-            SpawnEnemies(missionInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
+            SpawnEnemies(missionCriticalInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
+
+            StartCoroutine(CameraManager.Instance.BlendToFarCameraForSeconds(2));
         }
 
         // Probably TEMP solution for after interacting

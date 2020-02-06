@@ -18,7 +18,7 @@ public class FieldOfVision : MonoBehaviour
 	public int edgeResolveInterations;
 	public float edgeDstThreshold;
 
-	public Chaser chaser;
+	private Chaser chaser;
 
 	[Header("View Mesh Options")]
 	public GameObject viewMeshObject;

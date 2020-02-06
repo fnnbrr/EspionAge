@@ -44,94 +44,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startEnemies:
-  - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+  - enemyType: 0
+    prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
       type: 3}
-    spawnPosition: {x: -10, y: 3, z: -5.5}
+    spawnPosition: {x: -15, y: 3, z: -14}
     spawnRotation: {x: 0, y: 0, z: 0}
     waypoints:
-    - position: {x: 19, y: 0, z: -5.5}
+    - position: {x: -15, y: 0, z: 26}
       stayTime: 0
-    - position: {x: -10, y: 0, z: -5.5}
+    - position: {x: -34, y: 0, z: -14}
       stayTime: 0
-    - position: {x: -10, y: 0, z: 19.3}
+    - position: {x: 0, y: 0, z: -14}
       stayTime: 0
-  - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
-      type: 3}
-    spawnPosition: {x: 32, y: 3, z: -25}
-    spawnRotation: {x: 0, y: 0, z: 0}
-    waypoints:
-    - position: {x: -19, y: 0, z: -25}
-      stayTime: 0
-    - position: {x: 32, y: 0, z: -25}
-      stayTime: 0
-    - position: {x: 32, y: 0, z: 13}
-      stayTime: 0
-  missionInteractables:
+    startResponsePoint: {x: 0, y: 0, z: 0}
+    wanderBounds:
+      position: {x: 0, y: 0, z: 0}
+      radius: 0
+  missionCriticalInteractables:
   - prefab: {fileID: 889763838926089807, guid: ef467d744abab4d98b6af885c5c29893, type: 3}
-    position: {x: -4, y: 1.5, z: 26.5}
+    position: {x: 40.5, y: 5.5, z: 5}
     rotation: {x: 0, y: 0, z: 0}
     enemiesToSpawnIfLastCollected:
-    - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+    - enemyType: 1
+      prefab: {fileID: 7003268395918406997, guid: 049751ea334d91849a1ca12394fe438d,
         type: 3}
-      spawnPosition: {x: 44, y: 3, z: 39}
+      spawnPosition: {x: -85, y: 0, z: -36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints:
-      - position: {x: 22, y: 0, z: 37}
-        stayTime: 0
-      - position: {x: 0, y: 0, z: 37}
-        stayTime: 0
-    - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+      waypoints: []
+      startResponsePoint: {x: 40.5, y: 0, z: 5}
+      wanderBounds:
+        position: {x: 33, y: 0, z: 28}
+        radius: 30
+    - enemyType: 1
+      prefab: {fileID: 7003268395918406997, guid: 049751ea334d91849a1ca12394fe438d,
         type: 3}
-      spawnPosition: {x: 44, y: 3, z: 39}
+      spawnPosition: {x: -85, y: 0, z: 36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints:
-      - position: {x: 30, y: 0, z: 28}
-        stayTime: 0
-      - position: {x: 30, y: 0, z: 4}
-        stayTime: 0
+      waypoints: []
+      startResponsePoint: {x: 40.5, y: 0, z: 5}
+      wanderBounds:
+        position: {x: 26, y: 0, z: -24}
+        radius: 30
+  missionObjects:
   - prefab: {fileID: 889763838926089807, guid: ef467d744abab4d98b6af885c5c29893, type: 3}
-    position: {x: -4, y: 1.5, z: 4.3}
+    position: {x: 37, y: 2, z: 40}
     rotation: {x: 0, y: 0, z: 0}
-    enemiesToSpawnIfLastCollected:
-    - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
-        type: 3}
-      spawnPosition: {x: 44, y: 0, z: 39}
-      spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints:
-      - position: {x: 22, y: 0, z: 37}
-        stayTime: 0
-      - position: {x: 0, y: 0, z: 37}
-        stayTime: 0
-    - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
-        type: 3}
-      spawnPosition: {x: 44, y: 0, z: -31}
-      spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints:
-      - position: {x: 30, y: 0, z: 28}
-        stayTime: 0
-      - position: {x: 30, y: 0, z: 4}
-        stayTime: 0
-  - prefab: {fileID: 889763838926089807, guid: ef467d744abab4d98b6af885c5c29893, type: 3}
-    position: {x: -25, y: 1.5, z: -15.5}
-    rotation: {x: 0, y: 0, z: 0}
-    enemiesToSpawnIfLastCollected:
-    - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
-        type: 3}
-      spawnPosition: {x: 44, y: 0, z: -31}
-      spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints:
-      - position: {x: 22, y: 0, z: 37}
-        stayTime: 0
-      - position: {x: 0, y: 0, z: 37}
-        stayTime: 0
-    - prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
-        type: 3}
-      spawnPosition: {x: 44, y: 0, z: -31}
-      spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints:
-      - position: {x: 30, y: 0, z: 28}
-        stayTime: 0
-      - position: {x: 30, y: 0, z: 4}
-        stayTime: 0
   testOnCollectSpawning: 0
   interactableIndexToTest: 0
