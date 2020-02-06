@@ -9,6 +9,9 @@ public class LaunchArcRenderer : MonoBehaviour
     public float angle;
     public int resolution = 10;
 
+    public GameObject endTargetDisplayPrefab;
+    private GameObject endTargetDisplay;
+
     private float g;  // force of gravity on the y-axis
     private float radianAngle;
 
@@ -18,6 +21,8 @@ public class LaunchArcRenderer : MonoBehaviour
     {
         lr = Utils.GetRequiredComponent<LineRenderer>(this);
         g = Mathf.Abs(Physics.gravity.y);
+
+        endTargetDisplay = Instantiate(endTargetDisplayPrefab, Vector3.zero, endTargetDisplayPrefab.transform.rotation, transform.parent);
     }
 
     private void OnValidate()
@@ -37,7 +42,18 @@ public class LaunchArcRenderer : MonoBehaviour
     public void RenderArc()
     {
         lr.positionCount = resolution + 1;
-        lr.SetPositions(CalculateArcArray());
+
+        Vector3[] arcArray = CalculateArcArray();
+        lr.SetPositions(arcArray);
+
+        if (endTargetDisplay)
+        {
+            // Set the z position of the endTargetDisplay to the x of the last point (because of darn parent-relative rotations), or zero
+            endTargetDisplay.transform.localPosition = new Vector3(0f, 0f, (arcArray?[arcArray.Length - 1] ?? Vector3.zero).x);
+        
+            // Only have the display active if the velocity or angle are both not 0
+            endTargetDisplay.SetActive(!Mathf.Approximately(velocity, 0f) && !Mathf.Approximately(angle, 0f));
+        }
     }
     
     public void RenderArc(float newAngle)
