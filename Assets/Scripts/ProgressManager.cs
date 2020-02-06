@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MissionStatusCode
+{
+    Started,
+    Completed,
+    Closed
+}
+
 public class ProgressManager: Singleton<ProgressManager>
 {
     // Should communicate with Dialogue System on what dialogue should show when interacting with same interactable
     // Needed to communicate with the dialogue system
-    //public List<IMission> Missions;
     private Dictionary<AMission, MissionStatusCode> MissionsStatus;
      
     [HideInInspector]
@@ -132,11 +138,4 @@ public class ProgressManager: Singleton<ProgressManager>
     }
 
     // TODO: Save/Load Progress (Look into Scriptable Objects)
-}
-
-public enum MissionStatusCode
-{
-    Started,
-    Completed,
-    Closed
 }

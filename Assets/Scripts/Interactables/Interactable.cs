@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
-    // TODO: player has already been assigned on trigger enter so remove passing it in for all functions
     protected GameObject player;
 
     // Must attach in instances in the inspector
@@ -13,11 +12,9 @@ public class Interactable : MonoBehaviour, IInteractable
     public RectTransform interactTransform;
 
     private bool interactableOn = false;
-    
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
-
 
     protected void Update()
     {
@@ -30,7 +27,8 @@ public class Interactable : MonoBehaviour, IInteractable
             // User chooses to interact with the item
             if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
             {
-                //FaceInteractable();
+                // TOOD: Re-add facing interactable at some point
+                // FaceInteractable();
 
                 OnInteract();
             }
@@ -100,7 +98,7 @@ public class Interactable : MonoBehaviour, IInteractable
     }
 
     // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
-    protected IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed, Action onFinishCallback)
+    protected IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed, Action onFinishCallback = null)
     {
         Quaternion startRotation = obj.transform.rotation;
 
@@ -115,7 +113,7 @@ public class Interactable : MonoBehaviour, IInteractable
         }
 
         // Prevents the user from rotating/moving while doing the rotation animation
-        onFinishCallback();
+        onFinishCallback?.Invoke();
     }
 
     private void UnfreezePlayer()
