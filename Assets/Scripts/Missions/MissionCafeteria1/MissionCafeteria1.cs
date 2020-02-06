@@ -216,16 +216,9 @@ public class MissionCafeteria1 : AMisson
     {
         UIManager.Instance.OnFadingComplete -= OnFadingCompleteRestartMission;
 
-        CameraManager.Instance.OnBlendingComplete += OnBlendingCompleteFadeIn;
-
         Cleanup();
         Initialize();
         GameManager.Instance.GetPlayerTransform().position = respawnPosition;
-    }
-
-    private void OnBlendingCompleteFadeIn(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
-    {
-        CameraManager.Instance.OnBlendingComplete -= OnBlendingCompleteFadeIn;
 
         isRestarting = false;
 
