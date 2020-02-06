@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using Cinemachine;
 
 [System.Serializable]
 public class MissionObject
@@ -57,6 +58,7 @@ public class MissionEnemy
 
 public class MissionCafeteria1 : MonoBehaviour, IMission
 {
+    public Vector3 respawnPosition;
     public List<MissionEnemy> startEnemies;
 
     [Header("All lists below must be the same size!")]
@@ -72,6 +74,8 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     [Header("Remove below once we have interactables")]
     public bool testOnCollectSpawning = false;
     public int interactableIndexToTest;
+
+    private bool isRestarting = false;
 
     private void Awake()
     {
@@ -93,7 +97,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
     }
     ////////////////////////////////////////////////////
 
-    public void OnEnable()
+    private void Initialize()
     {
         SpawnObjects(missionObjects);
         SpawnInteractables(missionCriticalInteractables);
@@ -105,6 +109,15 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
         DestroyGameObjects(instantiatedMissionObjects);
         DestroyGameObjects(instantiatedMissionInteractables);
         DestroyGameObjects(instantiatedEnemies.Where(e => e).Select(e => e.gameObject).ToList());
+
+        instantiatedMissionObjects.Clear();
+        instantiatedMissionInteractables.Clear();
+        instantiatedEnemies.Clear();
+    }
+
+    public void OnEnable()
+    {
+        Initialize();
     }
 
     private void OnDisable()
@@ -153,6 +166,7 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
                 // All enemies will be chasers, so we need to set the target transform for all.
                 Chaser enemyComponent = Utils.GetRequiredComponent<Chaser>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Chaser component!");
                 enemyComponent.targetTransform = GameManager.Instance.GetPlayerTransform();
+                enemyComponent.OnCollideWithPlayer += OnCollideWithPlayer;
 
                 switch (enemy.enemyType)
                 {
@@ -176,6 +190,47 @@ public class MissionCafeteria1 : MonoBehaviour, IMission
                 Debug.LogError("Could not sample position to spawn enemy for MissionCafeteria1!");
             }
         });
+    }
+
+    private void OnCollideWithPlayer()
+    {
+        if (isRestarting)
+        {
+            return;
+        }
+
+        isRestarting = true;
+
+        // Possible things we can look into the future:
+        // - maybe some UI like "Oops! You got caught!"
+        // - or even start some simple "caught" dialog with the person who caught you
+
+        UIManager.Instance.OnFadingComplete += OnFadingCompleteRestartMission;
+
+        // Fade out
+        UIManager.Instance.FadeOut();
+
+        // RESET MISSION COMPLETE STATUS
+    }
+
+    private void OnFadingCompleteRestartMission()
+    {
+        UIManager.Instance.OnFadingComplete -= OnFadingCompleteRestartMission;
+
+        CameraManager.Instance.OnBlendingComplete += OnBlendingCompleteFadeIn;
+
+        Cleanup();
+        Initialize();
+        GameManager.Instance.GetPlayerTransform().position = respawnPosition;
+    }
+
+    private void OnBlendingCompleteFadeIn(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        CameraManager.Instance.OnBlendingComplete -= OnBlendingCompleteFadeIn;
+
+        isRestarting = false;
+
+        UIManager.Instance.FadeIn();
     }
 
     private void DestroyGameObjects(List<GameObject> gameObjects)
