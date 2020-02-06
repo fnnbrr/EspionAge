@@ -30,7 +30,7 @@ public class Interactable : MonoBehaviour, IInteractable
             // User chooses to interact with the item
             if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
             {
-                FaceInteractable();
+                //FaceInteractable();
 
                 OnInteract();
             }
