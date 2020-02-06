@@ -5,18 +5,16 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour, IInteractable
 {
-    private GameObject player;
+    protected GameObject player;
 
     // Must attach in instances in the inspector
     public Animator interactableAnim;
     public RectTransform interactTransform;
 
     private bool interactableOn = false;
-    
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
-
 
     protected void Update()
     {
@@ -29,9 +27,10 @@ public class Interactable : MonoBehaviour, IInteractable
             // User chooses to interact with the item
             if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
             {
-                FaceInteractable();
+                //TODO: Get FaceInteractable to work and not freeze player rotation
+                //FaceInteractable();
 
-                OnInteract(player);
+                OnInteract();
             }
      
         }
@@ -65,7 +64,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
 
     // Handle the dialogue for this interactable
-    public virtual void OnInteract(GameObject birdie)
+    public virtual void OnInteract()
     {
         Debug.Log("Interacted");
 
@@ -93,12 +92,14 @@ public class Interactable : MonoBehaviour, IInteractable
 
         // Animation of facing the interactable
         // Possible issue to prevent another coroutine being called if player is already rotating
-        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed));
+        player.GetComponent<PlayerController>().CanMove = false;
+        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed, () => UnfreezePlayer()));
 
     }
 
+    // TODO: see how to set a default null-ish value for Action, and just conditionally call it if its not null (so it's not necessary pass in a callback).
     // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
-    private IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed)
+    protected IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed, Action onFinishCallback = null)
     {
         Quaternion startRotation = obj.transform.rotation;
 
@@ -112,10 +113,21 @@ public class Interactable : MonoBehaviour, IInteractable
             yield return null;
         }
 
+        // Prevents the user from rotating/moving while doing the rotation animation
+        onFinishCallback?.Invoke();
     }
 
+    private void UnfreezePlayer()
+    {
+        if (player != null)
+        {
+            Debug.LogError("Trying to access a player that has not been assigned");
+        }
 
-    private void ShowInteractUI()
+        player.GetComponent<PlayerController>().CanMove = true;
+    }
+
+    protected void ShowInteractUI()
     {
         interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);

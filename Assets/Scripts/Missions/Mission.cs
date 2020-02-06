@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AMisson : MonoBehaviour
+public class AMission : MonoBehaviour
 {
     public delegate void MissionComplete();
     public event MissionComplete OnMissionComplete;

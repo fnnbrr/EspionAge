@@ -56,7 +56,7 @@ public class MissionEnemy
     public ResponderWanderBounds wanderBounds;
 }
 
-public class MissionCafeteria1 : AMisson
+public class MissionCafeteria1 : AMission
 {
     public Vector3 respawnPosition;
     public List<MissionEnemy> startEnemies;

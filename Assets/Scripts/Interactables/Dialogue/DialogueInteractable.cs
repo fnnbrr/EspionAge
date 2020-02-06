@@ -9,17 +9,31 @@ public class DialogueInteractable : Interactable
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
+    protected bool isConversing = false;
+
     private int activeLineIndex = 0;
 
-    public override void OnInteract(GameObject birdie)
+    public override void OnInteract()  
     {
-        speakerUIBirdie = birdie.GetComponentInChildren<SpeakerUI>();
-        speakerUINPC = GetComponentInChildren<SpeakerUI>();
+        if (!isConversing)
+        {
+            isConversing = true;
 
-        HideInteractUI();
-        AdvanceConversation();
+            // Freeze player when conversing
+            player.GetComponent<PlayerController>().CanMove = false;
 
-        base.OnInteract(birdie);
+            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+
+            HideInteractUI();
+            AdvanceConversation();
+
+            base.OnInteract();
+        }
+        else
+        {
+            AdvanceConversation();
+        }
     }
 
     void AdvanceConversation() {
@@ -36,6 +50,12 @@ public class DialogueInteractable : Interactable
             speakerUIBirdie.Hide();
             speakerUINPC.Hide();
             activeLineIndex = 0;
+
+            isConversing = false;
+            ShowInteractUI();
+
+            // Unfreeze player when done
+            player.GetComponent<PlayerController>().CanMove = true;
         }
     }
 
