@@ -105,11 +105,11 @@ public class FieldOfVision : MonoBehaviour
 		{
 			viewMeshRenderer.material = spottedMaterial;
 
-			viewMeshRenderer.material.color = Color.Lerp(
+			viewMeshRenderer.material.SetColor("_BaseColor", Color.Lerp(
 				Color.black,
 				spottedMaterial.color,
 				Mathf.PingPong(Time.time * flashingSpeed, 1f)
-			);
+			));
 		}
 	}
 

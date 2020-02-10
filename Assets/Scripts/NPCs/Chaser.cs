@@ -38,7 +38,7 @@ public abstract class Chaser : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
         {
-            OnCollideWithPlayer();
+            OnCollideWithPlayer?.Invoke();
         }
     }
 }
