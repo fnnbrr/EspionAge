@@ -49,14 +49,14 @@ public class NPCInteractable : DialogueInteractable
 
                     conversation = currentMissionNPC.beforeConvo;
 
-                    Debug.Log("Start Mission");
+                    Debug.Log("NPC: beforeConvo");
 
                 }
                 // Mission started but not completed
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
                 {
                     conversation = currentMissionNPC.duringConvo;
-                    Debug.Log("Get to it!");
+                    Debug.Log("NPC: duringConvo");
                 }
                 // Objective of mission has been completed but now talking to NPC to close mission
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
@@ -73,7 +73,7 @@ public class NPCInteractable : DialogueInteractable
 
                     conversation = currentMissionNPC.afterConvo;
 
-                    Debug.Log("Mission Completed");
+                    Debug.Log("NPC: afterConvo");
                 }
                 else
                 {

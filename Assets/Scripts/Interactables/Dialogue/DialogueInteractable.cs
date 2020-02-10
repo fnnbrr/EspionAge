@@ -69,35 +69,24 @@ public class DialogueInteractable : Interactable
         } 
         else {
             SetDialogue(speakerUINPC, speakerUIBirdie, line.text);
-            Debug.Log($"Should hear something {conversation.npcVoice}");
-            if (!string.IsNullOrEmpty(conversation.npcVoice.Trim()))
-            {
-                Debug.Log($"Should REALLy hear something {conversation.npcVoice}");
-                FMODUnity.RuntimeManager.PlayOneShot(conversation.npcVoice, speakerUINPC.transform.position);
-            }
+            PlayVoice(conversation.npcVoice);
         }
     }
 
-    void SetDialogue(
-        SpeakerUI activeSpeakerUI,
-        SpeakerUI inactiveSpeakerUI,
-        string text
-    ) {
+    void SetDialogue(SpeakerUI activeSpeakerUI, SpeakerUI inactiveSpeakerUI, string text) {
         //who is speaking
         activeSpeakerUI.Dialogue = text;
         activeSpeakerUI.Show();
+
         //who is not speaking
         inactiveSpeakerUI.Hide();
     }
 
-    public void Enable()
+    private void PlayVoice(string fmodPath)
     {
-        gameObject.SetActive(true);
+        if (!string.IsNullOrEmpty(fmodPath.Trim()))
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(fmodPath, speakerUINPC.transform.position);
+        }
     }
-
-    public void Disable()
-    {
-        gameObject.SetActive(false);
-    }
-    
 }
