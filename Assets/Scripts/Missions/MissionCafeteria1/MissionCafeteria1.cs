@@ -99,6 +99,8 @@ public class MissionCafeteria1 : AMission
 
     private void Initialize()
     {
+        interactedCount = 0;
+
         SpawnObjects(missionObjects);
         SpawnInteractables(missionCriticalInteractables);
         SpawnEnemies(startEnemies);
