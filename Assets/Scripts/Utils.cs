@@ -17,14 +17,34 @@ public static class Utils
         StopPlayMode();
     }
 
+    public static T GetRequiredComponent<T>(GameObject o) where T : Component
+    {
+        return GetRequiredComponent<T>(o, $"Expected component '{typeof(T).Name}' on object {o.name}");
+    }
+
     public static T GetRequiredComponent<T>(MonoBehaviour o) where T : Component
     {
         return GetRequiredComponent<T>(o, $"Expected component '{typeof(T).Name}' on object {o.name}");
     }
 
-    public static T GetRequiredComponent<T>(GameObject o) where T : Component
+    public static T GetRequiredComponentInChildren<T>(GameObject o) where T : Component
     {
-        return GetRequiredComponent<T>(o, $"Expected component '{typeof(T).Name}' on object {o.name}");
+        return GetRequiredComponentInChildren<T>(o, $"Expected component '{typeof(T).Name}' in children of object {o.name}");
+    }
+
+    public static T GetRequiredComponentInChildren<T>(MonoBehaviour o) where T : Component
+    {
+        return GetRequiredComponentInChildren<T>(o, $"Expected component '{typeof(T).Name}' in children of object {o.name}");
+    }
+
+    public static T GetRequiredComponent<T>(GameObject o, string customError) where T : Component
+    {
+        T comp = o.GetComponent<T>();
+        if (!comp)
+        {
+            LogErrorAndStopPlayMode(customError);
+        }
+        return comp;
     }
 
     public static T GetRequiredComponent<T>(MonoBehaviour o, string customError) where T : Component
@@ -37,9 +57,19 @@ public static class Utils
         return comp;
     }
 
-    public static T GetRequiredComponent<T>(GameObject o, string customError) where T : Component
+    public static T GetRequiredComponentInChildren<T>(GameObject o, string customError) where T : Component
     {
-        T comp = o.GetComponent<T>();
+        T comp = o.GetComponentInChildren<T>();
+        if (!comp)
+        {
+            LogErrorAndStopPlayMode(customError);
+        }
+        return comp;
+    }
+
+    public static T GetRequiredComponentInChildren<T>(MonoBehaviour o, string customError) where T : Component
+    {
+        T comp = o.GetComponentInChildren<T>();
         if (!comp)
         {
             LogErrorAndStopPlayMode(customError);

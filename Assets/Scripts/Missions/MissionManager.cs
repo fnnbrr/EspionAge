@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class InProgressMissionContainer
 {
-    public IMission mission;
+    public AMission mission;
     public GameObject gameObject;
 
-    public InProgressMissionContainer(IMission _mission, GameObject _gameObject)
+    public InProgressMissionContainer(AMission _mission, GameObject _gameObject)
     {
         mission = _mission;
         gameObject = _gameObject;
@@ -25,21 +25,21 @@ public class MissionManager : Singleton<MissionManager>
         activeMissions = new List<InProgressMissionContainer>();
     }
 
-    public IMission StartMission(GameObject missionPrefab)
+    public AMission StartMission(GameObject missionPrefab)
     {
         GameObject createdMission = Instantiate(missionPrefab, Vector3.zero, Quaternion.identity, transform);
-        Component missionComponent = createdMission.GetComponent(typeof(IMission));
+        Component missionComponent = createdMission.GetComponent(typeof(AMission));
 
-        if (missionComponent is IMission)
+        if (missionComponent is AMission)
         {
-            IMission mission = missionComponent as IMission;
+            AMission mission = missionComponent as AMission;
 
             activeMissions.Add(new InProgressMissionContainer(mission, createdMission));
             return mission;
         } 
         else
         {
-            Utils.LogErrorAndStopPlayMode($"Expected to find an IMission component on {missionPrefab.name}!");
+            Utils.LogErrorAndStopPlayMode($"Expected to find an AMission component on {missionPrefab.name}!");
             return null;
         }
     }
@@ -49,7 +49,7 @@ public class MissionManager : Singleton<MissionManager>
         return activeMissions.Find(m => m.mission is T);
     }
 
-    public void EndMission(IMission mission)
+    public void EndMission(AMission mission)
     {
         InProgressMissionContainer container = activeMissions.Find(m => m.mission == mission);
 

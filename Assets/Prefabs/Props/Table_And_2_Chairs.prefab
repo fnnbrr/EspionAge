@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3733584420101963957}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Table_and_Chair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,12 +46,12 @@ GameObject:
   - component: {fileID: 3069424177677752560}
   - component: {fileID: 6903639757009462551}
   - component: {fileID: 4714153159837901911}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube_13 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &4607726341067304275
 Transform:
@@ -89,6 +89,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -138,12 +139,12 @@ GameObject:
   - component: {fileID: 294677214322161665}
   - component: {fileID: 6370568287524856706}
   - component: {fileID: 6941905995206009922}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube_13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &7933557047332176985
 Transform:
@@ -181,6 +182,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -229,13 +231,13 @@ GameObject:
   - component: {fileID: 6373305718186009136}
   - component: {fileID: 8531782720435028650}
   - component: {fileID: 2042386476974637815}
-  - component: {fileID: 5142185631312851205}
-  m_Layer: 0
+  - component: {fileID: 934085185}
+  m_Layer: 10
   m_Name: Cube_14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &6373305718186009136
 Transform:
@@ -273,6 +275,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -298,8 +301,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &5142185631312851205
-MeshCollider:
+--- !u!65 &934085185
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -308,10 +311,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 5987461133685615553, guid: 17bf801d8c5ffcd4db00ad688b0347dd, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 2.1229389, y: 1.452293, z: 2.1229389}
+  m_Center: {x: 0, y: 0.000000059604645, z: 0}
 --- !u!1 &2511601416489716276
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +324,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6234226873427331010}
   - component: {fileID: 7346565503782499718}
-  m_Layer: 0
+  - component: {fileID: 2045383174}
+  m_Layer: 10
   m_Name: CINEMA_4D_Editor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,6 +389,37 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &2045383174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2511601416489716276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_CameraOutput: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &8860257241388147053
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +429,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8625292460707905977}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Table_And_2_Chairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,7 +443,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8860257241388147053}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:

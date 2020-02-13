@@ -26,7 +26,7 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_ENDMISSIONCAFETERIA1)]
     public static void EndMissionCafeteria1()
     {
-        IMission mission = MissionManager.Instance.GetActiveMission<MissionCafeteria1>().mission;
+        AMission mission = MissionManager.Instance.GetActiveMission<MissionCafeteria1>().mission;
         MissionManager.Instance.EndMission(mission);
     }
 }

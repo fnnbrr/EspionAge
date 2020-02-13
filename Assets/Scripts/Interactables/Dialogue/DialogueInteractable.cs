@@ -9,17 +9,31 @@ public class DialogueInteractable : Interactable
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
+    protected bool isConversing = false;
+
     private int activeLineIndex = 0;
 
-    public override void OnInteract(GameObject birdie)
+    public override void OnInteract()  
     {
-        speakerUIBirdie = birdie.GetComponentInChildren<SpeakerUI>();
-        speakerUINPC = GetComponentInChildren<SpeakerUI>();
+        if (!isConversing)
+        {
+            isConversing = true;
 
-        HideInteractUI();
-        AdvanceConversation();
+            // Freeze player when conversing
+            player.GetComponent<PlayerController>().CanMove = false;
 
-        base.OnInteract(birdie);
+            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+
+            HideInteractUI();
+            AdvanceConversation();
+
+            base.OnInteract();
+        }
+        else
+        {
+            AdvanceConversation();
+        }
     }
 
     void AdvanceConversation() {
@@ -36,6 +50,12 @@ public class DialogueInteractable : Interactable
             speakerUIBirdie.Hide();
             speakerUINPC.Hide();
             activeLineIndex = 0;
+
+            isConversing = false;
+            ShowInteractUI();
+
+            // Unfreeze player when done
+            player.GetComponent<PlayerController>().CanMove = true;
         }
     }
 
@@ -49,29 +69,24 @@ public class DialogueInteractable : Interactable
         } 
         else {
             SetDialogue(speakerUINPC, speakerUIBirdie, line.text);
+            PlayVoice(conversation.npcVoice);
         }
     }
 
-    void SetDialogue(
-        SpeakerUI activeSpeakerUI,
-        SpeakerUI inactiveSpeakerUI,
-        string text
-    ) {
+    void SetDialogue(SpeakerUI activeSpeakerUI, SpeakerUI inactiveSpeakerUI, string text) {
         //who is speaking
         activeSpeakerUI.Dialogue = text;
         activeSpeakerUI.Show();
+
         //who is not speaking
         inactiveSpeakerUI.Hide();
     }
 
-    public void Enable()
+    private void PlayVoice(string fmodPath)
     {
-        gameObject.SetActive(true);
+        if (!string.IsNullOrEmpty(fmodPath.Trim()))
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(fmodPath, speakerUINPC.transform.position);
+        }
     }
-
-    public void Disable()
-    {
-        gameObject.SetActive(false);
-    }
-    
 }
