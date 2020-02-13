@@ -16,6 +16,9 @@ public class AwakenessManager : Singleton<AwakenessManager>
     public float movementSpeedBuff = 5f;
     public float turnSpeedBuff = 5f;
 
+    [Header("Other Effects")]
+    public float zoomInAmount;
+
     private Vignette vignette;
     private MotionBlur motionBlur;
     private FilmGrain filmGrain;
@@ -38,36 +41,47 @@ public class AwakenessManager : Singleton<AwakenessManager>
         UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
         UIManager.Instance.staminaBar.OnChange += UpdateFilmGrain;
         UIManager.Instance.staminaBar.OnChange += UpdateColorGrading;
+        UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
         
         UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
     }
 
-    void UpdateVignette(float fillAmount)
+    private float GetInterpolatedFillAmount(float fillAmount)
     {
-        vignette.intensity.value = vignetteMultiplier * fillAmount;
+        return fillAmount / StaminaBar.STAMINA_MAX;  // this is just dividing by 1 for now, but this could cause many issues if we ever change it
     }
-    
-    void UpdateMotionBlur(float fillAmount)
+
+    private void UpdateVignette(float fillAmount)
+    {
+        vignette.intensity.value = vignetteMultiplier * GetInterpolatedFillAmount(fillAmount);
+    }
+
+    private void UpdateMotionBlur(float fillAmount)
     {
         // We have end --> start because: fillAmount == 0 means no stamina (end state), and == 1 means full (start state)
-        motionBlur.intensity.value = fillAmount / StaminaBar.STAMINA_MAX;
+        motionBlur.intensity.value = GetInterpolatedFillAmount(fillAmount);
     }
 
-    void UpdateFilmGrain(float fillAmount)
+    private void UpdateFilmGrain(float fillAmount)
     {
-        filmGrain.intensity.value = fillAmount / StaminaBar.STAMINA_MAX;
-    }
-    
-    void UpdateColorGrading(float fillAmount)
-    {
-        colorAdjustments.saturation.value = saturationMultiplier * fillAmount;
-        colorAdjustments.contrast.value = startContrast + contrastMultiplier * fillAmount;
-        colorAdjustments.postExposure.value = startExposure + brightnessMultiplier * fillAmount;
+        filmGrain.intensity.value = GetInterpolatedFillAmount(fillAmount);
     }
 
-    void UpdateMovementBuffs(float fillAmount)
+    private void UpdateColorGrading(float fillAmount)
     {
-        playerController.movementSpeed = playerController.baseMovementSpeed + (fillAmount * movementSpeedBuff);
-        playerController.turnSpeed = playerController.baseTurnSpeed + (fillAmount * turnSpeedBuff);
+        colorAdjustments.saturation.value = saturationMultiplier * GetInterpolatedFillAmount(fillAmount);
+        colorAdjustments.contrast.value = startContrast + contrastMultiplier * GetInterpolatedFillAmount(fillAmount);
+        colorAdjustments.postExposure.value = startExposure + brightnessMultiplier * GetInterpolatedFillAmount(fillAmount);
+    }
+
+    private void UpdateMovementBuffs(float fillAmount)
+    {
+        playerController.movementSpeed = playerController.baseMovementSpeed + (movementSpeedBuff * GetInterpolatedFillAmount(fillAmount));
+        playerController.turnSpeed = playerController.baseTurnSpeed + (turnSpeedBuff * GetInterpolatedFillAmount(fillAmount));
+    }
+
+    private void UpdateCameraDistance(float fillAmount)
+    {
+        CameraManager.Instance.AddToCurrentCameraDistance(zoomInAmount * GetInterpolatedFillAmount(fillAmount));
     }
 }

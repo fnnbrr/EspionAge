@@ -23,6 +23,9 @@ public class CameraManager : Singleton<CameraManager>
     public event BlendingStartAction OnBlendingStart;
     public event BlendingCompleteAction OnBlendingComplete;
 
+    private bool defaultCameraDistanceInitialized = false;
+    private float activeCameraDefaultCameraDistance;  // used to keep track of the base camera distance, to then add to freely
+
     private void Start()
     {
         if (!brain && !(brain = FindObjectOfType<CinemachineBrain>()))
@@ -49,6 +52,29 @@ public class CameraManager : Singleton<CameraManager>
     public Transform GetActiveCameraTransform()
     {
         return GetActiveCamera().VirtualCameraGameObject.transform;
+    }
+
+    public void AddToCurrentCameraDistance(float cameraDistanceDelta)
+    {
+        // This happens when right in the beginning of the game, OnStart, should not be an issue otherwise
+        if (GetActiveCamera() == null)
+        {
+            return;
+        }
+
+        if (!defaultCameraDistanceInitialized)
+        {
+            UpdateDefaultCameraDistance();
+        }
+
+        CinemachineFramingTransposer framingTransposer = GetActiveVirtualCamera().GetCinemachineComponent<CinemachineFramingTransposer>();
+        if (framingTransposer)
+        {
+            framingTransposer.m_CameraDistance = activeCameraDefaultCameraDistance + cameraDistanceDelta;
+        } else
+        {
+            Debug.LogError("Could not get the CinemachineFramingTransposer component of the current active camera!");
+        }
     }
 
     public void BlendTo(CinemachineVirtualCamera blendToCamera, bool alertListeners = true)
@@ -84,6 +110,8 @@ public class CameraManager : Singleton<CameraManager>
         {
             StartCoroutine(WaitForBlendFinish(fromCamera, blendToCamera));
         }
+
+        UpdateDefaultCameraDistance();
     }
 
     // This is just here so we can alert listeners that we have finished blending
@@ -127,5 +155,17 @@ public class CameraManager : Singleton<CameraManager>
 
         // now blend back to the original camera
         BlendTo(currentCamera, false);
+    }
+
+    private void UpdateDefaultCameraDistance()
+    {
+        defaultCameraDistanceInitialized = true;
+
+        // Update the our local activeCameraDefaultCameraDistance
+        CinemachineFramingTransposer blendToCameraFramingTransposer = GetActiveVirtualCamera().GetCinemachineComponent<CinemachineFramingTransposer>();
+        if (blendToCameraFramingTransposer)
+        {
+            activeCameraDefaultCameraDistance = blendToCameraFramingTransposer.m_CameraDistance;
+        }
     }
 }
