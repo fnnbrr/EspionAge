@@ -25,6 +25,9 @@ public class PlayerManager : MonoBehaviour
 
     private List<Coroutine> spawnedCoroutines;
 
+    public delegate void OnThrowEventHandler(Interactable source);
+    public event OnThrowEventHandler OnThrow;
+
     private void Start()
     {
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
@@ -125,6 +128,8 @@ public class PlayerManager : MonoBehaviour
 
         // Reset the angle to 0, which also means the line renderer will not be visible
         launchArcRenderer.RenderArc(0f);
+
+        OnThrow?.Invoke(current.GetComponent<Interactable>());
     }
 
     private float DistToClosestEnemy()

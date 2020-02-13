@@ -22,7 +22,10 @@ public class LaunchArcRenderer : MonoBehaviour
         lr = Utils.GetRequiredComponent<LineRenderer>(this);
         g = Mathf.Abs(Physics.gravity.y);
 
-        endTargetDisplay = Instantiate(endTargetDisplayPrefab, Vector3.zero, endTargetDisplayPrefab.transform.rotation, transform.parent);
+        if (endTargetDisplayPrefab)
+        {
+            endTargetDisplay = Instantiate(endTargetDisplayPrefab, Vector3.zero, endTargetDisplayPrefab.transform.rotation, transform.parent);
+        }
     }
 
     private void OnValidate()
