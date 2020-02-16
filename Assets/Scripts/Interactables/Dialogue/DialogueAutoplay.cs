@@ -17,7 +17,7 @@ public class DialogueAutoplay : MonoBehaviour
     private int activeLineIndex = 0;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
@@ -37,7 +37,6 @@ public class DialogueAutoplay : MonoBehaviour
     }
 
     // Autoplay dialogue when triggered
-    // https://www.youtube.com/watch?v=f-oSXg6_AMQ Video for making dialogue show one after each other without player intervention
     public void TriggerAutoplay()
     {
         if (!autoPlaying)
@@ -45,6 +44,11 @@ public class DialogueAutoplay : MonoBehaviour
             autoPlaying = true;
             StartCoroutine(DisplayConversations()); ;
         }
+    }
+
+    protected virtual void InactivateDialogue()
+    {
+        autoPlaying = false;
     }
 
 
@@ -62,7 +66,8 @@ public class DialogueAutoplay : MonoBehaviour
         speakerUIBirdie.Hide();
         speakerUINPC.Hide();
         activeLineIndex = 0;
-        autoPlaying = false;
+
+        InactivateDialogue();
     }
 
 
