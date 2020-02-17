@@ -25,6 +25,9 @@ public class PlayerManager : MonoBehaviour
 
     private List<Coroutine> spawnedCoroutines;
 
+    public delegate void OnThrowEventHandler(Interactable source);
+    public event OnThrowEventHandler OnThrow;
+
     private void Start()
     {
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
@@ -41,6 +44,8 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        HandleDisplayThrow();
+
         HandleDecreaseAwakeness();
 
         float minDistance = DistToClosestEnemy();
@@ -75,19 +80,23 @@ public class PlayerManager : MonoBehaviour
             }
             else
             {
-                // If we are holding the button, then ping pong the launch arc angle
-                if (isThrowing)
-                {
-                    startThrowTime += angleIncreaseSpeed * Time.deltaTime;
-                    launchArcRenderer.RenderArc(Mathf.PingPong(startThrowTime, maxThrowAngle - minThrowAngle) + minThrowAngle);
-                }
                 // Otherwise, we started holding just now, so let's record the start time and stuff
-                else
+                if (!isThrowing)
                 {
                     isThrowing = true;
                     startThrowTime = Time.time;
                 }
             }
+        }
+    }
+
+    private void HandleDisplayThrow()
+    {
+        // If we are holding the button, then ping pong the launch arc angle
+        if (isThrowing)
+        {
+            startThrowTime += angleIncreaseSpeed * Time.deltaTime;
+            launchArcRenderer.RenderArc(Mathf.PingPong(startThrowTime, maxThrowAngle - minThrowAngle) + minThrowAngle);
         }
     }
 
@@ -119,6 +128,8 @@ public class PlayerManager : MonoBehaviour
 
         // Reset the angle to 0, which also means the line renderer will not be visible
         launchArcRenderer.RenderArc(0f);
+
+        OnThrow?.Invoke(current.GetComponent<Interactable>());
     }
 
     private float DistToClosestEnemy()
