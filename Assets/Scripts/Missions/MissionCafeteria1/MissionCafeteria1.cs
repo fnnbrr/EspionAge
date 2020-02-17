@@ -70,11 +70,6 @@ public class MissionCafeteria1 : AMission
     private List<Chaser> instantiatedEnemies;
     private int interactedCount = 0;
 
-    // TODO: Remove all properties below when interactables are implemented
-    [Header("Remove below once we have interactables")]
-    public bool testOnCollectSpawning = false;
-    public int interactableIndexToTest;
-
     private bool isRestarting = false;
 
     private void Awake()
@@ -86,18 +81,7 @@ public class MissionCafeteria1 : AMission
         instantiatedEnemies = new List<Chaser>();
     }
 
-    ////////////////////////////////////////////////////
-    // TOOD: REMOVE ONCE INTERACTABLES ARE IMPLEMENTED
-    private void Start()
-    {
-        if (testOnCollectSpawning && interactableIndexToTest >= 0 && interactableIndexToTest < missionCriticalInteractables.Count)
-        {
-            SpawnEnemies(missionCriticalInteractables[interactableIndexToTest].enemiesToSpawnIfLastCollected);
-        }
-    }
-    ////////////////////////////////////////////////////
-
-    private void Initialize()
+    protected override void Initialize()
     {
         interactedCount = 0;
 
@@ -106,7 +90,7 @@ public class MissionCafeteria1 : AMission
         SpawnEnemies(startEnemies);
     }
 
-    private void Cleanup()
+    protected override void Cleanup()
     {
         DestroyGameObjects(instantiatedMissionObjects);
         DestroyGameObjects(instantiatedMissionInteractables);
@@ -115,21 +99,6 @@ public class MissionCafeteria1 : AMission
         instantiatedMissionObjects.Clear();
         instantiatedMissionInteractables.Clear();
         instantiatedEnemies.Clear();
-    }
-
-    public void OnEnable()
-    {
-        Initialize();
-    }
-
-    private void OnDisable()
-    {
-        Cleanup();
-    }
-
-    private void OnDestroy()
-    {
-        Cleanup();
     }
 
     private void SpawnObjects(List<MissionObject> interactables)
