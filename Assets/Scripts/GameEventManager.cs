@@ -10,11 +10,13 @@ public class GameEventManager : Singleton<GameEventManager>
     /// </summary>
     public enum GameEvent
     {
+        TutorialActive,
         TutorialComplete,
         KitchenMissionComplete
     }
     private readonly Dictionary<GameEvent, bool> defaultValues = new Dictionary<GameEvent, bool>()
     {
+        {GameEvent.TutorialActive, false },
         {GameEvent.TutorialComplete, false },
         {GameEvent.KitchenMissionComplete, false }
     };
