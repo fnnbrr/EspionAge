@@ -215,7 +215,7 @@ public class MissionCafeteria1 : AMission
 
             SpawnEnemies(missionCriticalInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
 
-            StartCoroutine(CameraManager.Instance.BlendToFarCameraForSeconds(2));
+            CameraManager.Instance.BlendToFarCameraForSeconds(2);
 
             AlertMissionComplete();
         }
