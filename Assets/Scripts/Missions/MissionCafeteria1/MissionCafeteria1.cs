@@ -6,14 +6,6 @@ using UnityEngine.AI;
 using Cinemachine;
 
 [System.Serializable]
-public class MissionObject
-{
-    public GameObject prefab;
-    public Vector3 position;
-    public Vector3 rotation;
-}
-
-[System.Serializable]
 public class MissionCriticalInteractable : MissionObject
 {
     public List<MissionEnemy> enemiesToSpawnIfLastCollected;
@@ -65,7 +57,6 @@ public class MissionCafeteria1 : AMission
     public List<MissionCriticalInteractable> missionCriticalInteractables;
     public List<MissionObject> missionObjects;
 
-    private List<GameObject> instantiatedMissionObjects;
     private List<GameObject> instantiatedMissionInteractables;
     private List<Chaser> instantiatedEnemies;
     private int interactedCount = 0;
@@ -74,7 +65,6 @@ public class MissionCafeteria1 : AMission
 
     private void Awake()
     {
-        instantiatedMissionObjects = new List<GameObject>();
         instantiatedMissionInteractables = new List<GameObject>();
 
         // TODO: this should probably be changed to a generic enemy type at some point
@@ -92,11 +82,10 @@ public class MissionCafeteria1 : AMission
 
     protected override void Cleanup()
     {
-        DestroyGameObjects(instantiatedMissionObjects);
+        DestroyMissionObjects(missionObjects);
         DestroyGameObjects(instantiatedMissionInteractables);
         DestroyGameObjects(instantiatedEnemies.Where(e => e).Select(e => e.gameObject).ToList());
 
-        instantiatedMissionObjects.Clear();
         instantiatedMissionInteractables.Clear();
         instantiatedEnemies.Clear();
     }
@@ -106,7 +95,7 @@ public class MissionCafeteria1 : AMission
         // Instantiate all interactable objects
         interactables.ForEach(i =>
         {
-            instantiatedMissionObjects.Add(Instantiate(i.prefab, i.position, Quaternion.Euler(i.rotation)));
+            i.spawnedInstance = MissionManager.Instance.SpawnMissionObject(i);
         });
     }
 
@@ -194,6 +183,14 @@ public class MissionCafeteria1 : AMission
         isRestarting = false;
 
         UIManager.Instance.FadeIn();
+    }
+
+    private void DestroyMissionObjects(List<MissionObject> missionObjects)
+    {
+        missionObjects.ForEach(o =>
+        {
+            MissionManager.Instance.DestroyMissionObject(o);
+        });
     }
 
     private void DestroyGameObjects(List<GameObject> gameObjects)

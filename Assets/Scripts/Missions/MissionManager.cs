@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[System.Serializable]
+public class MissionObject
+{
+    public GameObject prefab;
+    public Vector3 position;
+    public Vector3 rotation;
+
+    [HideInInspector]
+    public GameObject spawnedInstance;
+}
+
 public class InProgressMissionContainer
 {
     public AMission mission;
@@ -61,6 +72,19 @@ public class MissionManager : Singleton<MissionManager>
         else
         {
             Debug.LogError("Tried to end an invalid mission!");
+        }
+    }
+
+    public GameObject SpawnMissionObject(MissionObject missionObject)
+    {
+        return Instantiate(missionObject.prefab, missionObject.position, Quaternion.Euler(missionObject.rotation));
+    }
+
+    public void DestroyMissionObject(MissionObject missionObject)
+    {
+        if (missionObject.spawnedInstance)
+        {
+            Destroy(missionObject.spawnedInstance);
         }
     }
 }
