@@ -32,10 +32,7 @@ public class NPCAutoFollow : DialogueAutoplay
     {
         if(other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {
-            TriggerAutoplay();
-
-            targetObject = other.gameObject;
-            TriggerFollow();
+            TriggerInteraction(other.gameObject);
         }
     }
 
@@ -56,19 +53,13 @@ public class NPCAutoFollow : DialogueAutoplay
             return;
         }
 
-        if(!isFollowing)
-        {
-            isFollowing = true;
-        }
+        isFollowing = true;
     }
 
 
     void StopFollow()
     {
-        if(isFollowing)
-        {
-            isFollowing = false;
-        }
+        isFollowing = false;
     }
 
 
@@ -89,13 +80,7 @@ public class NPCAutoFollow : DialogueAutoplay
         }
         else
         {
-            //Chase target
-            Vector3 targetPosition = targetObject.transform.position;
-            Vector3 thisPosition = transform.position;
-            Vector3 dirToTarget = thisPosition - targetPosition;
-            Vector3 newPos = thisPosition - dirToTarget;
-
-            agent.SetDestination(newPos);
+            agent.SetDestination(targetObject.transform.position);
         }
     }
 }
