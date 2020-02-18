@@ -10,48 +10,75 @@ public class NPCAutoFollow : DialogueAutoplay
 
     protected NavMeshAgent agent;
 
-    protected override void Start()
+
+    void Start()
     {
-        base.Start();
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
     }
+
 
     void Update()
     {
         if(isFollowing)
         {
-            // TODO: only chase character is not within range of the target
+            // TODO: only chase character within a certain area
             ChaseTarget();
         }
-        // TODO: set a way for the character to stop chasing the target
     }
 
-    //TEMPORARY TO TEST
-    public new void OnTriggerEnter(Collider other)
+    // Temporary way to trigger interaction (Remove once Trigger Interaction is integrated)
+    // Remove this and box collider on NPC when done
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
+        if(other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {
             TriggerAutoplay();
-            TriggerFollow(other.gameObject);
+
+            targetObject = other.gameObject;
+            TriggerFollow();
         }
     }
 
-
-    public void TriggerFollow(GameObject _targetObject)
+    public new void TriggerInteraction(GameObject target)
     {
+        base.TriggerInteraction(target);
+
+        targetObject = target;
+        TriggerFollow();
+    }
+
+
+    void TriggerFollow()
+    {
+        if(targetObject == null)
+        {
+            Debug.LogError("Target to follow must be assigned");
+            return;
+        }
+
         if(!isFollowing)
         {
             isFollowing = true;
-            targetObject = _targetObject;
         }
     }
 
-    // TODO: Function that handles when autoplay of text is happening and if it should start following the target
-    protected override void InactivateDialogue()
+
+    void StopFollow()
     {
-        base.InactivateDialogue();
-        isFollowing = false;
+        if(isFollowing)
+        {
+            isFollowing = false;
+        }
     }
+
+
+    protected override void OnDialogueComplete()
+    {
+        base.OnDialogueComplete();
+        StopFollow();
+        // Code to add mission can possibly be put here
+    }
+
 
     void ChaseTarget()
     {

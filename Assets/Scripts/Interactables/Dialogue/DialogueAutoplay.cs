@@ -6,8 +6,6 @@ public class DialogueAutoplay : MonoBehaviour
 {
     public Conversation conversation;
 
-    public GameObject player;
-
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
@@ -16,28 +14,18 @@ public class DialogueAutoplay : MonoBehaviour
     public float waitLineTime = 2.0f;
     private int activeLineIndex = 0;
 
-    // Start is called before the first frame update
-    protected virtual void Start()
+
+    public void TriggerInteraction(GameObject target)
     {
-        speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+        // Possible issue here when target is not Birdie
+        speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(target);
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+
+        TriggerAutoplay();
     }
 
 
-    // Triggering should be handled by another/ separate function
-    // Follow Player should be called in a child class of this class
-
-    // Temporarily using on trigger enter to trigger autoplay
-    public void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
-        {
-            TriggerAutoplay();
-        }
-    }
-
-    // Autoplay dialogue when triggered
-    public void TriggerAutoplay()
+    protected void TriggerAutoplay()
     {
         if (!autoPlaying)
         {
@@ -46,7 +34,7 @@ public class DialogueAutoplay : MonoBehaviour
         }
     }
 
-    protected virtual void InactivateDialogue()
+    protected virtual void OnDialogueComplete()
     {
         autoPlaying = false;
     }
@@ -67,7 +55,7 @@ public class DialogueAutoplay : MonoBehaviour
         speakerUINPC.Hide();
         activeLineIndex = 0;
 
-        InactivateDialogue();
+        OnDialogueComplete();
     }
 
 
