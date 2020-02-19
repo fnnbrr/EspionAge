@@ -26,7 +26,12 @@ public class CameraZone : MonoBehaviour
     {
         if (other.CompareTag(Constants.TAG_PLAYER))
         {
-            CameraManager.Instance.BlendTo(mainCamera);
+            // so if there is no mainCamera set, we will just keep whatever the current camera is (which may not be preferable in most cases)
+            if (mainCamera)
+            {
+                CameraManager.Instance.BlendTo(mainCamera);
+            }
+
             if (GameManager.Instance.enableFog)
             {
                 StartCoroutine(FadeFog(enabledFogAlpha, disabledFogAlpha));
