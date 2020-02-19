@@ -8,6 +8,7 @@ public class Throwable : Interactable
 {
     public GameObject pingPrefab;
     public float pingFloorOffset = 1.0f;
+    public float pingDuration = 1.0f;
     private bool hasBeenAcquired = false;
     private bool hasHit = false;
     
@@ -29,8 +30,9 @@ public class Throwable : Interactable
         Vector3 hitPoint = other.GetContact(0).point;
         Vector3 hitNormal = other.GetContact(0).normal;
         
-        Instantiate(pingPrefab, hitPoint + (pingFloorOffset * hitNormal), 
+        GameObject pingInstance = Instantiate(pingPrefab, hitPoint + (pingFloorOffset * hitNormal), 
             Quaternion.LookRotation(-hitNormal));
+        Destroy(pingInstance, pingDuration);
         hasHit = true;
     }
 }
