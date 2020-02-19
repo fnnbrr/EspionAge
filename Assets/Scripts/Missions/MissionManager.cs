@@ -26,14 +26,53 @@ public class InProgressMissionContainer
     }
 }
 
+[System.Serializable]
+public class MissionMapping
+{
+    [Header("Make sure this mission is unique among the list!")]
+    public MissionsEnum mission;
+    public GameObject prefab;
+}
+
 public class MissionManager : Singleton<MissionManager>
 {
+    [Header("This will get converted to a Dictionary at runtime.")]
+    public List<MissionMapping> missionMappingList;
+    private Dictionary<MissionsEnum, GameObject> missionMapping;
+
     private List<InProgressMissionContainer> activeMissions;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        InitializeMissionMapping();
+
         activeMissions = new List<InProgressMissionContainer>();
+    }
+
+    private void InitializeMissionMapping()
+    {
+        missionMapping = new Dictionary<MissionsEnum, GameObject>();
+        missionMappingList.ForEach(m =>
+        {
+            missionMapping.Add(m.mission, m.prefab);
+        });
+        if (missionMapping.Count != System.Enum.GetNames(typeof(MissionsEnum)).Length)
+        {
+            Utils.LogErrorAndStopPlayMode("Expected the number of missions in MissionManager to be equal to the number in MissionsEnum!");
+        }
+    }
+
+    public GameObject GetMissionFromEnum(MissionsEnum missionEnumValue)
+    {
+        if (missionMapping.TryGetValue(missionEnumValue, out GameObject prefab))
+        {
+            return prefab;
+        }
+        else
+        {
+            Debug.LogWarning($"Unmapped MissionsEnum value: {missionEnumValue} passed into GetMissionFromEnum!");
+            return null;
+        }
     }
 
     public AMission StartMission(GameObject missionPrefab)
