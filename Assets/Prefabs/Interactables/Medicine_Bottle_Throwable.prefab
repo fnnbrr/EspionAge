@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3658902531811208854}
   - component: {fileID: 3658902531811208852}
   - component: {fileID: 3658902531811208855}
+  - component: {fileID: 2992696118134802159}
   m_Layer: 10
   m_Name: Medicine_Bottle_Throwable
   m_TagString: Untagged
@@ -65,6 +66,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactableAnim: {fileID: 3658902532567942418}
   interactTransform: {fileID: 3658902532567942419}
+  pingPrefab: {fileID: 3968524627807016739, guid: 9681931255df4a245b8a1b52668d0d89,
+    type: 3}
+  pingFloorOffset: 1
 --- !u!65 &3658902531811208855
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -78,6 +82,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &2992696118134802159
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3658902531811208850}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.45
+  m_Height: 1.5
+  m_Direction: 1
+  m_Center: {x: -9.313226e-10, y: 0, z: 0}
 --- !u!1 &3658902532391834960
 GameObject:
   m_ObjectHideFlags: 0
