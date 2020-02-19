@@ -33,7 +33,7 @@ public class MissionTutorial : AMission
         // Spawn the old person waiting, that'll annoy us once we drop the vase
 
         // Toggle the event in the EventManager
-        // ~> GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, true);
+        GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, true);
         // The old person waiting should already be in the world and be set up with a conditional conversation that'll end this mission
         //  the logic there should be based on this GameEvent enum, and for now just end the current mission, since we know itll be the first thing
         //  - cleaner way otherwise would possibily be having a mapping of some Mission enum to class types, where we can do something like:
@@ -62,7 +62,7 @@ public class MissionTutorial : AMission
         // Despawn the old person waiting for us
 
         // Toggle the event in the EventManager
-        // ~> GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, false);
+        GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, false);
 
         if (MissionManager.Instance)
         {
