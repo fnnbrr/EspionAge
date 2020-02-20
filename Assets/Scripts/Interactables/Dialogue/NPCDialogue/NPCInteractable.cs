@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 public class MissionNPC
@@ -20,6 +21,30 @@ public class NPCInteractable : DialogueInteractable
     public List<MissionNPC> missionsOffered;
     private MissionNPC currentMissionNPC;                            // Current Mission given by this NPC (should only be 1 per NPC)
     private AMission startedMission;                                 // started mission needed to end mission
+
+    private bool isFollowing = false;
+    protected GameObject targetObject;
+
+    protected NavMeshAgent agent;
+
+
+    protected override void Start()
+    {
+        base.Start();
+        agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+    }
+
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (isFollowing)
+        {
+            // TODO: only chase character within a certain area
+            ChaseTarget();
+        }
+    }
 
 
     public override void OnInteract()
@@ -85,6 +110,55 @@ public class NPCInteractable : DialogueInteractable
         }
         
         base.OnInteract();
+    }
+
+    // Should be called in another class as this is responsible for autoplay
+    public override void TriggerInteraction(GameObject target)
+    {
+        base.TriggerInteraction(target);
+
+        targetObject = target;
+    }
+
+
+    // Other class should handle whether NPC should follow target
+    public void TriggerFollow()
+    {
+        if (targetObject == null)
+        {
+            Debug.LogError("Target to follow must be assigned");
+            return;
+        }
+
+        isFollowing = true;
+    }
+
+
+    void StopFollow()
+    {
+        isFollowing = false;
+    }
+
+
+    protected override void OnAutoplayComplete()
+    {
+        base.OnAutoplayComplete();
+        StopFollow();
+        // Code to add mission can possibly be put here
+    }
+
+
+    void ChaseTarget()
+    {
+        if (targetObject == null)
+        {
+            Debug.LogError("Object being followed must be assigned");
+            return;
+        }
+        else
+        {
+            agent.SetDestination(targetObject.transform.position);
+        }
     }
 
     private void HandleOnMissionReset()
