@@ -7,8 +7,8 @@ public class LoudObject : MonoBehaviour
 {
     public float thrust;
     public Vector3 direction;
+    public float shakeRadius;
     public float dropRadius;
-    public float innerDropRadius;
     public float loudObjectRadius;
     private float distance;
     private Rigidbody rb;
@@ -27,17 +27,17 @@ public class LoudObject : MonoBehaviour
     void Update()
     {
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
-        if (distance <= innerDropRadius)
+        if (distance <= dropRadius)
         {
             rb.AddForce(direction * thrust);
             rb.useGravity = true;
             NotifyChasingNurse();
         } 
-        else if (distance <= (innerDropRadius + 3))
+        else if (distance <= (dropRadius + 3))
         {
             Shake(maxShake);
         } 
-        else if (distance <= dropRadius)
+        else if (distance <= shakeRadius)
         {
             float dynamicShake = Mathf.Lerp(maxShake, minShake, Mathf.Clamp(distance/5.0f, 0f, 1f));
             Shake(dynamicShake);
@@ -79,7 +79,7 @@ public class LoudObject : MonoBehaviour
 
         // Radius sphere 
         Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, dropRadius);
+        Gizmos.DrawWireSphere(transform.position, shakeRadius);
 
         // Loud object radius
         Gizmos.color = Color.yellow;
