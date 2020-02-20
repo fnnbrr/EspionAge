@@ -50,8 +50,6 @@ public class InteractableAutoSpawner : MonoBehaviour
 
     private void OnInteractEnd(Interactable source)
     {
-        // TODO: Have a nice fade out shader animation and delete afterwards
-        Destroy(source.gameObject, 5f);
         SpawnInteractable();
     }
 }
