@@ -113,9 +113,9 @@ public class NPCInteractable : DialogueInteractable
     }
 
     // Should be called in another class as this is responsible for autoplay
-    public override void TriggerInteraction(GameObject target)
+    public override void TriggerAutoplay(GameObject target)
     {
-        base.TriggerInteraction(target);
+        base.TriggerAutoplay(target);
 
         targetObject = target;
     }

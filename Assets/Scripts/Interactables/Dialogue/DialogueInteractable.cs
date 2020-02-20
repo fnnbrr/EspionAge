@@ -47,26 +47,18 @@ public class DialogueInteractable : Interactable
                 AdvanceConversation();
             }
         }
+        else
+        {
+            StartCoroutine(AutoplayConversations()); ;
+        }
     }
 
     // Functionality for Autoplay Conversation to be triggered
-    public virtual void TriggerInteraction(GameObject target)
+    public virtual void TriggerAutoplay(GameObject target)
     {
         // Possible issue here when target is not Birdie
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(target);
-
-        TriggerAutoplay();
-    }
-
-
-    protected void TriggerAutoplay()
-    {
-        if (!autoPlaying)
-        {
-            autoPlaying = true;
-            OnInteract();                                           // This must be called to load the conversation
-            StartCoroutine(AutoplayConversations()); ;
-        }
+        autoPlaying = true;
     }
 
     protected virtual void OnAutoplayComplete()
