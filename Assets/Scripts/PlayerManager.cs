@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Throwables")]
     public Transform throwPosition;
+    public float throwableDestroyTime = 5f;
     public float throwMultiplier = 0.08f;
     public float angleIncreaseSpeed = 45f;
     public float minThrowAngle = 0f;
@@ -130,6 +131,9 @@ public class PlayerManager : MonoBehaviour
         launchArcRenderer.RenderArc(0f);
 
         OnThrow?.Invoke(current.GetComponent<Interactable>());
+
+        // TODO: Have a nice fade out shader animation and delete after this time elapses
+        Destroy(current, throwableDestroyTime);
     }
 
     private float DistToClosestEnemy()
