@@ -14,11 +14,14 @@ public class InteractableAutoSpawner : MonoBehaviour
     public int spawnCount = 5;
     [SerializeField] public InteractableType interactableType;
 
+    private List<GameObject> currentInteractables;
+
     void Start()
     {
-        for(int i = 0; i < spawnCount; i++)
+        currentInteractables = new List<GameObject>();
+        for (int i = 0; i < spawnCount; i++)
         {
-            SpawnInteractable();
+            currentInteractables.Add(SpawnInteractable());
         }
 
         if (interactableType == InteractableType.Throwable)
@@ -27,7 +30,7 @@ public class InteractableAutoSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnInteractable()
+    private GameObject SpawnInteractable()
     {
         GameObject spawnedInteractable = Instantiate(prefab, transform);
         spawnedInteractable.transform.localPosition = Vector3.zero;
@@ -46,10 +49,15 @@ public class InteractableAutoSpawner : MonoBehaviour
                 Debug.LogError($"Unknown InteractableType: {interactableType}");
                 break;
         }
+
+        return spawnedInteractable;
     }
 
     private void OnInteractEnd(Interactable source)
     {
-        SpawnInteractable();
+        if (currentInteractables.Remove(source.gameObject))
+        {
+            currentInteractables.Add(SpawnInteractable());
+        }
     }
 }
