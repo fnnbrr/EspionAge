@@ -60,6 +60,7 @@ public class ObjectFader : MonoBehaviour
 
     // Code from here was changed for our own uses: 
     //  https://forum.unity.com/threads/how-to-write-a-general-shader-code-for-different-render-type-like-standard-shader.685960/
+    //  https://www.youtube.com/watch?v=nNjNWDZSkAI
     public void SetMaterialsTransparent()
     {
         foreach (Material material in r.materials)
