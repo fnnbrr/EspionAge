@@ -6,14 +6,6 @@ using UnityEngine.AI;
 using Cinemachine;
 
 [System.Serializable]
-public class MissionObject
-{
-    public GameObject prefab;
-    public Vector3 position;
-    public Vector3 rotation;
-}
-
-[System.Serializable]
 public class MissionCriticalInteractable : MissionObject
 {
     public List<MissionEnemy> enemiesToSpawnIfLastCollected;
@@ -65,39 +57,21 @@ public class MissionCafeteria1 : AMission
     public List<MissionCriticalInteractable> missionCriticalInteractables;
     public List<MissionObject> missionObjects;
 
-    private List<GameObject> instantiatedMissionObjects;
     private List<GameObject> instantiatedMissionInteractables;
     private List<Chaser> instantiatedEnemies;
     private int interactedCount = 0;
-
-    // TODO: Remove all properties below when interactables are implemented
-    [Header("Remove below once we have interactables")]
-    public bool testOnCollectSpawning = false;
-    public int interactableIndexToTest;
 
     private bool isRestarting = false;
 
     private void Awake()
     {
-        instantiatedMissionObjects = new List<GameObject>();
         instantiatedMissionInteractables = new List<GameObject>();
 
         // TODO: this should probably be changed to a generic enemy type at some point
         instantiatedEnemies = new List<Chaser>();
     }
 
-    ////////////////////////////////////////////////////
-    // TOOD: REMOVE ONCE INTERACTABLES ARE IMPLEMENTED
-    private void Start()
-    {
-        if (testOnCollectSpawning && interactableIndexToTest >= 0 && interactableIndexToTest < missionCriticalInteractables.Count)
-        {
-            SpawnEnemies(missionCriticalInteractables[interactableIndexToTest].enemiesToSpawnIfLastCollected);
-        }
-    }
-    ////////////////////////////////////////////////////
-
-    private void Initialize()
+    protected override void Initialize()
     {
         interactedCount = 0;
 
@@ -106,30 +80,14 @@ public class MissionCafeteria1 : AMission
         SpawnEnemies(startEnemies);
     }
 
-    private void Cleanup()
+    protected override void Cleanup()
     {
-        DestroyGameObjects(instantiatedMissionObjects);
+        DestroyMissionObjects(missionObjects);
         DestroyGameObjects(instantiatedMissionInteractables);
         DestroyGameObjects(instantiatedEnemies.Where(e => e).Select(e => e.gameObject).ToList());
 
-        instantiatedMissionObjects.Clear();
         instantiatedMissionInteractables.Clear();
         instantiatedEnemies.Clear();
-    }
-
-    public void OnEnable()
-    {
-        Initialize();
-    }
-
-    private void OnDisable()
-    {
-        Cleanup();
-    }
-
-    private void OnDestroy()
-    {
-        Cleanup();
     }
 
     private void SpawnObjects(List<MissionObject> interactables)
@@ -137,7 +95,7 @@ public class MissionCafeteria1 : AMission
         // Instantiate all interactable objects
         interactables.ForEach(i =>
         {
-            instantiatedMissionObjects.Add(Instantiate(i.prefab, i.position, Quaternion.Euler(i.rotation)));
+            i.spawnedInstance = MissionManager.Instance.SpawnMissionObject(i);
         });
     }
 
@@ -225,6 +183,14 @@ public class MissionCafeteria1 : AMission
         isRestarting = false;
 
         UIManager.Instance.FadeIn();
+    }
+
+    private void DestroyMissionObjects(List<MissionObject> missionObjects)
+    {
+        missionObjects.ForEach(o =>
+        {
+            MissionManager.Instance.DestroyMissionObject(o);
+        });
     }
 
     private void DestroyGameObjects(List<GameObject> gameObjects)
