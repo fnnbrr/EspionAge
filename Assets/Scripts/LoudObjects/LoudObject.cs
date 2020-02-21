@@ -40,6 +40,7 @@ public class LoudObject : MonoBehaviour
             float clampedDistance = Mathf.Clamp(distance, dropRadius, shakeRadius);
             float lerpedDistance = Mathf.Lerp(0f, 1f, (clampedDistance - dropRadius) / (shakeRadius - dropRadius));
             float dynamicShake = Mathf.Lerp(maxShake, minShake, lerpedDistance);
+            print(dynamicShake);
             Shake(dynamicShake);
         } 
         else 
