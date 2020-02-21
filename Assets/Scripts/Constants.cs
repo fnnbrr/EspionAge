@@ -16,10 +16,14 @@ public static class Constants
     public const string INPUT_INTERACTABLE_GETDOWN = "Interact";
     public const string INPUT_THROW_GETDOWN = "Fire1";
 
+    public const string ASSET_PATH_MISSIONTUTORIAL = "Assets/Prefabs/Missions/MissionTutorial.prefab";
     public const string ASSET_PATH_MISSIONCAFETERIA1 = "Assets/Prefabs/Missions/MissionCafeteria1.prefab";
 
-    public const string CHEATS_STARTMISSIONCAFETERIA1 = "Cheats/MissionCafeteria1/Start";
-    public const string CHEATS_ENDMISSIONCAFETERIA1 = "Cheats/MissionCafeteria1/End";
+    public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
+    public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
+    public const string CHEATS_STARTMISSIONCAFETERIA1 = "Cheats/01-MissionCafeteria1/Start";
+    public const string CHEATS_ENDMISSIONCAFETERIA1 = "Cheats/01-MissionCafeteria1/End";
+
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
     public const string SCENE_MAIN = "MAIN";
