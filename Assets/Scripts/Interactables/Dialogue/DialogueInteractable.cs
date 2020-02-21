@@ -26,13 +26,13 @@ public class DialogueInteractable : Interactable
     // Conversation to happen when interacted with
     public override void OnInteract()
     {
+        speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+
         if (!autoPlaying)
         {
             if (!isConversing)
             {
                 isConversing = true;
-
-                speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
 
                 // Freeze player when conversing
                 player.GetComponent<PlayerController>().CanMove = false;
@@ -54,10 +54,8 @@ public class DialogueInteractable : Interactable
     }
 
     // Functionality for Autoplay Conversation to be triggered
-    public virtual void TriggerAutoplay(GameObject target)
+    protected void TriggerAutoplay()
     {
-        // Possible issue here when target is not Birdie
-        speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(target);
         autoPlaying = true;
     }
 
