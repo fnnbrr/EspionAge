@@ -36,6 +36,19 @@ public class CameraManager : Singleton<CameraManager>
         {
             Utils.LogErrorAndStopPlayMode($"{name} needs a CinemachineBrain component! Could not fix automatically.");
         }
+
+        OnBlendingStart_Internal += DisableZoomOnBlendStart_Internal;
+        OnBlendingComplete_Internal += EnableZoomOnBlendEnd_Internal;
+    }
+
+    private void DisableZoomOnBlendStart_Internal(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        canZoom = false;
+    }
+
+    private void EnableZoomOnBlendEnd_Internal(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        canZoom = true;
     }
 
     public ICinemachineCamera GetActiveCamera()
@@ -81,12 +94,7 @@ public class CameraManager : Singleton<CameraManager>
         }
     }
 
-    public void BlendTo(CinemachineVirtualCamera blendToCamera, bool alertListeners = true)
-    {
-        BlendTo(blendToCamera, OnBlendingStart, OnBlendingComplete, alertListeners);
-    }
-
-    public void BlendTo(CinemachineVirtualCamera blendToCamera, BlendingStartAction startAction, BlendingCompleteAction completeAction, bool alertListeners = true)
+    public void BlendTo(CinemachineVirtualCamera blendToCamera, bool alertGlobally = true)
     {
         // This can fail when we first start the game, so lets check for it
         if (!IsActiveCameraValid())
@@ -100,10 +108,13 @@ public class CameraManager : Singleton<CameraManager>
             return;  // early exit, because we cannot blend between the same cameras??
         }
 
+        canZoom = false;
+
         // alert all listeners that we started blending some camera
-        if (alertListeners)
+        OnBlendingStart_Internal?.Invoke(fromCamera, blendToCamera);
+        if (alertGlobally)
         {
-            startAction?.Invoke(fromCamera, blendToCamera);
+            OnBlendingStart?.Invoke(fromCamera, blendToCamera);
         }
 
         UpdateDefaultCameraDistance(blendToCamera);
@@ -117,23 +128,24 @@ public class CameraManager : Singleton<CameraManager>
         // The CinemachineBrain in the scene handles blending between the cameras 
         // - (if we set up a custom blend already)
 
-        if (alertListeners)
-        {
-            StartCoroutine(WaitForBlendFinish(completeAction, fromCamera, blendToCamera));
-        }
+        StartCoroutine(WaitForBlendFinish(fromCamera, blendToCamera, alertGlobally));
     }
 
     // This is just here so we can alert listeners that we have finished blending
     //  checking if the last camera is still live or not seems like the only way
-    private IEnumerator WaitForBlendFinish(BlendingCompleteAction completeAction, CinemachineVirtualCamera waitForCamera, CinemachineVirtualCamera toCamera)
+    private IEnumerator WaitForBlendFinish(CinemachineVirtualCamera waitForCamera, CinemachineVirtualCamera toCamera, bool alertGlobalListeners)
     {
         while(CinemachineCore.Instance.IsLive(waitForCamera))
         {
             yield return null;  // same as FixedUpdate
         }
 
-        // alert all listeners that we stopped blending some camera
-        completeAction?.Invoke(waitForCamera, toCamera);
+        // alert all global listeners that we stopped blending some camera
+        if (alertGlobalListeners)
+        {
+            OnBlendingComplete?.Invoke(waitForCamera, toCamera);
+        }
+        OnBlendingComplete_Internal?.Invoke(waitForCamera, toCamera);
 
         yield return null;
     }
@@ -154,10 +166,8 @@ public class CameraManager : Singleton<CameraManager>
             yield break;
         }
 
-        // Start blending to the far camera (and do not alert listeners of this)
-        // TODO: Think of a better way to handle this
-        canZoom = false;  // disable zooming from outside sources, since the far camera should be a static distance from the player
-        BlendTo(currentDistancePair.far, alertListeners: false);
+        // Start blending to the far camera (and do not alert global listeners of this)
+        BlendTo(currentDistancePair.far, alertGlobally: false);
 
         // Wait for the blending to completely finish
         while (CinemachineCore.Instance.IsLive(currentCamera))
@@ -168,32 +178,19 @@ public class CameraManager : Singleton<CameraManager>
         // now wait the given number of seconds
         yield return new WaitForSeconds(seconds);
 
-        // enable zooming from outside sources after we finishing zooming back in, 
-        //  awareness and such can affect the player on the close camera
-        OnBlendingComplete_Internal += ReenableZoomAfterBlend;
-
         // now blend back to the original camera
-        BlendTo(currentCamera, OnBlendingStart_Internal, OnBlendingComplete_Internal);
-    }
-
-    private void ReenableZoomAfterBlend(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
-    {
-        OnBlendingComplete_Internal -= ReenableZoomAfterBlend;
-        canZoom = true;
+        BlendTo(currentCamera, alertGlobally: false);
     }
 
     private void UpdateDefaultCameraDistance(CinemachineVirtualCamera virtualCamera)
     {
-        if (canZoom)
-        {
-            defaultCameraDistanceInitialized = true;
+        defaultCameraDistanceInitialized = true;
 
-            // Update the our local activeCameraDefaultCameraDistance
-            CinemachineFramingTransposer blendToCameraFramingTransposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-            if (blendToCameraFramingTransposer)
-            {
-                activeCameraDefaultCameraDistance = blendToCameraFramingTransposer.m_CameraDistance;
-            }
+        // Update the our local activeCameraDefaultCameraDistance
+        CinemachineFramingTransposer blendToCameraFramingTransposer = virtualCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+        if (blendToCameraFramingTransposer)
+        {
+            activeCameraDefaultCameraDistance = blendToCameraFramingTransposer.m_CameraDistance;
         }
     }
 }
