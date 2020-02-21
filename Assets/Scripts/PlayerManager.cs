@@ -132,8 +132,23 @@ public class PlayerManager : MonoBehaviour
 
         OnThrow?.Invoke(current.GetComponent<Interactable>());
 
-        // TODO: Have a nice fade out shader animation and delete after this time elapses
-        Destroy(current, throwableDestroyTime);
+        StartCoroutine(FadeOutAndDelete(current, throwableDestroyTime));
+    }
+
+    private IEnumerator FadeOutAndDelete(GameObject o, float destroyTime)
+    {
+        yield return new WaitForSeconds(destroyTime);
+
+        ObjectFader objectFader = o.GetComponent<ObjectFader>();
+        if (!objectFader)
+        {
+            Destroy(o);
+        }
+        else
+        {
+            objectFader.OnFadeToTransparentComplete += () => Destroy(o);
+            objectFader.FadeToTransparent();
+        }
     }
 
     private float DistToClosestEnemy()
