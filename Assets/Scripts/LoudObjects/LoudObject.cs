@@ -5,14 +5,15 @@ using UnityEngine;
 
 public class LoudObject : MonoBehaviour
 {
-    public float thrust;
-    public Vector3 direction;
+    public float thrustForce;
+    public Vector3 thrustDirection;
     public float shakeRadius;
     public float dropRadius;
-    public float loudObjectRadius;
+    public float loudEffectRadius;
     private float distance;
     private Rigidbody rb;
 
+    private Shader plateShader;
     public float minShake;
     public float maxShake;
     Renderer[] rends;
@@ -22,24 +23,23 @@ public class LoudObject : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rends = GetComponents<Renderer> ();
+        plateShader = Shader.Find("PlateShake");
     }
 
     void Update()
     {
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
+
         if (distance <= dropRadius)
         {
-            rb.AddForce(direction * thrust);
-            rb.useGravity = true;
+            rb.AddForce(thrustDirection * thrustForce);
             NotifyChasingNurse();
-        } 
-        else if (distance <= (dropRadius + 3))
-        {
-            Shake(maxShake);
         } 
         else if (distance <= shakeRadius)
         {
-            float dynamicShake = Mathf.Lerp(maxShake, minShake, Mathf.Clamp(distance/5.0f, 0f, 1f));
+            float clampedDistance = Mathf.Clamp(distance, dropRadius, shakeRadius);
+            float lerpedDistance = Mathf.Lerp(0f, 1f, (clampedDistance - dropRadius) / (shakeRadius - dropRadius));
+            float dynamicShake = Mathf.Lerp(maxShake, minShake, lerpedDistance);
             Shake(dynamicShake);
         } 
         else 
@@ -50,8 +50,8 @@ public class LoudObject : MonoBehaviour
 
     void NotifyChasingNurse()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, loudObjectRadius);
-        int i = 0;
+        //TODO: Add a parameter to this function, layer mask
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, loudEffectRadius);
         foreach (Collider collider in hitColliders)
         {
             // if collider is the chasing nurse 
@@ -63,7 +63,7 @@ public class LoudObject : MonoBehaviour
 
     void Shake(float shake){
         foreach (Renderer rend in rends){
-            if (rend.material.shader == Shader.Find("PlateShake")){
+            if (rend.material.shader == plateShader){
                 // SHAKE SHAKE SHAKE SHAKE
                 rend.material.SetFloat("_ShakeAmplitude", shake);
             }
@@ -74,7 +74,7 @@ public class LoudObject : MonoBehaviour
     {
         // Direction arrow of object falling
         Gizmos.color = Color.red;
-        Vector3 directionToDraw = transform.TransformDirection(direction) * 5;
+        Vector3 directionToDraw = transform.TransformDirection(thrustDirection) * 5;
         Gizmos.DrawRay(transform.position, directionToDraw);
 
         // Radius sphere 
@@ -83,7 +83,7 @@ public class LoudObject : MonoBehaviour
 
         // Loud object radius
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, loudObjectRadius);
+        Gizmos.DrawWireSphere(transform.position, loudEffectRadius);
     }
 
 }

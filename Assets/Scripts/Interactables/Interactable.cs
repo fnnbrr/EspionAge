@@ -39,7 +39,6 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerEnter(Collider other)
     {
-       
         if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {
             if (!interactableOn)
