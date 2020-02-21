@@ -57,12 +57,17 @@ public class MissionTutorial : AMission
 
     protected override void Cleanup()
     {
+        // Here we have checks for all the instances specifically because this can be called on App shutdown
+        //  this means its possible for some Singletons to have already been garbage collected by the time we get here
         Debug.Log("MissionTutorial Cleanup()!");
 
         // Despawn the old person waiting for us
 
-        // Toggle the event in the EventManager
-        GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, false);
+        if (GameEventManager.Instance)
+        {
+            // Toggle the event in the EventManager
+            GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, false);
+        }
 
         if (MissionManager.Instance)
         {

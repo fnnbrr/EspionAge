@@ -26,8 +26,8 @@ public class AMission : MonoBehaviour
     {
         if (!isInitialized)
         {
-            Initialize();
             isInitialized = true;
+            Initialize();
         }
     }
 
@@ -35,8 +35,8 @@ public class AMission : MonoBehaviour
     {
         if (isInitialized)
         {
-            Cleanup();
             isInitialized = false;
+            Cleanup();
         }
     }
 
@@ -44,8 +44,8 @@ public class AMission : MonoBehaviour
     {
         if (isInitialized)
         {
-            Cleanup();
             isInitialized = false;
+            Cleanup();
         }
     }
 
