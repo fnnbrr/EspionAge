@@ -126,7 +126,6 @@ public class ObjectFader : MonoBehaviour
             currentAlphaPercentage += fadeSpeed * Time.deltaTime;
             yield return null;
         }
-
         SetAllMaterialsLerpedTransparency(1f); // we want to make sure we actually set it to the final color in the end (fading may be off by a little bit)
 
         SetMaterialsOpaque();
@@ -195,44 +194,30 @@ public class ObjectFader : MonoBehaviour
         }
         else
         {
+            material.SetOverrideTag("RenderType", "Transparent");
+            material.SetInt("_ZWrite", 0);
+            material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            material.SetShaderPassEnabled("ShadowCaster", false);
+
             BlendMode blendMode = (BlendMode)material.GetFloat("_Blend");
             switch (blendMode)
             {
                 case BlendMode.Alpha:
-                    material.SetOverrideTag("RenderType", "Transparent");
                     material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
                     material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    material.SetInt("_ZWrite", 0);
-                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-                    material.SetShaderPassEnabled("ShadowCaster", false);
                     break;
                 case BlendMode.Premultiply:
-                    material.SetOverrideTag("RenderType", "Transparent");
                     material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
                     material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    material.SetInt("_ZWrite", 0);
-                    material.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-                    material.SetShaderPassEnabled("ShadowCaster", false);
                     break;
                 case BlendMode.Additive:
-                    material.SetOverrideTag("RenderType", "Transparent");
                     material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
                     material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.One);
-                    material.SetInt("_ZWrite", 0);
-                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-                    material.SetShaderPassEnabled("ShadowCaster", false);
                     break;
                 case BlendMode.Multiply:
-                    material.SetOverrideTag("RenderType", "Transparent");
                     material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.DstColor);
                     material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
-                    material.SetInt("_ZWrite", 0);
-                    material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                    material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-                    material.SetShaderPassEnabled("ShadowCaster", false);
                     break;
             }
         }
