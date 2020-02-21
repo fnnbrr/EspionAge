@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3658902531811208854}
   - component: {fileID: 3658902531811208852}
   - component: {fileID: 3658902531811208855}
+  - component: {fileID: 6998355294730622540}
   m_Layer: 10
   m_Name: Medicine_Bottle_Throwable
   m_TagString: Untagged
@@ -78,6 +79,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6998355294730622540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3658902531811208850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d19109bb7031e0f48a60de189bdf23ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fadeSpeed: 1
 --- !u!1 &3658902532391834960
 GameObject:
   m_ObjectHideFlags: 0
