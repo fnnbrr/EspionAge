@@ -35,7 +35,7 @@ public class LoudObject : MonoBehaviour
             rb.AddForce(thrustDirection * thrustForce);
             NotifyChasingNurse();
         } 
-        else if (distance <= shakeRadius)
+        else
         {
             float clampedDistance = Mathf.Clamp(distance, dropRadius, shakeRadius);
             float lerpedDistance = Mathf.Lerp(0f, 1f, (clampedDistance - dropRadius) / (shakeRadius - dropRadius));
@@ -43,10 +43,6 @@ public class LoudObject : MonoBehaviour
             print(dynamicShake);
             Shake(dynamicShake);
         } 
-        else 
-        {
-            Shake(0f);
-        }
     }
 
     void NotifyChasingNurse()
