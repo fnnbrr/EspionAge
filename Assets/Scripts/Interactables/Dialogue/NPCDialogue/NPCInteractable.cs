@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 public class MissionNPC
@@ -20,6 +21,8 @@ public class NPCInteractable : DialogueInteractable
     public List<MissionNPC> missionsOffered;
     private MissionNPC currentMissionNPC;                            // Current Mission given by this NPC (should only be 1 per NPC)
     private AMission startedMission;                                 // started mission needed to end mission
+
+    protected GameObject targetObject;
 
 
     public override void OnInteract()
@@ -86,6 +89,14 @@ public class NPCInteractable : DialogueInteractable
         
         base.OnInteract();
     }
+
+    // To be called in another class
+    public void StartAutoplayInteraction()
+    {
+        TriggerAutoplay();
+        OnInteract();
+    }
+
 
     private void HandleOnMissionReset()
     {
