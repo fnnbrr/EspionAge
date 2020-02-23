@@ -13,73 +13,27 @@ public class DialogueInteractable : Interactable
 
     private int activeLineIndex = 0;
 
-
-    private bool autoPlaying = false;
-
-    public float waitLineTime = 2.0f;
-
-    protected virtual void Start()
+    public override void OnInteract()  
     {
-        speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
-    }
-
-    // Conversation to happen when interacted with
-    public override void OnInteract()
-    {
-        speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
-
-        if (!autoPlaying)
+        if (!isConversing)
         {
-            if (!isConversing)
-            {
-                isConversing = true;
+            isConversing = true;
 
-                // Freeze player when conversing
-                player.GetComponent<PlayerController>().CanMove = false;
+            // Freeze player when conversing
+            player.GetComponent<PlayerController>().CanMove = false;
 
-                HideInteractUI();
-                AdvanceConversation();
+            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
 
-                base.OnInteract();
-            }
-            else
-            {
-                AdvanceConversation();
-            }
+            HideInteractUI();
+            AdvanceConversation();
+
+            base.OnInteract();
         }
         else
         {
-            StartCoroutine(AutoplayConversations()); ;
+            AdvanceConversation();
         }
-    }
-
-    // Functionality for Autoplay Conversation to be triggered
-    protected void TriggerAutoplay()
-    {
-        autoPlaying = true;
-    }
-
-    protected virtual void OnAutoplayComplete()
-    {
-        autoPlaying = false;
-    }
-
-
-    IEnumerator AutoplayConversations()
-    {
-        while (activeLineIndex < conversation.lines.Length)
-        {
-            //If there is still conversation left
-            DisplayLine();
-            activeLineIndex += 1;
-            yield return new WaitForSeconds(waitLineTime);
-        }
-
-        speakerUIBirdie.Hide();
-        speakerUINPC.Hide();
-        activeLineIndex = 0;
-
-        OnAutoplayComplete();
     }
 
     void AdvanceConversation() {
