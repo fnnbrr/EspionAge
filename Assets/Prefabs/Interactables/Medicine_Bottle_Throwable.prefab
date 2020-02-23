@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3658902531811208852}
   - component: {fileID: 3658902531811208855}
   - component: {fileID: 6998355294730622540}
+  - component: {fileID: 836580982558548202}
   m_Layer: 10
   m_Name: Medicine_Bottle_Throwable
   m_TagString: Untagged
@@ -66,11 +67,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactableAnim: {fileID: 3658902532567942418}
   interactTransform: {fileID: 3658902532567942419}
-  pingPrefab: {fileID: 3270625631504617136, guid: c6cff22645e904a40bb95ed17be87a89,
-    type: 3}
-  pingFloorOffset: 1
-  pingDuration: 1
-  pingGrowthScale: 0.1
 --- !u!65 &3658902531811208855
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -97,6 +93,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeSpeed: 1
+--- !u!114 &836580982558548202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3658902531811208850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73547dfa966127f4096953b30953478b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pingPrefab: {fileID: 7913854334745017090, guid: e14dd387ab2fad4439dc7b3cc92aa004,
+    type: 3}
+  pingFloorOffset: 0.5
+  pingDuration: 0.75
+  pingGrowthScale: 0.5
 --- !u!1 &3658902532391834960
 GameObject:
   m_ObjectHideFlags: 0

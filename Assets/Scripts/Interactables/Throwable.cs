@@ -4,16 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NoisePing))]
 public class Throwable : Interactable
 {
-    public GameObject pingPrefab;
-    public float pingFloorOffset = 1.0f;
-    public float pingDuration = 1.0f;
-    public float pingGrowthScale = 0.1f;
-    
     private bool hasBeenAcquired = false;
     private bool hasHit = false;
-    private GameObject pingInstance;
     
     public override void OnInteract()
     {
@@ -32,17 +27,8 @@ public class Throwable : Interactable
         
         Vector3 hitPoint = other.GetContact(0).point;
         Vector3 hitNormal = other.GetContact(0).normal;
-        
-        pingInstance = Instantiate(pingPrefab, hitPoint + (pingFloorOffset * hitNormal), 
-            Quaternion.LookRotation(hitPoint));
-        Destroy(pingInstance, pingDuration);
+
+        gameObject.GetComponent<NoisePing>().SpawnNoisePing(hitPoint, hitNormal);
         hasHit = true;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!pingInstance) return;
-
-        pingInstance.transform.localScale += (pingGrowthScale * Vector3.one);
     }
 }
