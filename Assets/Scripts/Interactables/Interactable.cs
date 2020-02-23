@@ -16,7 +16,7 @@ public class Interactable : MonoBehaviour, IInteractable
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
-    protected virtual void Update()
+    protected void Update()
     {
         //Ensures text is always facing the camera
         if(interactableOn)
