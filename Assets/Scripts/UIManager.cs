@@ -20,6 +20,11 @@ public class UIManager : Singleton<UIManager>
         fader.gameObject.SetActive(true);
     }
 
+    private Color GetFaderColorWithAlpha(float alpha)
+    {
+        return new Color(fader.color.r, fader.color.g, fader.color.b, alpha);
+    }
+
     public void FadeIn()
     {
         // full black --> invisible
@@ -37,7 +42,7 @@ public class UIManager : Singleton<UIManager>
         float currentAlpha = startAlpha;
         while (Mathf.Abs(currentAlpha - startAlpha) < Mathf.Abs(startAlpha - endAlpha))
         {
-            fader.color = new Color(fader.color.r, fader.color.g, fader.color.b, currentAlpha);
+            fader.color = GetFaderColorWithAlpha(currentAlpha);
             currentAlpha += fadeSpeed * Time.deltaTime * Mathf.Sign(endAlpha - startAlpha);
             yield return null;
         }
@@ -45,5 +50,15 @@ public class UIManager : Singleton<UIManager>
         OnFadingComplete?.Invoke();
 
         yield return null;
+    }
+
+    public void InstantFadeIn()
+    {
+        fader.color = GetFaderColorWithAlpha(0f);
+    }
+
+    public void InstantFadeOut()
+    {
+        fader.color = GetFaderColorWithAlpha(1f);
     }
 }

@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour
 
     [Header("Throwables")]
     public Transform throwPosition;
+    public float throwableDestroyTime = 5f;
     public float throwMultiplier = 0.08f;
     public float angleIncreaseSpeed = 45f;
     public float minThrowAngle = 0f;
@@ -130,6 +131,24 @@ public class PlayerManager : MonoBehaviour
         launchArcRenderer.RenderArc(0f);
 
         OnThrow?.Invoke(current.GetComponent<Interactable>());
+
+        StartCoroutine(FadeOutAndDelete(current, throwableDestroyTime));
+    }
+
+    private IEnumerator FadeOutAndDelete(GameObject o, float destroyTime)
+    {
+        yield return new WaitForSeconds(destroyTime);
+
+        ObjectFader objectFader = o.GetComponent<ObjectFader>();
+        if (!objectFader)
+        {
+            Destroy(o);
+        }
+        else
+        {
+            objectFader.OnFadeToTransparentComplete += () => Destroy(o);
+            objectFader.FadeToTransparent();
+        }
     }
 
     private float DistToClosestEnemy()
