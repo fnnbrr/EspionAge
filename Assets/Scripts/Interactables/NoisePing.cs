@@ -5,9 +5,9 @@ using UnityEngine;
 public class NoisePing : MonoBehaviour
 {
     public GameObject pingPrefab;
-    public float pingFloorOffset = 1.0f;
-    public float pingDuration = 1.0f;
-    public float pingGrowthScale = 0.1f;
+    public float pingFloorOffset = 0.5f;
+    public float pingDuration = 0.75f;
+    public float pingGrowthScale = 0.5f;
     
     private GameObject pingInstance;
     

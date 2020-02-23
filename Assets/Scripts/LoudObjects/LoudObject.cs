@@ -9,7 +9,6 @@ public class LoudObject : MonoBehaviour
     public Vector3 thrustDirection;
     public float shakeRadius;
     public float dropRadius;
-    public float loudEffectRadius;
     private float distance;
     private Rigidbody rb;
 
@@ -17,6 +16,9 @@ public class LoudObject : MonoBehaviour
     public float minShake;
     public float maxShake;
     Renderer[] rends;
+
+    private bool hasBeenBumped = false;
+    private bool hasHit = false;
     
 
     void Start()
@@ -33,7 +35,7 @@ public class LoudObject : MonoBehaviour
         if (distance <= dropRadius)
         {
             rb.AddForce(thrustDirection * thrustForce);
-            NotifyChasingNurse();
+            hasBeenBumped = true;
         } 
         else
         {
@@ -45,17 +47,15 @@ public class LoudObject : MonoBehaviour
         } 
     }
 
-    void NotifyChasingNurse()
+    private void OnCollisionEnter(Collision other)
     {
-        //TODO: Add a parameter to this function, layer mask
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, loudEffectRadius);
-        foreach (Collider collider in hitColliders)
-        {
-            // if collider is the chasing nurse 
-            // {
-            // call it's function 
-            // }
-        }
+        if (!hasBeenBumped || hasHit || other.gameObject.CompareTag("Player")) return;
+        
+        Vector3 hitPoint = other.GetContact(0).point;
+        Vector3 hitNormal = other.GetContact(0).normal;
+
+        gameObject.GetComponent<NoisePing>().SpawnNoisePing(hitPoint, hitNormal);
+        hasHit = true;
     }
 
     void Shake(float shake){
@@ -77,10 +77,6 @@ public class LoudObject : MonoBehaviour
         // Radius sphere 
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(transform.position, shakeRadius);
-
-        // Loud object radius
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, loudEffectRadius);
     }
 
 }
