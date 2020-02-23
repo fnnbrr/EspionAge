@@ -51,6 +51,9 @@ public class MissionEnemy
 public class MissionCafeteria1 : AMission
 {
     public Vector3 respawnPosition;
+
+    public GameObject startCutsceneCamera;
+
     public List<MissionEnemy> startEnemies;
 
     [Header("All lists below must be the same size!")]
@@ -62,6 +65,7 @@ public class MissionCafeteria1 : AMission
     private int interactedCount = 0;
 
     private bool isRestarting = false;
+    private bool startCutscenePlayed = false;
 
     private void Awake()
     {
@@ -78,6 +82,8 @@ public class MissionCafeteria1 : AMission
         SpawnObjects(missionObjects);
         SpawnInteractables(missionCriticalInteractables);
         SpawnEnemies(startEnemies);
+
+        RegionManager.Instance.kitchen.OnPlayerEnter += StartCutscene;
     }
 
     protected override void Cleanup()
@@ -88,6 +94,12 @@ public class MissionCafeteria1 : AMission
 
         instantiatedMissionInteractables.Clear();
         instantiatedEnemies.Clear();
+
+        if (!startCutscenePlayed)
+        {
+            RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
+        }
+        startCutscenePlayed = false;
     }
 
     private void SpawnObjects(List<MissionObject> interactables)
@@ -150,6 +162,34 @@ public class MissionCafeteria1 : AMission
                 Debug.LogError("Could not sample position to spawn enemy for MissionCafeteria1!");
             }
         });
+    }
+
+    private void StartCutscene()
+    {
+        // The current assumptions are gonna be that:
+        //  - we will have a camera where we need to set the look at
+        //  - and it will have an already created Animator with a single state that it will start on Awake
+        //
+        // So we can just destroy it after the animation time is over and it should switch back to whatever the current camera was
+        RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
+        startCutscenePlayed = true;
+
+        if (!startCutsceneCamera || instantiatedMissionInteractables.Count == 0)
+        {
+            return;
+        }
+
+        GameObject instantiatedCutscenePrefab = Instantiate(startCutsceneCamera);
+        CinemachineVirtualCamera virtualCamera = instantiatedCutscenePrefab.GetComponentInChildren<CinemachineVirtualCamera>();
+        Animator virtualCameraAnim = instantiatedCutscenePrefab.GetComponentInChildren<Animator>();
+        if (!virtualCamera || !virtualCameraAnim)
+        {
+            return;
+        }
+
+        virtualCamera.LookAt = instantiatedMissionInteractables[0].transform;
+
+        Destroy(instantiatedCutscenePrefab, virtualCameraAnim.GetCurrentAnimatorStateInfo(0).length * 1.5f);
     }
 
     private void OnCollideWithPlayer()
