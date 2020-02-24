@@ -38,7 +38,6 @@ public class Interactable : MonoBehaviour, IInteractable
 
                 OnInteract();
             }
-     
         }
     }
 
