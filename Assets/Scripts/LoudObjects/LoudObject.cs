@@ -9,7 +9,6 @@ public class LoudObject : MonoBehaviour
     public Vector3 thrustDirection;
     public float shakeRadius;
     public float dropRadius;
-    public float loudEffectRadius;
     private float distance;
     private Rigidbody rb;
 
@@ -17,13 +16,17 @@ public class LoudObject : MonoBehaviour
     public float minShake;
     public float maxShake;
     Renderer[] rends;
-    
+
+    private bool hasBeenBumped = false;
+    private bool hasHit = false;
+    private NoisePing noisePing;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rends = GetComponents<Renderer> ();
         plateShader = Shader.Find("PlateShake");
+        noisePing = gameObject.GetComponent<NoisePing>();
     }
 
     void Update()
@@ -33,29 +36,23 @@ public class LoudObject : MonoBehaviour
         if (distance <= dropRadius)
         {
             rb.AddForce(thrustDirection * thrustForce);
-            NotifyChasingNurse();
+            hasBeenBumped = true;
         } 
         else
         {
             float clampedDistance = Mathf.Clamp(distance, dropRadius, shakeRadius);
             float lerpedDistance = Mathf.Lerp(0f, 1f, (clampedDistance - dropRadius) / (shakeRadius - dropRadius));
             float dynamicShake = Mathf.Lerp(maxShake, minShake, lerpedDistance);
-            print(dynamicShake);
             Shake(dynamicShake);
         } 
     }
 
-    void NotifyChasingNurse()
+    private void OnCollisionEnter(Collision other)
     {
-        //TODO: Add a parameter to this function, layer mask
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, loudEffectRadius);
-        foreach (Collider collider in hitColliders)
-        {
-            // if collider is the chasing nurse 
-            // {
-            // call it's function 
-            // }
-        }
+        if (!hasBeenBumped || hasHit || other.gameObject.CompareTag("Player")) return;
+
+        noisePing.SpawnNoisePing(other);
+        hasHit = true;
     }
 
     void Shake(float shake){
@@ -77,10 +74,6 @@ public class LoudObject : MonoBehaviour
         // Radius sphere 
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(transform.position, shakeRadius);
-
-        // Loud object radius
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, loudEffectRadius);
     }
 
 }
