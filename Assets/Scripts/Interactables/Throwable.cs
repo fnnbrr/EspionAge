@@ -9,7 +9,13 @@ public class Throwable : Interactable
 {
     private bool hasBeenAcquired = false;
     private bool hasHit = false;
-    
+    private NoisePing noisePing;
+
+    private void Start()
+    {
+        noisePing = gameObject.GetComponent<NoisePing>();
+    }
+
     public override void OnInteract()
     {
         base.OnInteract();
@@ -24,11 +30,8 @@ public class Throwable : Interactable
     private void OnCollisionEnter(Collision other)
     {
         if (!hasBeenAcquired || hasHit) return;
-        
-        Vector3 hitPoint = other.GetContact(0).point;
-        Vector3 hitNormal = other.GetContact(0).normal;
 
-        gameObject.GetComponent<NoisePing>().SpawnNoisePing(hitPoint, hitNormal);
+        noisePing.SpawnNoisePing(other);
         hasHit = true;
     }
 }

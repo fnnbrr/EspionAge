@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class NoisePing : MonoBehaviour
 {
+    [Header("General")]
     public GameObject pingPrefab;
+    public float pingRadius = 10.0f;
+    
+    [Header("Tweaks")]
+    public float pingGrowthScale = 20.0f;
     public float pingFloorOffset = 0.5f;
-    public float pingDuration = 0.75f;
-    public float pingGrowthScale = 0.5f;
     
     private GameObject pingInstance;
     
-    public void SpawnNoisePing(Vector3 hitPoint, Vector3 hitNormal)
+    public void SpawnNoisePing(Collision other)
     {
+        Vector3 hitPoint = other.GetContact(0).point;
+        Vector3 hitNormal = other.GetContact(0).normal;
+        
         pingInstance = Instantiate(pingPrefab, hitPoint + (pingFloorOffset * hitNormal), 
             Quaternion.LookRotation(hitPoint));
+        
+        float pingDuration = 2 * pingRadius / pingGrowthScale;
         Destroy(pingInstance, pingDuration);
     }
 
@@ -22,6 +30,14 @@ public class NoisePing : MonoBehaviour
     {
         if (!pingInstance) return;
 
-        pingInstance.transform.localScale += new Vector3(pingGrowthScale, 0f, pingGrowthScale);
+        pingInstance.transform.localScale += new Vector3(Time.deltaTime * pingGrowthScale, 0f, 
+                                                         Time.deltaTime * pingGrowthScale);
+    }
+    
+    void OnDrawGizmos()
+    {
+        // pingRadius visualization
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, pingRadius);
     }
 }

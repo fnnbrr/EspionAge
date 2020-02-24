@@ -19,13 +19,14 @@ public class LoudObject : MonoBehaviour
 
     private bool hasBeenBumped = false;
     private bool hasHit = false;
-    
+    private NoisePing noisePing;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rends = GetComponents<Renderer> ();
         plateShader = Shader.Find("PlateShake");
+        noisePing = gameObject.GetComponent<NoisePing>();
     }
 
     void Update()
@@ -42,7 +43,6 @@ public class LoudObject : MonoBehaviour
             float clampedDistance = Mathf.Clamp(distance, dropRadius, shakeRadius);
             float lerpedDistance = Mathf.Lerp(0f, 1f, (clampedDistance - dropRadius) / (shakeRadius - dropRadius));
             float dynamicShake = Mathf.Lerp(maxShake, minShake, lerpedDistance);
-            print(dynamicShake);
             Shake(dynamicShake);
         } 
     }
@@ -50,11 +50,8 @@ public class LoudObject : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         if (!hasBeenBumped || hasHit || other.gameObject.CompareTag("Player")) return;
-        
-        Vector3 hitPoint = other.GetContact(0).point;
-        Vector3 hitNormal = other.GetContact(0).normal;
 
-        gameObject.GetComponent<NoisePing>().SpawnNoisePing(hitPoint, hitNormal);
+        noisePing.SpawnNoisePing(other);
         hasHit = true;
     }
 
