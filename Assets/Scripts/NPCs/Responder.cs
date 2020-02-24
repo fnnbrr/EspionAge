@@ -12,9 +12,8 @@ public class Responder : Chaser
     private float waypointPauseTimer;
 
     private Vector3 responsePointPosition;
-    private Vector3 wanderBoundsPosition;
+    private Vector3 wanderBoundsCenter;
     private float wanderBoundsRadius;
-    private Vector3 wanderBoundsCenter = Vector3.zero;
 
     public enum ActionStates
     {
@@ -36,9 +35,8 @@ public class Responder : Chaser
 
         if (wanderBounds)
         {
-            wanderBoundsPosition = wanderBounds.transform.position;
-            wanderBoundsRadius = wanderBounds.radius;
             wanderBoundsCenter = wanderBounds.center;
+            wanderBoundsRadius = wanderBounds.radius;
         }
     }
 
@@ -72,15 +70,15 @@ public class Responder : Chaser
     public void InitailizeResponderParameters(Vector3 responsePoint, Vector3 wanderPoint, float wanderRadius)
     {
         responsePointPosition = responsePoint;
-        wanderBoundsPosition = wanderPoint;
+        wanderBoundsCenter = wanderPoint;
         wanderBoundsRadius = wanderRadius;
     }
     
     void GotoNextPoint()
     {
-        Vector3 randomMovement = wanderBoundsPosition + Random.insideUnitSphere * wanderBoundsRadius + wanderBoundsCenter;
-
-        if (!NavMesh.SamplePosition(randomMovement, out NavMeshHit navHit, wanderBoundsRadius, -1))
+        Vector3 randomPoint = wanderBoundsCenter + Random.insideUnitSphere * wanderBoundsRadius;
+        
+        if (!NavMesh.SamplePosition(randomPoint, out NavMeshHit navHit, wanderBoundsRadius, NavMesh.AllAreas))
         {
             throw new UnityException("NavMesh.SamplePosition failed");
         }
@@ -105,11 +103,26 @@ public class Responder : Chaser
                     ChaseTarget();
                     break;
                 case ActionStates.Responding:
-                    currentState = ActionStates.Wandering;
+                    if (WaypointPauseComplete())
+                    {
+                        currentState = ActionStates.Wandering;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.gameObject.CompareTag("Noise")) return;
+
+        // TODO: draw a "?" above the Responder
+        currentState = ActionStates.Responding;
+        
+        wanderBoundsCenter = other.gameObject.transform.position;
+        wanderBoundsRadius = 15.0f;
+        agent.SetDestination(wanderBoundsCenter);
     }
 }

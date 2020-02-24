@@ -67,7 +67,7 @@ public class Interactable : MonoBehaviour, IInteractable
     // Handle the dialogue for this interactable
     public virtual void OnInteract()
     {
-        Debug.Log("Interacted");
+        //Debug.Log("Interacted");
 
         // Start Dialogue
         // We cannot access the OnInteractEnd event from a derived class, must do this:
@@ -82,7 +82,7 @@ public class Interactable : MonoBehaviour, IInteractable
         // Ensures player game object has been assigned
         if (player is null)
         {
-            Debug.LogError("Player refernce not found");
+            Debug.LogError("Player reference not found");
             return;
         }
 
