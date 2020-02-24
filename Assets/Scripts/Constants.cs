@@ -27,4 +27,7 @@ public static class Constants
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
     public const string SCENE_MAIN = "MAIN";
+
+    public const float INTERACT_BOUNDARY_RADIUS = 20.0f;
+    public const float WAIT_TIME_CONVO_LINE = 2.0f;
 }

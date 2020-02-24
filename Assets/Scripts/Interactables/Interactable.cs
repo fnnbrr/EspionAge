@@ -16,6 +16,11 @@ public class Interactable : MonoBehaviour, IInteractable
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
+    protected virtual void Start()
+    {
+        player = GameManager.Instance.GetPlayerTransform().gameObject;
+    }
+
     protected virtual void Update()
     {
         //Ensures text is always facing the camera
@@ -37,7 +42,7 @@ public class Interactable : MonoBehaviour, IInteractable
     }
 
 
-    protected void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {

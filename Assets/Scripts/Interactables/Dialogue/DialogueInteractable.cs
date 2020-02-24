@@ -10,18 +10,19 @@ public class DialogueInteractable : Interactable
     private SpeakerUI speakerUINPC;
 
     protected bool isConversing = false;
-
     private int activeLineIndex = 0;
-
 
     private bool autoPlaying = false;
 
-    public float waitLineTime = 2.0f;
+    public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
 
-    protected virtual void Start()
+
+    protected override void Start()
     {
+        base.Start();
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
     }
+
 
     // Conversation to happen when interacted with
     public override void OnInteract()
@@ -49,15 +50,16 @@ public class DialogueInteractable : Interactable
         }
         else
         {
-            StartCoroutine(AutoplayConversations()); ;
+            StartCoroutine(AutoplayConversation()); ;
         }
     }
 
-    // Functionality for Autoplay Conversation to be triggered
+
     protected void TriggerAutoplay()
     {
         autoPlaying = true;
     }
+
 
     protected virtual void OnAutoplayComplete()
     {
@@ -65,37 +67,40 @@ public class DialogueInteractable : Interactable
     }
 
 
-    IEnumerator AutoplayConversations()
+    bool ContinueConversation()
     {
-        while (activeLineIndex < conversation.lines.Length)
-        {
-            //If there is still conversation left
-            DisplayLine();
-            activeLineIndex += 1;
-            yield return new WaitForSeconds(waitLineTime);
-        }
+        DisplayLine();
+        activeLineIndex += 1;
+        return activeLineIndex < conversation.lines.Length;
+    }
 
+
+    void EndConversation()
+    {
         speakerUIBirdie.Hide();
         speakerUINPC.Hide();
         activeLineIndex = 0;
+    }
 
+
+    IEnumerator AutoplayConversation()
+    {
+        while (ContinueConversation())
+        {
+            yield return new WaitForSeconds(waitLineTime);
+        }
+
+        EndConversation();
         OnAutoplayComplete();
     }
 
+
     void AdvanceConversation() {
-        if (activeLineIndex < conversation.lines.Length)
-        {
-            //If there is still conversation left
-            DisplayLine();
-            activeLineIndex += 1;
-        }
-        else
+        if (!ContinueConversation())
         {
             //Once the conversation is over 
             //what happens 
-            speakerUIBirdie.Hide();
-            speakerUINPC.Hide();
-            activeLineIndex = 0;
+            EndConversation();
 
             isConversing = false;
             ShowInteractUI();
