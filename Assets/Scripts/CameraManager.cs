@@ -88,10 +88,8 @@ public class CameraManager : Singleton<CameraManager>
         if (framingTransposer)
         {
             framingTransposer.m_CameraDistance = activeCameraDefaultCameraDistance + cameraDistanceDelta;
-        } else
-        {
-            Debug.LogError("Could not get the CinemachineFramingTransposer component of the current active camera!");
         }
+        // For things like using dolly cameras for example, we don't need to care about zooming at the moment with those so, do nothing
     }
 
     public void BlendTo(CinemachineVirtualCamera blendToCamera, bool alertGlobally = true)
