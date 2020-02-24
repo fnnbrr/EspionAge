@@ -29,24 +29,22 @@ public class DialogueInteractable : Interactable
     {
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
 
-        if (!autoPlaying)
+    public override void OnInteract()  
+    {
+        if (!isConversing)
         {
-            if (!isConversing)
-            {
-                isConversing = true;
+            isConversing = true;
 
-                // Freeze player when conversing
-                player.GetComponent<PlayerController>().CanMove = false;
+            // Freeze player when conversing
+            player.GetComponent<PlayerController>().CanMove = false;
 
-                HideInteractUI();
-                AdvanceConversation();
+            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
 
-                base.OnInteract();
-            }
-            else
-            {
-                AdvanceConversation();
-            }
+            HideInteractUI();
+            AdvanceConversation();
+
+            base.OnInteract();
         }
         else
         {
