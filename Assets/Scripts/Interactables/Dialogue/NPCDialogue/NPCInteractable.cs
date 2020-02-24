@@ -42,12 +42,19 @@ public class NPCInteractable : DialogueInteractable
     {
         if(IsWithinBoundaryRadius(GameManager.Instance.GetPlayerTransform()))
         {
-            LoadConversation();
+            // Prevent loading during a conversation
+            if (!isConversing && !autoPlaying)
+            {
+                LoadConversation();
+            }
 
             // Autoplay
-            if(conversation.isAutoplayed && !autoPlaying)
+            if(conversation.isAutoplayed)
             {
-                OnInteract();
+                if(!autoPlaying)
+                {
+                    OnInteract();
+                }
             }
             // Enter collider to interact
             else
@@ -111,6 +118,10 @@ public class NPCInteractable : DialogueInteractable
                     ProgressManager.Instance.AddMission(startedMission);
                     startedMission.OnMissionComplete += HandleOnMissionComplete;
                     startedMission.OnMissionReset += HandleOnMissionReset;
+                }
+                else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
+                {
+                    //Must have this case because it is the catch for a during mission interaction (without this it will go to else)
                 }
                 // Objective of mission has been completed but now talking to NPC to close mission
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
