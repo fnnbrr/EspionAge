@@ -17,7 +17,12 @@ public class Interactable : MonoBehaviour, IInteractable
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
-    protected void Update()
+    protected virtual void Start()
+    {
+        player = GameManager.Instance.GetPlayerTransform().gameObject;
+    }
+
+    protected virtual void Update()
     {
         //Ensures text is always facing the camera
         if(enableInteract && interactableOn)
@@ -38,13 +43,12 @@ public class Interactable : MonoBehaviour, IInteractable
     }
 
 
-    protected void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (enableInteract && other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {
             if (!interactableOn)
             {
-                player = other.gameObject;
                 interactableOn = true;
 
                 ShowInteractUI();
