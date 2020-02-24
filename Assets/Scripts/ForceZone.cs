@@ -15,9 +15,24 @@ public class ForceZone : MonoBehaviour
 
     void Update()
     {
+        List<Rigidbody> toRemove = new List<Rigidbody>();
+
         foreach (Rigidbody r in activeObjects)
         {
-            r.AddForce(transform.forward * forceMagnitude);
+            // objects could be deleted unexpectedly
+            if (r)
+            {
+                r.AddForce(transform.forward * forceMagnitude);
+            }
+            else
+            {
+                toRemove.Add(r);
+            }
+        }
+
+        foreach (Rigidbody removing in toRemove)
+        {
+            activeObjects.Remove(removing);
         }
     }
 

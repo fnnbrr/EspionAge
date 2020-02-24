@@ -11,6 +11,7 @@ public class Interactable : MonoBehaviour, IInteractable
     public Animator interactableAnim;
     public RectTransform interactTransform;
 
+    protected bool enableInteract = true;
     private bool interactableOn = false;
 
     public delegate void OnInteractEventHandler(Interactable source);
@@ -19,7 +20,7 @@ public class Interactable : MonoBehaviour, IInteractable
     protected void Update()
     {
         //Ensures text is always facing the camera
-        if(interactableOn)
+        if(enableInteract && interactableOn)
         {
             // Interact Text always faces towards camera
             interactTransform.LookAt(CameraManager.Instance.GetActiveCameraTransform());
@@ -39,7 +40,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
+        if (enableInteract && other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
         {
             if (!interactableOn)
             {
@@ -54,7 +55,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER) && interactableOn)
+        if (enableInteract && other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER) && interactableOn)
         {
             interactableOn = false;
 
@@ -97,7 +98,6 @@ public class Interactable : MonoBehaviour, IInteractable
 
     }
 
-    // TODO: see how to set a default null-ish value for Action, and just conditionally call it if its not null (so it's not necessary pass in a callback).
     // Coroutine that animates the rotation of the given object to the desiredRotation at a set turn speed
     protected IEnumerator RotateAnimation(GameObject obj, Quaternion desiredRotation, float turnSpeed, Action onFinishCallback = null)
     {
