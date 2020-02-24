@@ -11,8 +11,9 @@ public class Throwable : Interactable
     private bool hasHit = false;
     private NoisePing noisePing;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         noisePing = gameObject.GetComponent<NoisePing>();
     }
 
