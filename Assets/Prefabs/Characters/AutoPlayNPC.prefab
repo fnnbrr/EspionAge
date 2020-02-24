@@ -1066,14 +1066,11 @@ MonoBehaviour:
   interactableAnim: {fileID: 5437224375401660387}
   interactTransform: {fileID: 5437224375401660319}
   conversation: {fileID: 0}
+  isConversing: 0
   waitLineTime: 2
   defaultConvos:
   - {fileID: 11400000, guid: 76314b2acf61143028ece968fd73cc3d, type: 2}
-  missionsOffered:
-  - missionPrefab: {fileID: 0}
-    beforeConvo: {fileID: 0}
-    duringConvo: {fileID: 0}
-    afterConvo: {fileID: 0}
+  missionsOffered: []
 --- !u!1 &5971000701003425853
 GameObject:
   m_ObjectHideFlags: 0

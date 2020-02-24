@@ -9,7 +9,7 @@ public class DialogueInteractable : Interactable
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
-    public bool isConversing = false;
+    protected bool isConversing = false;
     private int activeLineIndex = 0;
 
     protected bool autoPlaying = false;
