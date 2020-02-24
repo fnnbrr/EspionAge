@@ -33,7 +33,7 @@ public class DialogueInteractable : Interactable
                 isConversing = true;
 
                 // Freeze player when conversing
-                player.GetComponent<PlayerController>().CanMove = false;
+                GameManager.Instance.GetPlayerController().CanMove = false;
 
                 speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
                 speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
@@ -103,7 +103,7 @@ public class DialogueInteractable : Interactable
             ShowInteractUI();
 
             // Unfreeze player when done
-            player.GetComponent<PlayerController>().CanMove = true;
+            GameManager.Instance.GetPlayerController().CanMove = true;
         }
         else
         {

@@ -15,7 +15,7 @@ public struct Line
 public class Conversation : ScriptableObject
 {
     public string npcVoice;
-    public Line[] lines;
     public bool isAutoplayed = false;
     public bool shouldFollow = false;
+    public Line[] lines;
 }

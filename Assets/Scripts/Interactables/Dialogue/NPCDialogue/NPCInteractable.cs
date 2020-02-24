@@ -55,15 +55,17 @@ public class NPCInteractable : DialogueInteractable
                 base.Update();
             }
         }
+        else
+        {
+            if (isFollowing)
+            {
+                StopFollow();
+            }
+        }
 
         if(isFollowing)
         {
             FollowTarget();
-
-            if(!IsWithinBoundaryRadius(GameManager.Instance.GetPlayerTransform()))
-            {
-                StopFollow();
-            }
         }
     }
 
@@ -192,9 +194,9 @@ public class NPCInteractable : DialogueInteractable
         }
     }
 
-    private bool IsWithinBoundaryRadius(Transform position)
+    private bool IsWithinBoundaryRadius(Transform targetTransform)
     {
-        return Vector3.Distance(originPosition, position.position) < Constants.INTERACT_BOUNDARY_RADIUS;
+        return Vector3.Distance(originPosition, targetTransform.position) < Constants.INTERACT_BOUNDARY_RADIUS;
     }
 
     public void SetOriginPosition(Vector3 position)
