@@ -18,13 +18,17 @@ public class Throwable : Interactable
 
     public override void OnInteract()
     {
-        base.OnInteract();
+        if (!hasBeenAcquired)
+        {
+            base.OnInteract();
 
-        PlayerManager playerManager = Utils.GetRequiredComponent<PlayerManager>(player);
-        playerManager.AddThrowable(gameObject);
-        hasBeenAcquired = true;
-
-        // TODO: Play object pickup sound effect here?
+            PlayerManager playerManager = Utils.GetRequiredComponent<PlayerManager>(player);
+            playerManager.AddThrowable(gameObject);
+            hasBeenAcquired = true;
+            enableInteract = false;  // the player should not be able to interact with this object anymore
+            
+            // TODO: Play object pickup sound effect here?
+        }
     }
     
     private void OnCollisionEnter(Collision other)
