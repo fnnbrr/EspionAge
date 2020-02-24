@@ -39,7 +39,7 @@ public class NPCInteractable : DialogueInteractable
 
     protected override void Update()
     {
-        if(IsWithinRadius(GameManager.Instance.GetPlayerTransform()))
+        if(IsWithinBoundaryRadius(GameManager.Instance.GetPlayerTransform()))
         {
             LoadConversation();
 
@@ -55,10 +55,14 @@ public class NPCInteractable : DialogueInteractable
             }
         }
 
-
         if(isFollowing)
         {
             FollowTarget();
+
+            if(!IsWithinBoundaryRadius(GameManager.Instance.GetPlayerTransform()))
+            {
+                StopFollow();
+            }
         }
     }
 
@@ -80,14 +84,11 @@ public class NPCInteractable : DialogueInteractable
             else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
             { 
                 conversation = currentMissionConvos.duringConvo;
-                Debug.Log("NPC: duringConvo");
             }
             // Objective of mission has been completed but now talking to NPC to close mission
             else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
             {
                 conversation = currentMissionConvos.afterConvo;
-
-                Debug.Log("NPC: afterConvo");
             }
         }
     }
@@ -143,15 +144,35 @@ public class NPCInteractable : DialogueInteractable
         {
             TriggerFollow(player);
         }
-
         base.OnInteract();
     }
 
+
+    protected override void OnTriggerEnter(Collider other)
+    {
+        if (!autoPlaying)
+        {
+            base.OnTriggerEnter(other);
+        }
+    }
 
     protected override void OnAutoplayComplete()
     {
         base.OnAutoplayComplete();
         if(conversation.shouldFollow)
+        {
+            StopFollow();
+            ReturnToOrigin();
+        }
+    }
+
+    // Not sure if we'll need this funtionality but putting it here anyway
+    // Would happen when not autoplaying and NPC is following
+    protected override void EndConversation()
+    {
+        base.EndConversation();
+
+        if(isFollowing && !autoPlaying)
         {
             StopFollow();
             ReturnToOrigin();
@@ -173,9 +194,8 @@ public class NPCInteractable : DialogueInteractable
     }
 
 
-    private bool IsWithinRadius(Transform position)
+    private bool IsWithinBoundaryRadius(Transform position)
     {
-        Debug.Log(Vector3.Distance(originPosition, position.position));
         return Vector3.Distance(originPosition, position.position) < Constants.INTERACT_BOUNDARY_RADIUS;
     }
 

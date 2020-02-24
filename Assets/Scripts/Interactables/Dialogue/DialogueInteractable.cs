@@ -9,7 +9,7 @@ public class DialogueInteractable : Interactable
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
-    protected bool isConversing = false;
+    public bool isConversing = false;
     private int activeLineIndex = 0;
 
     protected bool autoPlaying = false;
@@ -28,7 +28,6 @@ public class DialogueInteractable : Interactable
     public override void OnInteract()
     {
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
-
         if(!autoPlaying)
         {
             if (!isConversing)
@@ -45,6 +44,10 @@ public class DialogueInteractable : Interactable
                 AdvanceConversation();
 
                 base.OnInteract();
+            }
+            else
+            {
+                AdvanceConversation();
             }
         }
         else
@@ -68,13 +71,12 @@ public class DialogueInteractable : Interactable
 
     bool ContinueConversation()
     {
-        DisplayLine();
-        activeLineIndex += 1;
+        //DisplayLine();
         return activeLineIndex < conversation.lines.Length;
     }
 
 
-    void EndConversation()
+    protected virtual void EndConversation()
     {
         speakerUIBirdie.Hide();
         speakerUINPC.Hide();
@@ -86,6 +88,10 @@ public class DialogueInteractable : Interactable
     {
         while (ContinueConversation())
         {
+            //ISSUE: not displaying last line because it ends it right after it is displayed
+            //Temporary solution to this issue
+            DisplayLine();
+            activeLineIndex += 1;
             yield return new WaitForSeconds(waitLineTime);
         }
 
@@ -106,6 +112,13 @@ public class DialogueInteractable : Interactable
 
             // Unfreeze player when done
             player.GetComponent<PlayerController>().CanMove = true;
+        }
+        else
+        {
+            //ISSUE: not displaying last line because it ends it right after it is displayed
+            //Temporary solution to this issue
+            DisplayLine();
+            activeLineIndex += 1;
         }
     }
 
