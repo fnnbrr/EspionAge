@@ -48,7 +48,6 @@ public class Interactable : MonoBehaviour, IInteractable
         {
             if (!interactableOn)
             {
-                player = other.gameObject;
                 interactableOn = true;
 
                 ShowInteractUI();

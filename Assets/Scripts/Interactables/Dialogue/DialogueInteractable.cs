@@ -23,8 +23,6 @@ public class DialogueInteractable : Interactable
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
     }
 
-
-    // Conversation to happen when interacted with
     public override void OnInteract()
     {
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
@@ -56,25 +54,21 @@ public class DialogueInteractable : Interactable
         }
     }
 
-
     protected void TriggerAutoplay()
     {
         autoPlaying = true;
     }
-
 
     protected virtual void OnAutoplayComplete()
     {
         autoPlaying = false;
     }
 
-
-    bool ContinueConversation()
+    private bool ContinueConversation()
     {
         //DisplayLine();
         return activeLineIndex < conversation.lines.Length;
     }
-
 
     protected virtual void EndConversation()
     {
@@ -82,7 +76,6 @@ public class DialogueInteractable : Interactable
         speakerUINPC.Hide();
         activeLineIndex = 0;
     }
-
 
     IEnumerator AutoplayConversation()
     {
@@ -98,7 +91,6 @@ public class DialogueInteractable : Interactable
         EndConversation();
         OnAutoplayComplete();
     }
-
 
     void AdvanceConversation() {
         if (!ContinueConversation())

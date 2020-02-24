@@ -19,7 +19,7 @@ public class NPCInteractable : DialogueInteractable
     public List<Conversation> defaultConvos;
 
     public List<NPCMissionConvos> missionsOffered;
-    private NPCMissionConvos currentMissionConvos = null;                            // Current Mission given by this NPC (should only be 1 per NPC)
+    private NPCMissionConvos currentMissionConvos = null;            // Current Mission given by this NPC (should only be 1 per NPC)
     private AMission startedMission;                                 // started mission needed to end mission
 
 
@@ -28,6 +28,7 @@ public class NPCInteractable : DialogueInteractable
 
     protected bool isFollowing = false;
     private Vector3 originPosition;
+
 
     protected override void Start()
     {
@@ -97,7 +98,7 @@ public class NPCInteractable : DialogueInteractable
     {
         if (!isConversing)
         {
-            // NPC has mission to offer
+            // NPC has mission to offer (Mission should have been loaded in LoadConversation)
             if(currentMissionConvos != null)
             {
                 // Start mission
@@ -147,7 +148,6 @@ public class NPCInteractable : DialogueInteractable
         base.OnInteract();
     }
 
-
     protected override void OnTriggerEnter(Collider other)
     {
         if (!autoPlaying)
@@ -167,7 +167,7 @@ public class NPCInteractable : DialogueInteractable
     }
 
     // Not sure if we'll need this funtionality but putting it here anyway
-    // Would happen when not autoplaying and NPC is following
+    // Would happen when shouldFollow is true and autoPlaying is false for that conversation
     protected override void EndConversation()
     {
         base.EndConversation();
@@ -178,7 +178,6 @@ public class NPCInteractable : DialogueInteractable
             ReturnToOrigin();
         }
     }
-
 
     void FollowTarget()
     {
@@ -193,24 +192,20 @@ public class NPCInteractable : DialogueInteractable
         }
     }
 
-
     private bool IsWithinBoundaryRadius(Transform position)
     {
         return Vector3.Distance(originPosition, position.position) < Constants.INTERACT_BOUNDARY_RADIUS;
     }
-
 
     public void SetOriginPosition(Vector3 position)
     {
         originPosition = position;
     }
 
-
     public void ReturnToOrigin()
     {
         agent.SetDestination(originPosition);
     }
-
 
     protected void TriggerFollow(GameObject target)
     {
@@ -225,12 +220,10 @@ public class NPCInteractable : DialogueInteractable
         isFollowing = true;
     }
 
-
     protected void StopFollow()
     {
         isFollowing = false;
     }
-
 
     private void HandleOnMissionReset()
     {
@@ -243,8 +236,6 @@ public class NPCInteractable : DialogueInteractable
         Debug.Log("Objective Complete");
     }
 
-
-    // Makes player face interactable when they are interacted with
     public void NPCFacePlayer()
     {
         Vector3 dirToFace = player.transform.position - transform.position;
