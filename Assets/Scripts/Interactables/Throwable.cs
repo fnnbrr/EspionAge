@@ -1,25 +1,41 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NoisePing))]
 public class Throwable : Interactable
 {
-    private bool pickedUp = false;
+    private bool hasBeenAcquired = false;
+    private bool hasHit = false;
+    private NoisePing noisePing;
+
+    private void Start()
+    {
+        noisePing = gameObject.GetComponent<NoisePing>();
+    }
 
     public override void OnInteract()
     {
-        if (!pickedUp)
+        if (!hasBeenAcquired)
         {
             base.OnInteract();
 
             PlayerManager playerManager = Utils.GetRequiredComponent<PlayerManager>(player);
             playerManager.AddThrowable(gameObject);
-
-            // TODO: Play object pickup sound effect here?
-
-            pickedUp = true;
+            hasBeenAcquired = true;
             enableInteract = false;  // the player should not be able to interact with this object anymore
+            
+            // TODO: Play object pickup sound effect here?
         }
+    }
+    
+    private void OnCollisionEnter(Collision other)
+    {
+        if (!hasBeenAcquired || hasHit) return;
+
+        noisePing.SpawnNoisePing(other);
+        hasHit = true;
     }
 }
