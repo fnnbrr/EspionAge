@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
 public class NPCMissionConvos
@@ -25,9 +26,8 @@ public class NPCInteractable : DialogueInteractable
     protected NavMeshAgent agent;
     protected GameObject targetObject;
 
-    public bool isFollowing = false;
+    protected bool isFollowing = false;
     private Vector3 originPosition;
-    private float boundaryRadius = Constants.INTERACT_BOUNDARY_RADIUS;
 
     protected override void Start()
     {
@@ -42,9 +42,19 @@ public class NPCInteractable : DialogueInteractable
         if(IsWithinRadius(GameManager.Instance.GetPlayerTransform()))
         {
             LoadConversation();
+
+            // Autoplay
+            if(conversation.isAutoplayed && !autoPlaying)
+            {
+                OnInteract();
+            }
+            // Enter collider to interact
+            else
+            {
+                base.Update();
+            }
         }
 
-        base.Update();
 
         if(isFollowing)
         {
@@ -86,8 +96,6 @@ public class NPCInteractable : DialogueInteractable
     {
         if (!isConversing)
         {
-            //LoadConversation();
-
             // NPC has mission to offer
             if(currentMissionConvos != null)
             {
@@ -164,11 +172,13 @@ public class NPCInteractable : DialogueInteractable
         }
     }
 
+
     private bool IsWithinRadius(Transform position)
     {
         Debug.Log(Vector3.Distance(originPosition, position.position));
-        return Vector3.Distance(originPosition, position.position) < boundaryRadius;
+        return Vector3.Distance(originPosition, position.position) < Constants.INTERACT_BOUNDARY_RADIUS;
     }
+
 
     public void SetOriginPosition(Vector3 position)
     {

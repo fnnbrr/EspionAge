@@ -12,7 +12,7 @@ public class DialogueInteractable : Interactable
     protected bool isConversing = false;
     private int activeLineIndex = 0;
 
-    private bool autoPlaying = false;
+    protected bool autoPlaying = false;
 
     public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
 
@@ -29,22 +29,23 @@ public class DialogueInteractable : Interactable
     {
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
 
-    public override void OnInteract()  
-    {
-        if (!isConversing)
+        if(!autoPlaying)
         {
-            isConversing = true;
+            if (!isConversing)
+            {
+                isConversing = true;
 
-            // Freeze player when conversing
-            player.GetComponent<PlayerController>().CanMove = false;
+                // Freeze player when conversing
+                player.GetComponent<PlayerController>().CanMove = false;
 
-            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
-            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+                speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+                speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
 
-            HideInteractUI();
-            AdvanceConversation();
+                HideInteractUI();
+                AdvanceConversation();
 
-            base.OnInteract();
+                base.OnInteract();
+            }
         }
         else
         {
