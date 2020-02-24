@@ -95,7 +95,7 @@ public class MissionCafeteria1 : AMission
         instantiatedMissionInteractables.Clear();
         instantiatedEnemies.Clear();
 
-        if (!startCutscenePlayed)
+        if (!startCutscenePlayed && RegionManager.Instance)
         {
             RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
         }
@@ -189,7 +189,20 @@ public class MissionCafeteria1 : AMission
 
         virtualCamera.LookAt = instantiatedMissionInteractables[0].transform;
 
-        Destroy(instantiatedCutscenePrefab, virtualCameraAnim.GetCurrentAnimatorStateInfo(0).length * 1.5f);
+        StartCoroutine(EndCutsceneOperations(instantiatedCutscenePrefab, virtualCameraAnim.GetCurrentAnimatorStateInfo(0).length * 1.5f));
+    }
+
+    private IEnumerator EndCutsceneOperations(GameObject cutsceneObject, float cutsceneLength)
+    {
+        yield return new WaitForSeconds(cutsceneLength);
+
+        UIManager.Instance.FadeOut();
+
+        yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
+
+        Destroy(cutsceneObject);
+
+        UIManager.Instance.FadeIn();
     }
 
     private void OnCollideWithPlayer()
