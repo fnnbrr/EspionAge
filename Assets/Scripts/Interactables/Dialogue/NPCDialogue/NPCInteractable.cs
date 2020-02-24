@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [System.Serializable]
-public class MissionNPC
+public class NPCMissionConvos
 {
     public GameObject missionPrefab;
 
@@ -17,46 +18,99 @@ public class NPCInteractable : DialogueInteractable
 {
     public List<Conversation> defaultConvos;
 
-    public List<MissionNPC> missionsOffered;
-    private MissionNPC currentMissionNPC;                            // Current Mission given by this NPC (should only be 1 per NPC)
+    public List<NPCMissionConvos> missionsOffered;
+    private NPCMissionConvos currentMissionConvos = null;            // Current Mission given by this NPC (should only be 1 per NPC)
     private AMission startedMission;                                 // started mission needed to end mission
 
+
+    protected NavMeshAgent agent;
+    protected GameObject targetObject;
+
+    protected bool isFollowing = false;
+    private Vector3 originPosition;
+
+
+    protected override void Start()
+    {
+        base.Start();
+        agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+        originPosition = gameObject.transform.position;
+        LoadConversation();
+    }
+
+    protected override void Update()
+    {
+        if(IsWithinBoundaryRadius(GameManager.Instance.GetPlayerTransform()))
+        {
+            LoadConversation();
+
+            // Autoplay
+            if(conversation.isAutoplayed && !autoPlaying)
+            {
+                OnInteract();
+            }
+            // Enter collider to interact
+            else
+            {
+                base.Update();
+            }
+        }
+        else
+        {
+            if (isFollowing)
+            {
+                StopFollow();
+            }
+        }
+
+        if(isFollowing)
+        {
+            FollowTarget();
+        }
+    }
+
+    private void LoadConversation()
+    {
+        // Load the conversation of the NPC based on mission progress
+        if (missionsOffered.Count == 0)
+        {
+            // Random default convo (Temporary until better system is set for default convos)
+            conversation = defaultConvos[Random.Range(0, defaultConvos.Count)];
+        }
+        else
+        {
+            currentMissionConvos = missionsOffered[0];
+            if (startedMission == null)
+            {
+                conversation = currentMissionConvos.beforeConvo;
+            }
+            else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
+            { 
+                conversation = currentMissionConvos.duringConvo;
+            }
+            // Objective of mission has been completed but now talking to NPC to close mission
+            else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
+            {
+                conversation = currentMissionConvos.afterConvo;
+            }
+        }
+    }
 
     public override void OnInteract()
     {
         if (!isConversing)
         {
-            // Load the conversation of the NPC based on mission progress
-            if (missionsOffered.Count == 0)
-            {
-                // Return a random default convo (Temporary until better system is set for default convos)
-                conversation = defaultConvos[Random.Range(0, defaultConvos.Count)];
-            }
-            // NPC has mission to offer
-            else
+            // NPC has mission to offer (Mission should have been loaded in LoadConversation)
+            if(currentMissionConvos != null)
             {
                 // Start mission
                 if (startedMission == null)
                 {
-                    // Obtainment of mission and removal of offered mission
-                    currentMissionNPC = missionsOffered[0];
-
                     // Start mission and store reference because needed to end mission
-                    startedMission = MissionManager.Instance.StartMission(currentMissionNPC.missionPrefab);
+                    startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionPrefab);
                     ProgressManager.Instance.AddMission(startedMission);
                     startedMission.OnMissionComplete += HandleOnMissionComplete;
                     startedMission.OnMissionReset += HandleOnMissionReset;
-
-                    conversation = currentMissionNPC.beforeConvo;
-
-                    Debug.Log("NPC: beforeConvo");
-
-                }
-                // Mission started but not completed
-                else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
-                {
-                    conversation = currentMissionNPC.duringConvo;
-                    Debug.Log("NPC: duringConvo");
                 }
                 // Objective of mission has been completed but now talking to NPC to close mission
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
@@ -70,10 +124,7 @@ public class NPCInteractable : DialogueInteractable
                     startedMission.OnMissionReset -= HandleOnMissionReset;
                     startedMission = null;
                     missionsOffered.RemoveAt(0);
-
-                    conversation = currentMissionNPC.afterConvo;
-
-                    Debug.Log("NPC: afterConvo");
+                    currentMissionConvos = null;
                 }
                 else
                 {
@@ -81,10 +132,99 @@ public class NPCInteractable : DialogueInteractable
                     return;
                 }
             }
-            NPCFacePlayer();
+            if (!conversation.shouldFollow && !conversation.isAutoplayed)
+            {
+                NPCFacePlayer();
+            }
         }
-        
+
+        if(conversation.isAutoplayed)
+        {
+            TriggerAutoplay();
+        }
+
+        if (conversation.shouldFollow)
+        {
+            TriggerFollow(player);
+        }
         base.OnInteract();
+    }
+
+    protected override void OnTriggerEnter(Collider other)
+    {
+        if (!autoPlaying)
+        {
+            base.OnTriggerEnter(other);
+        }
+    }
+
+    protected override void OnAutoplayComplete()
+    {
+        base.OnAutoplayComplete();
+        if(conversation.shouldFollow)
+        {
+            StopFollow();
+            ReturnToOrigin();
+        }
+    }
+
+    // Not sure if we'll need this funtionality but putting it here anyway
+    // Would happen when shouldFollow is true and autoPlaying is false for that conversation
+    protected override void EndConversation()
+    {
+        base.EndConversation();
+
+        if(isFollowing && !autoPlaying)
+        {
+            StopFollow();
+            ReturnToOrigin();
+        }
+    }
+
+    void FollowTarget()
+    {
+        if (targetObject == null)
+        {
+            Debug.LogError("Object being followed must be assigned");
+            return;
+        }
+        else
+        {
+            agent.SetDestination(targetObject.transform.position);
+        }
+    }
+
+    private bool IsWithinBoundaryRadius(Transform targetTransform)
+    {
+        return Vector3.Distance(originPosition, targetTransform.position) < Constants.INTERACT_BOUNDARY_RADIUS;
+    }
+
+    public void SetOriginPosition(Vector3 position)
+    {
+        originPosition = position;
+    }
+
+    public void ReturnToOrigin()
+    {
+        agent.SetDestination(originPosition);
+    }
+
+    protected void TriggerFollow(GameObject target)
+    {
+        targetObject = target;
+
+        if (targetObject == null)
+        {
+            Debug.LogError("Target to follow must be assigned");
+            return;
+        }
+
+        isFollowing = true;
+    }
+
+    protected void StopFollow()
+    {
+        isFollowing = false;
     }
 
     private void HandleOnMissionReset()
@@ -98,8 +238,6 @@ public class NPCInteractable : DialogueInteractable
         Debug.Log("Objective Complete");
     }
 
-
-    // Makes player face interactable when they are interacted with
     public void NPCFacePlayer()
     {
         Vector3 dirToFace = player.transform.position - transform.position;

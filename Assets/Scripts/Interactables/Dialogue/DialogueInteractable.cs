@@ -10,52 +10,107 @@ public class DialogueInteractable : Interactable
     private SpeakerUI speakerUINPC;
 
     protected bool isConversing = false;
-
     private int activeLineIndex = 0;
 
-    public override void OnInteract()  
+    protected bool autoPlaying = false;
+
+    public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
+
+
+    protected override void Start()
     {
-        if (!isConversing)
+        base.Start();
+        speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+    }
+
+    public override void OnInteract()
+    {
+        speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+        if(!autoPlaying)
         {
-            isConversing = true;
+            if (!isConversing)
+            {
+                isConversing = true;
 
-            // Freeze player when conversing
-            player.GetComponent<PlayerController>().CanMove = false;
+                // Freeze player when conversing
+                GameManager.Instance.GetPlayerController().CanMove = false;
 
-            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
-            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+                speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+                speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
 
-            HideInteractUI();
-            AdvanceConversation();
+                HideInteractUI();
+                AdvanceConversation();
 
-            base.OnInteract();
+                base.OnInteract();
+            }
+            else
+            {
+                AdvanceConversation();
+            }
         }
         else
         {
-            AdvanceConversation();
+            StartCoroutine(AutoplayConversation()); ;
         }
     }
 
-    void AdvanceConversation() {
-        if (activeLineIndex < conversation.lines.Length)
+    protected void TriggerAutoplay()
+    {
+        autoPlaying = true;
+    }
+
+    protected virtual void OnAutoplayComplete()
+    {
+        autoPlaying = false;
+    }
+
+    private bool ContinueConversation()
+    {
+        //DisplayLine();
+        return activeLineIndex < conversation.lines.Length;
+    }
+
+    protected virtual void EndConversation()
+    {
+        speakerUIBirdie.Hide();
+        speakerUINPC.Hide();
+        activeLineIndex = 0;
+    }
+
+    IEnumerator AutoplayConversation()
+    {
+        while (ContinueConversation())
         {
-            //If there is still conversation left
+            //ISSUE: not displaying last line because it ends it right after it is displayed
+            //Temporary solution to this issue
             DisplayLine();
             activeLineIndex += 1;
+            yield return new WaitForSeconds(waitLineTime);
         }
-        else
+
+        EndConversation();
+        OnAutoplayComplete();
+    }
+
+    void AdvanceConversation() {
+        if (!ContinueConversation())
         {
             //Once the conversation is over 
             //what happens 
-            speakerUIBirdie.Hide();
-            speakerUINPC.Hide();
-            activeLineIndex = 0;
+            EndConversation();
 
             isConversing = false;
             ShowInteractUI();
 
             // Unfreeze player when done
-            player.GetComponent<PlayerController>().CanMove = true;
+            GameManager.Instance.GetPlayerController().CanMove = true;
+        }
+        else
+        {
+            //ISSUE: not displaying last line because it ends it right after it is displayed
+            //Temporary solution to this issue
+            DisplayLine();
+            activeLineIndex += 1;
         }
     }
 
