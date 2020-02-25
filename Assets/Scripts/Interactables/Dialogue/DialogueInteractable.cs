@@ -67,6 +67,7 @@ public class DialogueInteractable : Interactable
     private bool ContinueConversation()
     {
         //DisplayLine();
+        //activeLineIndex += 1;
         return activeLineIndex < conversation.lines.Length;
     }
 
