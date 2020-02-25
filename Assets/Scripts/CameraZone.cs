@@ -47,8 +47,11 @@ public class CameraZone : MonoBehaviour
 
     private void AlertBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
-        CameraManager.Instance.OnBlendingComplete -= AlertBlendingComplete;
-        OnPlayerEnter?.Invoke();
+        if (toCamera == mainCamera)  // we do not want to care about unrelated camera blending events
+        {
+            CameraManager.Instance.OnBlendingComplete -= AlertBlendingComplete;
+            OnPlayerEnter?.Invoke();
+        }
     }
 
     private void OnTriggerExit(Collider other)
