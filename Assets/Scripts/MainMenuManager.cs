@@ -59,9 +59,11 @@ public class MainMenuManager : MonoBehaviour
     public class ButtonData
     {
         [Header("This enum must be unique among the list!")]
-        public MainMenuManager.ButtonType buttonType;
+        public ButtonType buttonType;
         public Button buttonComponent;
         public List<Graphic> imagesToDarknen;
+
+        [HideInInspector] public Animator animator;
         [HideInInspector] public List<Color> originalColors = new List<Color>();
     }
 
@@ -78,6 +80,7 @@ public class MainMenuManager : MonoBehaviour
         foreach (ButtonData b in buttonData)
         {
             b.originalColors = b.imagesToDarknen.Select(i => i.color).ToList();
+            b.animator = b.buttonComponent.GetComponent<Animator>();
             buttonDataMappings.Add(b.buttonType, b);
         }
     }
@@ -196,6 +199,11 @@ public class MainMenuManager : MonoBehaviour
             {
                 i.color = imageDarkenedColor;
             });
+
+            if (buttonDataMappings[mainMenuButton].animator)
+            {
+                buttonDataMappings[mainMenuButton].animator.SetBool("Start", true);
+            }
         }
 
         switch (mainMenuButton)
@@ -216,15 +224,25 @@ public class MainMenuManager : MonoBehaviour
         // Here, we want None to mean everything must be cleaned up
         if (mainMenuButton == ButtonType.Start || mainMenuButton == ButtonType.None)
         {
-            mainLight.enabled = true;
+            GenericCleanup(ButtonType.Start);
 
-            ResetDarkenedColors(ButtonType.Start);
+            mainLight.enabled = true;
         } 
         else if (mainMenuButton == ButtonType.Quit || mainMenuButton == ButtonType.None)
         {
-            lightBulbMaterial.SetColor("_EmissionColor", lightBulbStartColor);
+            GenericCleanup(ButtonType.Quit);
 
-            ResetDarkenedColors(ButtonType.Quit);
+            lightBulbMaterial.SetColor("_EmissionColor", lightBulbStartColor);
+        }
+    }
+
+    private void GenericCleanup(ButtonType mainMenuButton)
+    {
+        ResetDarkenedColors(mainMenuButton);
+
+        if (buttonDataMappings[mainMenuButton].animator)
+        {
+            buttonDataMappings[mainMenuButton].animator.SetBool("Start", false);
         }
     }
 
