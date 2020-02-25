@@ -16,12 +16,13 @@ public class NPCMissionConvos
 
 public class NPCInteractable : DialogueInteractable
 {
+    public float boundaryRadius = Constants.INTERACT_BOUNDARY_RADIUS;
+
     public List<Conversation> defaultConvos;
 
     public List<NPCMissionConvos> missionsOffered;
     private NPCMissionConvos currentMissionConvos = null;            // Current Mission given by this NPC (should only be 1 per NPC)
     private AMission startedMission;                                 // started mission needed to end mission
-
 
     protected NavMeshAgent agent;
     protected GameObject targetObject;
@@ -40,7 +41,7 @@ public class NPCInteractable : DialogueInteractable
 
     protected override void Update()
     {
-        if(IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), Constants.INTERACT_BOUNDARY_RADIUS))
+        if(IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
         {
             // Prevent loading during a conversation
             if (!isConversing && !autoPlaying)
@@ -244,5 +245,13 @@ public class NPCInteractable : DialogueInteractable
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
         StartCoroutine(RotateAnimation(gameObject, rotation, player.GetComponent<PlayerController>().turnSpeed));
+    }
+
+
+    protected override void OnDrawGizmos()
+    {
+        base.OnDrawGizmos();
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(transform.position, boundaryRadius);
     }
 }
