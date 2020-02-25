@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float movementSpeed;
     [HideInInspector] public float turnSpeed;
     private Rigidbody rb;
-    private PlayerManager playerManager;
 
     private Vector3 movement;
     public bool CanMove { get; set; } = true;
@@ -23,7 +22,6 @@ public class PlayerController : MonoBehaviour
         movementSpeed = baseMovementSpeed;
         turnSpeed = baseTurnSpeed;
         rb = Utils.GetRequiredComponent<Rigidbody>(this);
-        playerManager = Utils.GetRequiredComponent<PlayerManager>(this);
 
         if (CameraManager.Instance)
         {
