@@ -5,6 +5,7 @@ using UnityEngine;
 public class DialogueInteractable : Interactable
 {
     public Conversation conversation;
+    public string npcVoicePath;
 
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
@@ -137,7 +138,7 @@ public class DialogueInteractable : Interactable
         } 
         else {
             SetDialogue(speakerUINPC, speakerUIBirdie, line.text);
-            PlayVoice(conversation.npcVoice);
+            PlayVoice(npcVoicePath);
         }
     }
 
