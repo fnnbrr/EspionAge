@@ -44,7 +44,7 @@ public class DialogueInteractable : Interactable
                 continueInteracting = true;
 
                 // Freeze player when conversing
-                GameManager.Instance.GetPlayerController().CanMove = false;
+                GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
 
                 speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
                 speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
@@ -116,7 +116,7 @@ public class DialogueInteractable : Interactable
             ShowInteractUI();
 
             // Unfreeze player when done
-            GameManager.Instance.GetPlayerController().CanMove = true;
+            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
         }
         else
         {

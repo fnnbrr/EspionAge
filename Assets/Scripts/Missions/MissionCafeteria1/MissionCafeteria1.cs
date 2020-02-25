@@ -179,7 +179,7 @@ public class MissionCafeteria1 : AMission
 
         if (!startCutsceneCamera || instantiatedMissionInteractables.Count == 0) return;
 
-        GameManager.Instance.GetPlayerController().CanMove = false;
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
 
         GameObject instantiatedCutscenePrefab = Instantiate(startCutsceneCamera);
         CinemachineVirtualCamera virtualCamera = instantiatedCutscenePrefab.GetComponentInChildren<CinemachineVirtualCamera>();
@@ -203,7 +203,7 @@ public class MissionCafeteria1 : AMission
 
         UIManager.Instance.FadeIn();
 
-        GameManager.Instance.GetPlayerController().CanMove = true;
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 
     private void OnCollideWithPlayer()
