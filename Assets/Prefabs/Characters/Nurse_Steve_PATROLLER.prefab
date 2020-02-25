@@ -54,6 +54,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -240,12 +241,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bbd1dc618b965549a3f827dce25aa6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 0}
   chase: 1
   targetTransform: {fileID: 0}
-  agent: {fileID: 0}
+  responsePoint: {x: 0, y: 0, z: 0}
+  searchBounds: {fileID: 0}
+  waitDurationSec: 1
+  currentState: 3
+  defaultState: 3
   patrolWaypoints: {fileID: 0}
-  waypointPauseSec: 1
-  currentState: 0
+  numSearches: 2
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +308,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
