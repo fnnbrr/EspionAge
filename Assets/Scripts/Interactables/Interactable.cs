@@ -13,6 +13,9 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected bool enableInteract = true;
     private bool interactableOn = false;
+    protected bool continueInteracting = false;
+
+    public bool withinInteractRadius;
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
@@ -24,8 +27,21 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected virtual void Update()
     {
+        withinInteractRadius = IsWithinRadius(transform.position, player.transform, Constants.INTERACT_POPUP_RADIUS);
+
+        if (!interactableOn && withinInteractRadius)
+        {
+            interactableOn = true;
+            ShowInteractUI();
+        }
+        else if(interactableOn && !withinInteractRadius)
+        {
+            interactableOn = false;
+            HideInteractUI();
+        }
+
         //Ensures text is always facing the camera
-        if(enableInteract && interactableOn)
+        if ((enableInteract && interactableOn) || continueInteracting)
         {
             // Interact Text always faces towards camera
             interactTransform.LookAt(CameraManager.Instance.GetActiveCameraTransform());
@@ -38,31 +54,6 @@ public class Interactable : MonoBehaviour, IInteractable
 
                 OnInteract();
             }
-        }
-    }
-
-
-    protected virtual void OnTriggerEnter(Collider other)
-    {
-        if (enableInteract && other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
-        {
-            if (!interactableOn)
-            {
-                interactableOn = true;
-
-                ShowInteractUI();
-            }
-        }
-    }
-
-
-    protected void OnTriggerExit(Collider other)
-    {
-        if (enableInteract && other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER) && interactableOn)
-        {
-            interactableOn = false;
-
-            HideInteractUI();
         }
     }
 
@@ -118,6 +109,11 @@ public class Interactable : MonoBehaviour, IInteractable
 
         // Prevents the user from rotating/moving while doing the rotation animation
         onFinishCallback?.Invoke();
+    }
+
+    protected bool IsWithinRadius(Vector3 center, Transform targetTransform, float radius)
+    {
+        return Vector3.Distance(center, targetTransform.position) < radius;
     }
 
     private void UnfreezePlayer()

@@ -40,7 +40,7 @@ public class NPCInteractable : DialogueInteractable
 
     protected override void Update()
     {
-        if(IsWithinBoundaryRadius(GameManager.Instance.GetPlayerTransform()))
+        if(IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), Constants.INTERACT_BOUNDARY_RADIUS))
         {
             // Prevent loading during a conversation
             if (!isConversing && !autoPlaying)
@@ -161,14 +161,6 @@ public class NPCInteractable : DialogueInteractable
         base.OnInteract();
     }
 
-    protected override void OnTriggerEnter(Collider other)
-    {
-        if (!autoPlaying)
-        {
-            base.OnTriggerEnter(other);
-        }
-    }
-
     protected override void OnAutoplayComplete()
     {
         base.OnAutoplayComplete();
@@ -203,11 +195,6 @@ public class NPCInteractable : DialogueInteractable
         {
             agent.SetDestination(targetObject.transform.position);
         }
-    }
-
-    private bool IsWithinBoundaryRadius(Transform targetTransform)
-    {
-        return Vector3.Distance(originPosition, targetTransform.position) < Constants.INTERACT_BOUNDARY_RADIUS;
     }
 
     public void SetOriginPosition(Vector3 position)
