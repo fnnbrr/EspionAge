@@ -48,9 +48,11 @@ public class MainMenuManager : MonoBehaviour
 
     private readonly Dictionary<Tuple<ButtonType, DirectionalMovement>, ButtonType> buttonMappings = new Dictionary<Tuple<ButtonType, DirectionalMovement>, ButtonType>()
     {
-        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.None, DirectionalMovement.Any), ButtonType.Start },
+        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.None, DirectionalMovement.Left), ButtonType.Start },
+        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.None, DirectionalMovement.Right), ButtonType.Quit },
         { new Tuple<ButtonType, DirectionalMovement>(ButtonType.Start, DirectionalMovement.Right), ButtonType.Quit },
-        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.Quit, DirectionalMovement.Left), ButtonType.Start }
+        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.Quit, DirectionalMovement.Left), ButtonType.Start },
+        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.None, DirectionalMovement.Any), ButtonType.Start }  // catch all
     };
 
     [Serializable]
