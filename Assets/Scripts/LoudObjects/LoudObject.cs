@@ -9,6 +9,7 @@ public class LoudObject : MonoBehaviour
     public Vector3 thrustDirection;
     public float shakeRadius;
     public float dropRadius;
+    public float despawnSec = 3.0f;
     private float distance;
     private Rigidbody rb;
 
@@ -53,6 +54,7 @@ public class LoudObject : MonoBehaviour
 
         noisePing.SpawnNoisePing(other);
         hasHit = true;
+        Destroy(gameObject, despawnSec);
     }
 
     void Shake(float shake){
