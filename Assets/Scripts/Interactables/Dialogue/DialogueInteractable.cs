@@ -23,6 +23,14 @@ public class DialogueInteractable : Interactable
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
     }
 
+    protected override void Update()
+    {
+        if (!autoPlaying)
+        {
+            base.Update();
+        }
+    }
+
     public override void OnInteract()
     {
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
@@ -31,6 +39,9 @@ public class DialogueInteractable : Interactable
             if (!isConversing)
             {
                 isConversing = true;
+
+                // Used this to resolve bug where player freezes but cannot interact because player out of range
+                continueInteracting = true;
 
                 // Freeze player when conversing
                 GameManager.Instance.GetPlayerController().CanMove = false;
@@ -101,6 +112,7 @@ public class DialogueInteractable : Interactable
             EndConversation();
 
             isConversing = false;
+            continueInteracting = false;
             ShowInteractUI();
 
             // Unfreeze player when done
