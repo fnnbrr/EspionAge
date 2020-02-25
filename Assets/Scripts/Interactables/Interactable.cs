@@ -15,7 +15,9 @@ public class Interactable : MonoBehaviour, IInteractable
     private bool interactableOn = false;
     protected bool continueInteracting = false;
 
-    public bool withinInteractRadius;
+    public float interactRadius = Constants.INTERACT_POPUP_RADIUS;
+
+    protected bool withinInteractRadius;
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
@@ -27,7 +29,7 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected virtual void Update()
     {
-        withinInteractRadius = IsWithinRadius(transform.position, player.transform, Constants.INTERACT_POPUP_RADIUS);
+        withinInteractRadius = IsWithinRadius(transform.position, player.transform, interactRadius);
 
         if (!interactableOn && withinInteractRadius)
         {
@@ -136,5 +138,12 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
+    }
+
+    protected virtual void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, interactRadius);
+
     }
 }
