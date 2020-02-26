@@ -34,8 +34,12 @@ public class UIMenuStatic<T> : MonoBehaviour where T : Enum
     protected Dictionary<T, UIButtonDataGeneric<T>> buttonDataMappings;
 
     [Header("UIMenuStatic Generic Fields")]
+    public bool logDebugInformation = false;
     public float axisInputBetweenDelay;
     private float nextAxisInputTime;
+
+    [Header("Image Darkening")]
+    public Color imageDarkenedColor;
 
     // Internal State Variables
     protected T currentButton;
@@ -74,6 +78,11 @@ public class UIMenuStatic<T> : MonoBehaviour where T : Enum
             stateUpdated = true;
 
             nextAxisInputTime = Time.time + axisInputBetweenDelay;
+
+            if (logDebugInformation)
+            {
+                Debug.Log($"{name}: ({previousButton}) -> ({currentButton})");
+            }
         }
     }
 
@@ -119,43 +128,40 @@ public class UIMenuStatic<T> : MonoBehaviour where T : Enum
 
         bool mostlyHorizontal = Mathf.Abs(horizontal) > Mathf.Abs(vertical);
 
+        Tuple<T, UIDirectionalMovement> currentMovement;
         if (mostlyHorizontal)
         {
-            Tuple<T, UIDirectionalMovement> currentMovement;
-            if (hasHorizontalInput)
+            if (horizontal > 0f)
             {
-                if (horizontal > 0f)
-                {
-                    currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Right);
-                }
-                else
-                {
-                    currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Left);
-                }
-            }
-            else // hasVerticalInput
-            {
-                if (vertical > 0f)
-                {
-                    currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Up);
-                }
-                else
-                {
-                    currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Down);
-                }
-            }
-
-            if (buttonMappings.ContainsKey(currentMovement))
-            {
-                UpdateMainMenuState(buttonMappings[currentMovement]);
+                currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Right);
             }
             else
             {
-                currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Any);
-                if (buttonMappings.ContainsKey(currentMovement))
-                {
-                    UpdateMainMenuState(buttonMappings[currentMovement]);
-                }
+                currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Left);
+            }
+        }
+        else
+        {
+            if (vertical > 0f)
+            {
+                currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Up);
+            }
+            else
+            {
+                currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Down);
+            }
+        }
+
+        if (buttonMappings.ContainsKey(currentMovement))
+        {
+            UpdateMainMenuState(buttonMappings[currentMovement]);
+        }
+        else
+        {
+            currentMovement = GetCurrentMovementPair(UIDirectionalMovement.Any);
+            if (buttonMappings.ContainsKey(currentMovement))
+            {
+                UpdateMainMenuState(buttonMappings[currentMovement]);
             }
         }
     }
@@ -176,13 +182,48 @@ public class UIMenuStatic<T> : MonoBehaviour where T : Enum
         return new Tuple<T, UIDirectionalMovement>(currentButton, directionalMovement);
     }
 
-    protected virtual void Cleanup(T button)
-    {
-        throw new NotImplementedException();
-    }
-
     protected virtual void Setup(T button)
     {
-        throw new NotImplementedException();
+        if (buttonDataMappings.ContainsKey(button))
+        {
+            buttonDataMappings[button].imagesToDarknen.ForEach(i =>
+            {
+                i.color = imageDarkenedColor;
+            });
+
+            if (buttonDataMappings[button].animator)
+            {
+                buttonDataMappings[button].animator.SetBool("Start", true);
+            }
+        }
+    }
+
+    protected virtual void Cleanup(T button)
+    {
+        foreach (T t in Enum.GetValues(typeof(T)))
+        {
+            GenericCleanup(t);
+        }
+    }
+
+    private void GenericCleanup(T button)
+    {
+        ResetDarkenedColors(button);
+
+        if (buttonDataMappings.ContainsKey(button) && buttonDataMappings[button].animator)
+        {
+            buttonDataMappings[button].animator.SetBool("Start", false);
+        }
+    }
+
+    private void ResetDarkenedColors(T button)
+    {
+        if (buttonDataMappings.ContainsKey(button))
+        {
+            for (int i = 0; i < buttonDataMappings[button].imagesToDarknen.Count; i++)
+            {
+                buttonDataMappings[button].imagesToDarknen[i].color = buttonDataMappings[button].originalColors[i];
+            }
+        }
     }
 }

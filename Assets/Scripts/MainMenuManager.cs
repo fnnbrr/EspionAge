@@ -24,9 +24,6 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
 
     public Light mainLight;
     public Renderer lightBulbRenderer;
-    
-    [Header("Image Darkening")]
-    public Color imageDarkenedColor;
 
     [Header("Camera Switching")]
     public List<CinemachineVirtualCamera> onPressPlayCameras;
@@ -79,18 +76,7 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
 
     protected override void Setup(EMainMenuButton mainMenuButton)
     {
-        if (buttonDataMappings.ContainsKey(mainMenuButton))
-        {
-            buttonDataMappings[mainMenuButton].imagesToDarknen.ForEach(i =>
-            {
-                i.color = imageDarkenedColor;
-            });
-
-            if (buttonDataMappings[mainMenuButton].animator)
-            {
-                buttonDataMappings[mainMenuButton].animator.SetBool("Start", true);
-            }
-        }
+        base.Setup(mainMenuButton);
 
         switch (mainMenuButton)
         {
@@ -107,39 +93,18 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
 
     protected override void Cleanup(EMainMenuButton mainMenuButton)
     {
-        // Here, we want None to mean everything must be cleaned up
-        if (mainMenuButton == EMainMenuButton.Start || mainMenuButton == EMainMenuButton.None)
+        base.Cleanup(mainMenuButton);
+
+        switch (mainMenuButton)
         {
-            GenericCleanup(EMainMenuButton.Start);
-
-            mainLight.enabled = true;
-        } 
-        else if (mainMenuButton == EMainMenuButton.Quit || mainMenuButton == EMainMenuButton.None)
-        {
-            GenericCleanup(EMainMenuButton.Quit);
-
-            lightBulbMaterial.SetColor("_EmissionColor", lightBulbStartColor);
-        }
-    }
-
-    private void GenericCleanup(EMainMenuButton mainMenuButton)
-    {
-        ResetDarkenedColors(mainMenuButton);
-
-        if (buttonDataMappings[mainMenuButton].animator)
-        {
-            buttonDataMappings[mainMenuButton].animator.SetBool("Start", false);
-        }
-    }
-
-    private void ResetDarkenedColors(EMainMenuButton mainMenuButton)
-    {
-        if (buttonDataMappings.ContainsKey(mainMenuButton))
-        {
-            for(int i = 0; i < buttonDataMappings[mainMenuButton].imagesToDarknen.Count; i++)
-            {
-                buttonDataMappings[mainMenuButton].imagesToDarknen[i].color = buttonDataMappings[mainMenuButton].originalColors[i];
-            }
+            case EMainMenuButton.Start:
+                mainLight.enabled = true;
+                break;
+            case EMainMenuButton.Quit:
+                lightBulbMaterial.SetColor("_EmissionColor", lightBulbStartColor);
+                break;
+            default:
+                break;
         }
     }
 

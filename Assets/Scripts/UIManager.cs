@@ -7,10 +7,13 @@ using TMPro;
 public class UIManager : Singleton<UIManager>
 {
     public StaminaBar staminaBar;
+    public PauseMenuManager pauseMenu;
 
     [Header("Fading Settings")]
     public Image fader;
     public float fadeSpeed = 2f;
+
+    private bool isPaused = false;
 
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
@@ -18,6 +21,14 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         fader.gameObject.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if (Input.GetButtonDown(Constants.INPUT_STARTBUTTON_GETDOWN))
+        {
+            PauseGame(!isPaused);
+        }
     }
 
     private Color GetFaderColorWithAlpha(float alpha)
@@ -60,5 +71,24 @@ public class UIManager : Singleton<UIManager>
     public void InstantFadeOut()
     {
         fader.color = GetFaderColorWithAlpha(1f);
+    }
+
+    public bool IsGamePaused()
+    {
+        return isPaused;
+    }
+
+    public void PauseGame(bool toPause)
+    {
+        if (toPause)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+        isPaused = toPause;
+        pauseMenu.gameObject.SetActive(toPause);
     }
 }

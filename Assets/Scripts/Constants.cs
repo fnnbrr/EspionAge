@@ -15,6 +15,7 @@ public static class Constants
 
     public const string INPUT_INTERACTABLE_GETDOWN = "Interact";
     public const string INPUT_THROW_GETDOWN = "Fire1";
+    public const string INPUT_STARTBUTTON_GETDOWN = "Start";
 
     public const string ASSET_PATH_MISSIONTUTORIAL = "Assets/Prefabs/Missions/MissionTutorial.prefab";
     public const string ASSET_PATH_MISSIONCAFETERIA1 = "Assets/Prefabs/Missions/MissionCafeteria1.prefab";
@@ -33,6 +34,7 @@ public static class Constants
     public const string CHEATS_TELEPORT_KITCHENSTART = "Cheats/Teleport/Kitchen Start";
     public const string CHEATS_TELEPORT_PIANO = "Cheats/Teleport/Piano";
 
+    public const string SCENE_MAINMENU = "main_menu";
     public const string SCENE_MAIN = "MAIN";
 
     public const float INTERACT_BOUNDARY_RADIUS = 20.0f;
