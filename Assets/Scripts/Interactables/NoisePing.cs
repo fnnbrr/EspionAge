@@ -17,10 +17,9 @@ public class NoisePing : MonoBehaviour
     public void SpawnNoisePing(Collision other)
     {
         Vector3 hitPoint = other.GetContact(0).point;
-        Vector3 hitNormal = other.GetContact(0).normal;
+        hitPoint.y = pingFloorOffset;  // so we always spawn right above the floor
         
-        pingInstance = Instantiate(pingPrefab, hitPoint + (pingFloorOffset * hitNormal), 
-            Quaternion.LookRotation(hitPoint));
+        pingInstance = Instantiate(pingPrefab, hitPoint, Quaternion.LookRotation(Vector3.forward));
         
         float pingDuration = 2 * pingRadius / pingGrowthScale;
         Destroy(pingInstance, pingDuration);
