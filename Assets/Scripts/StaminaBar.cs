@@ -9,7 +9,6 @@ public class StaminaBar : MonoBehaviour
     public Image staminaFillImage;
     public Image greyOutlineImage;
     public GameObject glowOutline;
-    private Image glowOutlineImage;
     public float glowSeconds = 4f;
 
     private Image staminaBarImage;
@@ -29,7 +28,6 @@ public class StaminaBar : MonoBehaviour
     void Start()
     {
         staminaBarImage = GetComponent<Image>();
-        glowOutlineImage = glowOutline.gameObject.GetComponent<Image>();
     }
 
     private void Awake() 
@@ -116,7 +114,7 @@ public class StaminaBar : MonoBehaviour
             yield return null;
         }
 
-image.color = new Color(image.color.r, image.color.g, image.color.b, endAlpha);
+        image.color = new Color(image.color.r, image.color.g, image.color.b, endAlpha);
         OnFadingComplete?.Invoke();
 
         yield return null;
