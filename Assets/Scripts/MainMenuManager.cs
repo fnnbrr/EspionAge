@@ -6,19 +6,27 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 
-public class MainMenuManager : MonoBehaviour
+public enum EMainMenuButton
 {
+    None,
+    Start,
+    Quit
+}
+
+// Necessary to make this wrapper according to: https://answers.unity.com/questions/214300/serializable-class-using-generics.html
+[Serializable]
+public class UIMainMenuButtonData : UIButtonDataGeneric<EMainMenuButton> { }
+
+public class MainMenuManager : UIMenuStatic<EMainMenuButton>
+{
+    [Header("MainMenuManager Fields")]
+    public new UIMainMenuButtonData[] buttonData;  // REQUIRED OVERRIDE HERE
+
     public Light mainLight;
     public Renderer lightBulbRenderer;
-
-    [Header("Input")]
-    public float axisInputBetweenDelay;
-    private float nextAxisInputTime;
     
     [Header("Image Darkening")]
     public Color imageDarkenedColor;
-    public List<ButtonData> buttonData;
-    private Dictionary<ButtonType, ButtonData> buttonDataMappings;
 
     [Header("Camera Switching")]
     public List<CinemachineVirtualCamera> onPressPlayCameras;
@@ -26,40 +34,12 @@ public class MainMenuManager : MonoBehaviour
     private Material lightBulbMaterial;
     private Color lightBulbStartColor;
     private bool isStarting;
-    private bool stateUpdated;
-
-    public enum ButtonType
-    {
-        None,
-        Start,
-        Quit
-    }
-    private ButtonType currentButton;
-    private ButtonType previousButton;
-
-    private enum DirectionalMovement
-    {
-        Any,
-        Up,
-        Down,
-        Left,
-        Right
-    }
-
-    private readonly Dictionary<Tuple<ButtonType, DirectionalMovement>, ButtonType> buttonMappings = new Dictionary<Tuple<ButtonType, DirectionalMovement>, ButtonType>()
-    {
-        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.None, DirectionalMovement.Left), ButtonType.Start },
-        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.None, DirectionalMovement.Right), ButtonType.Quit },
-        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.Start, DirectionalMovement.Right), ButtonType.Quit },
-        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.Quit, DirectionalMovement.Left), ButtonType.Start },
-        { new Tuple<ButtonType, DirectionalMovement>(ButtonType.None, DirectionalMovement.Any), ButtonType.Start }  // catch all
-    };
 
     [Serializable]
     public class ButtonData
     {
         [Header("This enum must be unique among the list!")]
-        public ButtonType buttonType;
+        public EMainMenuButton buttonType;
         public Button buttonComponent;
         public List<Graphic> imagesToDarknen;
 
@@ -67,131 +47,37 @@ public class MainMenuManager : MonoBehaviour
         [HideInInspector] public List<Color> originalColors = new List<Color>();
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        InitializeButtonDataMappings(buttonData);
+    }
+
     private void Start()
     {
-        previousButton = ButtonType.None;
-        currentButton = ButtonType.None;
-        stateUpdated = true;
+        buttonMappings = new Dictionary<Tuple<EMainMenuButton, UIDirectionalMovement>, EMainMenuButton>()
+        {
+            { new Tuple<EMainMenuButton, UIDirectionalMovement>(EMainMenuButton.None, UIDirectionalMovement.Left), EMainMenuButton.Start },
+            { new Tuple<EMainMenuButton, UIDirectionalMovement>(EMainMenuButton.None, UIDirectionalMovement.Right), EMainMenuButton.Quit },
+            { new Tuple<EMainMenuButton, UIDirectionalMovement>(EMainMenuButton.Start, UIDirectionalMovement.Right), EMainMenuButton.Quit },
+            { new Tuple<EMainMenuButton, UIDirectionalMovement>(EMainMenuButton.Quit, UIDirectionalMovement.Left), EMainMenuButton.Start },
+            { new Tuple<EMainMenuButton, UIDirectionalMovement>(EMainMenuButton.None, UIDirectionalMovement.Any), EMainMenuButton.Start }  // catch all
+        };
+
+        previousButton = EMainMenuButton.None;
+        currentButton = EMainMenuButton.None;
 
         lightBulbMaterial = lightBulbRenderer.material;
         lightBulbStartColor = lightBulbMaterial.GetColor("_EmissionColor");
-
-        buttonDataMappings = new Dictionary<ButtonType, ButtonData>();
-        foreach (ButtonData b in buttonData)
-        {
-            b.originalColors = b.imagesToDarknen.Select(i => i.color).ToList();
-            b.animator = b.buttonComponent.GetComponent<Animator>();
-            buttonDataMappings.Add(b.buttonType, b);
-        }
     }
 
-    private void Update()
+    protected override bool ShouldUpdate()
     {
-        if (!isStarting)
-        {
-            HandleInput();
-
-            if (stateUpdated && currentButton != previousButton)
-            {
-                Cleanup(previousButton);
-                Setup(currentButton);
-
-                stateUpdated = false;
-            }
-        }
+        return !isStarting;
     }
 
-    private void HandleInput()
-    {
-        HandleAxisInput();
-        HandleButtonInput();
-    }
-
-    private void HandleAxisInput()
-    {
-        // Early exit to limit how fast a user can move between buttons
-        if (nextAxisInputTime > Time.time) return;
-
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
-        bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
-        bool hasInput = hasHorizontalInput || hasVerticalInput;
-        if (!hasInput) return;  // if no input, let's just do an early exit
-
-        bool mostlyHorizontal = Mathf.Abs(horizontal) > Mathf.Abs(vertical);
-
-        if (mostlyHorizontal)
-        {
-            Tuple<ButtonType, DirectionalMovement> currentMovement;
-            if (hasHorizontalInput)
-            {
-                if (horizontal > 0f)
-                {
-                    currentMovement = GetCurrentMovementPair(DirectionalMovement.Right);
-                }
-                else
-                {
-                    currentMovement = GetCurrentMovementPair(DirectionalMovement.Left);
-                }
-            }
-            else // hasVerticalInput
-            {
-                if (vertical > 0f)
-                {
-                    currentMovement = GetCurrentMovementPair(DirectionalMovement.Up);
-                }
-                else
-                {
-                    currentMovement = GetCurrentMovementPair(DirectionalMovement.Down);
-                }
-            }
-
-            if (buttonMappings.ContainsKey(currentMovement))
-            {
-                UpdateMainMenuState(buttonMappings[currentMovement]);
-            }
-            else 
-            {
-                currentMovement = GetCurrentMovementPair(DirectionalMovement.Any);
-                if (buttonMappings.ContainsKey(currentMovement))
-                {
-                    UpdateMainMenuState(buttonMappings[currentMovement]);
-                }
-            }
-        }
-    }
-    private void HandleButtonInput()
-    {
-        if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
-        {
-            if (buttonDataMappings.ContainsKey(currentButton))
-            {
-                buttonDataMappings[currentButton].buttonComponent.onClick.Invoke();
-            }
-        }
-    }
-
-    private Tuple<ButtonType, DirectionalMovement> GetCurrentMovementPair(DirectionalMovement directionalMovement)
-    {
-        return new Tuple<ButtonType, DirectionalMovement>(currentButton, directionalMovement);
-    }
-
-    private void UpdateMainMenuState(ButtonType newState)
-    {
-        if (currentButton != newState)
-        {
-            previousButton = currentButton;
-            currentButton = newState;
-
-            stateUpdated = true;
-
-            nextAxisInputTime = Time.time + axisInputBetweenDelay;
-        }
-    }
-
-    private void Setup(ButtonType mainMenuButton)
+    protected override void Setup(EMainMenuButton mainMenuButton)
     {
         if (buttonDataMappings.ContainsKey(mainMenuButton))
         {
@@ -208,10 +94,10 @@ public class MainMenuManager : MonoBehaviour
 
         switch (mainMenuButton)
         {
-            case ButtonType.Start:
+            case EMainMenuButton.Start:
                 mainLight.enabled = false;
                 break;
-            case ButtonType.Quit:
+            case EMainMenuButton.Quit:
                 lightBulbMaterial.SetColor("_EmissionColor", Color.red);
                 break;
             default:
@@ -219,24 +105,24 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    private void Cleanup(ButtonType mainMenuButton)
+    protected override void Cleanup(EMainMenuButton mainMenuButton)
     {
         // Here, we want None to mean everything must be cleaned up
-        if (mainMenuButton == ButtonType.Start || mainMenuButton == ButtonType.None)
+        if (mainMenuButton == EMainMenuButton.Start || mainMenuButton == EMainMenuButton.None)
         {
-            GenericCleanup(ButtonType.Start);
+            GenericCleanup(EMainMenuButton.Start);
 
             mainLight.enabled = true;
         } 
-        else if (mainMenuButton == ButtonType.Quit || mainMenuButton == ButtonType.None)
+        else if (mainMenuButton == EMainMenuButton.Quit || mainMenuButton == EMainMenuButton.None)
         {
-            GenericCleanup(ButtonType.Quit);
+            GenericCleanup(EMainMenuButton.Quit);
 
             lightBulbMaterial.SetColor("_EmissionColor", lightBulbStartColor);
         }
     }
 
-    private void GenericCleanup(ButtonType mainMenuButton)
+    private void GenericCleanup(EMainMenuButton mainMenuButton)
     {
         ResetDarkenedColors(mainMenuButton);
 
@@ -246,7 +132,7 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    private void ResetDarkenedColors(ButtonType mainMenuButton)
+    private void ResetDarkenedColors(EMainMenuButton mainMenuButton)
     {
         if (buttonDataMappings.ContainsKey(mainMenuButton))
         {
@@ -286,12 +172,12 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnStartButtonEnter()
     {
-        UpdateMainMenuState(ButtonType.Start);
+        UpdateMainMenuState(EMainMenuButton.Start);
     }
 
     public void OnStartButtonExit()
     {
-        UpdateMainMenuState(ButtonType.None);
+        UpdateMainMenuState(EMainMenuButton.None);
     }
 
     public void HandlePressQuit()
@@ -305,11 +191,11 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnQuitButtonEnter()
     {
-        UpdateMainMenuState(ButtonType.Quit);
+        UpdateMainMenuState(EMainMenuButton.Quit);
     }
 
     public void OnQuitButtonExit()
     {
-        UpdateMainMenuState(ButtonType.None);
+        UpdateMainMenuState(EMainMenuButton.None);
     }
 }
