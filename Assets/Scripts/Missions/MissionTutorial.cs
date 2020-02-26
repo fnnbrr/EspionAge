@@ -6,20 +6,26 @@ public class MissionTutorial : AMission
 {
     public Vector3 playerStartPosition;
     public MissionObject vase;
+    private LoudObject vaseLoudObject;
+
     public MissionObject note;
+
+    public MissionObject distractingSenior;
+    private NPCInteractable distractingSeniorNPCInteractable;
+    private float distractingSeniorDefaultBoundaryRadius;
 
     // General Logic Overview:
     // * start out faded out
     // * move player to the spawn point (in her room)
-    // - spawn the old person waiting 
+    // * spawn the old person waiting 
     // ~ mission giver at the end of the hallway
     //   ~ somehow make the mission giver have a certain conversation
     //   ~ somehow wait for the player to talk to the the mission giver to end the mission
-    // - spawn the breakable vase
+    // * spawn the breakable vase
     // * fade in
     // - start animation of note going under the door
     //   - this note should be an interactable which will have some text of birdie speaking to herself (reading outloud i guess)
-    // - finish mission once we finishing interacting with the mission giver (which will also give us the next mission)
+    // * finish mission once we finishing interacting with the mission giver (which will also give us the next mission)
     protected override void Initialize()
     {
         Debug.Log("MissionTutorial Initialize()!");
@@ -31,6 +37,12 @@ public class MissionTutorial : AMission
         GameManager.Instance.GetPlayerTransform().position = playerStartPosition;
 
         // Spawn the old person waiting, that'll annoy us once we drop the vase
+        //  set the boundary radius to 0 so they do not follow us
+        distractingSenior.spawnedInstance = MissionManager.Instance.SpawnMissionObject(distractingSenior);
+        distractingSenior.spawnedInstance.tag = Constants.TAG_ENEMY;
+        distractingSeniorNPCInteractable = distractingSenior.spawnedInstance.GetComponent<NPCInteractable>();
+        distractingSeniorDefaultBoundaryRadius = distractingSeniorNPCInteractable.boundaryRadius;
+        distractingSeniorNPCInteractable.boundaryRadius = 0f;
 
         // Toggle the event in the EventManager
         GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, true);
@@ -40,19 +52,22 @@ public class MissionTutorial : AMission
         //      - FindObjectOfType<class_type>(), the pass it into the MissionManager as per usual
 
         // Spawn the vase (or is it already there?) and init the values there
-        if (MissionManager.Instance)
-        {
-            vase.spawnedInstance = MissionManager.Instance.SpawnMissionObject(vase);
-        }
+        vase.spawnedInstance = MissionManager.Instance.SpawnMissionObject(vase);
+        vaseLoudObject = vase.spawnedInstance.GetComponentInChildren<LoudObject>();
+        vaseLoudObject.OnHit += OnVaseDrop;
 
         // Fade in
         UIManager.Instance.FadeIn();
 
         // Start the note spawning and start the animation
-        if (MissionManager.Instance)
-        {
-            note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
-        }
+        note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
+    }
+
+    private void OnVaseDrop()
+    {
+        vaseLoudObject.OnHit -= OnVaseDrop;
+        distractingSeniorNPCInteractable.boundaryRadius = distractingSeniorDefaultBoundaryRadius;
+        distractingSenior.spawnedInstance.tag = Constants.TAG_NONE;
     }
 
     protected override void Cleanup()
@@ -71,6 +86,9 @@ public class MissionTutorial : AMission
 
         if (MissionManager.Instance)
         {
+            // Goodbye distracting senior!
+            MissionManager.Instance.DestroyMissionObject(distractingSenior);
+
             // Despawn the vase (if it isnt already going to be there?)
             MissionManager.Instance.DestroyMissionObject(vase);
 

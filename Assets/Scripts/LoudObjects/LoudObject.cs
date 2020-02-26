@@ -36,9 +36,9 @@ public class LoudObject : MonoBehaviour
     {
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
 
-        if (distance <= dropRadius)
+        if (!hasBeenBumped && distance <= dropRadius)
         {
-            rb.AddForce(thrustDirection * thrustForce);
+            rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
             hasBeenBumped = true;
         } 
         else

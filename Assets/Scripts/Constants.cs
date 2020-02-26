@@ -4,7 +4,9 @@ using UnityEngine;
 
 public static class Constants
 {
+    public const string TAG_NONE = "Untagged";
     public const string TAG_PLAYER = "Player";
+    public const string TAG_ENEMY = "Enemy";
 
     public const string LAYER_PLAYER = "PLAYER";
 
