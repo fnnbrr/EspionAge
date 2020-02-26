@@ -35,15 +35,15 @@ public class CameraZone : MonoBehaviour
         {
             if (isFirst && isRestricted) //to be removed when alex finds where he calls it
             {
-                StartCoroutine(UIManager.Instance.staminaBar.Glow());
+                UIManager.Instance.staminaBar.Glow();
             }
             if (isRestricted)
             {
-                UIManager.Instance.staminaBar.FadeOut();
+                UIManager.Instance.staminaBar.FadeIn();
             } 
             else
             {
-                UIManager.Instance.staminaBar.FadeIn();
+                UIManager.Instance.staminaBar.FadeOut();
             }
             // so if there is no mainCamera set, we will just keep whatever the current camera is (which may not be preferable in most cases)
             if (mainCamera)

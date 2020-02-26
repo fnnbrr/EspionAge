@@ -10,10 +10,11 @@ public class StaminaBar : MonoBehaviour
     public Image greyOutlineImage;
     public GameObject glowOutline;
     private Image glowOutlineImage;
+    public float glowSeconds = 4f;
 
     private Image staminaBarImage;
     public float changePerSecond = 0.1f;
-
+    
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
     public float fadeSpeed = 2f;
@@ -88,7 +89,7 @@ public class StaminaBar : MonoBehaviour
     }
 
     //Fading in and out
-    public void FadeIn()
+    public void FadeOut()
     {
         // full color --> invisible
         StartCoroutine(FadeCoroutine(1f, 0f, staminaFillImage));
@@ -96,7 +97,7 @@ public class StaminaBar : MonoBehaviour
         StartCoroutine(FadeCoroutine(1f, 0f, greyOutlineImage));
     }
 
-    public void FadeOut()
+    public void FadeIn()
     {
         print("fading out");
         // invisible --> full color
@@ -120,15 +121,9 @@ public class StaminaBar : MonoBehaviour
         yield return null;
     }
 
-    public IEnumerator Glow()
+    public void Glow()
     {
-        glowOutline.SetActive(true);
         Animator animator = glowOutline.GetComponent<Animator>();
-        animator.SetBool("glow", true);
-        
-        yield return new WaitForSeconds (4);
-        
-        animator.SetBool("glow", false);
-        StartCoroutine(FadeCoroutine(0f, 1f, glowOutlineImage));
+        animator.SetTrigger("Glow");
     }
 }
