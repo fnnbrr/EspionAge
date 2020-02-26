@@ -51,6 +51,11 @@ public class PauseMenuManager : UIMenuStatic<EPauseMenuButton>
         UpdateMainMenuState(EPauseMenuButton.None);
     }
 
+    protected override void OnCancelButtonInteract()
+    {
+        UIManager.Instance.PauseGame(false);
+    }
+
     public void HandleResumeButtonPress()
     {
         UIManager.Instance.PauseGame(false);
