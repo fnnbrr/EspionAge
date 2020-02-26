@@ -41,6 +41,16 @@ public class PauseMenuManager : UIMenuStatic<EPauseMenuButton>
         currentButton = EPauseMenuButton.Resume;
     }
 
+    private void OnEnable()
+    {
+        UpdateMainMenuState(EPauseMenuButton.Resume);
+    }
+
+    private void OnDisable()
+    {
+        UpdateMainMenuState(EPauseMenuButton.None);
+    }
+
     public void HandleResumeButtonPress()
     {
         UIManager.Instance.PauseGame(false);
