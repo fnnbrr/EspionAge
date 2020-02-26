@@ -45,7 +45,7 @@ public class DialogueInteractable : Interactable
                 continueInteracting = true;
 
                 // Freeze player when conversing
-                GameManager.Instance.GetPlayerController().CanMove = false;
+                GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
 
                 speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
                 speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
@@ -78,9 +78,15 @@ public class DialogueInteractable : Interactable
 
     private bool ContinueConversation()
     {
-        //DisplayLine();
-        //activeLineIndex += 1;
-        return activeLineIndex < conversation.lines.Length;
+        bool shouldShowLine = activeLineIndex < conversation.lines.Length;
+
+        if(shouldShowLine)
+        {
+            DisplayLine();
+            activeLineIndex += 1;
+        }
+
+        return shouldShowLine;
     }
 
     protected virtual void EndConversation()
@@ -94,10 +100,6 @@ public class DialogueInteractable : Interactable
     {
         while (ContinueConversation())
         {
-            //ISSUE: not displaying last line because it ends it right after it is displayed
-            //Temporary solution to this issue
-            DisplayLine();
-            activeLineIndex += 1;
             yield return new WaitForSeconds(waitLineTime);
         }
 
@@ -117,14 +119,7 @@ public class DialogueInteractable : Interactable
             ShowInteractUI();
 
             // Unfreeze player when done
-            GameManager.Instance.GetPlayerController().CanMove = true;
-        }
-        else
-        {
-            //ISSUE: not displaying last line because it ends it right after it is displayed
-            //Temporary solution to this issue
-            DisplayLine();
-            activeLineIndex += 1;
+            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
         }
     }
 

@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
 
     private Vector3 movement;
-    public bool CanMove { get; set; } = true;
+    public bool EnablePlayerInput { get; set; } = true;
 
     void Start()
     {
@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!CanMove)
+        if (!EnablePlayerInput)
         {
             return;
         }
@@ -95,11 +95,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
-        CanMove = false;
+        EnablePlayerInput = false;
     }
 
     private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
-        CanMove = true;
+        EnablePlayerInput = true;
     }
 }

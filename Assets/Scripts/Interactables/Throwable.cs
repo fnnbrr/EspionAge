@@ -19,6 +19,8 @@ public class Throwable : Interactable
 
     public override void OnInteract()
     {
+        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
+
         if (!hasBeenAcquired)
         {
             base.OnInteract();
