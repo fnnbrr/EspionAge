@@ -116,6 +116,7 @@ public class StaminaBar : MonoBehaviour
             yield return null;
         }
 
+image.color = new Color(image.color.r, image.color.g, image.color.b, endAlpha);
         OnFadingComplete?.Invoke();
 
         yield return null;
