@@ -14,22 +14,19 @@ public class ItemThrowCount : MonoBehaviour
     void Start()
     {
         playerManager = GameManager.Instance.GetPlayerManager();
-
         if(playerManager == null)
         {
-            Debug.LogError("Player manager does not exist");
+            Utils.LogErrorAndStopPlayMode("Player manager does not exist");
         }
-
         playerManager.OnThrow += HandleOnThrewBottle;
         playerManager.OnPickup += OnHandlePickup;
 
         text = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this);
-
         if(text == null)
         {
-            Debug.LogError("Throwable Object text is null");
+            Utils.LogErrorAndStopPlayMode("Throwable Object text is null");
         }
-        text.SetText("x" + numItemsHeld.ToString());
+        DisplayUpdate();
     }
 
     void OnHandlePickup(GameObject source)
