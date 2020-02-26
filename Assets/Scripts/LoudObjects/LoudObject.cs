@@ -55,6 +55,7 @@ public class LoudObject : MonoBehaviour
         noisePing.SpawnNoisePing(other);
         hasHit = true;
         Destroy(gameObject, despawnSec);
+        // TODO Alex - can you turn this into a fadeout?
     }
 
     void Shake(float shake){
