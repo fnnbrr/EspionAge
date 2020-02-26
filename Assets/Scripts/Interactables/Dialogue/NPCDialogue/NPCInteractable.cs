@@ -252,6 +252,6 @@ public class NPCInteractable : DialogueInteractable
     {
         base.OnDrawGizmos();
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, boundaryRadius);
+        Gizmos.DrawWireSphere(originPosition, boundaryRadius);
     }
 }
