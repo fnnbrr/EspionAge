@@ -29,6 +29,9 @@ public class PlayerManager : MonoBehaviour
     public delegate void OnThrowEventHandler(Interactable source);
     public event OnThrowEventHandler OnThrow;
 
+    public delegate void OnPickupEventHandler(GameObject source);
+    public event OnPickupEventHandler OnPickup;
+
     private void Start()
     {
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
@@ -108,6 +111,8 @@ public class PlayerManager : MonoBehaviour
         throwableObject.transform.localPosition = Vector3.zero;
 
         currentThrowables.Add(throwableObject);
+
+        OnPickup?.Invoke(throwableObject);
     }
 
     // This is an unsafe function! Must check length of currentThrowables before calling it (like in HandleThrowInput() above)!
