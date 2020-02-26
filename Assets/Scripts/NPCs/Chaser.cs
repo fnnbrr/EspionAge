@@ -109,7 +109,7 @@ public class Chaser : MonoBehaviour
             attemptsRemaining -= 1;
             if (attemptsRemaining == 0)
             {
-                throw new UnityException("NavMesh.SamplePosition failed");
+                agent.SetDestination(searchBoundsCenter);
             }
         }
  

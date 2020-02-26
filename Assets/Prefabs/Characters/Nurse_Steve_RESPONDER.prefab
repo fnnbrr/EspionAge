@@ -163,7 +163,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6100629634526287167}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.3333334, z: 0}
+  m_LocalPosition: {x: 0, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7003268395918407001}
@@ -383,6 +383,7 @@ MonoBehaviour:
   targetTransform: {fileID: 0}
   responsePoint: {x: 0, y: 0, z: 0}
   searchBounds: {fileID: 0}
+  noiseSearchRadius: 15
   waitDurationSec: 1
   currentState: 1
   defaultState: 2
