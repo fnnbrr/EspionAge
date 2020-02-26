@@ -81,4 +81,11 @@ public class TeleportCheats : MonoBehaviour
     {
         GameManager.Instance.GetPlayerTransform().position = new Vector3(-69.08f, 3f, -37.25f);
     }
+    
+    [MenuItem(Constants.CHEATS_TELEPORT_HALLWAY)]
+    public static void TeleportHallway()
+    {
+        GameManager.Instance.GetPlayerTransform().position = new Vector3(-66.6f, 3f, 124.6f);
+        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 180f, 0f);
+    }
 }
