@@ -11,13 +11,16 @@ public class Throwable : Interactable
     private bool hasHit = false;
     private NoisePing noisePing;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         noisePing = gameObject.GetComponent<NoisePing>();
     }
 
     public override void OnInteract()
     {
+        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
+
         if (!hasBeenAcquired)
         {
             base.OnInteract();

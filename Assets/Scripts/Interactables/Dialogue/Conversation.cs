@@ -14,6 +14,7 @@ public struct Line
 [CreateAssetMenu(fileName = "New Conversation", menuName = "Conversation")]
 public class Conversation : ScriptableObject
 {
-    public string npcVoice;
+    public bool isAutoplayed = false;
+    public bool shouldFollow = false;
     public Line[] lines;
 }

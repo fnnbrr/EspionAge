@@ -5,57 +5,121 @@ using UnityEngine;
 public class DialogueInteractable : Interactable
 {
     public Conversation conversation;
+    public string npcVoicePath;
 
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
     protected bool isConversing = false;
-
     private int activeLineIndex = 0;
 
-    public override void OnInteract()  
+    protected bool autoPlaying = false;
+
+    public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
+
+
+    protected override void Start()
     {
-        if (!isConversing)
+        base.Start();
+        speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+    }
+
+    protected override void Update()
+    {
+        if (!autoPlaying)
         {
-            isConversing = true;
-
-            // Freeze player when conversing
-            player.GetComponent<PlayerController>().CanMove = false;
-
-            speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
-            speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
-
-            HideInteractUI();
-            AdvanceConversation();
-
-            base.OnInteract();
-        }
-        else
-        {
-            AdvanceConversation();
+            base.Update();
         }
     }
 
-    void AdvanceConversation() {
-        if (activeLineIndex < conversation.lines.Length)
+    public override void OnInteract()
+    {
+        speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+        if(!autoPlaying)
         {
-            //If there is still conversation left
-            DisplayLine();
-            activeLineIndex += 1;
+            if (!isConversing)
+            {
+                isConversing = true;
+
+                // Used this to resolve bug where player freezes but cannot interact because player out of range
+                continueInteracting = true;
+
+                // Freeze player when conversing
+                GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+
+                speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
+                speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+
+                HideInteractUI();
+                AdvanceConversation();
+
+                base.OnInteract();
+            }
+            else
+            {
+                AdvanceConversation();
+            }
         }
         else
         {
+            StartCoroutine(AutoplayConversation()); ;
+        }
+    }
+
+    protected void TriggerAutoplay()
+    {
+        autoPlaying = true;
+    }
+
+    protected virtual void OnAutoplayComplete()
+    {
+        autoPlaying = false;
+    }
+
+    private bool ContinueConversation()
+    {
+        bool shouldShowLine = activeLineIndex < conversation.lines.Length;
+
+        if(shouldShowLine)
+        {
+            DisplayLine();
+            activeLineIndex += 1;
+        }
+
+        return shouldShowLine;
+    }
+
+    protected virtual void EndConversation()
+    {
+        speakerUIBirdie.Hide();
+        speakerUINPC.Hide();
+        activeLineIndex = 0;
+    }
+
+    IEnumerator AutoplayConversation()
+    {
+        while (ContinueConversation())
+        {
+            yield return new WaitForSeconds(waitLineTime);
+        }
+
+        EndConversation();
+        OnAutoplayComplete();
+    }
+
+    void AdvanceConversation() {
+        if (!ContinueConversation())
+        {
             //Once the conversation is over 
             //what happens 
-            speakerUIBirdie.Hide();
-            speakerUINPC.Hide();
-            activeLineIndex = 0;
+            EndConversation();
 
             isConversing = false;
+            continueInteracting = false;
             ShowInteractUI();
 
             // Unfreeze player when done
-            player.GetComponent<PlayerController>().CanMove = true;
+            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
         }
     }
 
@@ -69,7 +133,7 @@ public class DialogueInteractable : Interactable
         } 
         else {
             SetDialogue(speakerUINPC, speakerUIBirdie, line.text);
-            PlayVoice(conversation.npcVoice);
+            PlayVoice(npcVoicePath);
         }
     }
 

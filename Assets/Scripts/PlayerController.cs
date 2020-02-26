@@ -13,17 +13,15 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float movementSpeed;
     [HideInInspector] public float turnSpeed;
     private Rigidbody rb;
-    private PlayerManager playerManager;
 
     private Vector3 movement;
-    public bool CanMove { get; set; } = true;
+    public bool EnablePlayerInput { get; set; } = true;
 
     void Start()
     {
         movementSpeed = baseMovementSpeed;
         turnSpeed = baseTurnSpeed;
         rb = Utils.GetRequiredComponent<Rigidbody>(this);
-        playerManager = Utils.GetRequiredComponent<PlayerManager>(this);
 
         if (CameraManager.Instance)
         {
@@ -34,7 +32,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!CanMove)
+        if (!EnablePlayerInput)
         {
             return;
         }
@@ -97,11 +95,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
-        CanMove = false;
+        EnablePlayerInput = false;
     }
 
     private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
-        CanMove = true;
+        EnablePlayerInput = true;
     }
 }

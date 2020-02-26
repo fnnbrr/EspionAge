@@ -13,14 +13,37 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected bool enableInteract = true;
     private bool interactableOn = false;
+    protected bool continueInteracting = false;
+
+    public float interactRadius = Constants.INTERACT_POPUP_RADIUS;
+
+    protected bool withinInteractRadius;
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
-    protected void Update()
+    protected virtual void Start()
     {
+        player = GameManager.Instance.GetPlayerTransform().gameObject;
+    }
+
+    protected virtual void Update()
+    {
+        withinInteractRadius = IsWithinRadius(transform.position, player.transform, interactRadius);
+
+        if (!interactableOn && withinInteractRadius)
+        {
+            interactableOn = true;
+            ShowInteractUI();
+        }
+        else if(interactableOn && !withinInteractRadius)
+        {
+            interactableOn = false;
+            HideInteractUI();
+        }
+
         //Ensures text is always facing the camera
-        if(enableInteract && interactableOn)
+        if ((enableInteract && interactableOn) || continueInteracting)
         {
             // Interact Text always faces towards camera
             interactTransform.LookAt(CameraManager.Instance.GetActiveCameraTransform());
@@ -33,33 +56,6 @@ public class Interactable : MonoBehaviour, IInteractable
 
                 OnInteract();
             }
-     
-        }
-    }
-
-
-    protected void OnTriggerEnter(Collider other)
-    {
-        if (enableInteract && other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER))
-        {
-            if (!interactableOn)
-            {
-                player = other.gameObject;
-                interactableOn = true;
-
-                ShowInteractUI();
-            }
-        }
-    }
-
-
-    protected void OnTriggerExit(Collider other)
-    {
-        if (enableInteract && other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_PLAYER) && interactableOn)
-        {
-            interactableOn = false;
-
-            HideInteractUI();
         }
     }
 
@@ -67,8 +63,8 @@ public class Interactable : MonoBehaviour, IInteractable
     // Handle the dialogue for this interactable
     public virtual void OnInteract()
     {
-        //Debug.Log("Interacted");
-
+        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
+        
         // Start Dialogue
         // We cannot access the OnInteractEnd event from a derived class, must do this:
         // https://l.messenger.com/l.php?u=https%3A%2F%2Fstackoverflow.com%2Fquestions%2F4496799%2Fevent-can-only-appear-on-the-left-hand-side-of-or&h=AT00_XXqKtlm4qXzLotgXnPjPO2iqiYBcQtVkl_JrXtqEMBYJjmljCKHzEILlPthSMNjJjKHvn4aRXioteTvEvlrFo3wdk8hteIEUndnUco_OVnh6qiDClK7Hf7rkeyT_-oYgI1-21-b4yIuh22-2rkt
@@ -93,8 +89,8 @@ public class Interactable : MonoBehaviour, IInteractable
 
         // Animation of facing the interactable
         // Possible issue to prevent another coroutine being called if player is already rotating
-        player.GetComponent<PlayerController>().CanMove = false;
-        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed, () => UnfreezePlayer()));
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        StartCoroutine(RotateAnimation(player, rotation, GameManager.Instance.GetPlayerController().turnSpeed, () => UnfreezePlayer()));
 
     }
 
@@ -117,6 +113,11 @@ public class Interactable : MonoBehaviour, IInteractable
         onFinishCallback?.Invoke();
     }
 
+    protected bool IsWithinRadius(Vector3 center, Transform targetTransform, float radius)
+    {
+        return Vector3.Distance(center, targetTransform.position) < radius;
+    }
+
     private void UnfreezePlayer()
     {
         if (player != null)
@@ -124,7 +125,7 @@ public class Interactable : MonoBehaviour, IInteractable
             Debug.LogError("Trying to access a player that has not been assigned");
         }
 
-        player.GetComponent<PlayerController>().CanMove = true;
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 
     protected void ShowInteractUI()
@@ -137,5 +138,12 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         interactableAnim.ResetTrigger(Constants.ANIMATION_INTERACTABLE_POPIN);
         interactableAnim.SetTrigger(Constants.ANIMATION_INTERACTABLE_POPDOWN);
+    }
+
+    protected virtual void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, interactRadius);
+
     }
 }

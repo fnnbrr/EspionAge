@@ -172,20 +172,19 @@ public class MissionCafeteria1 : AMission
         //
         // So we can just destroy it after the animation time is over and it should switch back to whatever the current camera was
         RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
+
+        if (startCutscenePlayed) return;
+
         startCutscenePlayed = true;
 
-        if (!startCutsceneCamera || instantiatedMissionInteractables.Count == 0)
-        {
-            return;
-        }
+        if (!startCutsceneCamera || instantiatedMissionInteractables.Count == 0) return;
+
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
 
         GameObject instantiatedCutscenePrefab = Instantiate(startCutsceneCamera);
         CinemachineVirtualCamera virtualCamera = instantiatedCutscenePrefab.GetComponentInChildren<CinemachineVirtualCamera>();
         Animator virtualCameraAnim = instantiatedCutscenePrefab.GetComponentInChildren<Animator>();
-        if (!virtualCamera || !virtualCameraAnim)
-        {
-            return;
-        }
+        if (!virtualCamera || !virtualCameraAnim) return;
 
         virtualCamera.LookAt = instantiatedMissionInteractables[0].transform;
 
@@ -203,14 +202,13 @@ public class MissionCafeteria1 : AMission
         Destroy(cutsceneObject);
 
         UIManager.Instance.FadeIn();
+
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 
     private void OnCollideWithPlayer()
     {
-        if (isRestarting)
-        {
-            return;
-        }
+        if (isRestarting) return;
 
         isRestarting = true;
 
@@ -221,7 +219,7 @@ public class MissionCafeteria1 : AMission
         UIManager.Instance.OnFadingComplete += OnFadingCompleteRestartMission;
         UIManager.Instance.FadeOut();
 
-        // Tell any listeners (looking at you ProgressManager) that we need to reste whatever mission status
+        // Tell any listeners (looking at you ProgressManager) that we need to reset whatever mission status
         AlertMissionReset();
     }
 
@@ -229,9 +227,12 @@ public class MissionCafeteria1 : AMission
     {
         UIManager.Instance.OnFadingComplete -= OnFadingCompleteRestartMission;
 
+        bool alreadyPlayedCutscene = startCutscenePlayed;
+
         Cleanup();
         Initialize();
         GameManager.Instance.GetPlayerTransform().position = respawnPosition;
+        startCutscenePlayed = alreadyPlayedCutscene;
 
         isRestarting = false;
 
