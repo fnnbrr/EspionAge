@@ -145,6 +145,7 @@ public class MissionCafeteria1 : AMission
                     case MissionEnemy.EnemyType.Patroller:
                         Patroller patrol = enemyComponent as Patroller;
                         patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+                        patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
                         break;
                     case MissionEnemy.EnemyType.Chaser:
                         Chaser chaser = enemyComponent as Chaser;
