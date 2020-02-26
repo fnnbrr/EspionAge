@@ -63,6 +63,8 @@ public class Interactable : MonoBehaviour, IInteractable
     // Handle the dialogue for this interactable
     public virtual void OnInteract()
     {
+        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
+
         Debug.Log("Interacted");
 
         // Start Dialogue
@@ -89,8 +91,8 @@ public class Interactable : MonoBehaviour, IInteractable
 
         // Animation of facing the interactable
         // Possible issue to prevent another coroutine being called if player is already rotating
-        player.GetComponent<PlayerController>().CanMove = false;
-        StartCoroutine(RotateAnimation(player, rotation, player.GetComponent<PlayerController>().turnSpeed, () => UnfreezePlayer()));
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        StartCoroutine(RotateAnimation(player, rotation, GameManager.Instance.GetPlayerController().turnSpeed, () => UnfreezePlayer()));
 
     }
 
@@ -125,7 +127,7 @@ public class Interactable : MonoBehaviour, IInteractable
             Debug.LogError("Trying to access a player that has not been assigned");
         }
 
-        player.GetComponent<PlayerController>().CanMove = true;
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 
     protected void ShowInteractUI()

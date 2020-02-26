@@ -67,6 +67,8 @@ public class PlayerManager : MonoBehaviour
 
     private void HandleThrowInput()
     {
+        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
+
         if (launchArcRenderer && currentThrowables.Count > 0)
         {
             float throwAxisValue = Input.GetAxis(Constants.INPUT_THROW_GETDOWN);
