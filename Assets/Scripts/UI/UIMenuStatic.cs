@@ -175,6 +175,21 @@ public class UIMenuStatic<T> : MonoBehaviour where T : Enum
                 buttonDataMappings[currentButton].buttonComponent.onClick.Invoke();
             }
         }
+
+        if (Input.GetButtonDown(Constants.INPUT_CANCEL_GETDOWN))
+        {
+            OnCancelButtonInteract();
+        }
+    }
+
+    protected virtual void OnInputButtonInteract()
+    {
+        buttonDataMappings[currentButton].buttonComponent.onClick.Invoke();
+    }
+
+    protected virtual void OnCancelButtonInteract()
+    {
+        // Base class does nothing.
     }
 
     private Tuple<T, UIDirectionalMovement> GetCurrentMovementPair(UIDirectionalMovement directionalMovement)
