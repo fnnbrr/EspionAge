@@ -179,7 +179,7 @@ public class ObjectFader : MonoBehaviour
         {
             throw new System.ArgumentNullException("material");
         }
-        bool alphaClip = material.GetFloat("_AlphaClip") == 1;
+        bool alphaClip = material.HasProperty("_AlphaClip") ? material.GetFloat("_AlphaClip") == 1 : false;
         if (alphaClip)
         {
             material.EnableKeyword("_ALPHATEST_ON");

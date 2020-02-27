@@ -8,7 +8,6 @@ public class CameraZone : MonoBehaviour
 {
     public CinemachineVirtualCamera mainCamera;
     public bool isRestricted;
-    public bool isFirst;
     
     [Header("Fog Particles")]
     public List<ParticleSystem> fogs;
@@ -33,10 +32,6 @@ public class CameraZone : MonoBehaviour
     {
         if (other.CompareTag(Constants.TAG_PLAYER))
         {
-            if (isFirst && isRestricted) //to be removed when alex finds where he calls it
-            {
-                UIManager.Instance.staminaBar.Glow();
-            }
             if (isRestricted)
             {
                 UIManager.Instance.staminaBar.FadeIn();
