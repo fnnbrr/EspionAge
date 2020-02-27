@@ -1,18 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class MissionTutorial : AMission
 {
     public Vector3 playerStartPosition;
+    public GameObject startCutsceneCamera;
+    public GameObject startCutsceneText;
+
+    // Vase
     public MissionObject vase;
     private LoudObject vaseLoudObject;
 
+    // Note
     public MissionObject note;
 
+    // Distracting Senior
     public MissionObject distractingSenior;
     private NPCInteractable distractingSeniorNPCInteractable;
     private float distractingSeniorDefaultBoundaryRadius;
+
+    private bool startCutscenePlayed = false;
 
     // General Logic Overview:
     // * start out faded out
@@ -61,6 +70,9 @@ public class MissionTutorial : AMission
 
         // Start the note spawning and start the animation
         note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
+
+        // Cutscene for once they enter the hallway
+        RegionManager.Instance.hallway.OnPlayerEnter += StartCutscene;
     }
 
     private void OnVaseDrop()
@@ -95,5 +107,60 @@ public class MissionTutorial : AMission
             // Delete the note if it still exists
             MissionManager.Instance.DestroyMissionObject(note);
         }
+
+        if (!startCutscenePlayed && RegionManager.Instance)
+        {
+            RegionManager.Instance.hallway.OnPlayerEnter -= StartCutscene;
+        }
+        startCutscenePlayed = false;
+    }
+
+    private void StartCutscene()
+    {
+        // The current assumptions are gonna be that:
+        //  - we will have a camera where we need to set the look at
+        //  - and it will have an already created Animator with a single state that it will start on Awake
+        //
+        // So we can just destroy it after the animation time is over and it should switch back to whatever the current camera was
+        RegionManager.Instance.hallway.OnPlayerEnter -= StartCutscene;
+
+        if (startCutscenePlayed) return;
+        startCutscenePlayed = true;
+
+        if (!startCutsceneCamera || !startCutsceneText) return;
+
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+
+        // Setting up the cutscene camera
+        GameObject instantiatedCutscenePrefab = Instantiate(startCutsceneCamera);
+        CinemachineVirtualCamera virtualCamera = instantiatedCutscenePrefab.GetComponentInChildren<CinemachineVirtualCamera>();
+        Animator virtualCameraAnim = instantiatedCutscenePrefab.GetComponentInChildren<Animator>();
+        if (!virtualCamera || !virtualCameraAnim) return;  // early exit
+        virtualCamera.LookAt = distractingSenior.spawnedInstance.transform;
+        float cameraAnimationLength = virtualCameraAnim.GetCurrentAnimatorStateInfo(0).length * 1.5f;
+
+        // Setting up the cutscene text
+        GameObject instantiatedCutsceneText = Instantiate(startCutsceneText, UIManager.Instance.mainUICanvas.transform);
+        Animator textAnimator = instantiatedCutsceneText.GetComponentInChildren<Animator>();
+        if (!textAnimator) return;
+        float textAnimationLength = textAnimator.GetCurrentAnimatorStateInfo(0).length;
+
+        StartCoroutine(EndCutsceneOperations(instantiatedCutscenePrefab, instantiatedCutsceneText, Mathf.Max(cameraAnimationLength, textAnimationLength)));
+    }
+
+    private IEnumerator EndCutsceneOperations(GameObject cutsceneObject, GameObject cutsceneText, float cutsceneLength)
+    {
+        yield return new WaitForSeconds(cutsceneLength);
+
+        UIManager.Instance.FadeOut();
+
+        yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
+
+        Destroy(cutsceneObject);
+        Destroy(cutsceneText);
+
+        UIManager.Instance.FadeIn();
+
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 }
