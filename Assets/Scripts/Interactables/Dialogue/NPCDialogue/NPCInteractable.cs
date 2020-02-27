@@ -49,11 +49,17 @@ public class NPCInteractable : DialogueInteractable
                 LoadConversation();
             }
 
+            if (conversation.shouldFollow)
+            {
+                TriggerFollow(player);
+            }
+
             // Autoplay
-            if(conversation.isAutoplayed)
+            if (conversation.isAutoplayed)
             {
                 if(!autoPlaying)
                 {
+                    TriggerAutoplay();
                     OnInteract();
                 }
             }
@@ -150,15 +156,6 @@ public class NPCInteractable : DialogueInteractable
             }
         }
 
-        if(conversation.isAutoplayed)
-        {
-            TriggerAutoplay();
-        }
-
-        if (conversation.shouldFollow)
-        {
-            TriggerFollow(player);
-        }
         base.OnInteract();
     }
 
