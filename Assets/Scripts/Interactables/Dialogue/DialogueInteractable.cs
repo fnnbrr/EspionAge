@@ -7,11 +7,15 @@ public class DialogueInteractable : Interactable
     public Conversation conversation;
     public string npcVoicePath;
 
+    private PlayerManager playerManager;
+
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
 
     protected bool isConversing = false;
     private int activeLineIndex = 0;
+
+    private Coroutine coroutine;
 
     protected bool autoPlaying = false;
 
@@ -22,6 +26,8 @@ public class DialogueInteractable : Interactable
     {
         base.Start();
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
+        playerManager = GameManager.Instance.GetPlayerManager();
+        playerManager.OnInteractBegin += HandleAutoplayConversation;
     }
 
     protected override void Update()
@@ -37,6 +43,7 @@ public class DialogueInteractable : Interactable
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
         if(!autoPlaying)
         {
+            playerManager.InteractPlayer(this);
             if (!isConversing)
             {
                 isConversing = true;
@@ -62,7 +69,7 @@ public class DialogueInteractable : Interactable
         }
         else
         {
-            StartCoroutine(AutoplayConversation());
+            coroutine = StartCoroutine(AutoplayConversation());
         }
     }
 
@@ -151,6 +158,23 @@ public class DialogueInteractable : Interactable
         if (!string.IsNullOrEmpty(fmodPath.Trim()))
         {
             FMODUnity.RuntimeManager.PlayOneShot(fmodPath, speakerUINPC.transform.position);
+        }
+    }
+
+    // Temporary function that listens to event of an interaction that ends all other autoplay conversations
+    void HandleAutoplayConversation(DialogueInteractable source)
+    {
+        if(source.gameObject != this)
+        {
+            if(autoPlaying)
+            {
+                if (coroutine != null)
+                {
+                    StopCoroutine(coroutine);
+                    EndConversation();
+                    OnAutoplayComplete();
+                }
+            }
         }
     }
 }
