@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
+public enum NPCReactiveAction
+{
+    None,
+    Teleport
+}
+
+[System.Serializable]
 public class NPCMissionConvos
 {
     public MissionsEnum missionsEnum;
@@ -12,6 +19,10 @@ public class NPCMissionConvos
     public Conversation beforeConvo;
     public Conversation duringConvo;
     public Conversation afterConvo;
+
+    [Header("Reactive Actions")]
+    public NPCReactiveAction doOnComplete;
+    public Vector3 reactiveActionPosition;
 }
 
 public class NPCInteractable : DialogueInteractable
@@ -29,13 +40,16 @@ public class NPCInteractable : DialogueInteractable
 
     protected bool isFollowing = false;
     private Vector3 originPosition;
+    private Vector3 previousOriginPosition;
 
 
     protected override void Start()
     {
         base.Start();
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
-        originPosition = gameObject.transform.position;
+
+        SetOriginPosition(gameObject.transform.position);
+
         LoadConversation();
     }
 
@@ -123,7 +137,9 @@ public class NPCInteractable : DialogueInteractable
                     // Start mission and store reference because needed to end mission
                     startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionsEnum);
                     startedMission.OnMissionComplete += HandleOnMissionComplete;
+                    startedMission.OnMissionComplete += TryReactiveAction;
                     startedMission.OnMissionReset += HandleOnMissionReset;
+                    startedMission.OnMissionReset += TryResetReactiveAction;
                 }
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
                 {
@@ -137,7 +153,9 @@ public class NPCInteractable : DialogueInteractable
 
                     // Unsubscribe
                     startedMission.OnMissionComplete -= HandleOnMissionComplete;
+                    startedMission.OnMissionComplete -= TryReactiveAction;
                     startedMission.OnMissionReset -= HandleOnMissionReset;
+                    startedMission.OnMissionReset -= TryResetReactiveAction;
                     startedMission = null;
                     missionsOffered.RemoveAt(0);
 
@@ -156,6 +174,36 @@ public class NPCInteractable : DialogueInteractable
         }
 
         base.OnInteract();
+    }
+
+    private void TryReactiveAction()
+    {
+        switch (currentMissionConvos.doOnComplete)
+        {
+            case NPCReactiveAction.None:
+                break;
+            case NPCReactiveAction.Teleport:
+                SetOriginPosition(currentMissionConvos.reactiveActionPosition);
+                transform.position = originPosition;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void TryResetReactiveAction()
+    {
+        switch (currentMissionConvos.doOnComplete)
+        {
+            case NPCReactiveAction.None:
+                break;
+            case NPCReactiveAction.Teleport:
+                ResetOriginPosition();
+                transform.position = originPosition;
+                break;
+            default:
+                break;
+        }
     }
 
     protected override void OnAutoplayComplete()
@@ -196,7 +244,13 @@ public class NPCInteractable : DialogueInteractable
 
     public void SetOriginPosition(Vector3 position)
     {
+        previousOriginPosition = originPosition;
         originPosition = position;
+    }
+
+    public void ResetOriginPosition()
+    {
+        originPosition = previousOriginPosition;
     }
 
     public void ReturnToOrigin()

@@ -6,6 +6,7 @@ using TMPro;
 
 public class UIManager : Singleton<UIManager>
 {
+    public Canvas mainUICanvas;
     public StaminaBar staminaBar;
     public PauseMenuManager pauseMenu;
 

@@ -62,7 +62,7 @@ public class DialogueInteractable : Interactable
         }
         else
         {
-            StartCoroutine(AutoplayConversation()); ;
+            StartCoroutine(AutoplayConversation());
         }
     }
 

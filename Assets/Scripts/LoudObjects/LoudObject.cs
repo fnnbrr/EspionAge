@@ -5,13 +5,20 @@ using UnityEngine;
 
 public class LoudObject : MonoBehaviour
 {
+    [Header("Force Settings")]
     public float thrustForce;
     public Vector3 thrustDirection;
     public float shakeRadius;
     public float dropRadius;
+    public float despawnSec = 3.0f;
     private float distance;
     private Rigidbody rb;
 
+    [Header("Fade Settings")]
+    public bool fadeAndDestroyAfterThrow = true;
+    public float destroyAfterSeconds = 3f;
+
+    [Header("Shake Settings")]
     private Shader plateShader;
     public float minShake;
     public float maxShake;
@@ -19,23 +26,26 @@ public class LoudObject : MonoBehaviour
 
     private bool hasBeenBumped = false;
     private bool hasHit = false;
-    private NoisePing noisePing;
+    private NoisePinger noisePing;
+
+    public delegate void HasHitAction();
+    public event HasHitAction OnHit;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rends = GetComponents<Renderer> ();
-        plateShader = Shader.Find("PlateShake");
-        noisePing = gameObject.GetComponent<NoisePing>();
+        plateShader = Shader.Find(Constants.SHADER_NAME_SHAKE);
+        noisePing = gameObject.GetComponent<NoisePinger>();
     }
 
     void Update()
     {
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
 
-        if (distance <= dropRadius)
+        if (!hasBeenBumped && distance <= dropRadius)
         {
-            rb.AddForce(thrustDirection * thrustForce);
+            rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
             hasBeenBumped = true;
         } 
         else
@@ -53,6 +63,17 @@ public class LoudObject : MonoBehaviour
 
         noisePing.SpawnNoisePing(other);
         hasHit = true;
+
+        OnHit?.Invoke();
+
+        if (fadeAndDestroyAfterThrow)
+        {
+            ObjectFader objectFader = GetComponent<ObjectFader>();
+            if (objectFader)
+            {
+                objectFader.FadeToTransparent(destroyAfterSeconds, fadeAndDestroyAfterThrow);
+            }
+        }
     }
 
     void Shake(float shake){
@@ -71,9 +92,13 @@ public class LoudObject : MonoBehaviour
         Vector3 directionToDraw = transform.TransformDirection(thrustDirection) * 5;
         Gizmos.DrawRay(transform.position, directionToDraw);
 
-        // Radius sphere 
+        // Shake radius sphere 
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(transform.position, shakeRadius);
+        
+        // Drop radius sphere 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, dropRadius);
     }
 
 }

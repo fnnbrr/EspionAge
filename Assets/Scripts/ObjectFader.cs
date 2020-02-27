@@ -73,9 +73,9 @@ public class ObjectFader : MonoBehaviour
         StartCoroutine(FadeToOpaqueCoroutine());
     }
 
-    public void FadeToTransparent()
+    public void FadeToTransparent(float secondsLater = 0f, bool destroyAfter = false)
     {
-        StartCoroutine(FadeToTransparentCoroutine());
+        StartCoroutine(FadeToTransparentCoroutine(secondsLater, destroyAfter));
     }
 
     // Code from here was changed for our own uses: 
@@ -133,8 +133,10 @@ public class ObjectFader : MonoBehaviour
         OnFadeToOpaqueComplete?.Invoke();
     }
 
-    private IEnumerator FadeToTransparentCoroutine()
+    private IEnumerator FadeToTransparentCoroutine(float secondsLater = 0f, bool destroyAfter = false)
     {
+        yield return new WaitForSeconds(secondsLater);
+
         SetMaterialsTransparent();
 
         float currentAlphaPercentage = 1f;
@@ -148,6 +150,11 @@ public class ObjectFader : MonoBehaviour
         SetAllMaterialsLerpedTransparency(0f); // we want to make sure we actually set it to 0 in the end (fading may be off by a little bit)
         
         OnFadeToTransparentComplete?.Invoke();
+
+        if (destroyAfter)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void SetAllMaterialsLerpedTransparency(float lerpPercentage)
@@ -172,7 +179,7 @@ public class ObjectFader : MonoBehaviour
         {
             throw new System.ArgumentNullException("material");
         }
-        bool alphaClip = material.GetFloat("_AlphaClip") == 1;
+        bool alphaClip = material.HasProperty("_AlphaClip") ? material.GetFloat("_AlphaClip") == 1 : false;
         if (alphaClip)
         {
             material.EnableKeyword("_ALPHATEST_ON");

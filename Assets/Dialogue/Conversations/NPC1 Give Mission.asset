@@ -12,16 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85ee462f4b7334f118fe3d0f9f6176c1, type: 3}
   m_Name: NPC1 Give Mission
   m_EditorClassIdentifier: 
-  npcVoice: event:/Characters/OldManNPC
+  isAutoplayed: 0
+  shouldFollow: 0
   lines:
   - isBirdie: 0
-    text: Birdie, I haven't been able to eat solid food in weeks!
+    text: Birdie, there you are!
+  - isBirdie: 0
+    text: I haven't been able to eat solid food in weeks!
   - isBirdie: 1
     text: Something tells me that's your fault...
   - isBirdie: 0
     text: Well, the nurses confiscated my dentures after I bit Brutus...
-  - isBirdie: 1
-    text: Ah, there it is.
   - isBirdie: 1
     text: Honest to Pete, not again!
   - isBirdie: 0
