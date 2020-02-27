@@ -54,6 +54,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -258,8 +259,8 @@ GameObject:
   - component: {fileID: 7594660884359611373}
   - component: {fileID: 2651794029040270326}
   - component: {fileID: 6515904890622739506}
-  - component: {fileID: 7049685978079145166}
-  - component: {fileID: 6016702134282003319}
+  - component: {fileID: 7458521398593291181}
+  - component: {fileID: 1970660596293836023}
   m_Layer: 0
   m_Name: FMODCaughtParam
   m_TagString: Untagged
@@ -303,6 +304,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -340,7 +342,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7049685978079145166
+--- !u!114 &7458521398593291181
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -349,19 +351,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4848029577287680884}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: Player
-  Emitters:
-  - Target: {fileID: 0}
-    Params: []
-  - Target: {fileID: 0}
-    Params:
-    - Name: playerCaught
-      Value: 1
+  parameter: playerCaught
   TriggerEvent: 3
---- !u!114 &6016702134282003319
+  value: 1
+--- !u!114 &1970660596293836023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -370,18 +367,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4848029577287680884}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: Player
-  Emitters:
-  - Target: {fileID: 0}
-    Params: []
-  - Target: {fileID: 0}
-    Params:
-    - Name: playerCaught
-      Value: 0
+  parameter: playerCaught
   TriggerEvent: 4
+  value: 0
 --- !u!1001 &3423866236558735661
 PrefabInstance:
   m_ObjectHideFlags: 0

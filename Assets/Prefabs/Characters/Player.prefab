@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 2998625688478654437}
   - component: {fileID: 2998625688478654436}
   - component: {fileID: 539325392}
-  - component: {fileID: 877161553782133187}
   - component: {fileID: 1352118445427997489}
   m_Layer: 8
   m_Name: Player
@@ -112,25 +111,13 @@ MonoBehaviour:
   awakenessDecrease: 0.005
   dangerRadius: 1000
   throwPosition: {fileID: 9141267454401288687}
+  throwableDestroyTime: 5
   throwMultiplier: 0.08
   angleIncreaseSpeed: 22.5
   minThrowAngle: 0
   maxThrowAngle: 45
   minThrowVelocity: 8
   maxThrowVelocity: 12
---- !u!114 &877161553782133187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2998625688478654463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ListenerNumber: -1
 --- !u!95 &1352118445427997489
 Animator:
   serializedVersion: 3

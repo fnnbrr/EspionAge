@@ -11,6 +11,11 @@ public class Throwable : Interactable
     private bool hasHit = false;
     private NoisePing noisePing;
 
+    [FMODUnity.EventRef]
+    public string throwableSFX;
+    [FMODUnity.EventRef]
+    public string pickUpSFX;
+
     protected override void Start()
     {
         base.Start();
@@ -29,13 +34,13 @@ public class Throwable : Interactable
             playerManager.AddThrowable(gameObject);
             hasBeenAcquired = true;
             enableInteract = false;  // the player should not be able to interact with this object anymore
-            
-            // TODO: Play object pickup sound effect here?
+            FMODUnity.RuntimeManager.PlayOneShot(pickUpSFX, transform.position);
         }
     }
     
     private void OnCollisionEnter(Collision other)
     {
+        FMODUnity.RuntimeManager.PlayOneShot(throwableSFX, transform.position);
         if (!hasBeenAcquired || hasHit) return;
 
         noisePing.SpawnNoisePing(other);
