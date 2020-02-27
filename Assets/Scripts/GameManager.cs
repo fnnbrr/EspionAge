@@ -5,6 +5,9 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager>
 {
     public GameObject player;
+
+    [Header("Final Build Settings")]
+    public bool enableGameStart = false;
     public bool enableFog = false;
 
     private PlayerManager playerManager;
@@ -19,6 +22,11 @@ public class GameManager : Singleton<GameManager>
 
         playerManager = player.GetComponent<PlayerManager>();
         playerController = player.GetComponent<PlayerController>();
+
+        if (enableGameStart)
+        {
+            GameStart();
+        }
     }
 
     public Transform GetPlayerTransform()
@@ -34,5 +42,20 @@ public class GameManager : Singleton<GameManager>
     public PlayerController GetPlayerController()
     {
         return playerController;
+    }
+
+    private void GameStart()
+    {
+        // Kind of hacky way to get around the issue of this script being initialized before every other script
+        //  disable all cameras in CameraZones, and then only turn on the one in birdiesRoom
+        foreach(CameraZone cameraZone in FindObjectsOfType<CameraZone>())
+        {
+            if (cameraZone.mainCamera)
+            {
+                cameraZone.mainCamera.gameObject.SetActive(false);
+            }
+        }
+        RegionManager.Instance.birdiesRoom.mainCamera.gameObject.SetActive(true);
+        MissionManager.Instance.StartMission(MissionsEnum.MissionTutorial);
     }
 }

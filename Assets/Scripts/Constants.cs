@@ -4,7 +4,9 @@ using UnityEngine;
 
 public static class Constants
 {
+    public const string TAG_NONE = "Untagged";
     public const string TAG_PLAYER = "Player";
+    public const string TAG_ENEMY = "Enemy";
 
     public const string LAYER_PLAYER = "PLAYER";
 
@@ -20,8 +22,8 @@ public static class Constants
 
     public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
     public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
-    public const string CHEATS_STARTMISSIONCAFETERIA1 = "Cheats/01-MissionCafeteria1/Start";
-    public const string CHEATS_ENDMISSIONCAFETERIA1 = "Cheats/01-MissionCafeteria1/End";
+    public const string CHEATS_STARTMISSIONKITCHEN1 = "Cheats/01-MissionKitchen1/Start";
+    public const string CHEATS_ENDMISSIONKITCHEN1 = "Cheats/01-MissionKitchen1/End";
 
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
@@ -31,6 +33,7 @@ public static class Constants
     public const string CHEATS_TELEPORT_PANTRY = "Cheats/Teleport/Pantry";
     public const string CHEATS_TELEPORT_KITCHENSTART = "Cheats/Teleport/Kitchen Start";
     public const string CHEATS_TELEPORT_PIANO = "Cheats/Teleport/Piano";
+    public const string CHEATS_TELEPORT_HALLWAY = "Cheats/Teleport/Hallway";
 
     public const string SCENE_MAINMENU = "main_menu";
     public const string SCENE_MAIN = "MAIN";

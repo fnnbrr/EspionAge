@@ -4,40 +4,25 @@ using UnityEngine;
 
 public class NoisePing : MonoBehaviour
 {
-    [Header("General")]
-    public GameObject pingPrefab;
-    public float pingRadius = 10.0f;
-    
-    [Header("Tweaks")]
-    public float pingGrowthScale = 20.0f;
-    public float pingFloorOffset = 0.5f;
-    
-    private GameObject pingInstance;
-    
-    public void SpawnNoisePing(Collision other)
+    private float pingGrowthScale;
+    private float lifetime;
+
+    private bool initialized = false;
+
+    public void Initialize(float radius = 10f, float growthScale = 20f)
     {
-        Vector3 hitPoint = other.GetContact(0).point;
-        Vector3 hitNormal = other.GetContact(0).normal;
-        
-        pingInstance = Instantiate(pingPrefab, hitPoint + (pingFloorOffset * hitNormal), 
-            Quaternion.LookRotation(hitPoint));
-        
-        float pingDuration = 2 * pingRadius / pingGrowthScale;
-        Destroy(pingInstance, pingDuration);
+        pingGrowthScale = growthScale;
+
+        lifetime = 2 * radius / pingGrowthScale;
+        Destroy(gameObject, lifetime);
+
+        initialized = true;
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        if (!pingInstance) return;
+        if (!initialized) return;
 
-        pingInstance.transform.localScale += new Vector3(Time.deltaTime * pingGrowthScale, 0f, 
-                                                         Time.deltaTime * pingGrowthScale);
-    }
-    
-    void OnDrawGizmos()
-    {
-        // pingRadius visualization
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, pingRadius);
+        transform.localScale += new Vector3(Time.fixedDeltaTime * pingGrowthScale, 0f, Time.fixedDeltaTime * pingGrowthScale);
     }
 }
