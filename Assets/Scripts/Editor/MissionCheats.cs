@@ -17,7 +17,7 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_STARTMISSIONTUTORIAL)]
     public static void StartMissionTutorial()
     {
-        MissionManager.Instance.StartMission(AssetDatabase.LoadAssetAtPath<GameObject>(Constants.ASSET_PATH_MISSIONTUTORIAL));
+        MissionManager.Instance.StartMission(MissionsEnum.MissionTutorial);
     }
 
     [MenuItem(Constants.CHEATS_ENDMISSIONTUTORIAL, true)]
@@ -29,8 +29,7 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_ENDMISSIONTUTORIAL)]
     public static void EndMissionTutorial()
     {
-        AMission mission = MissionManager.Instance.GetActiveMission<MissionTutorial>().mission;
-        MissionManager.Instance.EndMission(mission);
+        MissionManager.Instance.EndMission(MissionsEnum.MissionTutorial);
     }
 
     ////////////////////
@@ -45,7 +44,7 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_STARTMISSIONKITCHEN1)]
     public static void StartMissionCafeteria1()
     {
-        MissionManager.Instance.StartMission(AssetDatabase.LoadAssetAtPath<GameObject>(Constants.ASSET_PATH_MISSIONCAFETERIA1));
+        MissionManager.Instance.StartMission(MissionsEnum.KitchenMission);
     }
 
     [MenuItem(Constants.CHEATS_ENDMISSIONKITCHEN1, true)]
@@ -58,6 +57,6 @@ public class MissionCheats: MonoBehaviour
     public static void EndMissionCafeteria1()
     {
         AMission mission = MissionManager.Instance.GetActiveMission<MissionKitchen1>().mission;
-        MissionManager.Instance.EndMission(mission);
+        MissionManager.Instance.EndMission(MissionsEnum.KitchenMission);
     }
 }

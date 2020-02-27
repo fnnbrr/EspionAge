@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [System.Serializable]
 public class NPCMissionConvos
 {
-    public GameObject missionPrefab;
+    public MissionsEnum missionsEnum;
 
     // Type of conversations an NPC can have based on if it is before, during or after a
     public Conversation beforeConvo;
@@ -49,11 +49,17 @@ public class NPCInteractable : DialogueInteractable
                 LoadConversation();
             }
 
+            if (conversation.shouldFollow)
+            {
+                TriggerFollow(player);
+            }
+
             // Autoplay
-            if(conversation.isAutoplayed)
+            if (conversation.isAutoplayed)
             {
                 if(!autoPlaying)
                 {
+                    TriggerAutoplay();
                     OnInteract();
                 }
             }
@@ -115,8 +121,7 @@ public class NPCInteractable : DialogueInteractable
                 if (startedMission == null)
                 {
                     // Start mission and store reference because needed to end mission
-                    startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionPrefab);
-                    ProgressManager.Instance.AddMission(startedMission);
+                    startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionsEnum);
                     startedMission.OnMissionComplete += HandleOnMissionComplete;
                     startedMission.OnMissionReset += HandleOnMissionReset;
                 }
@@ -128,14 +133,14 @@ public class NPCInteractable : DialogueInteractable
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
                 {
                     // Ends current mission with NPC
-                    MissionManager.Instance.EndMission(startedMission);
-                    ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Closed);
+                    MissionManager.Instance.EndMission(currentMissionConvos.missionsEnum);
 
                     // Unsubscribe
                     startedMission.OnMissionComplete -= HandleOnMissionComplete;
                     startedMission.OnMissionReset -= HandleOnMissionReset;
                     startedMission = null;
                     missionsOffered.RemoveAt(0);
+
                     currentMissionConvos = null;
                 }
                 else
@@ -150,15 +155,6 @@ public class NPCInteractable : DialogueInteractable
             }
         }
 
-        if(conversation.isAutoplayed)
-        {
-            TriggerAutoplay();
-        }
-
-        if (conversation.shouldFollow)
-        {
-            TriggerFollow(player);
-        }
         base.OnInteract();
     }
 
@@ -228,13 +224,12 @@ public class NPCInteractable : DialogueInteractable
 
     private void HandleOnMissionReset()
     {
-        ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Started);
+        MissionManager.Instance.RestartMission(currentMissionConvos.missionsEnum);
     }
 
     private void HandleOnMissionComplete()
     {
-        ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Completed);
-        Debug.Log("Objective Complete");
+        MissionManager.Instance.CompleteMissionObjective(currentMissionConvos.missionsEnum);
     }
 
     public void NPCFacePlayer()
@@ -252,6 +247,6 @@ public class NPCInteractable : DialogueInteractable
     {
         base.OnDrawGizmos();
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, boundaryRadius);
+        Gizmos.DrawWireSphere(originPosition, boundaryRadius);
     }
 }
