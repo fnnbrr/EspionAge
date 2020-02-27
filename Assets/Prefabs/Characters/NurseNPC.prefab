@@ -633,17 +633,18 @@ MonoBehaviour:
   interactRadius: 10
   conversation: {fileID: 0}
   npcVoicePath: event:/Characters/OldManNPC
-  waitLineTime: 2
+  waitLineTime: 5
   boundaryRadius: 20
   defaultConvos:
   - {fileID: 11400000, guid: 2a9daf04432cd47d08743e22a6809de6, type: 2}
   - {fileID: 11400000, guid: d5bb8fabd0b3baf4d9b4d068c68a3629, type: 2}
   missionsOffered:
-  - missionPrefab: {fileID: 5084350367684625037, guid: f722d4fe2c2556249a2d8d9b53694c6b,
-      type: 3}
+  - missionsEnum: 1
     beforeConvo: {fileID: 11400000, guid: 3906f99d3895849b29ab158a43b2d130, type: 2}
     duringConvo: {fileID: 11400000, guid: a4566adfec0fb430a86dfe033c85885d, type: 2}
     afterConvo: {fileID: 11400000, guid: e485504c19563410c9cd04471b6f0a87, type: 2}
+    doOnComplete: 1
+    reactiveActionPosition: {x: -60, y: 0, z: -35}
 --- !u!195 &1964985108
 NavMeshAgent:
   m_ObjectHideFlags: 0

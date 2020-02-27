@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(NoisePing))]
+[RequireComponent(typeof(NoisePinger))]
 public class Throwable : Interactable
 {
     private bool hasBeenAcquired = false;
     private bool hasHit = false;
-    private NoisePing noisePing;
+    private NoisePinger noisePing;
 
     protected override void Start()
     {
         base.Start();
-        noisePing = gameObject.GetComponent<NoisePing>();
+        noisePing = gameObject.GetComponent<NoisePinger>();
     }
 
     public override void OnInteract()

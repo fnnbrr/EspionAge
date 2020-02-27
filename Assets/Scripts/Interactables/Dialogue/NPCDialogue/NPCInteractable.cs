@@ -4,14 +4,25 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
+public enum NPCReactiveAction
+{
+    None,
+    Teleport
+}
+
+[System.Serializable]
 public class NPCMissionConvos
 {
-    public GameObject missionPrefab;
+    public MissionsEnum missionsEnum;
 
     // Type of conversations an NPC can have based on if it is before, during or after a
     public Conversation beforeConvo;
     public Conversation duringConvo;
     public Conversation afterConvo;
+
+    [Header("Reactive Actions")]
+    public NPCReactiveAction doOnComplete;
+    public Vector3 reactiveActionPosition;
 }
 
 public class NPCInteractable : DialogueInteractable
@@ -29,13 +40,16 @@ public class NPCInteractable : DialogueInteractable
 
     protected bool isFollowing = false;
     private Vector3 originPosition;
+    private Vector3 previousOriginPosition;
 
 
     protected override void Start()
     {
         base.Start();
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
-        originPosition = gameObject.transform.position;
+
+        SetOriginPosition(gameObject.transform.position);
+
         LoadConversation();
     }
 
@@ -49,11 +63,17 @@ public class NPCInteractable : DialogueInteractable
                 LoadConversation();
             }
 
+            if (conversation.shouldFollow)
+            {
+                TriggerFollow(player);
+            }
+
             // Autoplay
-            if(conversation.isAutoplayed)
+            if (conversation.isAutoplayed)
             {
                 if(!autoPlaying)
                 {
+                    TriggerAutoplay();
                     OnInteract();
                 }
             }
@@ -115,10 +135,11 @@ public class NPCInteractable : DialogueInteractable
                 if (startedMission == null)
                 {
                     // Start mission and store reference because needed to end mission
-                    startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionPrefab);
-                    ProgressManager.Instance.AddMission(startedMission);
+                    startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionsEnum);
                     startedMission.OnMissionComplete += HandleOnMissionComplete;
+                    startedMission.OnMissionComplete += TryReactiveAction;
                     startedMission.OnMissionReset += HandleOnMissionReset;
+                    startedMission.OnMissionReset += TryResetReactiveAction;
                 }
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
                 {
@@ -128,14 +149,16 @@ public class NPCInteractable : DialogueInteractable
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Completed)
                 {
                     // Ends current mission with NPC
-                    MissionManager.Instance.EndMission(startedMission);
-                    ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Closed);
+                    MissionManager.Instance.EndMission(currentMissionConvos.missionsEnum);
 
                     // Unsubscribe
                     startedMission.OnMissionComplete -= HandleOnMissionComplete;
+                    startedMission.OnMissionComplete -= TryReactiveAction;
                     startedMission.OnMissionReset -= HandleOnMissionReset;
+                    startedMission.OnMissionReset -= TryResetReactiveAction;
                     startedMission = null;
                     missionsOffered.RemoveAt(0);
+
                     currentMissionConvos = null;
                 }
                 else
@@ -150,16 +173,37 @@ public class NPCInteractable : DialogueInteractable
             }
         }
 
-        if(conversation.isAutoplayed)
-        {
-            TriggerAutoplay();
-        }
-
-        if (conversation.shouldFollow)
-        {
-            TriggerFollow(player);
-        }
         base.OnInteract();
+    }
+
+    private void TryReactiveAction()
+    {
+        switch (currentMissionConvos.doOnComplete)
+        {
+            case NPCReactiveAction.None:
+                break;
+            case NPCReactiveAction.Teleport:
+                SetOriginPosition(currentMissionConvos.reactiveActionPosition);
+                transform.position = originPosition;
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void TryResetReactiveAction()
+    {
+        switch (currentMissionConvos.doOnComplete)
+        {
+            case NPCReactiveAction.None:
+                break;
+            case NPCReactiveAction.Teleport:
+                ResetOriginPosition();
+                transform.position = originPosition;
+                break;
+            default:
+                break;
+        }
     }
 
     protected override void OnAutoplayComplete()
@@ -200,7 +244,15 @@ public class NPCInteractable : DialogueInteractable
 
     public void SetOriginPosition(Vector3 position)
     {
+        previousOriginPosition = originPosition;
         originPosition = position;
+    }
+
+    public void ResetOriginPosition()
+    {
+        Vector3 temp = originPosition;
+        originPosition = previousOriginPosition;
+        previousOriginPosition = temp;
     }
 
     public void ReturnToOrigin()
@@ -228,13 +280,12 @@ public class NPCInteractable : DialogueInteractable
 
     private void HandleOnMissionReset()
     {
-        ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Started);
+        MissionManager.Instance.RestartMission(currentMissionConvos.missionsEnum);
     }
 
     private void HandleOnMissionComplete()
     {
-        ProgressManager.Instance.UpdateMissionStatus(startedMission, MissionStatusCode.Completed);
-        Debug.Log("Objective Complete");
+        MissionManager.Instance.CompleteMissionObjective(currentMissionConvos.missionsEnum);
     }
 
     public void NPCFacePlayer()
@@ -252,6 +303,6 @@ public class NPCInteractable : DialogueInteractable
     {
         base.OnDrawGizmos();
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, boundaryRadius);
+        Gizmos.DrawWireSphere(originPosition, boundaryRadius);
     }
 }
