@@ -121,7 +121,6 @@ public class NPCInteractable : DialogueInteractable
                 if (startedMission == null)
                 {
                     // Start mission and store reference because needed to end mission
-                    GameObject missionPrefab = MissionManager.Instance.GetMissionPrefabFromEnum(currentMissionConvos.missionsEnum);
                     startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionsEnum);
                     startedMission.OnMissionComplete += HandleOnMissionComplete;
                     startedMission.OnMissionReset += HandleOnMissionReset;

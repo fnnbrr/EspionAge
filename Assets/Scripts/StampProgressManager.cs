@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class StampProgressManager : MonoBehaviour
 {
-    private int numStampsCollected = 0;
     public TextMeshProUGUI text;
 
     void OnEnable()
@@ -15,7 +14,6 @@ public class StampProgressManager : MonoBehaviour
 
     void DisplayUpdate()
     {
-        numStampsCollected = ProgressManager.Instance.GetNumStampsUnlocked();
-        text.SetText(numStampsCollected.ToString());
+        text.SetText(ProgressManager.Instance.GetNumStampsUnlocked().ToString());
     }
 }

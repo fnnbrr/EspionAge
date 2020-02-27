@@ -101,11 +101,6 @@ public class MissionManager : Singleton<MissionManager>
     {
         if (missionMapping.TryGetValue(missionEnumValue, out MissionMapping mission))
         {
-            if (mission.collectible == null)
-            {
-                // Collectible is not obtained in this level
-                return null;
-            }
             return mission.collectible;
         }
         else
