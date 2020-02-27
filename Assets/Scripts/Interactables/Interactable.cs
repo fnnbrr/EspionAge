@@ -22,6 +22,7 @@ public class Interactable : MonoBehaviour, IInteractable
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
+
     protected virtual void Start()
     {
         player = GameManager.Instance.GetPlayerTransform().gameObject;
