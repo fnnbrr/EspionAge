@@ -80,7 +80,6 @@ public class Chaser : MonoBehaviour
         }
         else if (numTargetsInRange == 0 && currentState == ActionStates.Chasing)
         {
-            GotoNextSearchPoint();
             currentState = defaultState;
         }
     }
@@ -107,7 +106,7 @@ public class Chaser : MonoBehaviour
         while (!NavMesh.SamplePosition(randomPoint, out navHit, searchBoundsRadius, NavMesh.AllAreas))
         {
             attemptsRemaining -= 1;
-            if (attemptsRemaining == 0)
+            if (attemptsRemaining < 0)
             {
                 agent.SetDestination(searchBoundsCenter);
             }
