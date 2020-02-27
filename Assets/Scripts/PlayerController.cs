@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float movementSpeed;
     [HideInInspector] public float turnSpeed;
     private Rigidbody rb;
+    private Animator anim;
 
     private Vector3 movement;
     public bool EnablePlayerInput { get; set; } = true;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
         movementSpeed = baseMovementSpeed;
         turnSpeed = baseTurnSpeed;
         rb = Utils.GetRequiredComponent<Rigidbody>(this);
+        anim = Utils.GetRequiredComponentInChildren<Animator>(this);
 
         if (CameraManager.Instance)
         {
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!EnablePlayerInput)
         {
+            SetIsWalking(false);
             return;
         }
 
@@ -54,8 +57,14 @@ public class PlayerController : MonoBehaviour
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;    // to be used later for animations and such
+        SetIsWalking(isWalking);
 
         HandleControl(movement);
+    }
+
+    public void SetIsWalking(bool isWalking)
+    {
+        anim.SetBool(Constants.ANIMATION_BIRDIE_ISWALKING, isWalking);
     }
 
     private Vector3 CleanForwardVector(Vector3 forwardVector)

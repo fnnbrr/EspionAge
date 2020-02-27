@@ -9,8 +9,8 @@ public static class Constants
     public const string TAG_ENEMY = "Enemy";
 
     public const string LAYER_PLAYER = "PLAYER";
-
-    public const string ANIMATION_PLAYER_ISRESTING = "IsResting";
+    
+    public const string ANIMATION_BIRDIE_ISWALKING = "IsWalking";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
@@ -41,4 +41,6 @@ public static class Constants
     public const float INTERACT_BOUNDARY_RADIUS = 20.0f;
     public const float INTERACT_POPUP_RADIUS = 10.0f;
     public const float WAIT_TIME_CONVO_LINE = 2.0f;
+
+    public const string SHADER_NAME_SHAKE = "PlateShake";
 }
