@@ -159,6 +159,9 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
   spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
   flashingSpeed: 2
+  parameter: playerCaught
+  notCaught: 0
+  isCaught: 1
 --- !u!195 &2450668294617206675
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -267,7 +270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3278627089683948043
 Transform:
   m_ObjectHideFlags: 0

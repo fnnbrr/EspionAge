@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 1033882117269768458}
   - component: {fileID: 1033882117269768457}
   - component: {fileID: 1033882117269768456}
+  - component: {fileID: -8194328323741330668}
   m_Layer: 0
   m_Name: Dentures
   m_TagString: Untagged
@@ -106,6 +107,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactableAnim: {fileID: 4984904853352916685}
   interactTransform: {fileID: 4984904853352916657}
+  interactRadius: 10
+--- !u!114 &-8194328323741330668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033882117269768695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  parameter: missionComplete
+  TriggerEvent: 3
+  value: 1
 --- !u!1001 &1033882116717999188
 PrefabInstance:
   m_ObjectHideFlags: 0
