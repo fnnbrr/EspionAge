@@ -250,9 +250,7 @@ public class NPCInteractable : DialogueInteractable
 
     public void ResetOriginPosition()
     {
-        Vector3 temp = originPosition;
         originPosition = previousOriginPosition;
-        previousOriginPosition = temp;
     }
 
     public void ReturnToOrigin()
