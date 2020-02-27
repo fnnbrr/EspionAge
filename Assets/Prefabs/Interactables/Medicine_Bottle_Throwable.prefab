@@ -67,6 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactableAnim: {fileID: 3658902532567942418}
   interactTransform: {fileID: 3658902532567942419}
+  interactRadius: 10
 --- !u!65 &3658902531811208855
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107,8 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pingPrefab: {fileID: 1645977202193189007, guid: f1b3677185bfc3a489e4bd4feb07ace0,
     type: 3}
-  pingRadius: 10
-  pingGrowthScale: 20
+  pingRadius: 15
+  pingGrowthScale: 30
   pingFloorOffset: 0.5
 --- !u!1 &3658902532391834960
 GameObject:

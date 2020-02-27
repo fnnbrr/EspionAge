@@ -4,18 +4,12 @@ using UnityEngine;
 
 public class Patroller : Chaser
 {
-    [Header("Patroller")]
+    [Header("Patrolling")]
     public Transform patrolWaypoints;
-    public float waypointPauseSec = 1.0f;
-    private float waypointPauseTimer;
+    [Tooltip("After responding, how many times should I search before resuming my patrol?")]
+    public int numSearches = 2;
 
-    public enum ActionStates
-    {
-        Patrolling,
-        Chasing
-    }
-    [Header("For Debugging")]
-    [SerializeField] public ActionStates currentState = ActionStates.Patrolling;
+    private int curNumSearches = 0;
 
     private List<Vector3> points = new List<Vector3>();
     private int destinationCount;
@@ -24,8 +18,8 @@ public class Patroller : Chaser
     new void Start()
     {
         base.Start();
-        waypointPauseTimer = waypointPauseSec;
 
+        defaultState = ActionStates.Patrolling;
         if (patrolWaypoints)
         {
             foreach (Transform childWaypoint in patrolWaypoints)
@@ -41,35 +35,8 @@ public class Patroller : Chaser
         points = new List<Vector3>(newPoints);
     }
 
-    public override void HandleTargetsInRange(int numTargetsInRange)
-    {
-        if (chase && numTargetsInRange > 0 && currentState != ActionStates.Chasing)
-        {
-            ChaseTarget();
-            currentState = ActionStates.Chasing;
-        }
-        else if (numTargetsInRange == 0 && currentState != ActionStates.Patrolling)
-        {
-            GotoNextPoint();
-            currentState = ActionStates.Patrolling;
-        }
-    }
-
-    bool WaypointPauseComplete()
-    {
-        waypointPauseTimer -= Time.deltaTime;
-        if (waypointPauseTimer > 0)
-        {
-            agent.SetDestination(transform.position);
-            return false;
-        }
-
-        waypointPauseTimer = waypointPauseSec;
-        return true;
-    }
-    
     // Cycles through points start->end, then end->start
-    void GotoNextPoint()
+    private void GotoNextPatrolPoint()
     {
         // Returns if only the starting position is present
         if (points.Count < 2)
@@ -84,23 +51,43 @@ public class Patroller : Chaser
 
     void Update()
     {
-        if (agent.isOnNavMesh && !agent.pathPending && agent.remainingDistance < 0.5f)
+        if (!agent.isOnNavMesh || agent.pathPending || !(agent.remainingDistance < 0.5f)) return;
+        
+        // Choose the next destination point when the agent gets close to the current one.
+        switch (currentState)
         {
-            switch (currentState)
-            {
-                case ActionStates.Patrolling:
-                    // Choose the next destination point when the agent gets close to the current one.
-                    if (WaypointPauseComplete())
+            case ActionStates.Patrolling:
+                if (WaitComplete())
+                {
+                    GotoNextPatrolPoint();
+                }
+                break;
+            case ActionStates.Chasing:
+                ChaseTarget();
+                break;
+            case ActionStates.Responding:
+                if (WaitComplete())
+                {
+                    currentState = ActionStates.Searching;
+                }
+                break;
+            case ActionStates.Searching:
+                if (WaitComplete())
+                {
+                    if (curNumSearches < numSearches)
                     {
-                        GotoNextPoint();
+                        curNumSearches += 1;
+                        GotoNextSearchPoint();
                     }
-                    break;
-                case ActionStates.Chasing:
-                    ChaseTarget();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                    else
+                    {
+                        curNumSearches = 0;
+                        currentState = defaultState;
+                    }
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 }
