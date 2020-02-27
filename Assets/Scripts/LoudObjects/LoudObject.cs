@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LoudObject : MonoBehaviour
 {
+    [Header("Force Settings")]
     public float thrustForce;
     public Vector3 thrustDirection;
     public float shakeRadius;
@@ -12,6 +13,11 @@ public class LoudObject : MonoBehaviour
     private float distance;
     private Rigidbody rb;
 
+    [Header("Fade Settings")]
+    public bool fadeAndDestroyAfterThrow = true;
+    public float destroyAfterSeconds = 3f;
+
+    [Header("Shake Settings")]
     private Shader plateShader;
     public float minShake;
     public float maxShake;
@@ -28,7 +34,7 @@ public class LoudObject : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rends = GetComponents<Renderer> ();
-        plateShader = Shader.Find("PlateShake");
+        plateShader = Shader.Find(Constants.SHADER_NAME_SHAKE);
         noisePing = gameObject.GetComponent<NoisePinger>();
     }
 
@@ -58,6 +64,15 @@ public class LoudObject : MonoBehaviour
         hasHit = true;
 
         OnHit?.Invoke();
+
+        if (fadeAndDestroyAfterThrow)
+        {
+            ObjectFader objectFader = GetComponent<ObjectFader>();
+            if (objectFader)
+            {
+                objectFader.FadeToTransparent(destroyAfterSeconds, fadeAndDestroyAfterThrow);
+            }
+        }
     }
 
     void Shake(float shake){
