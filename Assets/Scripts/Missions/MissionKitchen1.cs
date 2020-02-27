@@ -22,7 +22,7 @@ public class MissionEnemy
     }
 
     [System.Serializable]
-    public class ResponderWanderBounds
+    public class ChaserWanderBounds
     {
         public Vector3 position;
         public float radius;
@@ -31,7 +31,7 @@ public class MissionEnemy
     public enum EnemyType
     {
         Patroller,
-        Responder
+        Chaser
     }
     [SerializeField] public EnemyType enemyType;
 
@@ -43,9 +43,9 @@ public class MissionEnemy
     [Header("Specific Patroller Settings")]
     public List<EnemyWaypoint> waypoints;
 
-    [Header("Specific Responder Settings")]
+    [Header("Specific Chaser Settings")]
     public Vector3 startResponsePoint;
-    public ResponderWanderBounds wanderBounds;
+    public ChaserWanderBounds wanderBounds;
 }
 
 public class MissionKitchen1 : AMission
@@ -145,10 +145,11 @@ public class MissionKitchen1 : AMission
                     case MissionEnemy.EnemyType.Patroller:
                         Patroller patrol = enemyComponent as Patroller;
                         patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+                        patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
                         break;
-                    case MissionEnemy.EnemyType.Responder:
-                        Responder responder = enemyComponent as Responder;
-                        responder.InitailizeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
+                    case MissionEnemy.EnemyType.Chaser:
+                        Chaser chaser = enemyComponent as Chaser;
+                        chaser.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
                         break;
                     default:
                         Debug.LogError($"Unknown enemy type: {enemy.enemyType}!");

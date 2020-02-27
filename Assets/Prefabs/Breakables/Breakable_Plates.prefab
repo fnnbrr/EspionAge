@@ -93,7 +93,7 @@ MonoBehaviour:
   pingPrefab: {fileID: 1645977202193189007, guid: f1b3677185bfc3a489e4bd4feb07ace0,
     type: 3}
   pingRadius: 15
-  pingGrowthScale: 20
+  pingGrowthScale: 30
   pingFloorOffset: 0.5
 --- !u!114 &906590706157901623
 MonoBehaviour:
@@ -107,10 +107,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccbb36553044f4ed0859553b1f295fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrustForce: 50
+  thrustForce: 100
   thrustDirection: {x: 0, y: 0, z: 0}
   shakeRadius: 20
-  dropRadius: 10
+  dropRadius: 5
+  despawnSec: 3
   minShake: 0.1
   maxShake: 0.8
 --- !u!1001 &7392053781726760823

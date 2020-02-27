@@ -70,24 +70,32 @@ MonoBehaviour:
     rotation: {x: 0, y: 0, z: 0}
     spawnedInstance: {fileID: 0}
     enemiesToSpawnIfLastCollected:
-    - enemyType: 1
-      prefab: {fileID: 7003268395918406997, guid: 049751ea334d91849a1ca12394fe438d,
+    - enemyType: 0
+      prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
         type: 3}
       spawnPosition: {x: -85, y: 0, z: -36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints: []
+      waypoints:
+      - position: {x: 33, y: 0, z: 16}
+        stayTime: 0
+      - position: {x: 9, y: 0, z: 40}
+        stayTime: 0
       startResponsePoint: {x: 24, y: 0, z: -2}
       wanderBounds:
-        position: {x: 33, y: 0, z: 28}
-        radius: 30
-    - enemyType: 1
-      prefab: {fileID: 7003268395918406997, guid: 049751ea334d91849a1ca12394fe438d,
+        position: {x: 19, y: 0, z: 7}
+        radius: 20
+    - enemyType: 0
+      prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
         type: 3}
       spawnPosition: {x: -85, y: 0, z: 36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      waypoints: []
+      waypoints:
+      - position: {x: 11, y: 0, z: -40}
+        stayTime: 0
+      - position: {x: 24, y: 0, z: -12}
+        stayTime: 0
       startResponsePoint: {x: 37.5, y: 0, z: 0}
       wanderBounds:
-        position: {x: 26, y: 0, z: -24}
-        radius: 30
+        position: {x: 14, y: 0, z: -14}
+        radius: 20
   missionObjects: []
