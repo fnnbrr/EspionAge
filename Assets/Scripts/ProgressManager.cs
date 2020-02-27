@@ -17,6 +17,7 @@ public class ProgressManager: Singleton<ProgressManager>
      
     [HideInInspector]
     public bool allStampsUnlocked = false;
+    private int numStampsUnlocked = 0;
 
     public List<StampCollectible> stampCollectibles;                        // List of collectibles needed to be able to add stamps in the inspector
     public Dictionary<StampCollectible, bool> stampsUnlockStatus;           // Use a dictinoary to keep track of what stamps are unlocked
@@ -51,6 +52,7 @@ public class ProgressManager: Singleton<ProgressManager>
         else
         {
             stampsUnlockStatus[stamp] = true;
+            numStampsUnlocked++;
             Debug.Log("Unlocked " + stamp.collectibleName);
 
             if(HasUnlockedAllStamps())
@@ -83,6 +85,11 @@ public class ProgressManager: Singleton<ProgressManager>
         return availableStamps;
     }
 
+    public int GetNumStampsUnlocked()
+    {
+        return numStampsUnlocked;
+    }
+
 
     public void UnlockBingoBallCollectible(BingoBallCollectible bingoBall)
     {
@@ -113,7 +120,6 @@ public class ProgressManager: Singleton<ProgressManager>
     }
 
 
-    // To be called in Mission Manager when mission is completed
     public void AddMission(AMission mission)
     {
         missionsStatus.Add(mission, MissionStatusCode.Started);
