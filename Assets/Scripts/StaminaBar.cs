@@ -97,7 +97,6 @@ public class StaminaBar : MonoBehaviour
 
     public void FadeIn()
     {
-        print("fading out");
         // invisible --> full color
         StartCoroutine(FadeCoroutine(0f, 1f, staminaFillImage));
         StartCoroutine(FadeCoroutine(0f, 1f, staminaBarImage));

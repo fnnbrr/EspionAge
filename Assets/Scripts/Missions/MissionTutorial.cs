@@ -162,5 +162,7 @@ public class MissionTutorial : AMission
         UIManager.Instance.FadeIn();
 
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+
+        UIManager.Instance.staminaBar.Glow();
     }
 }
