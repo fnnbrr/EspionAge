@@ -19,7 +19,7 @@ public class LoudObject : MonoBehaviour
 
     private bool hasBeenBumped = false;
     private bool hasHit = false;
-    private NoisePing noisePing;
+    private NoisePinger noisePing;
 
     public delegate void HasHitAction();
     public event HasHitAction OnHit;
@@ -29,7 +29,7 @@ public class LoudObject : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rends = GetComponents<Renderer> ();
         plateShader = Shader.Find("PlateShake");
-        noisePing = gameObject.GetComponent<NoisePing>();
+        noisePing = gameObject.GetComponent<NoisePinger>();
     }
 
     void Update()
