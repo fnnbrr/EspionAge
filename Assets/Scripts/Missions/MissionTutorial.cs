@@ -9,6 +9,7 @@ public class MissionTutorial : AMission
     public Vector3 playerStartPosition;
 
     [Header("Cutscene")]
+    public GameObject awakenessPointerUIAnimation;
     public GameObject vaseFocusCameraPrefab;
     public GameObject vaseDropCutsceneText;
     public GameObject enemyFocusCameraPrefab;
@@ -126,10 +127,11 @@ public class MissionTutorial : AMission
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
         CinemachineVirtualCamera currentCamera = CameraManager.Instance.GetActiveVirtualCamera();
 
-        // Cutscene Order: Vase Focus -> Enemies Come -> Birdie Runs Away
+        // Cutscene Order: Vase Focus -> Outline Awakeness Meter -> Enemies Come -> Birdie Runs Away
         yield return StartCoroutine(PlayCutscenePart(currentCamera, vaseFocusCameraPrefab, vaseDropCutsceneText, focusObject.transform));
+        yield return StartCoroutine(PlayCutsceneText(awakenessPointerUIAnimation));
         SpawnEnemies();
-        yield return StartCoroutine(PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].transform));
+        yield return StartCoroutine(PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].transform, doHardBlend: true));
 
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
@@ -148,9 +150,22 @@ public class MissionTutorial : AMission
         });
     }
 
-    private IEnumerator PlayCutscenePart(CinemachineVirtualCamera startCamera, GameObject cameraPrefab, GameObject cutsceneTextPrefab, Transform focusTransform)
+    private IEnumerator PlayCutscenePart(CinemachineVirtualCamera startCamera, GameObject cameraPrefab, GameObject cutsceneTextPrefab, Transform focusTransform, bool doHardBlend = false)
     {
         GameObject cutsceneCameraInstance = CameraManager.Instance.SpawnCameraFromPrefab(cameraPrefab);
+
+        if (doHardBlend)
+        {
+            CinemachineBlenderSettings.CustomBlend hardBlend = new CinemachineBlenderSettings.CustomBlend
+            {
+                m_From = CinemachineBlenderSettings.kBlendFromAnyCameraLabel,
+                m_To = cutsceneCameraInstance.name,
+                m_Blend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Style.Cut, 0f)
+            };
+            CameraManager.Instance.brain.m_CustomBlends.m_CustomBlends = 
+                CameraManager.Instance.brain.m_CustomBlends.m_CustomBlends.Append(hardBlend).ToArray();
+        }
+
         cutsceneCameraInstance.GetComponent<CinemachineVirtualCamera>().LookAt = focusTransform;
         camerasToCleanUp.Add(cutsceneCameraInstance);
         CameraManager.Instance.BlendTo(cutsceneCameraInstance.GetComponent<CinemachineVirtualCamera>(), alertGlobally: false);
