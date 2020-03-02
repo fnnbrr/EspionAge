@@ -35,6 +35,11 @@ public class StaminaBar : MonoBehaviour
         staminaFillImage.fillAmount = 0.0f;
     }
 
+    public void ResetAwakeness()
+    {
+        UpdateFillAmount(0f);
+    }
+
     // No custom decrease function needed so it was no implemented (like below)
     public IEnumerator DecreaseStaminaBy(float percent)
     {

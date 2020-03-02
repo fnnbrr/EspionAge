@@ -7,6 +7,9 @@ using Cinemachine;
 public class MissionTutorial : AMission
 {
     public Vector3 playerStartPosition;
+    public Vector3 playerStartRotation;
+    public Vector3 playerRespawnPosition;
+    public Vector3 playerRespawnRotation;
 
     [Header("Cutscene")]
     public GameObject awakenessPointerUIAnimation;
@@ -22,6 +25,7 @@ public class MissionTutorial : AMission
 
     [Header("First Vase")]
     public Vector3 firstVasePosition;
+    private GameObject firstVaseInstance;
     private LoudObject firstVaseLoudObject;
     private BreakableObject firstVaseBreakable;
 
@@ -39,6 +43,7 @@ public class MissionTutorial : AMission
     //public MissionObject note;
 
     private bool startCutscenePlayed = false;
+    private bool respawning = false;
 
     private List<GameObject> spawnedEnemies;
     private List<GameObject> camerasToCleanUp;
@@ -76,19 +81,19 @@ public class MissionTutorial : AMission
 
         // Move player to a set position
         GameManager.Instance.GetPlayerTransform().position = playerStartPosition;
+        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(playerStartRotation);
 
         // Toggle the event in the EventManager
         GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, true);
 
         // spawn the specific first vase we will drop, and the remaining ones
-        GameObject firstVaseInstance = SpawnVase(firstVasePosition);
+        firstVaseInstance = SpawnVase(firstVasePosition);
         firstVaseLoudObject = firstVaseInstance.GetComponentInChildren<LoudObject>();
         firstVaseLoudObject.dropRadius = 0f;
         firstVaseBreakable = firstVaseInstance.GetComponentInChildren<BreakableObject>();
-        vasePositions.ForEach(p =>
-        {
-            SpawnVase(p);
-        });
+
+        // Spawn all the other vases
+        SpawnRegularVases();
 
         // Fade in
         UIManager.Instance.FadeIn();
@@ -147,7 +152,38 @@ public class MissionTutorial : AMission
 
             PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemyInstance);
             chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
+            chaser.OnCollideWithPlayer += RestartAfterCutscene;
         });
+    }
+
+    private void RestartAfterCutscene()
+    {
+        if (!respawning)
+        {
+            respawning = true;
+            StartCoroutine(RestartAfterCutsceneCoroutine());
+        }
+    }
+
+    private IEnumerator RestartAfterCutsceneCoroutine()
+    {
+        UIManager.Instance.FadeOut();
+        yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
+        GameManager.Instance.GetPlayerTransform().position = playerRespawnPosition;
+        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(playerRespawnRotation);
+        UIManager.Instance.staminaBar.ResetAwakeness();
+
+        DestroyFromList(spawnedVases);
+        DestroyFromList(spawnedVaseStands);
+        DestroyFromList(spawnedEnemies);
+
+        SpawnRegularVases();
+        SpawnEnemies();
+
+        UIManager.Instance.FadeIn();
+        yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
+
+        respawning = false;
     }
 
     private IEnumerator PlayCutscenePart(CinemachineVirtualCamera startCamera, GameObject cameraPrefab, GameObject cutsceneTextPrefab, Transform focusTransform, bool doHardBlend = false)
@@ -198,11 +234,17 @@ public class MissionTutorial : AMission
     private GameObject SpawnVase(Vector3 position)
     {
         GameObject vaseInstance = Instantiate(vasePrefab, position, Quaternion.identity);
-        Debug.Log(vaseInstance);
-        spawnedVases.Add(vaseInstance);
         spawnedVaseStands.Add(Instantiate(vaseStandPrefab, new Vector3(position.x - 1f, 1.5f, position.z - 1f), Quaternion.identity));
 
+        BreakableObject breakableVase = Utils.GetRequiredComponentInChildren<BreakableObject>(vaseInstance);
+        breakableVase.OnBreak += OnVaseBreak;
+
         return vaseInstance;
+    }
+
+    private void OnVaseBreak(GameObject brokenInstance)
+    {
+        spawnedVases.Add(brokenInstance);
     }
 
     protected override void Cleanup()
@@ -232,19 +274,39 @@ public class MissionTutorial : AMission
         startCutscenePlayed = false;
 
         // Destroy all spawned objects
+        DestroyAllObjects();
+        DestroyFromList(camerasToCleanUp);
+    }
+
+    private void SpawnRegularVases()
+    {
+        vasePositions.ForEach(p =>
+        {
+            spawnedVases.Add(SpawnVase(p));
+        });
+    }
+
+    private void DestroyAllObjects()
+    {
+        if (firstVaseInstance)
+        {
+            Destroy(firstVaseInstance);
+        }
         DestroyFromList(spawnedVases);
         DestroyFromList(spawnedVaseStands);
         DestroyFromList(spawnedEnemies);
-        DestroyFromList(camerasToCleanUp);
     }
 
     private void DestroyFromList(List<GameObject> gameObjects)
     {
         if (gameObjects != null && gameObjects.Count > 0)
         {
-            gameObjects.ForEach(v =>
+            gameObjects.ForEach(o =>
             {
-                Destroy(v);
+                if (o)
+                {
+                    Destroy(o);
+                }
             });
         }
     }

@@ -9,6 +9,8 @@ public class PureChaser : MonoBehaviour
 
     private NavMeshAgent agent;
 
+    public event Chaser.CollideWithPlayerAction OnCollideWithPlayer;
+
     private void Start()
     {
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
@@ -27,5 +29,13 @@ public class PureChaser : MonoBehaviour
         if (!agent.isOnNavMesh) return;
 
         ChaseTarget();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
+        {
+            OnCollideWithPlayer?.Invoke();
+        }
     }
 }
