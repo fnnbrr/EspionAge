@@ -102,6 +102,15 @@ public class MissionTutorial : AMission
     private void StartDropCutscene()
     {
         RegionManager.Instance.hallway.OnPlayerEnter -= StartDropCutscene;
+        StartCoroutine(WaitForPlayerMovement());
+    }
+
+    private IEnumerator WaitForPlayerMovement()
+    {
+        while (!GameManager.Instance.GetPlayerController().IsMoving)
+        {
+            yield return new WaitForFixedUpdate();
+        }
         startCutscenePlayed = true;
         firstVaseLoudObject.Drop();
         firstVaseBreakable.OnBreak += StartVaseFocus;

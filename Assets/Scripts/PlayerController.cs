@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 movement;
     public bool EnablePlayerInput { get; set; } = true;
+    public bool IsMoving { get; set; } = false;
 
     void Start()
     {
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetIsWalking(bool isWalking)
     {
+        IsMoving = isWalking;
         anim.SetBool(Constants.ANIMATION_BIRDIE_ISWALKING, isWalking);
     }
 
