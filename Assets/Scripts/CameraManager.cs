@@ -13,6 +13,7 @@ public class VirtualCameraPair
 public class CameraManager : Singleton<CameraManager>
 {
     public CinemachineBrain brain;
+    public Transform CMCamerasRoot;
 
     // Specific pairs of cameras which we can dynamically blend between during certain events
     public List<VirtualCameraPair> distancePairs;
@@ -178,6 +179,11 @@ public class CameraManager : Singleton<CameraManager>
 
         // now blend back to the original camera
         BlendTo(currentCamera, alertGlobally: false);
+    }
+
+    public GameObject SpawnCameraFromPrefab(GameObject prefab)
+    {
+        return Instantiate(prefab, CMCamerasRoot);
     }
 
     private CinemachineFramingTransposer GetCameraFramingTransposer(CinemachineVirtualCamera virtualCamera)

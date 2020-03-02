@@ -45,8 +45,7 @@ public class LoudObject : MonoBehaviour
 
         if (!hasBeenBumped && distance <= dropRadius)
         {
-            rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
-            hasBeenBumped = true;
+            Drop();
         } 
         else
         {
@@ -55,6 +54,12 @@ public class LoudObject : MonoBehaviour
             float dynamicShake = Mathf.Lerp(maxShake, minShake, lerpedDistance);
             Shake(dynamicShake);
         } 
+    }
+
+    public void Drop()
+    {
+        rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
+        hasBeenBumped = true;
     }
 
     private void OnCollisionEnter(Collision other)

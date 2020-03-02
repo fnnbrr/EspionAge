@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Cinemachine;
 
@@ -9,11 +10,28 @@ public class MissionTutorial : AMission
     public GameObject startCutsceneCamera;
     public GameObject startCutsceneText;
 
-    // Vase
+    [Header("Vase - General")]
+    public GameObject vasePrefab;
+    public GameObject vaseStandPrefab;
+    [Header("First Vase + Cutscene")]
+
+    public Vector3 firstVasePosition;
+    public GameObject vaseFocusCameraPrefab;
+    public float vaseFocusSeconds;
+    private GameObject vaseFocusCamInstance;
+    private LoudObject firstVaseLoudObject;
+    private BreakableObject firstVaseBreakable;
+
+    [Header("Row of Vases")]
+    public List<Vector3> vasePositions;
+    private List<GameObject> spawnedVases;
+    private List<GameObject> spawnedVaseStands;
+    // stand position must then be, (x - 0.5, 1.5, z - 1)
+
     public MissionObject vase;
     private LoudObject vaseLoudObject;
 
-    // Note
+    [Header("Note")]
     public MissionObject note;
 
     // Distracting Senior
@@ -47,11 +65,11 @@ public class MissionTutorial : AMission
 
         // Spawn the old person waiting, that'll annoy us once we drop the vase
         //  set the boundary radius to 0 so they do not follow us
-        distractingSenior.spawnedInstance = MissionManager.Instance.SpawnMissionObject(distractingSenior);
-        distractingSenior.spawnedInstance.tag = Constants.TAG_ENEMY;
-        distractingSeniorNPCInteractable = distractingSenior.spawnedInstance.GetComponent<NPCInteractable>();
-        distractingSeniorDefaultBoundaryRadius = distractingSeniorNPCInteractable.boundaryRadius;
-        distractingSeniorNPCInteractable.boundaryRadius = 0f;
+        //distractingSenior.spawnedInstance = MissionManager.Instance.SpawnMissionObject(distractingSenior);
+        //distractingSenior.spawnedInstance.tag = Constants.TAG_ENEMY;
+        //distractingSeniorNPCInteractable = distractingSenior.spawnedInstance.GetComponent<NPCInteractable>();
+        //distractingSeniorDefaultBoundaryRadius = distractingSeniorNPCInteractable.boundaryRadius;
+        //distractingSeniorNPCInteractable.boundaryRadius = 0f;
 
         // Toggle the event in the EventManager
         GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, true);
@@ -61,18 +79,68 @@ public class MissionTutorial : AMission
         //      - FindObjectOfType<class_type>(), the pass it into the MissionManager as per usual
 
         // Spawn the vase (or is it already there?) and init the values there
-        vase.spawnedInstance = MissionManager.Instance.SpawnMissionObject(vase);
-        vaseLoudObject = vase.spawnedInstance.GetComponentInChildren<LoudObject>();
-        vaseLoudObject.OnHit += OnVaseDrop;
+        //vase.spawnedInstance = MissionManager.Instance.SpawnMissionObject(vase);
+        //vaseLoudObject = vase.spawnedInstance.GetComponentInChildren<LoudObject>();
+        //vaseLoudObject.OnHit += OnVaseDrop;
+
+        spawnedVases = new List<GameObject>();
+        spawnedVaseStands = new List<GameObject>();
+        GameObject firstVaseInstance = SpawnVase(firstVasePosition);
+        firstVaseLoudObject = firstVaseInstance.GetComponentInChildren<LoudObject>();
+        firstVaseLoudObject.dropRadius = 0f;
+        firstVaseBreakable = firstVaseInstance.GetComponentInChildren<BreakableObject>();
+        vasePositions.ForEach(p =>
+        {
+            SpawnVase(p);
+        });
 
         // Fade in
         UIManager.Instance.FadeIn();
 
         // Start the note spawning and start the animation
-        note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
+        //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
 
         // Cutscene for once they enter the hallway
-        RegionManager.Instance.hallway.OnPlayerEnter += StartCutscene;
+        RegionManager.Instance.hallway.OnPlayerEnter += StartDropCutscene;
+    }
+
+    private void StartDropCutscene()
+    {
+        firstVaseLoudObject.Drop();
+        firstVaseBreakable.OnBreak += StartVaseFocus;
+    }
+
+    private void StartVaseFocus(GameObject brokenInstance)
+    {
+        StartCoroutine(VaseFocusCoroutine(brokenInstance));
+    }
+
+    private IEnumerator VaseFocusCoroutine(GameObject focusObject)
+    {
+        vaseFocusCamInstance = CameraManager.Instance.SpawnCameraFromPrefab(vaseFocusCameraPrefab);
+        vaseFocusCamInstance.GetComponent<CinemachineVirtualCamera>().LookAt = focusObject.transform;
+
+        CinemachineVirtualCamera currentCamera = CameraManager.Instance.GetActiveVirtualCamera();
+        CameraManager.Instance.BlendTo(vaseFocusCamInstance.GetComponent<CinemachineVirtualCamera>());
+
+        yield return new WaitForSeconds(vaseFocusSeconds);
+
+        CameraManager.Instance.BlendTo(currentCamera);
+        CameraManager.Instance.OnBlendingComplete += DeleteAfterBlending;
+    }
+
+    private void DeleteAfterBlending(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        Destroy(vaseFocusCamInstance);
+    }
+
+    private GameObject SpawnVase(Vector3 position)
+    {
+        GameObject vaseInstance = Instantiate(vasePrefab, position, Quaternion.identity);
+        spawnedVases.Add(vaseInstance);
+        spawnedVaseStands.Add(Instantiate(vaseStandPrefab, new Vector3(position.x - 1f, 1.5f, position.z - 1f), Quaternion.identity));
+
+        return vaseInstance;
     }
 
     private void OnVaseDrop()
@@ -99,20 +167,29 @@ public class MissionTutorial : AMission
         if (MissionManager.Instance)
         {
             // Goodbye distracting senior!
-            MissionManager.Instance.DestroyMissionObject(distractingSenior);
+            //MissionManager.Instance.DestroyMissionObject(distractingSenior);
 
             // Despawn the vase (if it isnt already going to be there?)
-            MissionManager.Instance.DestroyMissionObject(vase);
+            //MissionManager.Instance.DestroyMissionObject(vase);
 
             // Delete the note if it still exists
-            MissionManager.Instance.DestroyMissionObject(note);
+            //MissionManager.Instance.DestroyMissionObject(note);
         }
 
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.hallway.OnPlayerEnter -= StartCutscene;
+            //RegionManager.Instance.hallway.OnPlayerEnter -= StartCutscene;
         }
         startCutscenePlayed = false;
+
+        spawnedVases.ForEach(v =>
+        {
+            Destroy(v);
+        });
+        spawnedVaseStands.ForEach(v =>
+        {
+            Destroy(v);
+        });
     }
 
     private void StartCutscene()

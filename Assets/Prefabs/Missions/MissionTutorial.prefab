@@ -48,16 +48,29 @@ MonoBehaviour:
     type: 3}
   startCutsceneText: {fileID: 160906416572943929, guid: 66b5e39fdf811704db6b17c93975df30,
     type: 3}
+  vasePrefab: {fileID: 6872363483067291833, guid: 23f56f3b92555d04a801b412248a65f1,
+    type: 3}
+  vaseStandPrefab: {fileID: 9073910147309779605, guid: 46116c0641b9a6a44845879c14655d30,
+    type: 3}
+  firstVasePosition: {x: -67, y: 3, z: 131}
+  vaseFocusCameraPrefab: {fileID: 4890077399741527070, guid: a6ee302e5a401e549aabb33e44075cae,
+    type: 3}
+  vaseFocusSeconds: 5
+  vasePositions:
+  - {x: -60, y: 3, z: 116}
+  - {x: -60, y: 3, z: 101}
+  - {x: -60, y: 3, z: 86}
+  - {x: -60, y: 3, z: 71}
   vase:
     prefab: {fileID: 6872363483067291833, guid: 23f56f3b92555d04a801b412248a65f1,
       type: 3}
-    position: {x: -60, y: 3, z: 100}
+    position: {x: -100, y: 3, z: 131}
     rotation: {x: 0, y: 0, z: 0}
     spawnedInstance: {fileID: 0}
   note:
     prefab: {fileID: 9073910147309779605, guid: 46116c0641b9a6a44845879c14655d30,
       type: 3}
-    position: {x: -61, y: 1.5, z: 99}
+    position: {x: -100, y: 1.5, z: 130}
     rotation: {x: 0, y: 0, z: 0}
     spawnedInstance: {fileID: 0}
   distractingSenior:
