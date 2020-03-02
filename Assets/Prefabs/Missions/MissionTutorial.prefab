@@ -44,9 +44,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStartPosition: {x: -95, y: 5, z: 135}
-  startCutsceneCamera: {fileID: 5007511198981216693, guid: ead8dd98cd153ac4aa2127af4da489ac,
+  vaseDropCutsceneCamera: {fileID: 4890077399741527070, guid: a6ee302e5a401e549aabb33e44075cae,
     type: 3}
-  startCutsceneText: {fileID: 160906416572943929, guid: 66b5e39fdf811704db6b17c93975df30,
+  vaseDropCutsceneText: {fileID: 160906416572943929, guid: 3f99436274c790c4e937320a7253c129,
+    type: 3}
+  enemyCutsceneText: {fileID: 160906416572943929, guid: 595d47382edebb544adf6aa694bddad5,
+    type: 3}
+  birdieRunawayCutsceneText: {fileID: 160906416572943929, guid: 9a79d206011450549865f12b94658580,
     type: 3}
   vasePrefab: {fileID: 6872363483067291833, guid: 23f56f3b92555d04a801b412248a65f1,
     type: 3}
@@ -55,27 +59,21 @@ MonoBehaviour:
   firstVasePosition: {x: -67, y: 3, z: 131}
   vaseFocusCameraPrefab: {fileID: 4890077399741527070, guid: a6ee302e5a401e549aabb33e44075cae,
     type: 3}
-  vaseFocusSeconds: 5
   vasePositions:
   - {x: -60, y: 3, z: 116}
   - {x: -60, y: 3, z: 101}
   - {x: -60, y: 3, z: 86}
   - {x: -60, y: 3, z: 71}
-  vase:
-    prefab: {fileID: 6872363483067291833, guid: 23f56f3b92555d04a801b412248a65f1,
-      type: 3}
-    position: {x: -100, y: 3, z: 131}
-    rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
+  chaserPrefab: {fileID: 3862208129692031431, guid: e9c98b9dbdfbaf3468d9f310c9ed292e,
+    type: 3}
+  enemyPositions:
+  - {x: -16, y: 3, z: 184}
+  - {x: -16, y: 3, z: 147}
+  enemyFocusCameraPrefab: {fileID: 4890077399741527070, guid: 0f761866fa336b64aba08d1dc0eb31b3,
+    type: 3}
   note:
     prefab: {fileID: 9073910147309779605, guid: 46116c0641b9a6a44845879c14655d30,
       type: 3}
     position: {x: -100, y: 1.5, z: 130}
     rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
-  distractingSenior:
-    prefab: {fileID: 2196495751212916611, guid: 0786861a466cd194197a09657fff7506,
-      type: 3}
-    position: {x: -53, y: 3, z: 110}
-    rotation: {x: 0, y: 90, z: 0}
     spawnedInstance: {fileID: 0}
