@@ -250,8 +250,6 @@ public class NPCInteractable : DialogueInteractable
     {
         previousOriginPosition = originPosition;
         originPosition = position;
-
-        Debug.Log($"{previousOriginPosition} -> {originPosition}");
     }
 
     public void ResetOriginPosition()
