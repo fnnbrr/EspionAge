@@ -30,6 +30,9 @@ public class PlayerManager : MonoBehaviour
 
     public delegate void OnPickupEventHandler(GameObject source);
     public event OnPickupEventHandler OnPickup;
+    
+    public delegate void OnThrowableResetEventHandler();
+    public event OnThrowableResetEventHandler OnThrowableReset;
 
     public delegate void OnInteractEventHandler(DialogueInteractable source);
     public event OnInteractEventHandler OnInteractBegin;
@@ -140,6 +143,17 @@ public class PlayerManager : MonoBehaviour
         OnThrow?.Invoke(current.GetComponent<Interactable>());
 
         StartCoroutine(FadeOutAndDelete(current, throwableDestroyTime));
+    }
+
+    public void ResetThrowables()
+    {
+        currentThrowables.ForEach(t =>
+        {
+            Destroy(t);
+        });
+        currentThrowables.Clear();
+
+        OnThrowableReset?.Invoke();
     }
 
     private IEnumerator FadeOutAndDelete(GameObject o, float destroyTime)
