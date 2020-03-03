@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -120,7 +121,7 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
         } 
         else
         {
-            StartMainScene();
+            StartCoroutine(StartMainScene());
         }
     }
 
@@ -130,8 +131,9 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
         HandlePressStart();
     }
 
-    void StartMainScene()
+    private IEnumerator StartMainScene()
     {
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(Constants.SCENE_MAIN);
     }
 
