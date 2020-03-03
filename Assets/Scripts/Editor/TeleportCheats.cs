@@ -19,7 +19,8 @@ public class TeleportCheats : MonoBehaviour
     [MenuItem(Constants.CHEATS_TELEPORT_BIRDIESROOM)]
     public static void TeleportBirdiesRoom()
     {
-        GameManager.Instance.GetPlayerTransform().position = new Vector3(-98.12f, 3f, 136.48f);
+        GameManager.Instance.GetPlayerTransform().position = new Vector3(-158f, 3f, 235f);
+        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 90f, 0f);
     }
 
     [MenuItem(Constants.CHEATS_TELEPORT_DININGHALL, true)]
@@ -91,7 +92,7 @@ public class TeleportCheats : MonoBehaviour
     [MenuItem(Constants.CHEATS_TELEPORT_HALLWAY)]
     public static void TeleportHallway()
     {
-        GameManager.Instance.GetPlayerTransform().position = new Vector3(-66.6f, 3f, 124.6f);
+        GameManager.Instance.GetPlayerTransform().position = new Vector3(-124f, 3f, 235f);
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 180f, 0f);
     }
 
