@@ -7,6 +7,7 @@ using Cinemachine;
 public class CameraZone : MonoBehaviour 
 {
     public CinemachineVirtualCamera mainCamera;
+    public bool isRestricted;
     
     [Header("Fog Particles")]
     public List<ParticleSystem> fogs;
@@ -31,6 +32,14 @@ public class CameraZone : MonoBehaviour
     {
         if (other.CompareTag(Constants.TAG_PLAYER))
         {
+            if (isRestricted)
+            {
+                UIManager.Instance.staminaBar.FadeIn();
+            } 
+            else
+            {
+                UIManager.Instance.staminaBar.FadeOut();
+            }
             // so if there is no mainCamera set, we will just keep whatever the current camera is (which may not be preferable in most cases)
             if (mainCamera)
             {

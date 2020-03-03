@@ -130,6 +130,7 @@ MonoBehaviour:
   pingRadius: 10
   pingGrowthScale: 20
   pingFloorOffset: 0.5
+  breakable: event:/SFX/vaseBreak
 --- !u!114 &3206113488935633330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +147,9 @@ MonoBehaviour:
   thrustDirection: {x: 1, y: 0, z: 0}
   shakeRadius: 20
   dropRadius: 10
+  despawnSec: 3
+  fadeAndDestroyAfterThrow: 1
+  destroyAfterSeconds: 3
   minShake: 0.1
   maxShake: 0.8
 --- !u!114 &1617476792585939057

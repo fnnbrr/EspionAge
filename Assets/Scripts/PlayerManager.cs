@@ -32,6 +32,9 @@ public class PlayerManager : MonoBehaviour
     public delegate void OnPickupEventHandler(GameObject source);
     public event OnPickupEventHandler OnPickup;
 
+    public delegate void OnInteractEventHandler(DialogueInteractable source);
+    public event OnInteractEventHandler OnInteractBegin;
+
     private void Start()
     {
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
@@ -206,5 +209,10 @@ public class PlayerManager : MonoBehaviour
     public void HandleDecreaseAwakeness()
     {
         spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(awakenessDecrease)));
+    }
+
+    public void InteractPlayer(DialogueInteractable source)
+    {
+        OnInteractBegin?.Invoke(source);
     }
 }

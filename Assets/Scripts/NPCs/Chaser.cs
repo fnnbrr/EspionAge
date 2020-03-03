@@ -170,5 +170,7 @@ public class Chaser : MonoBehaviour
         searchBoundsCenter = other.gameObject.transform.position;
         searchBoundsRadius = noiseSearchRadius;
         agent.SetDestination(searchBoundsCenter);
+
+        waitTimer = waitDurationSec;
     }
 }

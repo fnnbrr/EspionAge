@@ -11,9 +11,14 @@ public class NoisePinger : MonoBehaviour
     [Header("Tweaks")]
     public float pingGrowthScale = 20.0f;
     public float pingFloorOffset = 0.5f;
+
+    [Header("FMOD Audio")]
+    [FMODUnity.EventRef]
+    public string breakable;
     
     public void SpawnNoisePing(Collision other)
     {
+        FMODUnity.RuntimeManager.PlayOneShot(breakable, transform.position);
         Vector3 hitPoint = other.GetContact(0).point;
         Vector3 hitNormal = other.GetContact(0).normal;
         
