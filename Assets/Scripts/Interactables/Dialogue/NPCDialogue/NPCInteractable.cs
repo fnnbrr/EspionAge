@@ -48,7 +48,8 @@ public class NPCInteractable : DialogueInteractable
         base.Start();
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
 
-        SetOriginPosition(gameObject.transform.position);
+        SetOriginPosition(transform.position);
+        previousOriginPosition = transform.position;
 
         LoadConversation();
     }
@@ -249,6 +250,8 @@ public class NPCInteractable : DialogueInteractable
     {
         previousOriginPosition = originPosition;
         originPosition = position;
+
+        Debug.Log($"{previousOriginPosition} -> {originPosition}");
     }
 
     public void ResetOriginPosition()
