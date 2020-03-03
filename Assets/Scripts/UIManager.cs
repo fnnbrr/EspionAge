@@ -9,6 +9,8 @@ public class UIManager : Singleton<UIManager>
     public Canvas mainUICanvas;
     public StaminaBar staminaBar;
     public PauseMenuManager pauseMenu;
+    public UITextOverlay textOverlay;
+    public GameObject pressAPrompt;
 
     [Header("Fading Settings")]
     public Image fader;

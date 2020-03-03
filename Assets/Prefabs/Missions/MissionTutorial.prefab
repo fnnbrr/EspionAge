@@ -47,6 +47,10 @@ MonoBehaviour:
   playerStartRotation: {x: 0, y: 90, z: 0}
   playerRespawnPosition: {x: -67.75, y: 3, z: 136}
   playerRespawnRotation: {x: 0, y: 90, z: 0}
+  startCutsceneTexts:
+  - ...I don't belong here...
+  - I still have some steam in me!
+  - I don't care what those nurses say.
   awakenessPointerUIAnimation: {fileID: 3909992060979402668, guid: 8cccb53eb092f28478dd9ace5dce982b,
     type: 3}
   vaseFocusCameraPrefab: {fileID: 4890077399741527070, guid: a6ee302e5a401e549aabb33e44075cae,
@@ -71,6 +75,8 @@ MonoBehaviour:
   - {x: -60, y: 3, z: 71}
   chaserPrefab: {fileID: 3862208129692031431, guid: e9c98b9dbdfbaf3468d9f310c9ed292e,
     type: 3}
-  enemyPositions:
-  - {x: -16, y: 3, z: 184}
-  - {x: -16, y: 3, z: 147}
+  chaserGroups:
+  - startChaseRadius: 100
+    enemyStartPositions:
+    - {x: -16, y: 3, z: 184}
+    - {x: -16, y: 3, z: 147}

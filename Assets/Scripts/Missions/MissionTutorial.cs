@@ -12,6 +12,7 @@ public class MissionTutorial : AMission
     public Vector3 playerRespawnRotation;
 
     [Header("Cutscene")]
+    public List<string> startCutsceneTexts;
     public GameObject awakenessPointerUIAnimation;
     public GameObject vaseFocusCameraPrefab;
     public GameObject vaseDropCutsceneText;
@@ -37,7 +38,7 @@ public class MissionTutorial : AMission
 
     [Header("Chaser Enemies")]
     public GameObject chaserPrefab;
-    public List<Vector3> enemyPositions;
+    public List<TutorialChaserGroup> chaserGroups;
 
     //[Header("Note")]
     //public MissionObject note;
@@ -47,6 +48,13 @@ public class MissionTutorial : AMission
 
     private List<GameObject> spawnedEnemies;
     private List<GameObject> camerasToCleanUp;
+
+    [System.Serializable]
+    public class TutorialChaserGroup
+    {
+        public float startChaseRadius;
+        public List<Vector3> enemyStartPositions;
+    }
 
     // General Logic Overview:
     // * start out faded out
@@ -94,6 +102,16 @@ public class MissionTutorial : AMission
 
         // Spawn all the other vases
         SpawnRegularVases();
+
+        StartCoroutine(StartMissionLogic());
+    }
+
+    private IEnumerator StartMissionLogic()
+    {
+        foreach (string text in startCutsceneTexts)
+        {
+            yield return UIManager.Instance.textOverlay.SetText(text);
+        }
 
         // Fade in
         UIManager.Instance.FadeIn();
@@ -145,14 +163,18 @@ public class MissionTutorial : AMission
 
     private void SpawnEnemies()
     {
-        enemyPositions.ForEach(p =>
+        chaserGroups.ForEach(group =>
         {
-            GameObject enemyInstance = Instantiate(chaserPrefab, p, Quaternion.identity);
-            spawnedEnemies.Add(enemyInstance);
+            group.enemyStartPositions.ForEach(position =>
+            {
+                GameObject enemyInstance = Instantiate(chaserPrefab, position, Quaternion.identity);
+                spawnedEnemies.Add(enemyInstance);
 
-            PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemyInstance);
-            chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
-            chaser.OnCollideWithPlayer += RestartAfterCutscene;
+                PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemyInstance);
+                chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
+                chaser.startChaseRadius = group.startChaseRadius;
+                chaser.OnCollideWithPlayer += RestartAfterCutscene;
+            });
         });
     }
 

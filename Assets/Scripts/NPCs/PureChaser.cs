@@ -6,8 +6,10 @@ using UnityEngine.AI;
 public class PureChaser : MonoBehaviour
 {
     public Transform targetTransform;
+    public float startChaseRadius = 100f;
 
     private NavMeshAgent agent;
+    private bool shouldChase = false;
 
     public event Chaser.CollideWithPlayerAction OnCollideWithPlayer;
 
@@ -18,7 +20,7 @@ public class PureChaser : MonoBehaviour
 
     protected void ChaseTarget()
     {
-        if (targetTransform)
+        if (shouldChase && targetTransform)
         {
             agent.SetDestination(targetTransform.position);
         }
@@ -27,6 +29,11 @@ public class PureChaser : MonoBehaviour
     private void Update()
     {
         if (!agent.isOnNavMesh) return;
+
+        if (!shouldChase && Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position) <= startChaseRadius)
+        {
+            shouldChase = true;
+        }
 
         ChaseTarget();
     }
@@ -37,5 +44,11 @@ public class PureChaser : MonoBehaviour
         {
             OnCollideWithPlayer?.Invoke();
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, startChaseRadius);
     }
 }
