@@ -6,14 +6,18 @@ using UnityEngine.UI;
 
 public class StaminaBar : MonoBehaviour
 {
-    public Image staminaFillImage;
+    public Image fillImage;
     public GameObject glowOutline;
+    public GameObject lightningRoot;
 
     public float fillChangePerSecond = 0.1f;
     public float fadeSpeed = 2f;
+    public float decreasePerSecond = 0.2f;
+    public float waitUntilDecreaseTime = 2f;
 
     private List<Image> allChildImages;
     private Animator glowAnimator;
+    private float lastIncreaseTime;
 
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
@@ -23,7 +27,7 @@ public class StaminaBar : MonoBehaviour
     public event ChangedAction OnChange;
 
     [HideInInspector] 
-    public const float STAMINA_MAX = 1f;
+    public const float FILL_MAX = 1f;
 
     private void Awake()
     {
@@ -33,47 +37,57 @@ public class StaminaBar : MonoBehaviour
 
     void Start()
     {
-        staminaFillImage.fillAmount = 0.0f;
+        fillImage.fillAmount = 0.0f;
     }
-    
+
+    private void FixedUpdate()
+    {
+        if (Time.time > lastIncreaseTime + waitUntilDecreaseTime)
+        {
+            StartCoroutine(DecreaseFillBy(decreasePerSecond * Time.fixedDeltaTime));
+        }
+    }
+
     // No custom decrease function needed so it was no implemented (like below)
-    public IEnumerator DecreaseStaminaBy(float percent)
+    public IEnumerator DecreaseFillBy(float percent)
     {
-        float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
-        float decreaseBy = percentClamped * STAMINA_MAX;
+        float percentClamped = Mathf.Clamp(percent, 0f, FILL_MAX);
+        float decreaseBy = percentClamped * FILL_MAX;
 
-        float goalFillAmount = Mathf.Max(0f, staminaFillImage.fillAmount - decreaseBy);
-        float toDecrease = staminaFillImage.fillAmount - goalFillAmount;
+        float goalFillAmount = Mathf.Max(0f, fillImage.fillAmount - decreaseBy);
+        float toDecrease = fillImage.fillAmount - goalFillAmount;
 
-        return ChangeStaminaGeneral(toDecrease, -fillChangePerSecond);
+        return ChangeFillGeneral(toDecrease, -fillChangePerSecond);
     }
 
-    // Default IncreaseStaminaBy function, using the public changePerSecond field
-    public IEnumerator IncreaseStaminaBy(float percent)
+    // Default IncreaseFillBy function, using the public changePerSecond field
+    public IEnumerator IncreaseFillBy(float percent)
     {
-        return IncreaseStaminaBy(percent, fillChangePerSecond);
+        return IncreaseFillBy(percent, fillChangePerSecond);
     }
 
     // Allowing custom speed (specifically) for minigames, due to large increases being common
-    public IEnumerator IncreaseStaminaBy(float percent, float speed) 
+    public IEnumerator IncreaseFillBy(float percent, float speed) 
     {
-        float percentClamped = Mathf.Clamp(percent, 0f, STAMINA_MAX);
-        float increaseBy = percentClamped * STAMINA_MAX;
+        float percentClamped = Mathf.Clamp(percent, 0f, FILL_MAX);
+        float increaseBy = percentClamped * FILL_MAX;
 
-        float goalFillAmount = Mathf.Min(STAMINA_MAX, staminaFillImage.fillAmount + increaseBy);
-        float toAdd = goalFillAmount - staminaFillImage.fillAmount;
+        float goalFillAmount = Mathf.Min(FILL_MAX, fillImage.fillAmount + increaseBy);
+        float toAdd = goalFillAmount - fillImage.fillAmount;
 
-        return ChangeStaminaGeneral(toAdd, speed);
+        lastIncreaseTime = Time.time;
+
+        return ChangeFillGeneral(toAdd, speed);
     }
 
     // Shortens the code, and keeps the main Coroutine loop logic in one place for updating the fillAmount
-    IEnumerator ChangeStaminaGeneral(float difference, float speed)
+    IEnumerator ChangeFillGeneral(float difference, float speed)
     {
         float currentSum = 0f;
         while (currentSum <= difference)
         {
             float change = speed * Time.fixedDeltaTime;
-            UpdateFillAmount(staminaFillImage.fillAmount + change);
+            UpdateFillAmount(fillImage.fillAmount + change);
             currentSum += Mathf.Abs(change);  // because the change can be negative
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
@@ -82,9 +96,16 @@ public class StaminaBar : MonoBehaviour
     void UpdateFillAmount(float newFill)
     {
         // Update the fill amount
-        staminaFillImage.fillAmount = newFill;
+        fillImage.fillAmount = newFill;
+
+        EnableLightning(Mathf.Approximately(fillImage.fillAmount, FILL_MAX));
 
         OnChange?.Invoke(newFill);
+    }
+
+    private void EnableLightning(bool enable)
+    {
+        lightningRoot.SetActive(enable);
     }
 
     //Fading in and out
@@ -153,6 +174,6 @@ public class StaminaBar : MonoBehaviour
 
     public void InnerGlow(int times = 4)
     {
-        StartCoroutine(PulseColorCoroutine(staminaFillImage.color, Color.white, staminaFillImage, times));
+        StartCoroutine(PulseColorCoroutine(fillImage.color, Color.white, fillImage, times));
     }
 }
