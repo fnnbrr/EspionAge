@@ -24,6 +24,8 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
 
     public Light mainLight;
     public Renderer lightBulbRenderer;
+    [FMODUnity.EventRef]
+    public string LightSFX;
 
     [Header("Camera Switching")]
     public List<CinemachineVirtualCamera> onPressPlayCameras;
@@ -82,6 +84,7 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
         {
             case EMainMenuButton.Start:
                 mainLight.enabled = false;
+                FMODUnity.RuntimeManager.PlayOneShot(LightSFX, transform.position);
                 break;
             case EMainMenuButton.Quit:
                 lightBulbMaterial.SetColor("_EmissionColor", Color.red);
