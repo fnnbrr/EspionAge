@@ -7,16 +7,16 @@ using UnityEngine.UI;
 public class StaminaBar : MonoBehaviour
 {
     public Image staminaFillImage;
-    public Image greyOutlineImage;
     public GameObject glowOutline;
-    public float glowSeconds = 4f;
 
-    private Image staminaBarImage;
-    public float changePerSecond = 0.1f;
-    
+    public float fillChangePerSecond = 0.1f;
+    public float fadeSpeed = 2f;
+
+    private List<Image> allChildImages;
+    private Animator glowAnimator;
+
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
-    public float fadeSpeed = 2f;
 
     // Events for others to subscribe to OnChange events
     public delegate void ChangedAction(float fillAmount);
@@ -25,16 +25,17 @@ public class StaminaBar : MonoBehaviour
     [HideInInspector] 
     public const float STAMINA_MAX = 1f;
 
-    void Start()
+    private void Awake()
     {
-        staminaBarImage = GetComponent<Image>();
+        allChildImages = GetComponentsInChildren<Image>().ToList();
+        glowAnimator = glowOutline.GetComponent<Animator>();
     }
 
-    private void Awake() 
+    void Start()
     {
         staminaFillImage.fillAmount = 0.0f;
     }
-
+    
     // No custom decrease function needed so it was no implemented (like below)
     public IEnumerator DecreaseStaminaBy(float percent)
     {
@@ -44,13 +45,13 @@ public class StaminaBar : MonoBehaviour
         float goalFillAmount = Mathf.Max(0f, staminaFillImage.fillAmount - decreaseBy);
         float toDecrease = staminaFillImage.fillAmount - goalFillAmount;
 
-        return ChangeStaminaGeneral(toDecrease, -changePerSecond);
+        return ChangeStaminaGeneral(toDecrease, -fillChangePerSecond);
     }
 
     // Default IncreaseStaminaBy function, using the public changePerSecond field
     public IEnumerator IncreaseStaminaBy(float percent)
     {
-        return IncreaseStaminaBy(percent, changePerSecond);
+        return IncreaseStaminaBy(percent, fillChangePerSecond);
     }
 
     // Allowing custom speed (specifically) for minigames, due to large increases being common
@@ -90,20 +91,22 @@ public class StaminaBar : MonoBehaviour
     public void FadeOut()
     {
         // full color --> invisible
-        StartCoroutine(FadeCoroutine(1f, 0f, staminaFillImage));
-        StartCoroutine(FadeCoroutine(1f, 0f, staminaBarImage));
-        StartCoroutine(FadeCoroutine(1f, 0f, greyOutlineImage));
+        allChildImages.ForEach(image =>
+        {
+            StartCoroutine(FadeAlphaCoroutine(1f, 0f, image));
+        });
     }
 
     public void FadeIn()
     {
         // invisible --> full color
-        StartCoroutine(FadeCoroutine(0f, 1f, staminaFillImage));
-        StartCoroutine(FadeCoroutine(0f, 1f, staminaBarImage));
-        StartCoroutine(FadeCoroutine(0f, 1f, greyOutlineImage));
+        allChildImages.ForEach(image =>
+        {
+            StartCoroutine(FadeAlphaCoroutine(0f, 1f, image));
+        });
     }
 
-    private IEnumerator FadeCoroutine(float startAlpha, float endAlpha, Image image)
+    private IEnumerator FadeAlphaCoroutine(float startAlpha, float endAlpha, Image image)
     {
         float currentAlpha = startAlpha;
         while (Mathf.Abs(currentAlpha - startAlpha) < Mathf.Abs(startAlpha - endAlpha))
@@ -119,9 +122,37 @@ public class StaminaBar : MonoBehaviour
         yield return null;
     }
 
-    public void Glow()
+    private IEnumerator PulseColorCoroutine(Color startColor, Color endColor, Image image, int times = 4)
     {
-        Animator animator = glowOutline.GetComponent<Animator>();
-        animator.SetTrigger("Glow");
+        for (int i = 0; i < times; i++)
+        {
+            float currentLerp = 0f;
+            while (currentLerp < 1f)
+            {
+                image.color = Color.Lerp(startColor, endColor, currentLerp);
+                currentLerp += fadeSpeed * Time.deltaTime;
+                yield return null;
+            }
+            image.color = Color.Lerp(startColor, endColor, 1f);
+
+            currentLerp = 1f;
+            while (currentLerp > 0f)
+            {
+                image.color = Color.Lerp(startColor, endColor, currentLerp);
+                currentLerp -= fadeSpeed * Time.deltaTime;
+                yield return null;
+            }
+            image.color = Color.Lerp(startColor, endColor, 0f);
+        }
+    }
+
+    public void OuterGlow()
+    {
+        glowAnimator.SetTrigger("Glow");
+    }
+
+    public void InnerGlow(int times = 4)
+    {
+        StartCoroutine(PulseColorCoroutine(staminaFillImage.color, Color.white, staminaFillImage, times));
     }
 }
