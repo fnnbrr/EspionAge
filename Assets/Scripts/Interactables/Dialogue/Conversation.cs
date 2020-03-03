@@ -15,7 +15,7 @@ public struct Line
 public class Conversation : ScriptableObject
 {
     public bool autoInitiate = false;
-    public bool conversationAutoplayed = false;
+    public bool autoplayConversation = false;
     public bool shouldFollow = false;
     public Line[] lines;
 }

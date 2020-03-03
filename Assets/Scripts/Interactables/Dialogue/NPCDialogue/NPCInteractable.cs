@@ -70,7 +70,7 @@ public class NPCInteractable : DialogueInteractable
 
 
             // Autoplay
-            if (conversation.conversationAutoplayed)
+            if (conversation.autoplayConversation)
             {
                 if(!autoPlaying)
                 {
@@ -174,7 +174,7 @@ public class NPCInteractable : DialogueInteractable
                     return;
                 }
             }
-            if (!conversation.shouldFollow && !conversation.conversationAutoplayed)
+            if (!conversation.shouldFollow && !conversation.autoplayConversation)
             {
                 NPCFacePlayer();
             }
