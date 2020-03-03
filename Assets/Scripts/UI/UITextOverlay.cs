@@ -52,6 +52,8 @@ public class UITextOverlay : MonoBehaviour
 
     private IEnumerator StartTypeText(string text)
     {
+        if (GameManager.Instance.skipSettings.allTextCutscenes) yield break;
+
         isTyping = true;
 
         int currentCharIndex = 0;

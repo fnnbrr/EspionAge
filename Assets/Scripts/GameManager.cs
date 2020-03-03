@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class SkipSettings
+{
+    public bool allTextCutscenes;
+    public bool allRealtimeCutscenes;
+}
+
 public class GameManager : Singleton<GameManager>
 {
     public GameObject player;
 
-    [Header("Final Build Settings")]
+    [Header("Game Settings")]
     public bool enableGameStart = false;
+    public SkipSettings skipSettings;
     public bool enableFog = false;
 
     private PlayerManager playerManager;

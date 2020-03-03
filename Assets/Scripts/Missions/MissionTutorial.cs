@@ -210,6 +210,8 @@ public class MissionTutorial : AMission
 
     private IEnumerator PlayCutscenePart(CinemachineVirtualCamera startCamera, GameObject cameraPrefab, GameObject cutsceneTextPrefab, Transform focusTransform, bool doHardBlend = false)
     {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
         GameObject cutsceneCameraInstance = CameraManager.Instance.SpawnCameraFromPrefab(cameraPrefab);
 
         if (doHardBlend)
@@ -236,6 +238,8 @@ public class MissionTutorial : AMission
 
     private IEnumerator PlayCutsceneText(GameObject cutsceneTextPrefab)
     {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
         GameObject instantiatedCutsceneText = Instantiate(cutsceneTextPrefab, UIManager.Instance.mainUICanvas.transform);
         Animator textAnimator = Utils.GetRequiredComponentInChildren<Animator>(instantiatedCutsceneText);
         float textAnimationLength = textAnimator.GetCurrentAnimatorStateInfo(0).length;
