@@ -42,6 +42,11 @@ public class MissionTutorial : AMission
     //[Header("Note")]
     //public MissionObject note;
 
+    [Header("Dining Room Blocking")]
+    public GameObject blockObject;
+    public List<Vector3> doorBlockingObjectPositions;
+    private List<GameObject> spawnedBlockingObjects;
+
     private bool startCutscenePlayed = false;
     private bool respawning = false;
 
@@ -107,6 +112,7 @@ public class MissionTutorial : AMission
         spawnedBrokenVases = new List<GameObject>();
         spawnedEnemies = new List<SpawnedEnemy>();
         camerasToCleanUp = new List<GameObject>();
+        spawnedBlockingObjects = new List<GameObject>();
     }
 
     protected override void Initialize()
@@ -129,6 +135,7 @@ public class MissionTutorial : AMission
 
         // Spawn all the other vases
         SpawnRegularVases();
+        SpawnBlockingObjects();
 
         StartCoroutine(StartMissionLogic());
     }
@@ -247,6 +254,7 @@ public class MissionTutorial : AMission
 
         SpawnRegularVases();
         SpawnEnemies();
+        SpawnBlockingObjects();
 
         UIManager.Instance.FadeIn();
         yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
@@ -358,6 +366,14 @@ public class MissionTutorial : AMission
         });
     }
 
+    private void SpawnBlockingObjects()
+    {
+        doorBlockingObjectPositions.ForEach(p =>
+        {
+            spawnedBlockingObjects.Add(Instantiate(blockObject, p, Quaternion.identity));
+        });
+    }
+
     private void DestroyAllObjects(bool exceptFirstVaseStand = false)
     {
         if (firstVase != null)
@@ -375,6 +391,7 @@ public class MissionTutorial : AMission
         DestroyFromList(spawnedVases.Select(v => v.vaseObject).ToList());
         DestroyFromList(spawnedVases.Select(v => v.vaseStand).ToList());
         DestroyFromList(spawnedEnemies.Select(e => e.gameObject).ToList());
+        DestroyFromList(spawnedBlockingObjects);
     }
 
     private void DestroyFromList(List<GameObject> gameObjects)
