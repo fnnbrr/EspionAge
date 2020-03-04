@@ -11,8 +11,10 @@ public class DialogueInteractable : Interactable
 
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
+    private UITextOverlay textOverlay;
 
     protected bool isConversing = false;
+    public bool isTyping = false;
     private int activeLineIndex = 0;
 
     private Coroutine coroutine;
@@ -28,11 +30,12 @@ public class DialogueInteractable : Interactable
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
         playerManager = GameManager.Instance.GetPlayerManager();
         playerManager.OnInteractBegin += HandleAutoplayConversation;
+        textOverlay = GetComponent<UITextOverlay>();
     }
 
     protected override void Update()
     {
-        if (!autoPlaying)
+        if (!autoPlaying && !isTyping)
         {
             base.Update();
         }
@@ -48,6 +51,9 @@ public class DialogueInteractable : Interactable
             {
                 isConversing = true;
 
+                textOverlay.OnFinishTyping += HandleFinishTyping;
+                isTyping = true;
+
                 // Used this to resolve bug where player freezes but cannot interact because player out of range
                 continueInteracting = true;
 
@@ -62,13 +68,14 @@ public class DialogueInteractable : Interactable
 
                 base.OnInteract();
             }
-            else
-            {
-                AdvanceConversation();
-            }
+            //else
+            //{
+            //    AdvanceConversation();
+            //}
         }
         else
         {
+            //textOverlay.OnFinishTyping += HandleFinishTyping;
             coroutine = StartCoroutine(AutoplayConversation());
         }
     }
@@ -101,6 +108,7 @@ public class DialogueInteractable : Interactable
         speakerUIBirdie.Hide();
         speakerUINPC.Hide();
         activeLineIndex = 0;
+        isTyping = false;
     }
 
     IEnumerator AutoplayConversation()
@@ -120,6 +128,7 @@ public class DialogueInteractable : Interactable
             //Once the conversation is over 
             //what happens 
             EndConversation();
+            textOverlay.OnFinishTyping -= HandleFinishTyping;
 
             isConversing = false;
             continueInteracting = false;
@@ -146,7 +155,8 @@ public class DialogueInteractable : Interactable
 
     void SetDialogue(SpeakerUI activeSpeakerUI, SpeakerUI inactiveSpeakerUI, string text) {
         //who is speaking
-        activeSpeakerUI.Dialogue = text;
+        //activeSpeakerUI.Dialogue = text;
+        activeSpeakerUI.setDialogue(text);
         activeSpeakerUI.Show();
 
         //who is not speaking
@@ -176,5 +186,11 @@ public class DialogueInteractable : Interactable
                 }
             }
         }
+    }
+
+    void HandleFinishTyping(string text)
+    {
+        AdvanceConversation();
+        Debug.Log("finished typing");
     }
 }

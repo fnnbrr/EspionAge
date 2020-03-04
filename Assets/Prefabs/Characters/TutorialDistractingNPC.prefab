@@ -172,7 +172,6 @@ GameObject:
   - component: {fileID: 603363624086772538}
   - component: {fileID: 603363624086772539}
   - component: {fileID: 603363624086772532}
-  - component: {fileID: 603363624086772533}
   m_Layer: 0
   m_Name: SpeechBubble
   m_TagString: Untagged
@@ -255,21 +254,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &603363624086772533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 603363624086772535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36be8a3e85de94be989e8c35b585591a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogue: {fileID: 5920011540894028331}
-  textBoxContainer: {fileID: 1626099994488330690}
-  canvas: {fileID: 603363622921908913}
 --- !u!1 &1133440521519840449
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,6 +959,8 @@ GameObject:
   - component: {fileID: 2196495751212916609}
   - component: {fileID: 2196495751212916608}
   - component: {fileID: 6274348420200446724}
+  - component: {fileID: 1818862201}
+  - component: {fileID: 1818862200}
   m_Layer: 0
   m_Name: TutorialDistractingNPC
   m_TagString: Untagged
@@ -1052,11 +1038,41 @@ MonoBehaviour:
   interactRadius: 10
   conversation: {fileID: 0}
   npcVoicePath: event:/Characters/BirdieVoice
+  isTyping: 0
   waitLineTime: 2
   boundaryRadius: 20
   defaultConvos:
   - {fileID: 11400000, guid: 47009ba9c96197b4e86d8bd1d43778b0, type: 2}
   missionsOffered: []
+--- !u!114 &1818862201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196495751212916611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2a146b2f60f1492c836891f8a776db7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charTypeSpeed: 0.1
+  textMesh: {fileID: 5920011540894028331}
+  isTyping: 0
+--- !u!114 &1818862200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2196495751212916611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36be8a3e85de94be989e8c35b585591a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textBoxContainer: {fileID: 1626099994488330690}
+  canvas: {fileID: 603363622921908913}
 --- !u!1 &2363724423160005100
 GameObject:
   m_ObjectHideFlags: 0
