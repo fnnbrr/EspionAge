@@ -7,7 +7,6 @@ public class LoudObject : MonoBehaviour
 {
     [Header("Force Settings")]
     public float thrustForce;
-    public Vector3 thrustDirection;
     public float shakeRadius;
     public float dropRadius;
     public float despawnSec = 3.0f;
@@ -34,7 +33,7 @@ public class LoudObject : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rends = GetComponents<Renderer> ();
+        rends = GetComponents<Renderer>();
         plateShader = Shader.Find(Constants.SHADER_NAME_SHAKE);
         noisePing = gameObject.GetComponent<NoisePinger>();
     }
@@ -42,10 +41,9 @@ public class LoudObject : MonoBehaviour
     void Update()
     {
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
-
         if (!hasBeenBumped && distance <= dropRadius)
         {
-            rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
+            rb.AddForce(-GameManager.Instance.GetPlayerTransform().forward * thrustForce, ForceMode.Impulse);
             hasBeenBumped = true;
         } 
         else
@@ -87,11 +85,6 @@ public class LoudObject : MonoBehaviour
     
     void OnDrawGizmos()    
     {
-        // Direction arrow of object falling
-        Gizmos.color = Color.red;
-        Vector3 directionToDraw = transform.TransformDirection(thrustDirection) * 5;
-        Gizmos.DrawRay(transform.position, directionToDraw);
-
         // Shake radius sphere 
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(transform.position, shakeRadius);
