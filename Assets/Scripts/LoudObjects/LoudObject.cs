@@ -10,7 +10,6 @@ public class LoudObject : MonoBehaviour
     public float shakeRadius;
     public float dropRadius;
     public float despawnSec = 3.0f;
-    private Vector3 thrustDirection;
     private float distance;
     private Rigidbody rb;
 
@@ -42,10 +41,9 @@ public class LoudObject : MonoBehaviour
     void Update()
     {
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
-        thrustDirection = -GameManager.Instance.GetPlayerTransform().forward;
         if (!hasBeenBumped && distance <= dropRadius)
         {
-            rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
+            rb.AddForce(-GameManager.Instance.GetPlayerTransform().forward * thrustForce, ForceMode.Impulse);
             hasBeenBumped = true;
         } 
         else
@@ -89,7 +87,7 @@ public class LoudObject : MonoBehaviour
     {
         // Direction arrow of object falling
         Gizmos.color = Color.red;
-        Vector3 directionToDraw = transform.TransformDirection(thrustDirection) * 5;
+        Vector3 directionToDraw = transform.TransformDirection(-GameManager.Instance.GetPlayerTransform().forward) * 5;
         Gizmos.DrawRay(transform.position, directionToDraw);
 
         // Shake radius sphere 
