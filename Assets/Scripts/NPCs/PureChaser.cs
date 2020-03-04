@@ -13,12 +13,17 @@ public class PureChaser : MonoBehaviour
 
     public event Chaser.CollideWithPlayerAction OnCollideWithPlayer;
 
-    private void Start()
+    private void Awake()
     {
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
     }
 
-    protected void ChaseTarget()
+    public void SetSpeed(float speed)
+    {
+        agent.speed = speed;
+    }
+
+    private void ChaseTarget()
     {
         if (shouldChase && targetTransform)
         {

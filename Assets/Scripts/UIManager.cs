@@ -93,5 +93,6 @@ public class UIManager : Singleton<UIManager>
         }
         isPaused = toPause;
         pauseMenu.gameObject.SetActive(toPause);
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = !toPause;
     }
 }

@@ -43,9 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c1d0aef40d99c0498c4f85642bb2045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStartPosition: {x: -95, y: 3, z: 135}
+  playerStartPosition: {x: -158, y: 3, z: 235}
   playerStartRotation: {x: 0, y: 90, z: 0}
-  playerRespawnPosition: {x: -67.75, y: 3, z: 136}
+  playerRespawnPosition: {x: -128, y: 3, z: 235}
   playerRespawnRotation: {x: 0, y: 90, z: 0}
   startCutsceneTexts:
   - ...I don't belong here...
@@ -67,7 +67,7 @@ MonoBehaviour:
     type: 3}
   vaseStandPrefab: {fileID: 9073910147309779605, guid: 46116c0641b9a6a44845879c14655d30,
     type: 3}
-  firstVasePosition: {x: -67, y: 3, z: 131}
+  firstVasePosition: {x: -127, y: 3, z: 230}
   vasePositions:
   - {x: -60, y: 3, z: 116}
   - {x: -60, y: 3, z: 101}
@@ -75,8 +75,23 @@ MonoBehaviour:
   - {x: -60, y: 3, z: 71}
   chaserPrefab: {fileID: 3862208129692031431, guid: e9c98b9dbdfbaf3468d9f310c9ed292e,
     type: 3}
+  enemyCutsceneSpeed: 3
+  enemyRegularSpeed: 8
   chaserGroups:
-  - startChaseRadius: 100
+  - startChaseRadius: 70
+    chaseSpeed: 8
     enemyStartPositions:
-    - {x: -16, y: 3, z: 184}
-    - {x: -16, y: 3, z: 147}
+    - {x: -83, y: 3, z: 257}
+    - {x: -93, y: 3, z: 268}
+  - startChaseRadius: 55
+    chaseSpeed: 10
+    enemyStartPositions:
+    - {x: -137, y: 3, z: 124}
+    - {x: -121, y: 3, z: 125.5}
+    - {x: -127.5, y: 3, z: 135}
+  - startChaseRadius: 45
+    chaseSpeed: 12
+    enemyStartPositions:
+    - {x: -34, y: 3, z: 167}
+    - {x: -54, y: 3, z: 182}
+    - {x: -40, y: 3, z: 179}

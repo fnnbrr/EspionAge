@@ -27,13 +27,14 @@ public static class Constants
 
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
-    public const string CHEATS_TELEPORT_BIRDIESROOM = "Cheats/Teleport/Birdies Room";
+    public const string CHEATS_TELEPORT_NURSESROOM = "Cheats/Teleport/Nurse's Room";
     public const string CHEATS_TELEPORT_DININGHALL = "Cheats/Teleport/Dining Hall";
     public const string CHEATS_TELEPORT_DENTURES = "Cheats/Teleport/Dentures";
     public const string CHEATS_TELEPORT_PANTRY = "Cheats/Teleport/Pantry";
     public const string CHEATS_TELEPORT_KITCHENSTART = "Cheats/Teleport/Kitchen Start";
     public const string CHEATS_TELEPORT_PIANO = "Cheats/Teleport/Piano";
     public const string CHEATS_TELEPORT_HALLWAY = "Cheats/Teleport/Hallway";
+    public const string CHEATS_TELEPORT_NPC1 = "Cheats/Teleport/NPC1";
 
     public const string SCENE_MAINMENU = "main_menu";
     public const string SCENE_MAIN = "MAIN";
