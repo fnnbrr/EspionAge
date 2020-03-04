@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [Header("Special")]
     public float dashForce;
     [Range(0f, StaminaBar.FILL_MAX)] public float specialAwakenessDecrease = 0.5f;
+    public List<TrailRenderer> specialTrailRenderers;
     
     [HideInInspector] public float movementSpeed;
     [HideInInspector] public float turnSpeed;
@@ -35,6 +36,8 @@ public class PlayerController : MonoBehaviour
             CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
             CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
         }
+
+        ToggleSpecialTrailRenderers(false);
     }
 
     private void Update()
@@ -48,9 +51,27 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetButtonDown(Constants.INPUT_SPECIAL_GETDOWN) && UIManager.Instance.staminaBar.lightningActive)
         {
+            StartCoroutine(EnableSpecialTrailRenderers(1f));
             PerformDash();
             UIManager.Instance.staminaBar.SetAwakeness(specialAwakenessDecrease);
         }
+    }
+
+    private IEnumerator EnableSpecialTrailRenderers(float forSeconds)
+    {
+        ToggleSpecialTrailRenderers(true);
+
+        yield return new WaitForSeconds(forSeconds);
+
+        ToggleSpecialTrailRenderers(false);
+    }
+
+    private void ToggleSpecialTrailRenderers(bool toggle)
+    {
+        specialTrailRenderers.ForEach(t =>
+        {
+            t.emitting = toggle;
+        });
     }
 
     private void PerformDash()
