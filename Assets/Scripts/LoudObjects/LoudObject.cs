@@ -34,19 +34,17 @@ public class LoudObject : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rends = GetComponents<Renderer> ();
+        rends = GetComponents<Renderer>();
         plateShader = Shader.Find(Constants.SHADER_NAME_SHAKE);
         noisePing = gameObject.GetComponent<NoisePinger>();
-        thrustDirection = - GameManager.Instance.GetPlayerTransform().forward;
     }
 
     void Update()
     {
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
-
+        thrustDirection = -GameManager.Instance.GetPlayerTransform().forward;
         if (!hasBeenBumped && distance <= dropRadius)
         {
-            print("herre");
             rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
             hasBeenBumped = true;
         } 
