@@ -129,7 +129,7 @@ public class StaminaBar : MonoBehaviour
 
     private IEnumerator FadeAlphaCoroutine(float startAlpha, float endAlpha, Image image)
     {
-        float currentAlpha = startAlpha;
+        float currentAlpha = image.color.a;
         while (Mathf.Abs(currentAlpha - startAlpha) < Mathf.Abs(startAlpha - endAlpha))
         {
             image.color = new Color(image.color.r, image.color.g, image.color.b, currentAlpha);
