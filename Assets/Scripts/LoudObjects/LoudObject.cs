@@ -85,11 +85,6 @@ public class LoudObject : MonoBehaviour
     
     void OnDrawGizmos()    
     {
-        // Direction arrow of object falling
-        Gizmos.color = Color.red;
-        Vector3 directionToDraw = transform.TransformDirection(-GameManager.Instance.GetPlayerTransform().forward) * 5;
-        Gizmos.DrawRay(transform.position, directionToDraw);
-
         // Shake radius sphere 
         Gizmos.color = Color.white;
         Gizmos.DrawWireSphere(transform.position, shakeRadius);
