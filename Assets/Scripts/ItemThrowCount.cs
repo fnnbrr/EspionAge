@@ -10,7 +10,6 @@ public class ItemThrowCount : MonoBehaviour
     PlayerManager playerManager;
     TextMeshProUGUI text;
 
-
     void Start()
     {
         playerManager = GameManager.Instance.GetPlayerManager();
@@ -19,17 +18,20 @@ public class ItemThrowCount : MonoBehaviour
             Utils.LogErrorAndStopPlayMode("Player manager does not exist");
         }
         playerManager.OnThrow += HandleOnThrewBottle;
-        playerManager.OnPickup += OnHandlePickup;
+        playerManager.OnPickup += HandleOnPickup;
+        playerManager.OnThrowableReset += HandleResetThrowableCount;
 
-        text = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this);
-        if(text == null)
-        {
-            Utils.LogErrorAndStopPlayMode("Throwable Object text is null");
-        }
+        text = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this, "Throwable Object text is null!");
         DisplayUpdate();
     }
 
-    void OnHandlePickup(GameObject source)
+    private void HandleResetThrowableCount()
+    {
+        numItemsHeld = 0;
+        DisplayUpdate();
+    }
+
+    void HandleOnPickup(GameObject source)
     {
         numItemsHeld += 1;
         DisplayUpdate();

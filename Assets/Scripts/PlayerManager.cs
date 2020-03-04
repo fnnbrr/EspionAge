@@ -6,7 +6,6 @@ public class PlayerManager : MonoBehaviour
 {
     [Header("Awakeness")]
     public float awakenessIncrease = 0.01f;
-    public float awakenessDecrease = 0.005f;
     public float dangerRadius = 1000.0f;
 
     [Header("Throwables")]
@@ -31,6 +30,9 @@ public class PlayerManager : MonoBehaviour
 
     public delegate void OnPickupEventHandler(GameObject source);
     public event OnPickupEventHandler OnPickup;
+    
+    public delegate void OnThrowableResetEventHandler();
+    public event OnThrowableResetEventHandler OnThrowableReset;
 
     public delegate void OnInteractEventHandler(DialogueInteractable source);
     public event OnInteractEventHandler OnInteractBegin;
@@ -53,8 +55,6 @@ public class PlayerManager : MonoBehaviour
     {
         HandleDisplayThrow();
 
-        HandleDecreaseAwakeness();
-
         float minDistance = DistToClosestEnemy();
 
         if (minDistance < dangerRadius)
@@ -65,7 +65,7 @@ public class PlayerManager : MonoBehaviour
 
     private void UpdateThrowVelocity(float fillAmount)
     {
-        launchArcRenderer.velocity = Mathf.Lerp(minThrowVelocity, maxThrowVelocity, fillAmount / StaminaBar.STAMINA_MAX);
+        launchArcRenderer.velocity = Mathf.Lerp(minThrowVelocity, maxThrowVelocity, fillAmount / StaminaBar.FILL_MAX);
     }
 
     private void HandleThrowInput()
@@ -145,6 +145,17 @@ public class PlayerManager : MonoBehaviour
         StartCoroutine(FadeOutAndDelete(current, throwableDestroyTime));
     }
 
+    public void ResetThrowables()
+    {
+        currentThrowables.ForEach(t =>
+        {
+            Destroy(t);
+        });
+        currentThrowables.Clear();
+
+        OnThrowableReset?.Invoke();
+    }
+
     private IEnumerator FadeOutAndDelete(GameObject o, float destroyTime)
     {
         yield return new WaitForSeconds(destroyTime);
@@ -168,8 +179,7 @@ public class PlayerManager : MonoBehaviour
         Vector3 position = transform.position;
         foreach (GameObject enemy in enemies)
         {
-            Vector3 diff = enemy.transform.position - position;
-            float curDistance = diff.sqrMagnitude;
+            float curDistance = Vector3.Distance(enemy.transform.position, position);
             if (curDistance < minDistance)
             {
                 minDistance = curDistance;
@@ -193,22 +203,11 @@ public class PlayerManager : MonoBehaviour
     private void OnDisable()
     {
         StopAllSpawnedCoroutines();
-
     }
 
     void HandleIncreaseAwakeness(float multiplier)
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(multiplier * awakenessIncrease)));
-    }
-
-    void HandleIncreaseAwakenessBy(float value, float speed)
-    {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseStaminaBy(value, speed)));
-    }
-
-    public void HandleDecreaseAwakeness()
-    {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.DecreaseStaminaBy(awakenessDecrease)));
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseFillBy(multiplier * awakenessIncrease)));
     }
 
     public void InteractPlayer(DialogueInteractable source)

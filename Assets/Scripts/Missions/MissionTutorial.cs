@@ -163,6 +163,6 @@ public class MissionTutorial : AMission
 
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
-        UIManager.Instance.staminaBar.Glow();
+        UIManager.Instance.staminaBar.OuterGlow();
     }
 }
