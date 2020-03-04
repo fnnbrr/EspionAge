@@ -7,10 +7,10 @@ public class LoudObject : MonoBehaviour
 {
     [Header("Force Settings")]
     public float thrustForce;
-    public Vector3 thrustDirection;
     public float shakeRadius;
     public float dropRadius;
     public float despawnSec = 3.0f;
+    private Vector3 thrustDirection;
     private float distance;
     private Rigidbody rb;
 
@@ -37,6 +37,7 @@ public class LoudObject : MonoBehaviour
         rends = GetComponents<Renderer> ();
         plateShader = Shader.Find(Constants.SHADER_NAME_SHAKE);
         noisePing = gameObject.GetComponent<NoisePinger>();
+        thrustDirection = - GameManager.Instance.GetPlayerTransform().forward;
     }
 
     void Update()
@@ -45,6 +46,7 @@ public class LoudObject : MonoBehaviour
 
         if (!hasBeenBumped && distance <= dropRadius)
         {
+            print("herre");
             rb.AddForce(thrustDirection * thrustForce, ForceMode.Impulse);
             hasBeenBumped = true;
         } 
