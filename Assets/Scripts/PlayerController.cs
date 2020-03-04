@@ -9,6 +9,10 @@ public class PlayerController : MonoBehaviour
     public float baseTurnSpeed = 2f;
     public float canMoveRotationThreshold = 0.1f;
     public float consideredMovementThreshold = 0.1f;
+
+    [Header("Special")]
+    public float dashForce;
+    [Range(0f, StaminaBar.FILL_MAX)] public float specialAwakenessDecrease = 0.5f;
     
     [HideInInspector] public float movementSpeed;
     [HideInInspector] public float turnSpeed;
@@ -31,6 +35,27 @@ public class PlayerController : MonoBehaviour
             CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
             CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
         }
+    }
+
+    private void Update()
+    {
+        if (!EnablePlayerInput) return;
+
+        HandleSpecialInput();
+    }
+
+    private void HandleSpecialInput()
+    {
+        if (Input.GetButtonDown(Constants.INPUT_SPECIAL_GETDOWN) && UIManager.Instance.staminaBar.lightningActive)
+        {
+            PerformDash();
+            UIManager.Instance.staminaBar.SetAwakeness(specialAwakenessDecrease);
+        }
+    }
+
+    private void PerformDash()
+    {
+        rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
     }
 
     void FixedUpdate()

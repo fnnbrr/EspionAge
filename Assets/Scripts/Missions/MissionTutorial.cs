@@ -178,8 +178,8 @@ public class MissionTutorial : AMission
         CinemachineVirtualCamera currentCamera = CameraManager.Instance.GetActiveVirtualCamera();
 
         // Cutscene Order: Vase Focus -> Outline Awakeness Meter -> Enemies Come -> Birdie Runs Away
-        yield return StartCoroutine(PlayCutscenePart(currentCamera, vaseFocusCameraPrefab, vaseDropCutsceneText, focusObject.transform));
         yield return StartCoroutine(PlayCutsceneText(awakenessPointerUIAnimation));
+        yield return StartCoroutine(PlayCutscenePart(currentCamera, vaseFocusCameraPrefab, vaseDropCutsceneText, focusObject.transform));
         SpawnEnemies();
         SetEnemySpeed(enemyCutsceneSpeed);  // make all slower than usual for now
         yield return StartCoroutine(PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].gameObject.transform, doHardBlend: true));

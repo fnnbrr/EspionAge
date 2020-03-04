@@ -19,6 +19,7 @@ public static class Constants
     public const string INPUT_CANCEL_GETDOWN = "Cancel";
     public const string INPUT_THROW_GETDOWN = "Fire1";
     public const string INPUT_STARTBUTTON_GETDOWN = "Start";
+    public const string INPUT_SPECIAL_GETDOWN = "Special";
 
     public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
     public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
@@ -35,6 +36,10 @@ public static class Constants
     public const string CHEATS_TELEPORT_PIANO = "Cheats/Teleport/Piano";
     public const string CHEATS_TELEPORT_HALLWAY = "Cheats/Teleport/Hallway";
     public const string CHEATS_TELEPORT_NPC1 = "Cheats/Teleport/NPC1";
+
+    public const string CHEATS_AWAKENESS_DEFAULT = "Cheats/Awakeness/Default";
+    public const string CHEATS_AWAKENESS_ALWAYSMIN = "Cheats/Awakeness/Always Min";
+    public const string CHEATS_AWAKENESS_ALWAYSMAX = "Cheats/Awakeness/Always Max";
 
     public const string SCENE_MAINMENU = "main_menu";
     public const string SCENE_MAIN = "MAIN";

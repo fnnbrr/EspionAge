@@ -14,6 +14,9 @@ public class LoudObject : MonoBehaviour
     private float distance;
     private Rigidbody rb;
 
+    [Header("Awakeness Settings")]
+    [Range(0f, StaminaBar.FILL_MAX)] public float awakenessIncreasePercentage = 0.2f;
+
     [Header("Fade Settings")]
     public bool fadeAndDestroyAfterThrow = true;
     public float destroyAfterSeconds = 3f;
@@ -68,6 +71,8 @@ public class LoudObject : MonoBehaviour
 
         noisePing.SpawnNoisePing(other);
         hasHit = true;
+
+        UIManager.Instance.staminaBar.InstantIncreaseAwarenessBy(awakenessIncreasePercentage);
 
         OnHit?.Invoke();
 
