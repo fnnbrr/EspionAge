@@ -32,7 +32,7 @@ public class DialogueInteractable : Interactable
         playerManager = GameManager.Instance.GetPlayerManager();
         playerManager.OnInteractBegin += HandleAutoplayConversation;
 
-        characterTextOverlay = GetComponent<UITextOverlay>();
+        characterTextOverlay = Utils.GetRequiredComponent<UITextOverlay>(this);
         playerTextOverlay = Utils.GetRequiredComponent<UITextOverlay>(player);
     }
 

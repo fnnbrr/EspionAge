@@ -14,7 +14,7 @@ public class SpeakerUI : MonoBehaviour
 
     void Start()
     {
-        textOverlay = GetComponent<UITextOverlay>();
+        textOverlay = Utils.GetRequiredComponent<UITextOverlay>(this);
         Hide();
     }
 
