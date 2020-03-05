@@ -24,7 +24,7 @@ public class SpeakerUI : MonoBehaviour
         textBoxContainer.transform.position = textPosition;
     }
 
-    public Coroutine setDialogue(string textToSet)
+    public Coroutine SetDialogue(string textToSet)
     {
         return textOverlay.SetText(textToSet);
     }

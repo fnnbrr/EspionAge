@@ -75,7 +75,6 @@ public class DialogueInteractable : Interactable
         }
         else
         {
-            //textOverlay.OnFinishTyping += HandleFinishTyping;
             coroutine = StartCoroutine(AutoplayConversation());
         }
     }
@@ -157,7 +156,7 @@ public class DialogueInteractable : Interactable
     void SetDialogue(SpeakerUI activeSpeakerUI, SpeakerUI inactiveSpeakerUI, string text) {
         //who is speaking
         activeSpeakerUI.Show();
-        activeSpeakerUI.setDialogue(text);
+        activeSpeakerUI.SetDialogue(text);
         
         //who is not speaking
         inactiveSpeakerUI.Hide();
