@@ -88,6 +88,7 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
                 break;
             case EMainMenuButton.Quit:
                 lightBulbMaterial.SetColor("_EmissionColor", Color.red);
+                FMODUnity.RuntimeManager.PlayOneShot(LightSFX, transform.position);
                 break;
             default:
                 break;
