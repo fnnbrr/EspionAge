@@ -21,6 +21,11 @@ public class UIManager : Singleton<UIManager>
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
 
+    private void Awake()
+    {
+        textOverlay.RegisterForTextCutscenes();
+    }
+
     private void Start()
     {
         fader.gameObject.SetActive(true);

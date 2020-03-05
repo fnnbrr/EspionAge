@@ -58,7 +58,7 @@ public class StaminaBar : MonoBehaviour
         }
     }
 
-    public void InstantIncreaseAwarenessBy(float amount)
+    public void InstantIncreaseAwakenessBy(float amount)
     {
         UpdateFillAmount(fillImage.fillAmount + amount);
     }

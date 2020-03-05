@@ -70,7 +70,7 @@ public class LoudObject : MonoBehaviour
         noisePing.SpawnNoisePing(other);
         hasHit = true;
 
-        UIManager.Instance.staminaBar.InstantIncreaseAwarenessBy(awakenessIncreasePercentage);
+        UIManager.Instance.staminaBar.InstantIncreaseAwakenessBy(awakenessIncreasePercentage);
 
         OnHit?.Invoke();
 

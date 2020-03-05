@@ -17,6 +17,7 @@ public class UITextOverlay : MonoBehaviour
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
+    public bool usedForTextCutscenes = false;
 
     private void Update()
     {
@@ -35,6 +36,11 @@ public class UITextOverlay : MonoBehaviour
         }
     }
 
+    public void RegisterForTextCutscenes()
+    {
+        usedForTextCutscenes = true;
+    }
+
     public Coroutine SetText(string text)
     {
         if (isTyping && currentTypingCoroutine != null)
@@ -48,7 +54,7 @@ public class UITextOverlay : MonoBehaviour
 
     private IEnumerator StartTypeText(string text)
     {
-        if (GameManager.Instance.skipSettings.allTextCutscenes) yield break;
+        if (usedForTextCutscenes && GameManager.Instance.skipSettings.allTextCutscenes) yield break;
 
         isTyping = true;
 
