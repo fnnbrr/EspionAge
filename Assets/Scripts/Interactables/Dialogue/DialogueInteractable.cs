@@ -11,7 +11,8 @@ public class DialogueInteractable : Interactable
 
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
-    private UITextOverlay textOverlay;
+    private UITextOverlay characterTextOverlay;
+    private UITextOverlay playerTextOverlay;
 
     protected bool isConversing = false;
     public bool isTyping = false;
@@ -30,7 +31,9 @@ public class DialogueInteractable : Interactable
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
         playerManager = GameManager.Instance.GetPlayerManager();
         playerManager.OnInteractBegin += HandleAutoplayConversation;
-        textOverlay = GetComponent<UITextOverlay>();
+
+        characterTextOverlay = GetComponent<UITextOverlay>();
+        playerTextOverlay = Utils.GetRequiredComponent<UITextOverlay>(player);
     }
 
     protected override void Update()
@@ -51,7 +54,8 @@ public class DialogueInteractable : Interactable
             {
                 isConversing = true;
 
-                textOverlay.OnFinishTyping += HandleFinishTyping;
+                characterTextOverlay.OnFinishTyping += HandleFinishTyping;
+                playerTextOverlay.OnFinishTyping += HandleFinishTyping;
                 isTyping = true;
 
                 // Used this to resolve bug where player freezes but cannot interact because player out of range
@@ -68,10 +72,6 @@ public class DialogueInteractable : Interactable
 
                 base.OnInteract();
             }
-            //else
-            //{
-            //    AdvanceConversation();
-            //}
         }
         else
         {
@@ -128,7 +128,8 @@ public class DialogueInteractable : Interactable
             //Once the conversation is over 
             //what happens 
             EndConversation();
-            textOverlay.OnFinishTyping -= HandleFinishTyping;
+            characterTextOverlay.OnFinishTyping -= HandleFinishTyping;
+            playerTextOverlay.OnFinishTyping -= HandleFinishTyping;
 
             isConversing = false;
             continueInteracting = false;
@@ -155,10 +156,9 @@ public class DialogueInteractable : Interactable
 
     void SetDialogue(SpeakerUI activeSpeakerUI, SpeakerUI inactiveSpeakerUI, string text) {
         //who is speaking
-        //activeSpeakerUI.Dialogue = text;
-        activeSpeakerUI.setDialogue(text);
         activeSpeakerUI.Show();
-
+        activeSpeakerUI.setDialogue(text);
+        
         //who is not speaking
         inactiveSpeakerUI.Hide();
     }
@@ -191,6 +191,5 @@ public class DialogueInteractable : Interactable
     void HandleFinishTyping(string text)
     {
         AdvanceConversation();
-        Debug.Log("finished typing");
     }
 }

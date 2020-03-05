@@ -190,7 +190,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6528124939642928890}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2300499362604062906
 BoxCollider:
@@ -599,9 +599,9 @@ Transform:
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 432185183357334790}
+  - {fileID: 5529468375550278211}
   - {fileID: 6096155601269346063}
   - {fileID: 2300499362604062907}
-  - {fileID: 5529468375550278211}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
@@ -647,7 +647,7 @@ MonoBehaviour:
     duringConvo: {fileID: 11400000, guid: a4566adfec0fb430a86dfe033c85885d, type: 2}
     afterConvo: {fileID: 11400000, guid: e485504c19563410c9cd04471b6f0a87, type: 2}
     doOnComplete: 1
-    reactiveActionPosition: {x: -60, y: 0, z: -35}
+    reactiveActionPosition: {x: -57, y: 0, z: -36}
 --- !u!195 &1964985108
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -683,7 +683,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charTypeSpeed: 0.1
-  textMesh: {fileID: 1642425273217987422}
   isTyping: 0
 --- !u!114 &1998687900
 MonoBehaviour:
@@ -860,7 +859,7 @@ PrefabInstance:
     - target: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
         type: 3}
@@ -1031,7 +1030,7 @@ PrefabInstance:
     - target: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -1056,7 +1055,7 @@ PrefabInstance:
     - target: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -1114,15 +1113,3 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2300499362298106142}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1642425273217987422 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 659235212013773376, guid: c819a38dde8924f49a4bf8b5448e832a,
-    type: 3}
-  m_PrefabInstance: {fileID: 2300499362298106142}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

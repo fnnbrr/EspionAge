@@ -7,7 +7,7 @@ public class UITextOverlay : MonoBehaviour
 {
     public float charTypeSpeed = 0.1f;
 
-    public TextMeshProUGUI textMesh;
+    private TextMeshProUGUI textMesh;
 
     public bool isTyping = false;
     private bool skipRequest = false;
@@ -17,10 +17,10 @@ public class UITextOverlay : MonoBehaviour
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
-    //private void Awake()
-    //{
-    //    textMesh = Utils.GetRequiredComponent<TextMeshProUGUI>(this);
-    //}
+    private void Awake()
+    {
+        textMesh = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this);
+    }
 
     private void Update()
     {
@@ -52,8 +52,6 @@ public class UITextOverlay : MonoBehaviour
 
     private IEnumerator StartTypeText(string text)
     {
-        //if (GameManager.Instance.skipSettings.allTextCutscenes) yield break;
-
         isTyping = true;
 
         int currentCharIndex = 0;

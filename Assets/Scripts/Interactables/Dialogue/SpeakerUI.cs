@@ -6,17 +6,11 @@ using TMPro;
 
 public class SpeakerUI : MonoBehaviour
 {
-    //public TMP_Text dialogue;
     public GameObject textBoxContainer;
     public GameObject canvas;
     private UITextOverlay textOverlay;
     
     private Vector3 textPosition;
-
-    //public string Dialogue
-    //{
-    //    set { dialogue.text = value;}
-    //}
 
     void Start()
     {
