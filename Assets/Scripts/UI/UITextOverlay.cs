@@ -1,13 +1,13 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class UITextOverlay : MonoBehaviour
 {
-    public float charTypeSpeed = 0.1f;
+    public float charTypeSpeed = 0.05f;
 
-    private TextMeshProUGUI textMesh;
+    public TextMeshProUGUI textMesh;
 
     private bool isTyping = false;
     private bool skipRequest = false;
@@ -17,10 +17,6 @@ public class UITextOverlay : MonoBehaviour
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
-    private void Awake()
-    {
-        textMesh = Utils.GetRequiredComponent<TextMeshProUGUI>(this);
-    }
 
     private void Update()
     {
@@ -80,8 +76,8 @@ public class UITextOverlay : MonoBehaviour
 
         textMesh.text = string.Empty;
 
-        isTyping = false;
         skipRequest = false;
+        isTyping = false;
 
         OnFinishTyping?.Invoke(text);
     }
