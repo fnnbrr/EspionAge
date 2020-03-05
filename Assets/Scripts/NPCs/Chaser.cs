@@ -37,6 +37,9 @@ public class Chaser : MonoBehaviour
         Patrolling,
     }
     
+    [Header("Question Mark Icon")]
+    public GameObject questionMark;
+    
     [Header("For Debugging")]
     [SerializeField] protected ActionStates currentState = ActionStates.Responding;
     [SerializeField] protected ActionStates defaultState = ActionStates.Searching;
@@ -164,7 +167,7 @@ public class Chaser : MonoBehaviour
     {
         if (!other.gameObject.CompareTag("Noise")) return;
 
-        // TODO: draw a "?" above the AI
+        ShowQuestionMark();
         currentState = ActionStates.Responding;
         
         searchBoundsCenter = other.gameObject.transform.position;
@@ -172,5 +175,15 @@ public class Chaser : MonoBehaviour
         agent.SetDestination(searchBoundsCenter);
 
         waitTimer = waitDurationSec;
+    }
+    
+    protected void ShowQuestionMark()
+    {
+        questionMark.SetActive(true);
+    }
+
+    protected void HideQuestionMark()
+    {
+        questionMark.SetActive(false);
     }
 }

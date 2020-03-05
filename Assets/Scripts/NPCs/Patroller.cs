@@ -68,6 +68,7 @@ public class Patroller : Chaser
             case ActionStates.Responding:
                 if (WaitComplete())
                 {
+                    ShowQuestionMark();
                     currentState = ActionStates.Searching;
                 }
                 break;
@@ -82,6 +83,7 @@ public class Patroller : Chaser
                     else
                     {
                         curNumSearches = 0;
+                        HideQuestionMark();
                         currentState = defaultState;
                     }
                 }

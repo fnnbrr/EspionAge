@@ -241,7 +241,7 @@ Transform:
   - {fileID: 4492194022455262885}
   - {fileID: 6100629634526287164}
   - {fileID: 6006785192980622720}
-  - {fileID: 8347802953215554550}
+  - {fileID: 2501712630098732762}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -379,6 +379,7 @@ MonoBehaviour:
   searchBounds: {fileID: 0}
   noiseSearchRadius: 15
   waitDurationSec: 1
+  questionMark: {fileID: 5008569405081666021}
   currentState: 1
   defaultState: 2
 --- !u!1001 &1492276330573742996
@@ -388,10 +389,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7003268395918407001}
     m_Modifications:
+    - target: {fileID: 3891812714996491598, guid: a0d8b49d3bcafe045a92b55d4d468979,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3891812714996491598, guid: a0d8b49d3bcafe045a92b55d4d468979,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
         type: 3}
       propertyPath: m_Name
       value: QuestionMark
+      objectReference: {fileID: 0}
+    - target: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7452608441132839010, guid: a0d8b49d3bcafe045a92b55d4d468979,
         type: 3}
@@ -460,9 +476,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0d8b49d3bcafe045a92b55d4d468979, type: 3}
---- !u!4 &8347802953215554550 stripped
+--- !u!1 &5008569405081666021 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
+    type: 3}
+  m_PrefabInstance: {fileID: 1492276330573742996}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2501712630098732762 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7452608441132839010, guid: a0d8b49d3bcafe045a92b55d4d468979,
+  m_CorrespondingSourceObject: {fileID: 3891812714996491598, guid: a0d8b49d3bcafe045a92b55d4d468979,
     type: 3}
   m_PrefabInstance: {fileID: 1492276330573742996}
   m_PrefabAsset: {fileID: 0}
