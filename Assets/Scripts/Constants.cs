@@ -34,6 +34,7 @@ public static class Constants
     public const string CHEATS_TELEPORT_KITCHENSTART = "Cheats/Teleport/Kitchen Start";
     public const string CHEATS_TELEPORT_PIANO = "Cheats/Teleport/Piano";
     public const string CHEATS_TELEPORT_HALLWAY = "Cheats/Teleport/Hallway";
+    public const string CHEATS_TELEPORT_NPC1 = "Cheats/Teleport/NPC1";
 
     public const string SCENE_MAINMENU = "main_menu";
     public const string SCENE_MAIN = "MAIN";

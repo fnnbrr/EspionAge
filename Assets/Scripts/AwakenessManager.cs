@@ -48,7 +48,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private float GetInterpolatedFillAmount(float fillAmount)
     {
-        return fillAmount / StaminaBar.STAMINA_MAX;  // this is just dividing by 1 for now, but this could cause many issues if we ever change it
+        return fillAmount / StaminaBar.FILL_MAX;  // this is just dividing by 1 for now, but this could cause many issues if we ever change it
     }
 
     private void UpdateVignette(float fillAmount)

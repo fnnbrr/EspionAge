@@ -48,7 +48,8 @@ public class NPCInteractable : DialogueInteractable
         base.Start();
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
 
-        SetOriginPosition(gameObject.transform.position);
+        SetOriginPosition(transform.position);
+        previousOriginPosition = transform.position;
 
         LoadConversation();
     }
@@ -68,8 +69,9 @@ public class NPCInteractable : DialogueInteractable
                 TriggerFollow(player);
             }
 
+
             // Autoplay
-            if (conversation.isAutoplayed)
+            if (conversation.autoplayConversation)
             {
                 if(!autoPlaying)
                 {
@@ -80,6 +82,12 @@ public class NPCInteractable : DialogueInteractable
             // Enter collider to interact
             else
             {
+                if(conversation.autoInitiate && !isConversing)
+				{
+                    interactableOn = true;
+                    OnInteract();
+				}
+
                 base.Update();
             }
         }
@@ -128,8 +136,11 @@ public class NPCInteractable : DialogueInteractable
     {
         if (!isConversing)
         {
+            // If input already disabled, then we won't continue from here and start a conversation
+            if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
+
             // NPC has mission to offer (Mission should have been loaded in LoadConversation)
-            if(currentMissionConvos != null)
+            if (currentMissionConvos != null)
             {
                 // Start mission
                 if (startedMission == null)
@@ -167,7 +178,7 @@ public class NPCInteractable : DialogueInteractable
                     return;
                 }
             }
-            if (!conversation.shouldFollow && !conversation.isAutoplayed)
+            if (!conversation.shouldFollow && !conversation.autoplayConversation)
             {
                 NPCFacePlayer();
             }

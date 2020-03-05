@@ -12,7 +12,7 @@ public class Interactable : MonoBehaviour, IInteractable
     public RectTransform interactTransform;
 
     protected bool enableInteract = true;
-    private bool interactableOn = false;
+    protected bool interactableOn = false;
     protected bool continueInteracting = false;
 
     public float interactRadius = Constants.INTERACT_POPUP_RADIUS;
@@ -32,7 +32,7 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         withinInteractRadius = IsWithinRadius(transform.position, player.transform, interactRadius);
 
-        if (!interactableOn && withinInteractRadius)
+        if (!interactableOn && withinInteractRadius && !continueInteracting)
         {
             interactableOn = true;
             ShowInteractUI();
