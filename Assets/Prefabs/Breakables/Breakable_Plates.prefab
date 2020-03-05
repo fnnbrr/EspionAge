@@ -93,9 +93,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pingPrefab: {fileID: 1645977202193189007, guid: f1b3677185bfc3a489e4bd4feb07ace0,
     type: 3}
-  pingRadius: 15
-  pingGrowthScale: 30
+  pingRadius: 70
+  pingGrowthScale: 100
   pingFloorOffset: 0.5
+  breakable: 
 --- !u!114 &906590706157901623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,9 +110,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thrustForce: 100
-  thrustDirection: {x: 0, y: 0, z: 0}
   shakeRadius: 20
   dropRadius: 5
+  despawnSec: 3
   fadeAndDestroyAfterThrow: 1
   destroyAfterSeconds: 3
   minShake: 0.1
