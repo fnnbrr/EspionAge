@@ -69,8 +69,9 @@ public class NPCInteractable : DialogueInteractable
                 TriggerFollow(player);
             }
 
+
             // Autoplay
-            if (conversation.isAutoplayed)
+            if (conversation.autoplayConversation)
             {
                 if(!autoPlaying)
                 {
@@ -81,6 +82,12 @@ public class NPCInteractable : DialogueInteractable
             // Enter collider to interact
             else
             {
+                if(conversation.autoInitiate && !isConversing)
+				{
+                    interactableOn = true;
+                    OnInteract();
+				}
+
                 base.Update();
             }
         }
@@ -171,7 +178,7 @@ public class NPCInteractable : DialogueInteractable
                     return;
                 }
             }
-            if (!conversation.shouldFollow && !conversation.isAutoplayed)
+            if (!conversation.shouldFollow && !conversation.autoplayConversation)
             {
                 NPCFacePlayer();
             }
