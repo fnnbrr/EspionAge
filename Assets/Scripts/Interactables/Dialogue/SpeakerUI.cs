@@ -6,19 +6,15 @@ using TMPro;
 
 public class SpeakerUI : MonoBehaviour
 {
-    public TMP_Text dialogue;
     public GameObject textBoxContainer;
     public GameObject canvas;
+    private UITextOverlay textOverlay;
     
     private Vector3 textPosition;
 
-    public string Dialogue
-    {
-        set { dialogue.text = value;}
-    }
-
     void Start()
     {
+        textOverlay = Utils.GetRequiredComponent<UITextOverlay>(this);
         Hide();
     }
 
@@ -26,6 +22,11 @@ public class SpeakerUI : MonoBehaviour
     {
         textPosition = Camera.main.WorldToScreenPoint(transform.position);
         textBoxContainer.transform.position = textPosition;
+    }
+
+    public Coroutine SetDialogue(string textToSet)
+    {
+        return textOverlay.SetText(textToSet);
     }
 
     public void Show()
