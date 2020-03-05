@@ -9,7 +9,7 @@ public class UITextOverlay : MonoBehaviour
 
     private TextMeshProUGUI textMesh;
 
-    public bool isTyping = false;
+    private bool isTyping = false;
     private bool skipRequest = false;
     private bool waitingForNext = false;
     private Coroutine currentTypingCoroutine;

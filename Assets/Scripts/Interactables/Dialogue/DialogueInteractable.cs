@@ -15,7 +15,7 @@ public class DialogueInteractable : Interactable
     private UITextOverlay playerTextOverlay;
 
     protected bool isConversing = false;
-    public bool isTyping = false;
+    private bool isTyping = false;
     private int activeLineIndex = 0;
 
     private Coroutine coroutine;
