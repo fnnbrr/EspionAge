@@ -81,11 +81,13 @@ public class MissionTutorial : AMission
     public class SpawnedEnemy
     {
         public GameObject gameObject;
+        public PureChaser chaser;
         public TutorialChaserGroup chaserGroup;
 
-        public SpawnedEnemy(GameObject o, TutorialChaserGroup g)
+        public SpawnedEnemy(GameObject o, PureChaser c, TutorialChaserGroup g)
         {
             gameObject = o;
+            chaser = c;
             chaserGroup = g;
         }
     }
@@ -137,7 +139,26 @@ public class MissionTutorial : AMission
         SpawnRegularVases();
         SpawnBlockingObjects();
 
+        // Listen for the player to pass through the final door
+        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
+
         StartCoroutine(StartMissionLogic());
+    }
+
+    private void CommenceCompleteMission()
+    {
+        spawnedEnemies.ForEach(e =>
+        {
+            // Send back all enemies to around the area of their start (mostly to get them off camera)
+            e.chaser.targetTransform = null;
+            e.chaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
+            e.chaser.OnReachDestination += HandleEnemyReachedStartPoint;
+        });
+    }
+    private void HandleEnemyReachedStartPoint()
+    {
+        AlertMissionComplete();
+        MissionManager.Instance.EndMission(MissionsEnum.MissionTutorial);
     }
 
     private IEnumerator StartMissionLogic()
@@ -205,13 +226,14 @@ public class MissionTutorial : AMission
             group.enemyStartPositions.ForEach(position =>
             {
                 GameObject enemyInstance = Instantiate(chaserPrefab, position, Quaternion.identity);
-                spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, group));
 
                 PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemyInstance);
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 chaser.SetSpeed(group.chaseSpeed);
                 chaser.startChaseRadius = group.startChaseRadius;
                 chaser.OnCollideWithPlayer += RestartAfterCutscene;
+
+                spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group));
             });
         });
     }

@@ -11,7 +11,11 @@ public class PureChaser : MonoBehaviour
     private NavMeshAgent agent;
     private bool shouldChase = false;
 
+    public const float reportReachedDistance = 2f;
+
     public event Chaser.CollideWithPlayerAction OnCollideWithPlayer;
+    public delegate void ReachedDestinationAction();
+    public event ReachedDestinationAction OnReachDestination;
 
     private void Awake()
     {
@@ -23,11 +27,16 @@ public class PureChaser : MonoBehaviour
         agent.speed = speed;
     }
 
+    public void SetDestination(Vector3 position)
+    {
+        agent.SetDestination(position);
+    }
+
     private void ChaseTarget()
     {
         if (shouldChase && targetTransform)
         {
-            agent.SetDestination(targetTransform.position);
+            SetDestination(targetTransform.position);
         }
     }
 
@@ -35,12 +44,24 @@ public class PureChaser : MonoBehaviour
     {
         if (!agent.isOnNavMesh) return;
 
-        if (!shouldChase && Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position) <= startChaseRadius)
+        CheckRemainingDistance();
+
+        if (!targetTransform) return;  // below are all about using targetTransform
+
+        if (!shouldChase && Vector3.Distance(transform.position, targetTransform.position) <= startChaseRadius)
         {
             shouldChase = true;
         }
 
         ChaseTarget();
+    }
+
+    private void CheckRemainingDistance()
+    {
+        if (Vector3.Distance(transform.position, agent.destination) <= reportReachedDistance)
+        {
+            OnReachDestination?.Invoke();
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
