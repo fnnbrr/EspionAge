@@ -10,14 +10,14 @@ public class TeleportCheats : MonoBehaviour
         return Application.isPlaying && GameManager.Instance.GetPlayerTransform();
     }
 
-    [MenuItem(Constants.CHEATS_TELEPORT_BIRDIESROOM, true)]
-    public static bool ValidateTeleportBirdiesRoom()
+    [MenuItem(Constants.CHEATS_TELEPORT_NURSESROOM, true)]
+    public static bool ValidateTeleportNursesRoom()
     {
         return ValidateTeleport();
     }
 
-    [MenuItem(Constants.CHEATS_TELEPORT_BIRDIESROOM)]
-    public static void TeleportBirdiesRoom()
+    [MenuItem(Constants.CHEATS_TELEPORT_NURSESROOM)]
+    public static void TeleportNursesRoom()
     {
         GameManager.Instance.GetPlayerTransform().position = new Vector3(-158f, 3f, 235f);
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 90f, 0f);

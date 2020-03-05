@@ -10,6 +10,9 @@ public class BreakableObject : MonoBehaviour
 
     private LoudObject loudObject;
 
+    public delegate void HasBrokenAction(GameObject brokenInstance);
+    public event HasBrokenAction OnBreak;
+
     void Start()
     {
         loudObject = Utils.GetRequiredComponent<LoudObject>(this);
@@ -19,6 +22,8 @@ public class BreakableObject : MonoBehaviour
     private void BreakOnHit()
     {
         GameObject instantiatedBrokenVersion = Instantiate(brokenVersion, transform.position, transform.rotation);
+
+        OnBreak?.Invoke(instantiatedBrokenVersion);
 
         ObjectFader objectFader = instantiatedBrokenVersion.GetComponent<ObjectFader>();
         if (objectFader)
