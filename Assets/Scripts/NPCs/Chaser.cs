@@ -19,8 +19,6 @@ public class Chaser : MonoBehaviour
     [Tooltip("After hearing a noise, how close should I search to that noise?")]
     public float noiseSearchRadius = 15.0f;
 
-    private const int SAMPLE_ATTEMPTS = 3; // gives NavMesh.SamplePosition room for error
-
     private Vector3 searchBoundsCenter;
     private float searchBoundsRadius;
     
@@ -69,6 +67,7 @@ public class Chaser : MonoBehaviour
     
     public void InitializeResponderParameters(Vector3 newResponsePoint, Vector3 wanderPoint, float wanderRadius)
     {
+        SetState(ActionStates.Responding);
         responsePoint = newResponsePoint;
         searchBoundsCenter = wanderPoint;
         searchBoundsRadius = wanderRadius;
@@ -105,14 +104,9 @@ public class Chaser : MonoBehaviour
         Vector3 randomPoint = searchBoundsCenter + Random.insideUnitSphere * searchBoundsRadius;
         NavMeshHit navHit;
 
-        int attemptsRemaining = SAMPLE_ATTEMPTS;
-        while (!NavMesh.SamplePosition(randomPoint, out navHit, searchBoundsRadius, NavMesh.AllAreas))
+        if (!NavMesh.SamplePosition(randomPoint, out navHit, searchBoundsRadius, NavMesh.AllAreas))
         {
-            attemptsRemaining -= 1;
-            if (attemptsRemaining < 0)
-            {
-                agent.SetDestination(searchBoundsCenter);
-            }
+            navHit.position = searchBoundsCenter;
         }
  
         agent.SetDestination(navHit.position);
