@@ -79,11 +79,11 @@ public class Chaser : MonoBehaviour
         if (chase && numTargetsInRange > 0 && currentState != ActionStates.Chasing)
         {
             ChaseTarget();
-            currentState = ActionStates.Chasing;
+            SetState(ActionStates.Chasing);
         }
         else if (numTargetsInRange == 0 && currentState == ActionStates.Chasing)
         {
-            currentState = defaultState;
+            SetState(defaultState);
         }
     }
     
@@ -147,7 +147,7 @@ public class Chaser : MonoBehaviour
             case ActionStates.Responding:
                 if (WaitComplete())
                 {
-                    currentState = ActionStates.Searching;
+                    SetState(ActionStates.Searching);
                 }
                 break;
             default:
@@ -166,15 +166,39 @@ public class Chaser : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.gameObject.CompareTag("Noise")) return;
-
-        ShowQuestionMark();
-        currentState = ActionStates.Responding;
+        
+        SetState(ActionStates.Responding);
         
         searchBoundsCenter = other.gameObject.transform.position;
         searchBoundsRadius = noiseSearchRadius;
         agent.SetDestination(searchBoundsCenter);
 
         waitTimer = waitDurationSec;
+    }
+
+    protected void SetState(ActionStates newState)
+    {
+        // Ensures that question mark is properly shown/hidden
+        switch (newState)
+        {
+            case ActionStates.Searching:
+                ShowQuestionMark();
+                break;
+            case ActionStates.Responding:
+                ShowQuestionMark();
+                break;
+            case ActionStates.Chasing:
+                HideQuestionMark();
+                break;
+            case ActionStates.Patrolling:
+                HideQuestionMark();
+                break;
+            default:
+                HideQuestionMark();
+                break;
+        }
+        
+        currentState = newState;
     }
     
     protected void ShowQuestionMark()
