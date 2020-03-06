@@ -9,6 +9,11 @@ public class PlayerController : MonoBehaviour
     public float baseTurnSpeed = 2f;
     public float canMoveRotationThreshold = 0.1f;
     public float consideredMovementThreshold = 0.1f;
+
+    [Header("Special")]
+    public float dashForce;
+    [Range(0f, StaminaBar.FILL_MAX)] public float specialAwakenessDecrease = 0.5f;
+    public List<TrailRenderer> specialTrailRenderers;
     
     [HideInInspector] public float movementSpeed;
     [HideInInspector] public float turnSpeed;
@@ -17,6 +22,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 movement;
     public bool EnablePlayerInput { get; set; } = true;
+    public bool IsMoving { get; set; } = false;
 
     void Start()
     {
@@ -30,6 +36,47 @@ public class PlayerController : MonoBehaviour
             CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
             CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
         }
+
+        ToggleSpecialTrailRenderers(false);
+    }
+
+    private void Update()
+    {
+        if (!EnablePlayerInput) return;
+
+        HandleSpecialInput();
+    }
+
+    private void HandleSpecialInput()
+    {
+        if (Input.GetButtonDown(Constants.INPUT_SPECIAL_GETDOWN) && UIManager.Instance.staminaBar.lightningActive)
+        {
+            StartCoroutine(EnableSpecialTrailRenderers(1f));
+            PerformDash();
+            UIManager.Instance.staminaBar.SetAwakeness(specialAwakenessDecrease);
+        }
+    }
+
+    private IEnumerator EnableSpecialTrailRenderers(float forSeconds)
+    {
+        ToggleSpecialTrailRenderers(true);
+
+        yield return new WaitForSeconds(forSeconds);
+
+        ToggleSpecialTrailRenderers(false);
+    }
+
+    private void ToggleSpecialTrailRenderers(bool toggle)
+    {
+        specialTrailRenderers.ForEach(t =>
+        {
+            t.emitting = toggle;
+        });
+    }
+
+    private void PerformDash()
+    {
+        rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
     }
 
     void FixedUpdate()
@@ -64,6 +111,7 @@ public class PlayerController : MonoBehaviour
 
     public void SetIsWalking(bool isWalking)
     {
+        IsMoving = isWalking;
         anim.SetBool(Constants.ANIMATION_BIRDIE_ISWALKING, isWalking);
     }
 

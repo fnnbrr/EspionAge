@@ -9,6 +9,8 @@ public class UIManager : Singleton<UIManager>
     public Canvas mainUICanvas;
     public StaminaBar staminaBar;
     public PauseMenuManager pauseMenu;
+    public UITextOverlay textOverlay;
+    public GameObject pressAPrompt;
 
     [Header("Fading Settings")]
     public Image fader;
@@ -18,6 +20,11 @@ public class UIManager : Singleton<UIManager>
 
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
+
+    private void Awake()
+    {
+        textOverlay.RegisterForTextCutscenes();
+    }
 
     private void Start()
     {

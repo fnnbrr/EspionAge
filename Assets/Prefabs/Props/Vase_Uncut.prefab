@@ -143,11 +143,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccbb36553044f4ed0859553b1f295fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrustForce: 35
+  thrustForce: 25
   thrustDirection: {x: 1, y: 0, z: 0}
-  shakeRadius: 20
-  dropRadius: 10
+  shakeRadius: 10
+  dropRadius: 5
   despawnSec: 3
+  awakenessIncreasePercentage: 0.2
   fadeAndDestroyAfterThrow: 1
   destroyAfterSeconds: 3
   minShake: 0.1

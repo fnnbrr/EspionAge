@@ -17,10 +17,11 @@ public class UITextOverlay : MonoBehaviour
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
+    public bool usedForTextCutscenes = false;
 
     private void Update()
     {
-        //UIManager.Instance.pressAPrompt.SetActive(isTyping);
+        UIManager.Instance.pressAPrompt.SetActive(isTyping);
 
         if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
         {
@@ -33,6 +34,11 @@ public class UITextOverlay : MonoBehaviour
                 waitingForNext = false;
             }
         }
+    }
+
+    public void RegisterForTextCutscenes()
+    {
+        usedForTextCutscenes = true;
     }
 
     public Coroutine SetText(string text)
@@ -48,6 +54,8 @@ public class UITextOverlay : MonoBehaviour
 
     private IEnumerator StartTypeText(string text)
     {
+        if (usedForTextCutscenes && GameManager.Instance.skipSettings.allTextCutscenes) yield break;
+
         isTyping = true;
 
         int currentCharIndex = 0;

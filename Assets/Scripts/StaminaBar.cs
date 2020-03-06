@@ -15,6 +15,8 @@ public class StaminaBar : MonoBehaviour
     public float decreasePerSecond = 0.2f;
     public float waitUntilDecreaseTime = 2f;
 
+    [HideInInspector] public bool lightningActive = false;
+
     private List<Image> allChildImages;
     private Animator glowAnimator;
     private float lastIncreaseTime;
@@ -26,12 +28,14 @@ public class StaminaBar : MonoBehaviour
     public delegate void ChangedAction(float fillAmount);
     public event ChangedAction OnChange;
 
-    [HideInInspector] 
-    public const float FILL_MAX = 1f;
+    [HideInInspector] public const float FILL_MAX = 1f;
+
+    [HideInInspector] public bool overrideValue = false;
+    [HideInInspector] public float overrideTo;
 
     private void Awake()
     {
-        allChildImages = GetComponentsInChildren<Image>().ToList();
+        allChildImages = GetComponentsInChildren<Image>(true).ToList();
         glowAnimator = glowOutline.GetComponent<Animator>();
     }
 
@@ -42,10 +46,31 @@ public class StaminaBar : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (overrideValue)
+        {
+            UpdateFillAmount(overrideTo);
+            return;
+        }
+
         if (Time.time > lastIncreaseTime + waitUntilDecreaseTime)
         {
             StartCoroutine(DecreaseFillBy(decreasePerSecond * Time.fixedDeltaTime));
         }
+    }
+
+    public void InstantIncreaseAwakenessBy(float amount)
+    {
+        UpdateFillAmount(fillImage.fillAmount + amount);
+    }
+
+    public void SetAwakeness(float amount)
+    {
+        UpdateFillAmount(amount);
+    }
+
+    public void ResetAwakeness()
+    {
+        UpdateFillAmount(0f);
     }
 
     // No custom decrease function needed so it was no implemented (like below)
@@ -105,6 +130,7 @@ public class StaminaBar : MonoBehaviour
 
     private void EnableLightning(bool enable)
     {
+        lightningActive = enable;
         lightningRoot.SetActive(enable);
     }
 

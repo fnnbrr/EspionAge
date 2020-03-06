@@ -13,6 +13,9 @@ public class LoudObject : MonoBehaviour
     private float distance;
     private Rigidbody rb;
 
+    [Header("Awakeness Settings")]
+    [Range(0f, StaminaBar.FILL_MAX)] public float awakenessIncreasePercentage = 0.2f;
+
     [Header("Fade Settings")]
     public bool fadeAndDestroyAfterThrow = true;
     public float destroyAfterSeconds = 3f;
@@ -43,8 +46,7 @@ public class LoudObject : MonoBehaviour
         distance = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
         if (!hasBeenBumped && distance <= dropRadius)
         {
-            rb.AddForce(-GameManager.Instance.GetPlayerTransform().forward * thrustForce, ForceMode.Impulse);
-            hasBeenBumped = true;
+            Drop();
         } 
         else
         {
@@ -55,12 +57,20 @@ public class LoudObject : MonoBehaviour
         } 
     }
 
+    public void Drop()
+    {
+        rb.AddForce(GameManager.Instance.GetPlayerTransform().forward * thrustForce, ForceMode.Impulse);
+        hasBeenBumped = true;
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (!hasBeenBumped || hasHit || other.gameObject.CompareTag("Player")) return;
 
         noisePing.SpawnNoisePing(other);
         hasHit = true;
+
+        UIManager.Instance.staminaBar.InstantIncreaseAwakenessBy(awakenessIncreasePercentage);
 
         OnHit?.Invoke();
 
