@@ -25,6 +25,8 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
 
     public Light mainLight;
     public Renderer lightBulbRenderer;
+
+    [Header("FMOD Audio")]
     [FMODUnity.EventRef]
     public string LightSFX;
 
