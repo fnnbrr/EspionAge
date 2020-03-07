@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaunchArcRenderer : MonoBehaviour
 {
+    [Range(1.0f, 10.0f)] public float throwSensitivity = 2.0f;
+    
     public float velocity;
     public float angle;
     public int resolution = 10;
@@ -14,6 +14,7 @@ public class LaunchArcRenderer : MonoBehaviour
 
     private LineRenderer lr;
     private Camera mainCamera;
+    private Vector3 mousePosition;
 
     private void Awake()
     {
@@ -33,6 +34,7 @@ public class LaunchArcRenderer : MonoBehaviour
     {
         RenderArc();
         mainCamera = Camera.main;
+        mousePosition = transform.position;
     }
 
     // populating the line renderer withthe appropriate settings
@@ -44,9 +46,9 @@ public class LaunchArcRenderer : MonoBehaviour
         lr.SetPositions(arcArray);
     }
     
-    public void RenderArc(float newAngle)
+    public void RenderArc(float minAngle, float maxAngle)
     {
-        angle = newAngle;
+        angle = Mathf.Clamp(throwSensitivity * Vector3.Distance(transform.position, mousePosition), minAngle, maxAngle);
         RenderArc();
     }
 
@@ -73,19 +75,18 @@ public class LaunchArcRenderer : MonoBehaviour
         return new Vector3(x, y);
     }
 
-    private void Update(){
-
-        if (Input.GetMouseButton(0))
+    private void Update()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        LayerMask hitMask = LayerMask.GetMask("Terrain");
+        
+        if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, hitMask));
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            LayerMask hitMask = LayerMask.GetMask("Terrain");
+            mousePosition.x = hit.point.x;
+            mousePosition.z = hit.point.z;
             
-            if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, hitMask));
-            {
-                Vector3 mousePoint = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-                transform.LookAt(mousePoint);
-                transform.Rotate(0, 270, 0);
-            }
+            transform.LookAt(mousePosition);
+            transform.Rotate(0, 270, 0);
         }
     }
 }

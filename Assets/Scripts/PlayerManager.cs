@@ -20,7 +20,6 @@ public class PlayerManager : MonoBehaviour
 
     private LaunchArcRenderer launchArcRenderer;
     private List<GameObject> currentThrowables;
-    private bool isThrowing = false;
     private float startThrowTime;
 
     private List<Coroutine> spawnedCoroutines;
@@ -40,6 +39,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
+        launchArcRenderer.gameObject.SetActive(false);  // initially hide arc
         currentThrowables = new List<GameObject>();
         spawnedCoroutines = new List<Coroutine>();
 
@@ -79,20 +79,20 @@ public class PlayerManager : MonoBehaviour
             // This means that we either just let go, or like were never pressing in the first place...
             if (Mathf.Approximately(throwAxisValue, 0f))
             {
-                // So we check if we were previously throwing (so this means we just let go)
-                if (isThrowing)
+                // Check if the launch arc was being rendered (so this means we just let go)
+                if (launchArcRenderer.gameObject.activeInHierarchy)
                 {
                     // If so, then throw the object!!
-                    isThrowing = false;
+                    launchArcRenderer.gameObject.SetActive(false);
                     ThrowNext();
                 }
             }
             else
             {
                 // Otherwise, we started holding just now, so let's record the start time and stuff
-                if (!isThrowing)
+                if (!launchArcRenderer.gameObject.activeInHierarchy)
                 {
-                    isThrowing = true;
+                    launchArcRenderer.gameObject.SetActive(true);
                     startThrowTime = Time.time;
                 }
             }
@@ -102,10 +102,10 @@ public class PlayerManager : MonoBehaviour
     private void HandleDisplayThrow()
     {
         // If we are holding the button, then ping pong the launch arc angle
-        if (isThrowing)
+        if (launchArcRenderer.gameObject.activeInHierarchy)
         {
             startThrowTime += angleIncreaseSpeed * Time.deltaTime;
-            launchArcRenderer.RenderArc(Mathf.PingPong(startThrowTime, maxThrowAngle - minThrowAngle) + minThrowAngle);
+            launchArcRenderer.RenderArc(minThrowAngle, maxThrowAngle);
         }
     }
 
@@ -137,8 +137,8 @@ public class PlayerManager : MonoBehaviour
             currentRigidbody.AddForce(Quaternion.AngleAxis((launchArcRenderer.angle % 180f) - 90, launchArcRenderer.transform.forward) * launchArcRenderer.transform.up * launchArcRenderer.velocity * throwMultiplier, ForceMode.Impulse);
         }
 
-        // Reset the angle to 0, which also means the line renderer will not be visible
-        launchArcRenderer.RenderArc(0f);
+        // Disable/hide the launchArcRenderer after throwing
+        launchArcRenderer.gameObject.SetActive(false);
 
         OnThrow?.Invoke(current.GetComponent<Interactable>());
 
