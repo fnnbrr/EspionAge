@@ -59,7 +59,8 @@ public class PlayerManager : MonoBehaviour
 
         if (minDistance < dangerRadius)
         {
-            HandleIncreaseAwakeness((dangerRadius - minDistance) / dangerRadius);
+            float awakenessGain = Mathf.Pow(((dangerRadius - minDistance) / dangerRadius), 2.0f);
+            HandleIncreaseAwakeness(awakenessGain);
         }
     }
 

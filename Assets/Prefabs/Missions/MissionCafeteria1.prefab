@@ -52,6 +52,7 @@ MonoBehaviour:
       type: 3}
     spawnPosition: {x: -15, y: 3, z: -14}
     spawnRotation: {x: 0, y: 0, z: 0}
+    isInitiallyResponding: 0
     waypoints:
     - position: {x: -15, y: 0, z: 26}
       stayTime: 0
@@ -59,7 +60,7 @@ MonoBehaviour:
       stayTime: 0
     - position: {x: 0, y: 0, z: -14}
       stayTime: 0
-    startResponsePoint: {x: 0, y: 0, z: 0}
+    startResponsePoint: {x: -15, y: 3, z: -14}
     wanderBounds:
       position: {x: 0, y: 0, z: 0}
       radius: 0
@@ -75,6 +76,7 @@ MonoBehaviour:
         type: 3}
       spawnPosition: {x: -85, y: 0, z: -36}
       spawnRotation: {x: 0, y: 0, z: 0}
+      isInitiallyResponding: 1
       waypoints:
       - position: {x: 33, y: 0, z: 16}
         stayTime: 0
@@ -89,6 +91,7 @@ MonoBehaviour:
         type: 3}
       spawnPosition: {x: -85, y: 0, z: 36}
       spawnRotation: {x: 0, y: 0, z: 0}
+      isInitiallyResponding: 1
       waypoints:
       - position: {x: 11, y: 0, z: -40}
         stayTime: 0
