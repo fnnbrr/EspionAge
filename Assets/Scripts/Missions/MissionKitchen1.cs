@@ -88,7 +88,10 @@ public class MissionKitchen1 : AMission
 
     protected override void Cleanup()
     {
-        DestroyMissionObjects(missionObjects);
+        if (MissionManager.Instance)
+        {
+            MissionManager.Instance.DestroyMissionObjects(missionObjects);
+        }
         DestroyGameObjects(instantiatedMissionInteractables);
         DestroyGameObjects(instantiatedEnemies.Where(e => e).Select(e => e.gameObject).ToList());
 
@@ -240,14 +243,6 @@ public class MissionKitchen1 : AMission
         isRestarting = false;
 
         UIManager.Instance.FadeIn();
-    }
-
-    private void DestroyMissionObjects(List<MissionObject> missionObjects)
-    {
-        missionObjects.ForEach(o =>
-        {
-            MissionManager.Instance.DestroyMissionObject(o);
-        });
     }
 
     private void DestroyGameObjects(List<GameObject> gameObjects)
