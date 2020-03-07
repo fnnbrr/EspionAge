@@ -16,7 +16,6 @@ public class RegionManager : Singleton<RegionManager>
 
     // Treating this list as a stack where the last element is considered "current" zone
     private List<CameraZone> currentPlayerZones;
-    private CinemachineVirtualCamera currentWaitForBlendingCamera;
 
     public delegate void EnterZoneAction(CameraZone zone);
     public delegate void ExitZoneAction(CameraZone zone);
@@ -28,9 +27,14 @@ public class RegionManager : Singleton<RegionManager>
         currentPlayerZones = new List<CameraZone>();
     }
 
+    public bool PlayerIsInAZone()
+    {
+        return currentPlayerZones.Count > 0;
+    }
+
     public CameraZone GetCurrentZone()
     {
-        if (currentPlayerZones.Count == 0)
+        if (!PlayerIsInAZone())
         {
             return null;
         }
@@ -78,8 +82,6 @@ public class RegionManager : Singleton<RegionManager>
     {
         if (camera)
         {
-            currentWaitForBlendingCamera = camera;
-
             CameraManager.Instance.OnBlendingComplete += AlertBlendingComplete;
             CameraManager.Instance.BlendTo(camera);
         }
@@ -87,7 +89,7 @@ public class RegionManager : Singleton<RegionManager>
 
     private void AlertBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
-        if (currentWaitForBlendingCamera && toCamera == GetCurrentZone().mainCamera)  // we do not want to care about unrelated camera blending events
+        if (PlayerIsInAZone() && toCamera == GetCurrentZone().mainCamera)  // we do not want to care about unrelated camera blending events
         {
             CameraManager.Instance.OnBlendingComplete -= AlertBlendingComplete;
             OnPlayerEnterZone?.Invoke(GetCurrentZone());
