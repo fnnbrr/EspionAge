@@ -39,6 +39,7 @@ public class MissionEnemy
     public GameObject prefab;
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
+    public bool isInitiallyResponding = false;
 
     [Header("Specific Patroller Settings")]
     public List<EnemyWaypoint> waypoints;
@@ -145,7 +146,10 @@ public class MissionKitchen1 : AMission
                     case MissionEnemy.EnemyType.Patroller:
                         Patroller patrol = enemyComponent as Patroller;
                         patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
-                        patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
+                        if (enemy.isInitiallyResponding)
+                        {
+                            patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
+                        }
                         break;
                     case MissionEnemy.EnemyType.Chaser:
                         Chaser chaser = enemyComponent as Chaser;

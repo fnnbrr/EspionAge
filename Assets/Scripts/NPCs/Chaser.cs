@@ -19,8 +19,6 @@ public class Chaser : MonoBehaviour
     [Tooltip("After hearing a noise, how close should I search to that noise?")]
     public float noiseSearchRadius = 15.0f;
 
-    private const int SAMPLE_ATTEMPTS = 3; // gives NavMesh.SamplePosition room for error
-
     private Vector3 searchBoundsCenter;
     private float searchBoundsRadius;
     
@@ -36,6 +34,9 @@ public class Chaser : MonoBehaviour
         Searching,
         Patrolling,
     }
+    
+    [Header("Question Mark Icon")]
+    public GameObject questionMark;
     
     [Header("For Debugging")]
     [SerializeField] protected ActionStates currentState = ActionStates.Responding;
@@ -66,6 +67,7 @@ public class Chaser : MonoBehaviour
     
     public void InitializeResponderParameters(Vector3 newResponsePoint, Vector3 wanderPoint, float wanderRadius)
     {
+        SetState(ActionStates.Responding);
         responsePoint = newResponsePoint;
         searchBoundsCenter = wanderPoint;
         searchBoundsRadius = wanderRadius;
@@ -76,11 +78,11 @@ public class Chaser : MonoBehaviour
         if (chase && numTargetsInRange > 0 && currentState != ActionStates.Chasing)
         {
             ChaseTarget();
-            currentState = ActionStates.Chasing;
+            SetState(ActionStates.Chasing);
         }
         else if (numTargetsInRange == 0 && currentState == ActionStates.Chasing)
         {
-            currentState = defaultState;
+            SetState(defaultState);
         }
     }
     
@@ -102,14 +104,9 @@ public class Chaser : MonoBehaviour
         Vector3 randomPoint = searchBoundsCenter + Random.insideUnitSphere * searchBoundsRadius;
         NavMeshHit navHit;
 
-        int attemptsRemaining = SAMPLE_ATTEMPTS;
-        while (!NavMesh.SamplePosition(randomPoint, out navHit, searchBoundsRadius, NavMesh.AllAreas))
+        if (!NavMesh.SamplePosition(randomPoint, out navHit, searchBoundsRadius, NavMesh.AllAreas))
         {
-            attemptsRemaining -= 1;
-            if (attemptsRemaining < 0)
-            {
-                agent.SetDestination(searchBoundsCenter);
-            }
+            navHit.position = searchBoundsCenter;
         }
  
         agent.SetDestination(navHit.position);
@@ -144,7 +141,7 @@ public class Chaser : MonoBehaviour
             case ActionStates.Responding:
                 if (WaitComplete())
                 {
-                    currentState = ActionStates.Searching;
+                    SetState(ActionStates.Searching);
                 }
                 break;
             default:
@@ -163,14 +160,48 @@ public class Chaser : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.gameObject.CompareTag("Noise")) return;
-
-        // TODO: draw a "?" above the AI
-        currentState = ActionStates.Responding;
+        
+        SetState(ActionStates.Responding);
         
         searchBoundsCenter = other.gameObject.transform.position;
         searchBoundsRadius = noiseSearchRadius;
         agent.SetDestination(searchBoundsCenter);
 
         waitTimer = waitDurationSec;
+    }
+
+    protected void SetState(ActionStates newState)
+    {
+        // Ensures that question mark is properly shown/hidden
+        switch (newState)
+        {
+            case ActionStates.Searching:
+                ShowQuestionMark();
+                break;
+            case ActionStates.Responding:
+                ShowQuestionMark();
+                break;
+            case ActionStates.Chasing:
+                HideQuestionMark();
+                break;
+            case ActionStates.Patrolling:
+                HideQuestionMark();
+                break;
+            default:
+                HideQuestionMark();
+                break;
+        }
+        
+        currentState = newState;
+    }
+    
+    protected void ShowQuestionMark()
+    {
+        questionMark.SetActive(true);
+    }
+
+    protected void HideQuestionMark()
+    {
+        questionMark.SetActive(false);
     }
 }

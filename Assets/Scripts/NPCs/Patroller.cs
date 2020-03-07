@@ -14,12 +14,16 @@ public class Patroller : Chaser
     private List<Vector3> points = new List<Vector3>();
     private int destinationCount;
 
+    private void Awake()
+    {
+        defaultState = ActionStates.Patrolling;
+    }
+
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
 
-        defaultState = ActionStates.Patrolling;
         if (patrolWaypoints)
         {
             foreach (Transform childWaypoint in patrolWaypoints)
@@ -68,7 +72,7 @@ public class Patroller : Chaser
             case ActionStates.Responding:
                 if (WaitComplete())
                 {
-                    currentState = ActionStates.Searching;
+                    SetState(ActionStates.Searching);
                 }
                 break;
             case ActionStates.Searching:
@@ -82,7 +86,7 @@ public class Patroller : Chaser
                     else
                     {
                         curNumSearches = 0;
-                        currentState = defaultState;
+                        SetState(defaultState);
                     }
                 }
                 break;
