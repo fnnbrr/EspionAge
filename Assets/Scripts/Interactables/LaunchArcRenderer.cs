@@ -14,6 +14,7 @@ public class LaunchArcRenderer : MonoBehaviour
 
     private LineRenderer lr;
     private Camera mainCamera;
+    private Plane mouseHitPlane;
     private Vector3 mousePosition;
 
     private void Awake()
@@ -34,6 +35,7 @@ public class LaunchArcRenderer : MonoBehaviour
     {
         RenderArc();
         mainCamera = Camera.main;
+        mouseHitPlane = new Plane(Vector3.up, Vector3.zero);
         mousePosition = transform.position;
     }
 
@@ -78,12 +80,13 @@ public class LaunchArcRenderer : MonoBehaviour
     private void Update()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        LayerMask hitMask = LayerMask.GetMask("Terrain");
         
-        if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, hitMask));
+        if(mouseHitPlane.Raycast(ray, out float enter));
         {
-            mousePosition.x = hit.point.x;
-            mousePosition.z = hit.point.z;
+            Vector3 hitPoint = ray.GetPoint(enter);
+            
+            mousePosition.x = hitPoint.x;
+            mousePosition.z = hitPoint.z;
             
             transform.LookAt(mousePosition);
             transform.Rotate(0, 270, 0);
