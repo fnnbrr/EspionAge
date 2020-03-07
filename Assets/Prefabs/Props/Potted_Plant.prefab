@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5889392491211042612}
-  - component: {fileID: 5889392491211042619}
+  - component: {fileID: 1683919815520760387}
   m_Layer: 0
   m_Name: Potted_Plant
   m_TagString: Untagged
@@ -32,8 +32,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &5889392491211042619
-CapsuleCollider:
+--- !u!65 &1683919815520760387
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -42,10 +42,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.42414322
-  m_Height: 1.9553198
-  m_Direction: 1
-  m_Center: {x: 0.000000047683717, y: 0.38091442, z: 0.07585716}
+  serializedVersion: 2
+  m_Size: {x: 0.7044134, y: 0.8634266, z: 0.6847464}
+  m_Center: {x: -0.010604858, y: 0.17902103, z: -0.017609406}
 --- !u!1001 &9158841252889913600
 PrefabInstance:
   m_ObjectHideFlags: 0
