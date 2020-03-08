@@ -4,6 +4,7 @@ using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     public bool EnablePlayerInput { get; set; } = true;
+    public bool controllerConnected = false;
 
     void Start()
     {
@@ -12,6 +13,8 @@ public class PlayerController : MonoBehaviour
             CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
             CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
         }
+
+        controllerConnected = Input.GetJoystickNames().Length > 0;
     }
 
     private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)

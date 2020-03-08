@@ -49,20 +49,36 @@ public class ThrowController : MonoBehaviour
     {
         if (!GameManager.Instance.GetPlayerController().EnablePlayerInput || currentThrowables.Count <= 0) return;
 
-        // Start rendering throw arc
-        if (Input.GetMouseButtonDown(0) && !launchArcRenderer.gameObject.activeInHierarchy)
+        // Handle mouse + keyboard input
+        if (!GameManager.Instance.GetPlayerController().controllerConnected)
         {
-            launchArcRenderer.gameObject.SetActive(true);
+            // Start rendering throw arc
+            if (Input.GetMouseButtonDown(0) && !launchArcRenderer.gameObject.activeInHierarchy)
+            {
+                launchArcRenderer.gameObject.SetActive(true);
+            }
+            // Throw
+            else if (Input.GetMouseButtonUp(0) && launchArcRenderer.gameObject.activeInHierarchy)
+            {
+                ThrowNext();
+            }
+            // Stop rendering throw arc
+            else if (Input.GetMouseButtonDown(1) && launchArcRenderer.gameObject.activeInHierarchy)
+            {
+                launchArcRenderer.gameObject.SetActive(false);
+            }
         }
-        // Throw
-        else if (Input.GetMouseButtonUp(0) && launchArcRenderer.gameObject.activeInHierarchy)
+
+        // Handle controller input
+        else
         {
-            ThrowNext();
-        }
-        // Stop rendering throw arc
-        else if (Input.GetMouseButtonDown(1) && launchArcRenderer.gameObject.activeInHierarchy)
-        {
-            launchArcRenderer.gameObject.SetActive(false);
+            float throwAxisValue = Input.GetAxis(Constants.INPUT_THROW_GETDOWN);
+            
+            // Trigger is held down
+            if (!Mathf.Approximately(throwAxisValue, 0f) && launchArcRenderer.gameObject.activeInHierarchy)
+            {
+                ThrowNext();
+            }
         }
     }
 
