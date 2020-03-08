@@ -12,7 +12,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
     public float brightnessMultiplier = -0.5f;
 
     [Header("Movement Buffs")]
-    public PlayerController playerController;
+    public MovementController movementController;
     public float movementSpeedBuff = 5f;
     public float turnSpeedBuff = 5f;
 
@@ -42,7 +42,8 @@ public class AwakenessManager : Singleton<AwakenessManager>
         UIManager.Instance.staminaBar.OnChange += UpdateFilmGrain;
         UIManager.Instance.staminaBar.OnChange += UpdateColorGrading;
         UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
-        
+
+        movementController = GameManager.Instance.GetMovementController();
         UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
     }
 
@@ -76,8 +77,8 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private void UpdateMovementBuffs(float fillAmount)
     {
-        playerController.movementSpeed = playerController.baseMovementSpeed + (movementSpeedBuff * GetInterpolatedFillAmount(fillAmount));
-        playerController.turnSpeed = playerController.baseTurnSpeed + (turnSpeedBuff * GetInterpolatedFillAmount(fillAmount));
+        movementController.movementSpeed = movementController.baseMovementSpeed + (movementSpeedBuff * GetInterpolatedFillAmount(fillAmount));
+        movementController.turnSpeed = movementController.baseTurnSpeed + (turnSpeedBuff * GetInterpolatedFillAmount(fillAmount));
     }
 
     private void UpdateCameraDistance(float fillAmount)

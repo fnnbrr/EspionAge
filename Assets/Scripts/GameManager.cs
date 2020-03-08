@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -20,8 +19,9 @@ public class GameManager : Singleton<GameManager>
 
     private PlayerManager playerManager;
     private PlayerController playerController;
+    private MovementController movementController;
 
-    private void Start()
+    private void Awake()
     {
         if (!player)
         {
@@ -30,7 +30,11 @@ public class GameManager : Singleton<GameManager>
 
         playerManager = player.GetComponent<PlayerManager>();
         playerController = player.GetComponent<PlayerController>();
+        movementController = player.GetComponent<MovementController>();
+    }
 
+    private void Start()
+    {
         if (enableGameStart)
         {
             GameStart();
@@ -50,6 +54,11 @@ public class GameManager : Singleton<GameManager>
     public PlayerController GetPlayerController()
     {
         return playerController;
+    }
+    
+    public MovementController GetMovementController()
+    {
+        return movementController;
     }
 
     private void GameStart()

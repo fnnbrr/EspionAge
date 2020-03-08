@@ -186,7 +186,7 @@ public class MissionTutorial : AMission
 
     private IEnumerator WaitForPlayerMovement()
     {
-        while (!GameManager.Instance.GetPlayerController().IsMoving)
+        while (!GameManager.Instance.GetMovementController().IsMoving)
         {
             yield return new WaitForFixedUpdate();
         }
