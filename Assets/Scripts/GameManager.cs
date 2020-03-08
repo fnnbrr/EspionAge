@@ -16,7 +16,7 @@ public class GameManager : Singleton<GameManager>
     public bool enableGameStart = false;
     public SkipSettings skipSettings;
 
-    private PlayerManager playerManager;
+    private ThrowController throwController;
     private PlayerController playerController;
     private MovementController movementController;
 
@@ -27,7 +27,7 @@ public class GameManager : Singleton<GameManager>
             Utils.LogErrorAndStopPlayMode("GameManager expects a reference to a main player GameObject!");
         }
 
-        playerManager = player.GetComponent<PlayerManager>();
+        throwController = player.GetComponent<ThrowController>();
         playerController = player.GetComponent<PlayerController>();
         movementController = player.GetComponent<MovementController>();
     }
@@ -45,9 +45,9 @@ public class GameManager : Singleton<GameManager>
         return player.transform;
     }
 
-    public PlayerManager GetPlayerManager()
+    public ThrowController GetPlayerManager()
     {
-        return playerManager;
+        return throwController;
     }
 
     public PlayerController GetPlayerController()

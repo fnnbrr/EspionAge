@@ -7,7 +7,7 @@ public class DialogueInteractable : Interactable
     public Conversation conversation;
     public string npcVoicePath;
 
-    private PlayerManager playerManager;
+    private ThrowController throwController;
 
     private SpeakerUI speakerUIBirdie;
     private SpeakerUI speakerUINPC;
@@ -29,8 +29,8 @@ public class DialogueInteractable : Interactable
     {
         base.Start();
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
-        playerManager = GameManager.Instance.GetPlayerManager();
-        playerManager.OnInteractBegin += HandleAutoplayConversation;
+        throwController = GameManager.Instance.GetPlayerManager();
+        throwController.OnInteractBegin += HandleAutoplayConversation;
 
         characterTextOverlay = Utils.GetRequiredComponent<UITextOverlay>(this);
         playerTextOverlay = Utils.GetRequiredComponent<UITextOverlay>(player);
@@ -49,7 +49,7 @@ public class DialogueInteractable : Interactable
         speakerUIBirdie = Utils.GetRequiredComponentInChildren<SpeakerUI>(player);
         if(!autoPlaying)
         {
-            playerManager.InteractPlayer(this);
+            throwController.InteractPlayer(this);
             if (!isConversing)
             {
                 isConversing = true;

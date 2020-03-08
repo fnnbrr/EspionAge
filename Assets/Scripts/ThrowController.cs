@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class ThrowController : MonoBehaviour
 {
-    [Header("Awakeness")]
-    public float awakenessIncrease = 0.01f;
-    public float dangerRadius = 1000.0f;
-
-    [Header("Throwables")]
+    [Header("Throwing")]
     public Transform throwPosition;
     public float throwableDestroyTime = 5f;
     public float throwMultiplier = 0.08f;
@@ -17,8 +13,6 @@ public class PlayerManager : MonoBehaviour
 
     private LaunchArcRenderer launchArcRenderer;
     private List<GameObject> currentThrowables;
-
-    private List<Coroutine> spawnedCoroutines;
 
     public delegate void OnThrowEventHandler(Interactable source);
     public event OnThrowEventHandler OnThrow;
@@ -37,7 +31,6 @@ public class PlayerManager : MonoBehaviour
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
         launchArcRenderer.gameObject.SetActive(false);  // initially hide arc
         currentThrowables = new List<GameObject>();
-        spawnedCoroutines = new List<Coroutine>();
 
         UIManager.Instance.staminaBar.OnChange += UpdateThrowVelocity;
     }
@@ -45,17 +38,6 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         HandleThrowInput();
-    }
-
-    private void FixedUpdate()
-    {
-        float minDistance = DistToClosestEnemy();
-
-        if (minDistance < dangerRadius)
-        {
-            float awakenessGain = Mathf.Pow(((dangerRadius - minDistance) / dangerRadius), 2.0f);
-            HandleIncreaseAwakeness(awakenessGain);
-        }
     }
 
     private void UpdateThrowVelocity(float fillAmount)
@@ -146,45 +128,7 @@ public class PlayerManager : MonoBehaviour
             objectFader.FadeToTransparent();
         }
     }
-
-    private float DistToClosestEnemy()
-    {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        float minDistance = Mathf.Infinity;
-        Vector3 position = transform.position;
-        foreach (GameObject enemy in enemies)
-        {
-            float curDistance = Vector3.Distance(enemy.transform.position, position);
-            if (curDistance < minDistance)
-            {
-                minDistance = curDistance;
-            }
-        }
-        return minDistance;
-    }
-
-    // Note: Might need to do more testing if this is actually doing anything considerable...
-    //  but better safe than sorry to make sure coroutines we spawn are no longer running when we enter a minigame
-    void StopAllSpawnedCoroutines()
-    {
-        // No loose coroutines in MY house!
-        foreach (Coroutine c in spawnedCoroutines)
-        {
-            StopCoroutine(c);
-        }
-        spawnedCoroutines.Clear();
-    }
-
-    private void OnDisable()
-    {
-        StopAllSpawnedCoroutines();
-    }
-
-    void HandleIncreaseAwakeness(float multiplier)
-    {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseFillBy(multiplier * awakenessIncrease)));
-    }
-
+    
     public void InteractPlayer(DialogueInteractable source)
     {
         OnInteractBegin?.Invoke(source);
