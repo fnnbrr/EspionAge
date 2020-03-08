@@ -4,7 +4,6 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class LaunchArcRenderer : MonoBehaviour
 {
-    [Range(1.0f, 10.0f)] public float throwSensitivity = 2.0f;
     public float minThrowAngle = 0f;
     public float maxThrowAngle = 45f;
     
@@ -16,8 +15,6 @@ public class LaunchArcRenderer : MonoBehaviour
     private float radianAngle;
 
     private LineRenderer lr;
-    private Camera mainCamera;
-    private Plane mouseHitPlane;
     private Vector3 mousePosition;
 
     private void Awake()
@@ -28,15 +25,13 @@ public class LaunchArcRenderer : MonoBehaviour
 
     private void Start()
     {
-        mainCamera = Camera.main;
-        mouseHitPlane = new Plane(Vector3.up, Vector3.zero);
         mousePosition = transform.position;
     }
 
     // populating the line renderer with the appropriate settings
     private void RenderArc()
     {
-        float mouseAngle = throwSensitivity * Vector3.Distance(transform.position, mousePosition);
+        float mouseAngle = Vector3.Distance(transform.position, mousePosition);
         angle = Mathf.Clamp(mouseAngle, minThrowAngle, maxThrowAngle);
         
         lr.positionCount = resolution + 1;
@@ -70,27 +65,15 @@ public class LaunchArcRenderer : MonoBehaviour
     private void OnEnable()
     {
         // Allows arc to be rendered in correct position when re-enabled
-        if (mainCamera)
-        {
-            Update();
-        }
+        Update();
     }
 
     private void Update()
     {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        
-        if(mouseHitPlane.Raycast(ray, out float enter));
-        {
-            Vector3 hitPoint = ray.GetPoint(enter);
+        mousePosition = GameManager.Instance.GetThrowController().GetMousePosition();
+        transform.LookAt(mousePosition);
+        transform.Rotate(0, 270, 0);
             
-            mousePosition.x = hitPoint.x;
-            mousePosition.z = hitPoint.z;
-            
-            transform.LookAt(mousePosition);
-            transform.Rotate(0, 270, 0);
-            
-            RenderArc();
-        }
+        RenderArc();
     }
 }

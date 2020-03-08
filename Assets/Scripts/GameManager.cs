@@ -45,7 +45,7 @@ public class GameManager : Singleton<GameManager>
         return player.transform;
     }
 
-    public ThrowController GetPlayerManager()
+    public ThrowController GetThrowController()
     {
         return throwController;
     }

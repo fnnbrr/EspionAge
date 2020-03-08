@@ -26,7 +26,7 @@ public class InteractableAutoSpawner : MonoBehaviour
 
         if (interactableType == InteractableType.Throwable)
         {
-            GameManager.Instance.GetPlayerManager().OnThrow += OnInteractEnd;
+            GameManager.Instance.GetThrowController().OnThrow += OnInteractEnd;
         }
     }
 

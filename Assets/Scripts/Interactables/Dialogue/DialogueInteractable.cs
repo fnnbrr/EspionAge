@@ -29,7 +29,7 @@ public class DialogueInteractable : Interactable
     {
         base.Start();
         speakerUINPC = Utils.GetRequiredComponentInChildren<SpeakerUI>(this);
-        throwController = GameManager.Instance.GetPlayerManager();
+        throwController = GameManager.Instance.GetThrowController();
         throwController.OnInteractBegin += HandleAutoplayConversation;
 
         characterTextOverlay = Utils.GetRequiredComponent<UITextOverlay>(this);

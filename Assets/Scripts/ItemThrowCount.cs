@@ -12,7 +12,7 @@ public class ItemThrowCount : MonoBehaviour
 
     void Start()
     {
-        throwController = GameManager.Instance.GetPlayerManager();
+        throwController = GameManager.Instance.GetThrowController();
         if(throwController == null)
         {
             Utils.LogErrorAndStopPlayMode("Player manager does not exist");

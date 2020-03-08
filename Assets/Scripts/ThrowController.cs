@@ -5,6 +5,7 @@ using UnityEngine;
 public class ThrowController : MonoBehaviour
 {
     [Header("Throwing")]
+    [Range(1.0f, 10.0f)] public float throwSensitivity = 2.0f;
     public Transform throwPosition;
     public float throwableDestroyTime = 5f;
     public float throwMultiplier = 0.08f;
@@ -13,6 +14,9 @@ public class ThrowController : MonoBehaviour
 
     private LaunchArcRenderer launchArcRenderer;
     private List<GameObject> currentThrowables;
+    private Plane mouseHitPlane;
+    private Camera mainCamera;
+    private bool isThrowReset = true;
 
     public delegate void OnThrowEventHandler(Interactable source);
     public event OnThrowEventHandler OnThrow;
@@ -31,6 +35,9 @@ public class ThrowController : MonoBehaviour
         launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
         launchArcRenderer.gameObject.SetActive(false);  // initially hide arc
         currentThrowables = new List<GameObject>();
+        
+        mouseHitPlane = new Plane(Vector3.up, Vector3.zero);
+        mainCamera = Camera.main;
 
         UIManager.Instance.staminaBar.OnChange += UpdateThrowVelocity;
     }
@@ -43,6 +50,33 @@ public class ThrowController : MonoBehaviour
     private void UpdateThrowVelocity(float fillAmount)
     {
         launchArcRenderer.velocity = Mathf.Lerp(minThrowVelocity, maxThrowVelocity, fillAmount / StaminaBar.FILL_MAX);
+    }
+
+    public Vector3 GetMousePosition()
+    {
+        //if (mainCamera == null) return transform.position;
+        
+        // Handle mouse + keyboard input
+        if (!GameManager.Instance.GetPlayerController().controllerConnected)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                    
+            if(mouseHitPlane.Raycast(ray, out float enter));
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+                return throwSensitivity * new Vector3(hitPoint.x, transform.position.y, hitPoint.z);
+            }
+        }
+
+        // Handle controller input
+        else
+        {
+            Vector3 position = transform.position;
+            float horizontal = position.x + Input.GetAxis("Horizontal Right Stick");
+            float vertical = position.z + Input.GetAxis("Vertical Right Stick");
+            
+            return throwSensitivity * new Vector3(horizontal, position.y, vertical);
+        }
     }
 
     private void HandleThrowInput()
@@ -72,12 +106,36 @@ public class ThrowController : MonoBehaviour
         // Handle controller input
         else
         {
-            float throwAxisValue = Input.GetAxis(Constants.INPUT_THROW_GETDOWN);
+            bool isTriggerDown = !Mathf.Approximately(Input.GetAxis(Constants.INPUT_THROW_GETDOWN), 0f);
             
-            // Trigger is held down
-            if (!Mathf.Approximately(throwAxisValue, 0f) && launchArcRenderer.gameObject.activeInHierarchy)
+            // Right joystick is being used
+            if (!Mathf.Approximately(Input.GetAxis("Horizontal Right Stick") + Input.GetAxis("Vertical Right Stick"),
+                0f))
             {
-                ThrowNext();
+                if (!launchArcRenderer.gameObject.activeInHierarchy)
+                {
+                    // Start rendering throw arc
+                    launchArcRenderer.gameObject.SetActive(true);
+                }
+                else if (isTriggerDown && isThrowReset)
+                {
+                    // Throw
+                    isThrowReset = false;
+                    ThrowNext();
+                }
+            }
+
+            // Right joystick is not being used but arc is still being rendered
+            else if (launchArcRenderer.gameObject.activeInHierarchy)
+            {
+                // Stop rendering throw arc
+                launchArcRenderer.gameObject.SetActive(false);
+            }
+
+            // Reset trigger when released after being held down
+            if (!isThrowReset && !isTriggerDown)
+            {
+                isThrowReset = true;
             }
         }
     }
@@ -107,7 +165,7 @@ public class ThrowController : MonoBehaviour
             current.SetActive(true);
             current.transform.localPosition = Vector3.zero;
             current.transform.parent = null;
-            currentRigidbody.AddForce(Quaternion.AngleAxis((launchArcRenderer.angle % 180f) - 90, launchArcRenderer.transform.forward) * launchArcRenderer.transform.up * launchArcRenderer.velocity * throwMultiplier, ForceMode.Impulse);
+            currentRigidbody.AddForce(Quaternion.AngleAxis((launchArcRenderer.angle % 180f) - 90, launchArcRenderer.transform.forward) * launchArcRenderer.transform.up * (launchArcRenderer.velocity * throwMultiplier), ForceMode.Impulse);
         }
 
         // Disable/hide the launchArcRenderer after throwing
