@@ -173,12 +173,14 @@ public class MissionTutorial : AMission
         //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
 
         // Cutscene for once they enter the hallway
-        RegionManager.Instance.hallway.OnPlayerEnter += StartDropCutscene;
+        RegionManager.Instance.OnPlayerEnterZone += StartDropCutscene;
     }
 
-    private void StartDropCutscene()
+    private void StartDropCutscene(CameraZone zone)
     {
-        RegionManager.Instance.hallway.OnPlayerEnter -= StartDropCutscene;
+        if (zone != RegionManager.Instance.hallway) return;
+
+        RegionManager.Instance.OnPlayerEnterZone -= StartDropCutscene;
         StartCoroutine(WaitForPlayerMovement());
     }
 
@@ -392,7 +394,7 @@ public class MissionTutorial : AMission
         // Handle the cutscene event handlers
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.hallway.OnPlayerEnter -= StartDropCutscene;
+            RegionManager.Instance.OnPlayerEnterZone -= StartDropCutscene;
         }
         startCutscenePlayed = false;
 

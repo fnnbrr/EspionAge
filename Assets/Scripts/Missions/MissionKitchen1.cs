@@ -39,6 +39,7 @@ public class MissionEnemy
     public GameObject prefab;
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
+    public bool isInitiallyResponding = false;
 
     [Header("Specific Patroller Settings")]
     public List<EnemyWaypoint> waypoints;
@@ -83,7 +84,7 @@ public class MissionKitchen1 : AMission
         SpawnInteractables(missionCriticalInteractables);
         SpawnEnemies(startEnemies);
 
-        RegionManager.Instance.kitchen.OnPlayerEnter += StartCutscene;
+        RegionManager.Instance.OnPlayerEnterZone += StartCutscene;
     }
 
     protected override void Cleanup()
@@ -100,7 +101,7 @@ public class MissionKitchen1 : AMission
 
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
+            RegionManager.Instance.OnPlayerEnterZone -= StartCutscene;
         }
         startCutscenePlayed = false;
     }
@@ -148,7 +149,10 @@ public class MissionKitchen1 : AMission
                     case MissionEnemy.EnemyType.Patroller:
                         Patroller patrol = enemyComponent as Patroller;
                         patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
-                        patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
+                        if (enemy.isInitiallyResponding)
+                        {
+                            patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
+                        }
                         break;
                     case MissionEnemy.EnemyType.Chaser:
                         Chaser chaser = enemyComponent as Chaser;
@@ -168,14 +172,16 @@ public class MissionKitchen1 : AMission
         });
     }
 
-    private void StartCutscene()
+    private void StartCutscene(CameraZone zone)
     {
+        if (zone != RegionManager.Instance.kitchen) return;
+
         // The current assumptions are gonna be that:
         //  - we will have a camera where we need to set the look at
         //  - and it will have an already created Animator with a single state that it will start on Awake
         //
         // So we can just destroy it after the animation time is over and it should switch back to whatever the current camera was
-        RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
+        RegionManager.Instance.OnPlayerEnterZone -= StartCutscene;
 
         if (startCutscenePlayed) return;
 

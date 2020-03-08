@@ -118,8 +118,8 @@ public class UIMenuStatic<T> : MonoBehaviour where T : Enum
         // Early exit to limit how fast a user can move between buttons
         if (nextAxisInputTime > Time.time) return;
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        float vertical = Input.GetAxisRaw("Vertical");
 
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);

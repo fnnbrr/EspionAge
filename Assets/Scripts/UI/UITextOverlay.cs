@@ -23,6 +23,13 @@ public class UITextOverlay : MonoBehaviour
     {
         UIManager.Instance.pressAPrompt.SetActive(isTyping);
 
+        HandleInput();
+    }
+
+    private void HandleInput()
+    {
+        if (UIManager.Instance.IsGamePaused()) return;
+
         if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
         {
             if (!skipRequest)
