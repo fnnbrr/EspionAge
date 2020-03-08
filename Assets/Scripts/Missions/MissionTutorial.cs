@@ -11,7 +11,7 @@ public class MissionTutorial : AMission
     public Vector3 playerRespawnPosition;
     public Vector3 playerRespawnRotation;
 
-    [Header("Cutscene")]
+    [Header("Cutscenes")]
     public List<string> startCutsceneTexts;
     public GameObject awakenessPointerUIAnimation;
     public GameObject vaseFocusCameraPrefab;
@@ -19,6 +19,7 @@ public class MissionTutorial : AMission
     public GameObject enemyFocusCameraPrefab;
     public GameObject enemyCutsceneText;
     public GameObject birdieRunawayCutsceneText;
+    public GameObject specialAbilityPointerUIAnimation;
 
     [Header("Vase - General")]
     public GameObject vasePrefab;
@@ -42,10 +43,8 @@ public class MissionTutorial : AMission
     //[Header("Note")]
     //public MissionObject note;
 
-    [Header("Dining Room Blocking")]
-    public GameObject blockObject;
-    public List<Vector3> doorBlockingObjectPositions;
-    private List<GameObject> spawnedBlockingObjects;
+    [Header("Misc. Objects")]
+    public List<MissionObject> extraObjects;
 
     private bool startCutscenePlayed = false;
     private bool respawning = false;
@@ -114,7 +113,6 @@ public class MissionTutorial : AMission
         spawnedBrokenVases = new List<GameObject>();
         spawnedEnemies = new List<SpawnedEnemy>();
         camerasToCleanUp = new List<GameObject>();
-        spawnedBlockingObjects = new List<GameObject>();
     }
 
     protected override void Initialize()
@@ -137,7 +135,7 @@ public class MissionTutorial : AMission
 
         // Spawn all the other vases
         SpawnRegularVases();
-        SpawnBlockingObjects();
+        SpawnExtraObjects();
 
         // Listen for the player to pass through the final door
         RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
@@ -219,6 +217,27 @@ public class MissionTutorial : AMission
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
         yield return StartCoroutine(PlayCutsceneText(birdieRunawayCutsceneText));
+
+        UIManager.Instance.staminaBar.OnLightningEnabled += StartSpecialAbilityTutorial;
+    }
+
+    private void StartSpecialAbilityTutorial(bool enabled)
+    {
+        if (!enabled) return;
+
+        // this is the moment we've all been waiting for
+        UIManager.Instance.staminaBar.OnLightningEnabled -= StartSpecialAbilityTutorial;
+
+        StartCoroutine(DisplaySpecialAbilityTutorial());
+    }
+
+    private IEnumerator DisplaySpecialAbilityTutorial()
+    {
+        Time.timeScale = 0f;
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        yield return StartCoroutine(PlayCutsceneText(specialAbilityPointerUIAnimation));
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+        Time.timeScale = 1f;
     }
 
     private void SpawnEnemies()
@@ -280,7 +299,7 @@ public class MissionTutorial : AMission
 
         SpawnRegularVases();
         SpawnEnemies();
-        SpawnBlockingObjects();
+        SpawnExtraObjects();
 
         UIManager.Instance.FadeIn();
         yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
@@ -392,11 +411,11 @@ public class MissionTutorial : AMission
         });
     }
 
-    private void SpawnBlockingObjects()
+    private void SpawnExtraObjects()
     {
-        doorBlockingObjectPositions.ForEach(p =>
+        extraObjects.ForEach(i =>
         {
-            spawnedBlockingObjects.Add(Instantiate(blockObject, p, Quaternion.identity));
+            i.spawnedInstance = MissionManager.Instance.SpawnMissionObject(i);
         });
     }
 
@@ -416,8 +435,13 @@ public class MissionTutorial : AMission
         DestroyFromList(spawnedBrokenVases);
         DestroyFromList(spawnedVases.Select(v => v.vaseObject).ToList());
         DestroyFromList(spawnedVases.Select(v => v.vaseStand).ToList());
+        spawnedVases.Clear();
         DestroyFromList(spawnedEnemies.Select(e => e.gameObject).ToList());
-        DestroyFromList(spawnedBlockingObjects);
+        spawnedEnemies.Clear();
+        if (MissionManager.Instance)
+        {
+            MissionManager.Instance.DestroyMissionObjects(extraObjects);
+        }
     }
 
     private void DestroyFromList(List<GameObject> gameObjects)

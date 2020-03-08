@@ -17,7 +17,7 @@ public class UITextOverlay : MonoBehaviour
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
-    public bool usedForTextCutscenes = false;
+    private bool usedForTextCutscenes = false;
 
     private void Update()
     {
