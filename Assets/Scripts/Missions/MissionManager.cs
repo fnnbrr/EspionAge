@@ -184,4 +184,12 @@ public class MissionManager : Singleton<MissionManager>
             Destroy(missionObject.spawnedInstance);
         }
     }
+
+    public void DestroyMissionObjects(List<MissionObject> missionObjects)
+    {
+        missionObjects.ForEach(o =>
+        {
+            DestroyMissionObject(o);
+        });
+    }
 }

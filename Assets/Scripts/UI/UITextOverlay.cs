@@ -17,11 +17,18 @@ public class UITextOverlay : MonoBehaviour
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
-    public bool usedForTextCutscenes = false;
+    private bool usedForTextCutscenes = false;
 
     private void Update()
     {
         UIManager.Instance.pressAPrompt.SetActive(isTyping);
+
+        HandleInput();
+    }
+
+    private void HandleInput()
+    {
+        if (UIManager.Instance.IsGamePaused()) return;
 
         if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
         {

@@ -66,17 +66,17 @@ Canvas:
   m_GameObject: {fileID: 7915639755219878390}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &7915639755219878393
 MonoBehaviour:
@@ -117,6 +117,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &951093942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7915639755895423201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2a146b2f60f1492c836891f8a776db7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charTypeSpeed: 0.05
+  textMesh: {fileID: 7915639755895423203}
+  usedForTextCutscenes: 0
 --- !u!114 &7915639755588706789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,14 +274,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: TextOverlay
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8001213164169146047, guid: f84c9847553ff4042bc8d344549e8afb, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f84c9847553ff4042bc8d344549e8afb, type: 3}
+--- !u!1 &7915639755895423201 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8001213164169146043, guid: f84c9847553ff4042bc8d344549e8afb,
+    type: 3}
+  m_PrefabInstance: {fileID: 202667001001307738}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7915639755895423202 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8001213164169146040, guid: f84c9847553ff4042bc8d344549e8afb,
     type: 3}
   m_PrefabInstance: {fileID: 202667001001307738}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7915639755895423203 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8001213164169146041, guid: f84c9847553ff4042bc8d344549e8afb,
+    type: 3}
+  m_PrefabInstance: {fileID: 202667001001307738}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7915639755895423201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1657164150619955776
 PrefabInstance:
   m_ObjectHideFlags: 0

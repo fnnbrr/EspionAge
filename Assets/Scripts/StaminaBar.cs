@@ -24,9 +24,11 @@ public class StaminaBar : MonoBehaviour
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
 
-    // Events for others to subscribe to OnChange events
     public delegate void ChangedAction(float fillAmount);
     public event ChangedAction OnChange;
+
+    public delegate void LightningEnabledAction(bool enabled);
+    public event LightningEnabledAction OnLightningEnabled;
 
     [HideInInspector] public const float FILL_MAX = 1f;
 
@@ -130,6 +132,10 @@ public class StaminaBar : MonoBehaviour
 
     private void EnableLightning(bool enable)
     {
+        if (lightningActive != enable)
+        {
+            OnLightningEnabled?.Invoke(enable);
+        }
         lightningActive = enable;
         lightningRoot.SetActive(enable);
     }

@@ -15,7 +15,6 @@ public class GameManager : Singleton<GameManager>
     [Header("Game Settings")]
     public bool enableGameStart = false;
     public SkipSettings skipSettings;
-    public bool enableFog = false;
 
     private PlayerManager playerManager;
     private PlayerController playerController;
