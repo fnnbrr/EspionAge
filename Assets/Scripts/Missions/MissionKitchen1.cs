@@ -84,7 +84,7 @@ public class MissionKitchen1 : AMission
         SpawnInteractables(missionCriticalInteractables);
         SpawnEnemies(startEnemies);
 
-        RegionManager.Instance.kitchen.OnPlayerEnter += StartCutscene;
+        RegionManager.Instance.OnPlayerEnterZone += StartCutscene;
     }
 
     protected override void Cleanup()
@@ -98,7 +98,7 @@ public class MissionKitchen1 : AMission
 
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
+            RegionManager.Instance.OnPlayerEnterZone -= StartCutscene;
         }
         startCutscenePlayed = false;
     }
@@ -169,14 +169,16 @@ public class MissionKitchen1 : AMission
         });
     }
 
-    private void StartCutscene()
+    private void StartCutscene(CameraZone zone)
     {
+        if (zone != RegionManager.Instance.kitchen) return;
+
         // The current assumptions are gonna be that:
         //  - we will have a camera where we need to set the look at
         //  - and it will have an already created Animator with a single state that it will start on Awake
         //
         // So we can just destroy it after the animation time is over and it should switch back to whatever the current camera was
-        RegionManager.Instance.kitchen.OnPlayerEnter -= StartCutscene;
+        RegionManager.Instance.OnPlayerEnterZone -= StartCutscene;
 
         if (startCutscenePlayed) return;
 
