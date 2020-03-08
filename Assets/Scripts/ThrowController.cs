@@ -5,7 +5,8 @@ using UnityEngine;
 public class ThrowController : MonoBehaviour
 {
     [Header("Throwing")]
-    [Range(1.0f, 10.0f)] public float throwSensitivity = 2.0f;
+    [Range(1.0f, 10.0f)] public float sensitivityMouse = 2.0f;
+    [Range(1.0f, 10.0f)] public float sensitivityController = 2.0f;
     public Transform throwPosition;
     public float throwableDestroyTime = 5f;
     public float throwMultiplier = 0.08f;
@@ -16,6 +17,7 @@ public class ThrowController : MonoBehaviour
     private List<GameObject> currentThrowables;
     private Plane mouseHitPlane;
     private Camera mainCamera;
+    private bool mainCameraActive = false;
     private bool isThrowReset = true;
 
     public delegate void OnThrowEventHandler(Interactable source);
@@ -54,29 +56,38 @@ public class ThrowController : MonoBehaviour
 
     public Vector3 GetMousePosition()
     {
-        //if (mainCamera == null) return transform.position;
-        
-        // Handle mouse + keyboard input
-        if (!GameManager.Instance.GetPlayerController().controllerConnected)
+        if (mainCameraActive)
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                    
-            if(mouseHitPlane.Raycast(ray, out float enter));
+            Vector3 position = transform.position;
+            
+            // Handle mouse + keyboard input
+            if (!GameManager.Instance.GetPlayerController().controllerConnected)
             {
-                Vector3 hitPoint = ray.GetPoint(enter);
-                return throwSensitivity * new Vector3(hitPoint.x, transform.position.y, hitPoint.z);
+                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                        
+                if(mouseHitPlane.Raycast(ray, out float enter))
+                {
+                    Vector3 hitPoint = ray.GetPoint(enter);
+                    
+                    float horizontal = sensitivityMouse * (hitPoint.x - position.x);
+                    float vertical = sensitivityMouse * (hitPoint.z - position.z);
+                
+                    return new Vector3(position.x + horizontal, position.y, position.z + vertical);
+                }
+            }
+    
+            // Handle controller input
+            else
+            {
+                float horizontal = 10 * sensitivityController * Input.GetAxis("Vertical Right Stick");
+                float vertical = 10 * sensitivityController * Input.GetAxis("Horizontal Right Stick");
+                
+                return new Vector3(position.x + horizontal, position.y, position.z + vertical);
             }
         }
 
-        // Handle controller input
-        else
-        {
-            Vector3 position = transform.position;
-            float horizontal = position.x + Input.GetAxis("Horizontal Right Stick");
-            float vertical = position.z + Input.GetAxis("Vertical Right Stick");
-            
-            return throwSensitivity * new Vector3(horizontal, position.y, vertical);
-        }
+        if (mainCamera != null) mainCameraActive = true;
+        return transform.position;
     }
 
     private void HandleThrowInput()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using Cinemachine;
 
 public class PlayerController : MonoBehaviour
@@ -14,7 +15,18 @@ public class PlayerController : MonoBehaviour
             CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
         }
 
-        controllerConnected = Input.GetJoystickNames().Length > 0;
+        SetControllerConnected();
+    }
+
+    private void SetControllerConnected()
+    {
+        string[] controllerNames = Input.GetJoystickNames();
+        
+        if (controllerNames.Length <= 0) return;
+        if (controllerNames.All(string.IsNullOrEmpty)) return;
+        
+        controllerConnected = true;
+        print("CONNECTED: " + controllerNames[0]);
     }
 
     private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
