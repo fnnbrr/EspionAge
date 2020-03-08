@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaunchArcRenderer : MonoBehaviour
 {
     [Range(1.0f, 10.0f)] public float throwSensitivity = 2.0f;
+    public float minThrowAngle = 0f;
+    public float maxThrowAngle = 45f;
     
     public float velocity;
     public float angle;
@@ -23,35 +26,22 @@ public class LaunchArcRenderer : MonoBehaviour
         g = Mathf.Abs(Physics.gravity.y);
     }
 
-    private void OnValidate()
+    private void Start()
     {
-        if (lr != null && Application.isPlaying)
-        {
-            RenderArc();
-        }
-    }
-
-    void Start()
-    {
-        RenderArc();
         mainCamera = Camera.main;
         mouseHitPlane = new Plane(Vector3.up, Vector3.zero);
         mousePosition = transform.position;
     }
 
-    // populating the line renderer withthe appropriate settings
-    public void RenderArc()
+    // populating the line renderer with the appropriate settings
+    private void RenderArc()
     {
+        float mouseAngle = throwSensitivity * Vector3.Distance(transform.position, mousePosition);
+        angle = Mathf.Clamp(mouseAngle, minThrowAngle, maxThrowAngle);
+        
         lr.positionCount = resolution + 1;
-
         Vector3[] arcArray = CalculateArcArray();
         lr.SetPositions(arcArray);
-    }
-    
-    public void RenderArc(float minAngle, float maxAngle)
-    {
-        angle = Mathf.Clamp(throwSensitivity * Vector3.Distance(transform.position, mousePosition), minAngle, maxAngle);
-        RenderArc();
     }
 
     Vector3[] CalculateArcArray()
@@ -77,6 +67,15 @@ public class LaunchArcRenderer : MonoBehaviour
         return new Vector3(x, y);
     }
 
+    private void OnEnable()
+    {
+        // Allows arc to be rendered in correct position when re-enabled
+        if (mainCamera)
+        {
+            Update();
+        }
+    }
+
     private void Update()
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -90,6 +89,8 @@ public class LaunchArcRenderer : MonoBehaviour
             
             transform.LookAt(mousePosition);
             transform.Rotate(0, 270, 0);
+            
+            RenderArc();
         }
     }
 }

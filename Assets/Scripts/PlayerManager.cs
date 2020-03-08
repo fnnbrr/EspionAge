@@ -12,15 +12,11 @@ public class PlayerManager : MonoBehaviour
     public Transform throwPosition;
     public float throwableDestroyTime = 5f;
     public float throwMultiplier = 0.08f;
-    public float angleIncreaseSpeed = 45f;
-    public float minThrowAngle = 0f;
-    public float maxThrowAngle = 90f;
     public float minThrowVelocity = 10f;
     public float maxThrowVelocity = 20f;
 
     private LaunchArcRenderer launchArcRenderer;
     private List<GameObject> currentThrowables;
-    private float startThrowTime;
 
     private List<Coroutine> spawnedCoroutines;
 
@@ -53,8 +49,6 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        HandleDisplayThrow();
-
         float minDistance = DistToClosestEnemy();
 
         if (minDistance < dangerRadius)
@@ -71,42 +65,22 @@ public class PlayerManager : MonoBehaviour
 
     private void HandleThrowInput()
     {
-        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
+        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput || currentThrowables.Count <= 0) return;
 
-        if (launchArcRenderer && currentThrowables.Count > 0)
+        // Start rendering throw arc
+        if (Input.GetMouseButtonDown(0) && !launchArcRenderer.gameObject.activeInHierarchy)
         {
-            float throwAxisValue = Input.GetAxis(Constants.INPUT_THROW_GETDOWN);
-
-            // This means that we either just let go, or like were never pressing in the first place...
-            if (Mathf.Approximately(throwAxisValue, 0f))
-            {
-                // Check if the launch arc was being rendered (so this means we just let go)
-                if (launchArcRenderer.gameObject.activeInHierarchy)
-                {
-                    // If so, then throw the object!!
-                    launchArcRenderer.gameObject.SetActive(false);
-                    ThrowNext();
-                }
-            }
-            else
-            {
-                // Otherwise, we started holding just now, so let's record the start time and stuff
-                if (!launchArcRenderer.gameObject.activeInHierarchy)
-                {
-                    launchArcRenderer.gameObject.SetActive(true);
-                    startThrowTime = Time.time;
-                }
-            }
+            launchArcRenderer.gameObject.SetActive(true);
         }
-    }
-
-    private void HandleDisplayThrow()
-    {
-        // If we are holding the button, then ping pong the launch arc angle
-        if (launchArcRenderer.gameObject.activeInHierarchy)
+        // Throw
+        else if (Input.GetMouseButtonUp(0) && launchArcRenderer.gameObject.activeInHierarchy)
         {
-            startThrowTime += angleIncreaseSpeed * Time.deltaTime;
-            launchArcRenderer.RenderArc(minThrowAngle, maxThrowAngle);
+            ThrowNext();
+        }
+        // Stop rendering throw arc
+        else if (Input.GetMouseButtonDown(1) && launchArcRenderer.gameObject.activeInHierarchy)
+        {
+            launchArcRenderer.gameObject.SetActive(false);
         }
     }
 
