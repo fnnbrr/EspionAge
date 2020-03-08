@@ -60,28 +60,27 @@ public class ThrowController : MonoBehaviour
         {
             Vector3 position = transform.position;
             
-            // Handle mouse + keyboard input
-            if (!GameManager.Instance.GetPlayerController().controllerConnected)
-            {
-                Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                        
-                if(mouseHitPlane.Raycast(ray, out float enter))
-                {
-                    Vector3 hitPoint = ray.GetPoint(enter);
-                    
-                    float horizontal = sensitivityMouse * (hitPoint.x - position.x);
-                    float vertical = sensitivityMouse * (hitPoint.z - position.z);
-                
-                    return new Vector3(position.x + horizontal, position.y, position.z + vertical);
-                }
-            }
-    
             // Handle controller input
-            else
+            if (GameManager.Instance.GetPlayerController().controllerConnected && 
+                !Mathf.Approximately(Input.GetAxis("Horizontal Right Stick") + Input.GetAxis("Vertical Right Stick"),
+                    0f))
             {
                 float horizontal = 10 * sensitivityController * Input.GetAxis("Vertical Right Stick");
                 float vertical = 10 * sensitivityController * Input.GetAxis("Horizontal Right Stick");
                 
+                return new Vector3(position.x + horizontal, position.y, position.z + vertical);
+            }
+            
+            // Handle mouse + keyboard input
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+                    
+            if(mouseHitPlane.Raycast(ray, out float enter))
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+                
+                float horizontal = sensitivityMouse * (hitPoint.x - position.x);
+                float vertical = sensitivityMouse * (hitPoint.z - position.z);
+            
                 return new Vector3(position.x + horizontal, position.y, position.z + vertical);
             }
         }
@@ -94,31 +93,11 @@ public class ThrowController : MonoBehaviour
     {
         if (!GameManager.Instance.GetPlayerController().EnablePlayerInput || currentThrowables.Count <= 0) return;
 
-        // Handle mouse + keyboard input
-        if (!GameManager.Instance.GetPlayerController().controllerConnected)
-        {
-            // Start rendering throw arc
-            if (Input.GetMouseButtonDown(0) && !launchArcRenderer.gameObject.activeInHierarchy)
-            {
-                launchArcRenderer.gameObject.SetActive(true);
-            }
-            // Throw
-            else if (Input.GetMouseButtonUp(0) && launchArcRenderer.gameObject.activeInHierarchy)
-            {
-                ThrowNext();
-            }
-            // Stop rendering throw arc
-            else if (Input.GetMouseButtonDown(1) && launchArcRenderer.gameObject.activeInHierarchy)
-            {
-                launchArcRenderer.gameObject.SetActive(false);
-            }
-        }
-
         // Handle controller input
-        else
+        if (GameManager.Instance.GetPlayerController().controllerConnected)
         {
             bool isTriggerDown = !Mathf.Approximately(Input.GetAxis(Constants.INPUT_THROW_GETDOWN), 0f);
-            
+
             // Right joystick is being used
             if (!Mathf.Approximately(Input.GetAxis("Horizontal Right Stick") + Input.GetAxis("Vertical Right Stick"),
                 0f))
@@ -130,14 +109,14 @@ public class ThrowController : MonoBehaviour
                 }
                 else if (isTriggerDown && isThrowReset)
                 {
-                    // Throw
                     isThrowReset = false;
                     ThrowNext();
                 }
             }
 
-            // Right joystick is not being used but arc is still being rendered
-            else if (launchArcRenderer.gameObject.activeInHierarchy)
+            // Right joystick (and mouse) is not being used but arc is still being rendered
+            else if (launchArcRenderer.gameObject.activeInHierarchy && 
+                     !Input.GetMouseButton(0) && !Input.GetMouseButtonUp(0))
             {
                 // Stop rendering throw arc
                 launchArcRenderer.gameObject.SetActive(false);
@@ -148,6 +127,22 @@ public class ThrowController : MonoBehaviour
             {
                 isThrowReset = true;
             }
+        }
+
+        // Handle mouse + keyboard input
+        if (Input.GetMouseButtonDown(0) && !launchArcRenderer.gameObject.activeInHierarchy)
+        {
+            // Start rendering throw arc
+            launchArcRenderer.gameObject.SetActive(true);
+        }
+        else if (Input.GetMouseButtonUp(0) && launchArcRenderer.gameObject.activeInHierarchy)
+        {
+            ThrowNext();
+        }
+        else if (Input.GetMouseButtonDown(1) && launchArcRenderer.gameObject.activeInHierarchy)
+        {
+            // Stop rendering throw arc
+            launchArcRenderer.gameObject.SetActive(false);
         }
     }
 
