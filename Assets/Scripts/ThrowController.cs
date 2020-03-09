@@ -62,8 +62,8 @@ public class ThrowController : MonoBehaviour
             
             // Handle controller input
             if (GameManager.Instance.GetPlayerController().controllerConnected && 
-                !Mathf.Approximately(Input.GetAxis("Horizontal Right Stick") + Input.GetAxis("Vertical Right Stick"),
-                    0f))
+                (PlayerController.InputAxisInUse("Horizontal Right Stick") || 
+                 PlayerController.InputAxisInUse("Vertical Right Stick")))
             {
                 float horizontal = 10 * sensitivityController * Input.GetAxis("Vertical Right Stick");
                 float vertical = 10 * sensitivityController * Input.GetAxis("Horizontal Right Stick");
@@ -96,11 +96,11 @@ public class ThrowController : MonoBehaviour
         // Handle controller input
         if (GameManager.Instance.GetPlayerController().controllerConnected)
         {
-            bool isTriggerDown = !Mathf.Approximately(Input.GetAxis(Constants.INPUT_THROW_GETDOWN), 0f);
+            bool isTriggerDown = PlayerController.InputAxisInUse(Constants.INPUT_THROW_GETDOWN);
 
             // Right joystick is being used
-            if (!Mathf.Approximately(Input.GetAxis("Horizontal Right Stick") + Input.GetAxis("Vertical Right Stick"),
-                0f))
+            if (PlayerController.InputAxisInUse("Horizontal Right Stick") || 
+                PlayerController.InputAxisInUse("Vertical Right Stick"))
             {
                 if (!launchArcRenderer.gameObject.activeInHierarchy)
                 {
@@ -184,10 +184,7 @@ public class ThrowController : MonoBehaviour
 
     public void ResetThrowables()
     {
-        currentThrowables.ForEach(t =>
-        {
-            Destroy(t);
-        });
+        currentThrowables.ForEach(Destroy);
         currentThrowables.Clear();
 
         OnThrowableReset?.Invoke();

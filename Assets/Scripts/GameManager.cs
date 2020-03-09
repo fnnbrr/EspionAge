@@ -26,10 +26,10 @@ public class GameManager : Singleton<GameManager>
         {
             Utils.LogErrorAndStopPlayMode("GameManager expects a reference to a main player GameObject!");
         }
-
-        throwController = player.GetComponent<ThrowController>();
-        playerController = player.GetComponent<PlayerController>();
-        movementController = player.GetComponent<MovementController>();
+        
+        throwController = Utils.GetRequiredComponent<ThrowController>(player);
+        playerController = Utils.GetRequiredComponent<PlayerController>(player);
+        movementController = Utils.GetRequiredComponent<MovementController>(player);
     }
 
     private void Start()

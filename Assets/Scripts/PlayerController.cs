@@ -21,12 +21,16 @@ public class PlayerController : MonoBehaviour
     private void SetControllerConnected()
     {
         string[] controllerNames = Input.GetJoystickNames();
-        
-        if (controllerNames.Length <= 0) return;
-        if (controllerNames.All(string.IsNullOrEmpty)) return;
-        
-        controllerConnected = true;
-        print("CONNECTED: " + controllerNames[0]);
+
+        if (controllerNames.Length <= 0 || controllerNames.All(string.IsNullOrEmpty))
+        {
+            controllerConnected = false;
+        }
+        else
+        {
+            controllerConnected = true;
+            print("CONNECTED: " + controllerNames[0]);
+        }
     }
 
     private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
@@ -37,5 +41,10 @@ public class PlayerController : MonoBehaviour
     private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
         EnablePlayerInput = true;
+    }
+    
+    public static bool InputAxisInUse(string axisName)
+    {
+        return !Mathf.Approximately(Input.GetAxis(axisName), 0f);
     }
 }
