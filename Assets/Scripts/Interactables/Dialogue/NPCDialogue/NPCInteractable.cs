@@ -4,10 +4,23 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [System.Serializable]
-public enum NPCReactiveAction
+public enum ENPCReactiveAction
 {
     None,
-    Teleport
+    Teleport,
+    Destroy
+}
+
+[System.Serializable]
+public class NPCReactiveAction
+{
+    public ENPCReactiveAction actionType;
+
+    [Header("Used for Teleport")]
+    public Vector3 actionPosition;
+
+    [Header("Used for Destroy")]
+    public List<GameObject> objects;
 }
 
 [System.Serializable]
@@ -21,8 +34,7 @@ public class NPCMissionConvos
     public Conversation afterConvo;
 
     [Header("Reactive Actions")]
-    public NPCReactiveAction doOnComplete;
-    public Vector3 reactiveActionPosition;
+    public List<NPCReactiveAction> doOnComplete;
 }
 
 public class NPCInteractable : DialogueInteractable
@@ -148,9 +160,9 @@ public class NPCInteractable : DialogueInteractable
                     // Start mission and store reference because needed to end mission
                     startedMission = MissionManager.Instance.StartMission(currentMissionConvos.missionsEnum);
                     startedMission.OnMissionComplete += HandleOnMissionComplete;
-                    startedMission.OnMissionComplete += TryReactiveAction;
+                    startedMission.OnMissionComplete += TryReactiveActions;
                     startedMission.OnMissionReset += HandleOnMissionReset;
-                    startedMission.OnMissionReset += TryResetReactiveAction;
+                    startedMission.OnMissionReset += TryResetReactiveActions;
                 }
                 else if (startedMission != null && ProgressManager.Instance.GetMissionStatus(startedMission) == MissionStatusCode.Started)
                 {
@@ -162,11 +174,14 @@ public class NPCInteractable : DialogueInteractable
                     // Ends current mission with NPC
                     MissionManager.Instance.EndMission(currentMissionConvos.missionsEnum);
 
+                    // Cleanup any reactive actions now
+                    CleanupReactiveActions();
+
                     // Unsubscribe
                     startedMission.OnMissionComplete -= HandleOnMissionComplete;
-                    startedMission.OnMissionComplete -= TryReactiveAction;
+                    startedMission.OnMissionComplete -= TryReactiveActions;
                     startedMission.OnMissionReset -= HandleOnMissionReset;
-                    startedMission.OnMissionReset -= TryResetReactiveAction;
+                    startedMission.OnMissionReset -= TryResetReactiveActions;
                     startedMission = null;
                     missionsOffered.RemoveAt(0);
 
@@ -187,34 +202,67 @@ public class NPCInteractable : DialogueInteractable
         base.OnInteract();
     }
 
-    private void TryReactiveAction()
+    private void TryReactiveActions()
     {
-        switch (currentMissionConvos.doOnComplete)
+        print("TryReactiveActions");
+        currentMissionConvos.doOnComplete.ForEach(a =>
         {
-            case NPCReactiveAction.None:
-                break;
-            case NPCReactiveAction.Teleport:
-                SetOriginPosition(currentMissionConvos.reactiveActionPosition);
-                transform.position = originPosition;
-                break;
-            default:
-                break;
-        }
+            switch (a.actionType)
+            {
+                case ENPCReactiveAction.None:
+                    break;
+                case ENPCReactiveAction.Teleport:
+                    SetOriginPosition(a.actionPosition);
+                    transform.position = originPosition;
+                    break;
+                case ENPCReactiveAction.Destroy:
+                    a.objects.ForEach(o => o.SetActive(false));
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
-    private void TryResetReactiveAction()
+    private void TryResetReactiveActions()
     {
-        switch (currentMissionConvos.doOnComplete)
+        print("TryResetReactiveActions");
+        currentMissionConvos.doOnComplete.ForEach(a =>
         {
-            case NPCReactiveAction.None:
-                break;
-            case NPCReactiveAction.Teleport:
-                ResetOriginPosition();
-                transform.position = originPosition;
-                break;
-            default:
-                break;
-        }
+            switch (a.actionType)
+            {
+                case ENPCReactiveAction.None:
+                    break;
+                case ENPCReactiveAction.Teleport:
+                    ResetOriginPosition();
+                    transform.position = originPosition;
+                    break;
+                case ENPCReactiveAction.Destroy:
+                    a.objects.ForEach(o => o.SetActive(true));
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    private void CleanupReactiveActions()
+    {
+        currentMissionConvos.doOnComplete.ForEach(a =>
+        {
+            switch (a.actionType)
+            {
+                case ENPCReactiveAction.None:
+                    break;
+                case ENPCReactiveAction.Teleport:
+                    break;
+                case ENPCReactiveAction.Destroy:
+                    a.objects.ForEach(Destroy);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     protected override void OnAutoplayComplete()
