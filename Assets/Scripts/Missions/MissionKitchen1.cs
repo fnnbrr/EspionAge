@@ -270,7 +270,7 @@ public class MissionKitchen1 : AMission
 
             SpawnEnemies(missionCriticalInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
 
-            CameraManager.Instance.BlendToCameraPrefabForSeconds(collectedDenturesCutsceneCamera, collectedDenturesCutsceneWait);
+            StartCoroutine(HandleDenturesCollectedCutscene());
 
             AlertMissionComplete();
         }
@@ -280,5 +280,12 @@ public class MissionKitchen1 : AMission
         // - this way be something like a coroutine which will animate the fade away and then destroy the object
         // - nice animation for fading away the entire object would be cool as well (POLISH)
         Destroy(interactable.gameObject);
+    }
+
+    private IEnumerator HandleDenturesCollectedCutscene()
+    {
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        yield return CameraManager.Instance.BlendToCameraPrefabForSeconds(collectedDenturesCutsceneCamera, collectedDenturesCutsceneWait);
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 }

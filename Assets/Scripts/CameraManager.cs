@@ -161,9 +161,9 @@ public class CameraManager : Singleton<CameraManager>
         yield return null;
     }
 
-    public void BlendToCameraPrefabForSeconds(GameObject cameraPrefab, float seconds)
+    public Coroutine BlendToCameraPrefabForSeconds(GameObject cameraPrefab, float seconds)
     {
-        StartCoroutine(BlendToCameraPrefabForSeconds_Internal(cameraPrefab, seconds));
+        return StartCoroutine(BlendToCameraPrefabForSeconds_Internal(cameraPrefab, seconds));
     }
 
     private IEnumerator BlendToCameraPrefabForSeconds_Internal(GameObject cameraPrefab, float seconds)
@@ -189,6 +189,12 @@ public class CameraManager : Singleton<CameraManager>
 
         // now blend back to the original camera
         BlendTo(currentCamera, alertGlobally: false);
+
+        // Wait for the blending to completely finish
+        while (CinemachineCore.Instance.IsLive(currentCamera))
+        {
+            yield return null;
+        }
     }
 
     public GameObject SpawnCameraFromPrefab(GameObject prefab)
