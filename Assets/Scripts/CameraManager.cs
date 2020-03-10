@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Cinemachine;
 
@@ -14,9 +15,6 @@ public class CameraManager : Singleton<CameraManager>
 {
     public CinemachineBrain brain;
     public Transform CMCamerasRoot;
-
-    // Specific pairs of cameras which we can dynamically blend between during certain events
-    public List<VirtualCameraPair> distancePairs;
 
     // No events for OnBlendingStart / OnBlendingComplete so we have to make our own
     public delegate void BlendingStartAction(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera);
@@ -98,7 +96,7 @@ public class CameraManager : Singleton<CameraManager>
         }
     }
 
-    public void BlendTo(CinemachineVirtualCamera blendToCamera, bool alertGlobally = true)
+    public void BlendTo(CinemachineVirtualCamera blendToCamera, bool alertGlobally = true, bool doHardBlend = false)
     {
         // This can fail when we first start the game, so lets check for it
         if (!IsActiveCameraValid()) return;
@@ -118,6 +116,18 @@ public class CameraManager : Singleton<CameraManager>
             OnBlendingStart?.Invoke(fromCamera, blendToCamera);
         }
 
+        CinemachineBlenderSettings.CustomBlend[] currentBlendSettings = brain.m_CustomBlends.m_CustomBlends;
+        if (doHardBlend)
+        {
+            CinemachineBlenderSettings.CustomBlend hardBlend = new CinemachineBlenderSettings.CustomBlend
+            {
+                m_From = CinemachineBlenderSettings.kBlendFromAnyCameraLabel,
+                m_To = blendToCamera.name,
+                m_Blend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Style.Cut, 0f)
+            };
+            brain.m_CustomBlends.m_CustomBlends = brain.m_CustomBlends.m_CustomBlends.Append(hardBlend).ToArray();
+        }
+
         // Set the camera for this zone to active
         blendToCamera.gameObject.SetActive(true);
 
@@ -127,17 +137,19 @@ public class CameraManager : Singleton<CameraManager>
         // The CinemachineBrain in the scene handles blending between the cameras 
         // - (if we set up a custom blend already)
 
-        StartCoroutine(WaitForBlendFinish(fromCamera, blendToCamera, alertGlobally));
+        StartCoroutine(WaitForBlendFinish(fromCamera, blendToCamera, alertGlobally, currentBlendSettings));
     }
 
     // This is just here so we can alert listeners that we have finished blending
     //  checking if the last camera is still live or not seems like the only way
-    private IEnumerator WaitForBlendFinish(CinemachineVirtualCamera waitForCamera, CinemachineVirtualCamera toCamera, bool alertGlobalListeners)
+    private IEnumerator WaitForBlendFinish(CinemachineVirtualCamera waitForCamera, CinemachineVirtualCamera toCamera, bool alertGlobalListeners, CinemachineBlenderSettings.CustomBlend[] blendSettings)
     {
         while(CinemachineCore.Instance.IsLive(waitForCamera))
         {
             yield return null;  // same as FixedUpdate
         }
+
+        brain.m_CustomBlends.m_CustomBlends = blendSettings;
 
         // alert all global listeners that we stopped blending some camera
         if (alertGlobalListeners)
@@ -149,24 +161,22 @@ public class CameraManager : Singleton<CameraManager>
         yield return null;
     }
 
-    public void BlendToFarCameraForSeconds(float seconds)
+    public void BlendToCameraPrefabForSeconds(GameObject cameraPrefab, float seconds)
     {
-        StartCoroutine(BlendToFarCameraForSeconds_Internal(seconds));
+        StartCoroutine(BlendToCameraPrefabForSeconds_Internal(cameraPrefab, seconds));
     }
 
-    private IEnumerator BlendToFarCameraForSeconds_Internal(float seconds)
+    private IEnumerator BlendToCameraPrefabForSeconds_Internal(GameObject cameraPrefab, float seconds)
     {
         // First see if we have a registered distance pair for the current camera
         CinemachineVirtualCamera currentCamera = GetActiveVirtualCamera();
-        VirtualCameraPair currentDistancePair = distancePairs.Find(pair => pair.normal == currentCamera);
 
-        if (currentDistancePair == null)
-        {
-            yield break;
-        }
+        GameObject cameraInstance = SpawnCameraFromPrefab(cameraPrefab);
+        CinemachineVirtualCamera virtualCamera = cameraInstance.GetComponentInChildren<CinemachineVirtualCamera>();
+        if (!virtualCamera) yield break;
 
         // Start blending to the far camera (and do not alert global listeners of this)
-        BlendTo(currentDistancePair.far, alertGlobally: false);
+        BlendTo(virtualCamera, alertGlobally: false);
 
         // Wait for the blending to completely finish
         while (CinemachineCore.Instance.IsLive(currentCamera))
