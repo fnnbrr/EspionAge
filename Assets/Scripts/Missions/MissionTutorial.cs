@@ -171,26 +171,19 @@ public class MissionTutorial : AMission
         //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
 
         // Cutscene for once they enter the hallway
-        RegionManager.Instance.OnPlayerEnterZone += StartDropCutscene;
+        RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
     }
 
-    private void StartDropCutscene(CameraZone zone)
+    private void OnNurseRoomDoorClose()
     {
-        if (zone != RegionManager.Instance.hallway) return;
-
-        RegionManager.Instance.OnPlayerEnterZone -= StartDropCutscene;
-        StartCoroutine(WaitForPlayerMovement());
-    }
-
-    private IEnumerator WaitForPlayerMovement()
-    {
-        while (!GameManager.Instance.GetPlayerController().IsMoving)
+        if (!RegionManager.Instance.PlayerIsInZone(RegionManager.Instance.nursesRoom))
         {
-            yield return new WaitForFixedUpdate();
+            RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
+
+            startCutscenePlayed = true;
+            firstVase.loudObject.Drop();
+            firstVase.breakableObject.OnBreak += StartVaseFocus;
         }
-        startCutscenePlayed = true;
-        firstVase.loudObject.Drop();
-        firstVase.breakableObject.OnBreak += StartVaseFocus;
     }
 
     private void StartVaseFocus(GameObject brokenInstance)
