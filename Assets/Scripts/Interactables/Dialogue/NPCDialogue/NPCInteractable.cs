@@ -204,7 +204,6 @@ public class NPCInteractable : DialogueInteractable
 
     private void TryReactiveActions()
     {
-        print("TryReactiveActions");
         currentMissionConvos.doOnComplete.ForEach(a =>
         {
             switch (a.actionType)
@@ -226,7 +225,6 @@ public class NPCInteractable : DialogueInteractable
 
     private void TryResetReactiveActions()
     {
-        print("TryResetReactiveActions");
         currentMissionConvos.doOnComplete.ForEach(a =>
         {
             switch (a.actionType)
