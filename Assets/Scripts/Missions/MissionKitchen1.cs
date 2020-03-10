@@ -239,11 +239,11 @@ public class MissionKitchen1 : AMission
 
         bool alreadyPlayedCutscene = startCutscenePlayed;
 
+        UIManager.Instance.staminaBar.ResetAwakeness();
         Cleanup();
         Initialize();
         GameManager.Instance.GetPlayerTransform().position = respawnPosition;
         GameManager.Instance.GetPlayerManager().ResetThrowables();
-        UIManager.Instance.staminaBar.fillImage.fillAmount = 0f;  // TODO: remove with proper function once its merged in
         startCutscenePlayed = alreadyPlayedCutscene;
 
         isRestarting = false;
