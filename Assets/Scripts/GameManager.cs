@@ -19,6 +19,7 @@ public class GameManager : Singleton<GameManager>
 
     private PlayerManager playerManager;
     private PlayerController playerController;
+    private Animator playerAnimator;
 
     private void Start()
     {
@@ -29,6 +30,7 @@ public class GameManager : Singleton<GameManager>
 
         playerManager = player.GetComponent<PlayerManager>();
         playerController = player.GetComponent<PlayerController>();
+        playerAnimator = player.GetComponentInChildren<Animator>();
 
         if (enableGameStart)
         {
@@ -49,6 +51,11 @@ public class GameManager : Singleton<GameManager>
     public PlayerController GetPlayerController()
     {
         return playerController;
+    }
+
+    public Animator GetPlayerAnimator()
+    {
+        return playerAnimator;
     }
 
     private void GameStart()

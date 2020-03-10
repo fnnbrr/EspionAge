@@ -42,8 +42,14 @@ public class AwakenessManager : Singleton<AwakenessManager>
         UIManager.Instance.staminaBar.OnChange += UpdateFilmGrain;
         UIManager.Instance.staminaBar.OnChange += UpdateColorGrading;
         UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
+        UIManager.Instance.staminaBar.OnChange += UpdatePlayerAnimation;
         
         UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
+    }
+
+    private void UpdatePlayerAnimation(float fillAmount)
+    {
+        GameManager.Instance.GetPlayerAnimator().SetFloat(Constants.ANIMATION_BIRDIE_AWAKENESS, fillAmount);
     }
 
     private float GetInterpolatedFillAmount(float fillAmount)
