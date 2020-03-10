@@ -636,7 +636,7 @@ MonoBehaviour:
   conversation: {fileID: 0}
   npcVoicePath: event:/Characters/OldManNPC
   waitLineTime: 5
-  boundaryRadius: 20
+  boundaryRadius: 10
   defaultConvos:
   - {fileID: 11400000, guid: 2a9daf04432cd47d08743e22a6809de6, type: 2}
   - {fileID: 11400000, guid: d5bb8fabd0b3baf4d9b4d068c68a3629, type: 2}
@@ -645,8 +645,16 @@ MonoBehaviour:
     beforeConvo: {fileID: 11400000, guid: 3906f99d3895849b29ab158a43b2d130, type: 2}
     duringConvo: {fileID: 11400000, guid: a4566adfec0fb430a86dfe033c85885d, type: 2}
     afterConvo: {fileID: 11400000, guid: e485504c19563410c9cd04471b6f0a87, type: 2}
-    doOnComplete: 1
-    reactiveActionPosition: {x: -57, y: 0, z: -36}
+    doOnComplete:
+    - actionType: 1
+      actionPosition: {x: -60, y: 0, z: 0}
+      objects: []
+    - actionType: 2
+      actionPosition: {x: 0, y: 0, z: 0}
+      objects:
+      - {fileID: 0}
+      - {fileID: 0}
+      - {fileID: 0}
 --- !u!195 &1964985108
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -683,7 +691,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charTypeSpeed: 0.05
   textMesh: {fileID: 1642425273217987422}
-  usedForTextCutscenes: 0
 --- !u!114 &1998687900
 MonoBehaviour:
   m_ObjectHideFlags: 0
