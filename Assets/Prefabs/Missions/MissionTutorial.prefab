@@ -91,9 +91,24 @@ MonoBehaviour:
     - {x: -121, y: 3, z: 125.5}
     - {x: -127.5, y: 3, z: 135}
   - startChaseRadius: 45
-    chaseSpeed: 12
+    chaseSpeed: 10
     enemyStartPositions:
     - {x: -36, y: 3, z: 167}
     - {x: -35, y: 3, z: 187}
     - {x: -40, y: 3, z: 179}
-  extraObjects: []
+  extraObjects:
+  - prefab: {fileID: 5155285835070006832, guid: 9c07c8282b0d7794e9c7445d201e146e,
+      type: 3}
+    position: {x: -120.7, y: 0.1, z: 211.8}
+    rotation: {x: 90, y: 90, z: 0}
+    spawnedInstance: {fileID: 0}
+  - prefab: {fileID: 5155285835070006832, guid: 9c07c8282b0d7794e9c7445d201e146e,
+      type: 3}
+    position: {x: -60.3, y: 0.1, z: 141.8}
+    rotation: {x: 90, y: 90, z: 0}
+    spawnedInstance: {fileID: 0}
+  - prefab: {fileID: 5155285835070006832, guid: 9c07c8282b0d7794e9c7445d201e146e,
+      type: 3}
+    position: {x: -106.1, y: 0.1, z: 159.8}
+    rotation: {x: 90, y: 0, z: 0}
+    spawnedInstance: {fileID: 0}
