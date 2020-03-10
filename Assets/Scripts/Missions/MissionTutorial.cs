@@ -336,7 +336,7 @@ public class MissionTutorial : AMission
         // Handle the cutscene event handlers
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.OnPlayerEnterZone -= StartDropCutscene;
+            RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
         }
         startCutscenePlayed = false;
 
