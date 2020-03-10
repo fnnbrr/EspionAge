@@ -18,15 +18,26 @@ public class InteractableAutoSpawner : MonoBehaviour
 
     void Start()
     {
-        currentInteractables = new List<GameObject>();
-        for (int i = 0; i < spawnCount; i++)
-        {
-            currentInteractables.Add(SpawnInteractable());
-        }
+        Initialize();
 
         if (interactableType == InteractableType.Throwable)
         {
             GameManager.Instance.GetPlayerManager().OnThrow += OnInteractEnd;
+            GameManager.Instance.GetPlayerManager().OnThrowableReset += Initialize;
+        }
+    }
+
+    private void Initialize()
+    {
+        if (currentInteractables != null)
+        {
+            currentInteractables.ForEach(Destroy);
+        }
+
+        currentInteractables = new List<GameObject>();
+        for (int i = 0; i < spawnCount; i++)
+        {
+            currentInteractables.Add(SpawnInteractable());
         }
     }
 
