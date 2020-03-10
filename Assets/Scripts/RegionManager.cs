@@ -14,6 +14,9 @@ public class RegionManager : Singleton<RegionManager>
     [Header("Region Triggers")]
     public RegionTrigger finalHallwayDoor;
 
+    [Header("Doors")]
+    public DoorBehaviour nurseRoomDoor;
+
     // Treating this list as a stack where the last element is considered "current" zone
     private List<CameraZone> currentPlayerZones;
 
