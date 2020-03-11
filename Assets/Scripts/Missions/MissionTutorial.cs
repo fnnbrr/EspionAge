@@ -171,26 +171,19 @@ public class MissionTutorial : AMission
         //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
 
         // Cutscene for once they enter the hallway
-        RegionManager.Instance.OnPlayerEnterZone += StartDropCutscene;
+        RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
     }
 
-    private void StartDropCutscene(CameraZone zone)
+    private void OnNurseRoomDoorClose()
     {
-        if (zone != RegionManager.Instance.hallway) return;
-
-        RegionManager.Instance.OnPlayerEnterZone -= StartDropCutscene;
-        StartCoroutine(WaitForPlayerMovement());
-    }
-
-    private IEnumerator WaitForPlayerMovement()
-    {
-        while (!GameManager.Instance.GetMovementController().IsMoving)
+        if (!RegionManager.Instance.PlayerIsInZone(RegionManager.Instance.nursesRoom))
         {
-            yield return new WaitForFixedUpdate();
+            RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
+
+            startCutscenePlayed = true;
+            firstVase.loudObject.Drop();
+            firstVase.breakableObject.OnBreak += StartVaseFocus;
         }
-        startCutscenePlayed = true;
-        firstVase.loudObject.Drop();
-        firstVase.breakableObject.OnBreak += StartVaseFocus;
     }
 
     private void StartVaseFocus(GameObject brokenInstance)
@@ -201,6 +194,8 @@ public class MissionTutorial : AMission
     private IEnumerator VaseCutsceneCoroutine(GameObject focusObject)
     {
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        UIManager.Instance.staminaBar.overrideValue = true;
+        UIManager.Instance.staminaBar.overrideTo = 0f;
         CinemachineVirtualCamera currentCamera = CameraManager.Instance.GetActiveVirtualCamera();
 
         // Cutscene Order: Vase Focus -> Outline Awakeness Meter -> Enemies Come -> Birdie Runs Away
@@ -213,10 +208,10 @@ public class MissionTutorial : AMission
         yield return StartCoroutine(MissionManager.Instance.PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].gameObject.transform, doHardBlend: true));
         ResetEnemySpeed();  // reset to assigned speeds
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+        UIManager.Instance.staminaBar.OnLightningEnabled += StartSpecialAbilityTutorial;
+        UIManager.Instance.staminaBar.overrideValue = false;
 
         yield return StartCoroutine(MissionManager.Instance.PlayCutsceneText(birdieRunawayCutsceneText));
-
-        UIManager.Instance.staminaBar.OnLightningEnabled += StartSpecialAbilityTutorial;
     }
 
     private void StartSpecialAbilityTutorial(bool enabled)
@@ -343,7 +338,7 @@ public class MissionTutorial : AMission
         // Handle the cutscene event handlers
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.OnPlayerEnterZone -= StartDropCutscene;
+            RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
         }
         startCutscenePlayed = false;
 

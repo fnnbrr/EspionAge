@@ -71,7 +71,7 @@ public class GameManager : Singleton<GameManager>
                 cameraZone.mainCamera.gameObject.SetActive(false);
             }
         }
-        RegionManager.Instance.birdiesRoom.mainCamera.gameObject.SetActive(true);
+        RegionManager.Instance.nursesRoom.mainCamera.gameObject.SetActive(true);
         MissionManager.Instance.StartMission(MissionsEnum.MissionTutorial);
     }
 }
