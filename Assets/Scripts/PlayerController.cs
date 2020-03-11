@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public float turnSpeed;
     private Rigidbody rb;
     private Animator anim;
+    [FMODUnity.EventRef]
+    public string boost;
 
     private Vector3 movement;
     public bool EnablePlayerInput { get; set; } = true;
@@ -77,6 +79,7 @@ public class PlayerController : MonoBehaviour
     private void PerformDash()
     {
         rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
+        FMODUnity.RuntimeManager.PlayOneShot(boost, transform.position);
     }
 
     void FixedUpdate()
