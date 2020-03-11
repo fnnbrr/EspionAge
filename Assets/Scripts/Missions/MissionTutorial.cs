@@ -50,7 +50,6 @@ public class MissionTutorial : AMission
     private bool respawning = false;
 
     private List<SpawnedEnemy> spawnedEnemies;
-    private List<GameObject> camerasToCleanUp;
 
     [System.Serializable]
     public class TutorialChaserGroup
@@ -112,7 +111,6 @@ public class MissionTutorial : AMission
         spawnedVases = new List<SpawnedVase>();
         spawnedBrokenVases = new List<GameObject>();
         spawnedEnemies = new List<SpawnedEnemy>();
-        camerasToCleanUp = new List<GameObject>();
     }
 
     protected override void Initialize()
@@ -207,16 +205,16 @@ public class MissionTutorial : AMission
 
         // Cutscene Order: Vase Focus -> Outline Awakeness Meter -> Enemies Come -> Birdie Runs Away
         Time.timeScale = 0f;
-        yield return StartCoroutine(PlayCutsceneText(awakenessPointerUIAnimation));
+        yield return StartCoroutine(MissionManager.Instance.PlayCutsceneText(awakenessPointerUIAnimation));
         Time.timeScale = 1f;
-        yield return StartCoroutine(PlayCutscenePart(currentCamera, vaseFocusCameraPrefab, vaseDropCutsceneText, focusObject.transform));
+        yield return StartCoroutine(MissionManager.Instance.PlayCutscenePart(currentCamera, vaseFocusCameraPrefab, vaseDropCutsceneText, focusObject.transform));
         SpawnEnemies();
         SetEnemySpeed(enemyCutsceneSpeed);  // make all slower than usual for now
-        yield return StartCoroutine(PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].gameObject.transform, doHardBlend: true));
+        yield return StartCoroutine(MissionManager.Instance.PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].gameObject.transform, doHardBlend: true));
         ResetEnemySpeed();  // reset to assigned speeds
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
-        yield return StartCoroutine(PlayCutsceneText(birdieRunawayCutsceneText));
+        yield return StartCoroutine(MissionManager.Instance.PlayCutsceneText(birdieRunawayCutsceneText));
 
         UIManager.Instance.staminaBar.OnLightningEnabled += StartSpecialAbilityTutorial;
     }
@@ -235,7 +233,7 @@ public class MissionTutorial : AMission
     {
         Time.timeScale = 0f;
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-        yield return StartCoroutine(PlayCutsceneText(specialAbilityPointerUIAnimation));
+        yield return StartCoroutine(MissionManager.Instance.PlayCutsceneText(specialAbilityPointerUIAnimation));
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
         Time.timeScale = 1f;
     }
@@ -307,55 +305,6 @@ public class MissionTutorial : AMission
         respawning = false;
     }
 
-    private IEnumerator PlayCutscenePart(CinemachineVirtualCamera startCamera, GameObject cameraPrefab, GameObject cutsceneTextPrefab, Transform focusTransform, bool doHardBlend = false)
-    {
-        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
-
-        GameObject cutsceneCameraInstance = CameraManager.Instance.SpawnCameraFromPrefab(cameraPrefab);
-
-        if (doHardBlend)
-        {
-            CinemachineBlenderSettings.CustomBlend hardBlend = new CinemachineBlenderSettings.CustomBlend
-            {
-                m_From = CinemachineBlenderSettings.kBlendFromAnyCameraLabel,
-                m_To = cutsceneCameraInstance.name,
-                m_Blend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Style.Cut, 0f)
-            };
-            CameraManager.Instance.brain.m_CustomBlends.m_CustomBlends = 
-                CameraManager.Instance.brain.m_CustomBlends.m_CustomBlends.Append(hardBlend).ToArray();
-        }
-
-        cutsceneCameraInstance.GetComponent<CinemachineVirtualCamera>().LookAt = focusTransform;
-        camerasToCleanUp.Add(cutsceneCameraInstance);
-        CameraManager.Instance.BlendTo(cutsceneCameraInstance.GetComponent<CinemachineVirtualCamera>(), alertGlobally: false);
-
-        yield return StartCoroutine(PlayCutsceneText(cutsceneTextPrefab));
-
-        CameraManager.Instance.BlendTo(startCamera, alertGlobally: false);
-        CameraManager.Instance.OnBlendingComplete += CleanupCamerasAfterBlending;
-    }
-
-    private IEnumerator PlayCutsceneText(GameObject cutsceneTextPrefab)
-    {
-        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
-
-        GameObject instantiatedCutsceneText = Instantiate(cutsceneTextPrefab, UIManager.Instance.mainUICanvas.transform);
-        Animator textAnimator = Utils.GetRequiredComponentInChildren<Animator>(instantiatedCutsceneText);
-        float textAnimationLength = textAnimator.GetCurrentAnimatorStateInfo(0).length;
-
-        yield return new WaitForSecondsRealtime(textAnimationLength);
-        Destroy(instantiatedCutsceneText);
-    }
-
-    private void CleanupCamerasAfterBlending(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
-    {
-        CameraManager.Instance.OnBlendingComplete += CleanupCamerasAfterBlending;
-        camerasToCleanUp.ForEach(c =>
-        {
-            Destroy(c);
-        });
-    }
-
     private SpawnedVase SpawnVase(Vector3 position)
     {
         GameObject vaseInstance = Instantiate(vasePrefab, position, Quaternion.identity);
@@ -400,7 +349,6 @@ public class MissionTutorial : AMission
 
         // Destroy all spawned objects
         DestroyAllObjects();
-        DestroyFromList(camerasToCleanUp);
     }
 
     private void SpawnRegularVases()
