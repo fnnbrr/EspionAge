@@ -9,10 +9,13 @@ public class RegionManager : Singleton<RegionManager>
     public CameraZone diningArea;
     public CameraZone kitchen;
     public CameraZone hallway;
-    public CameraZone birdiesRoom;
+    public CameraZone nursesRoom;
 
     [Header("Region Triggers")]
     public RegionTrigger finalHallwayDoor;
+
+    [Header("Doors")]
+    public DoorBehaviour nurseRoomDoor;
 
     // Treating this list as a stack where the last element is considered "current" zone
     private List<CameraZone> currentPlayerZones;
@@ -27,14 +30,19 @@ public class RegionManager : Singleton<RegionManager>
         currentPlayerZones = new List<CameraZone>();
     }
 
-    public bool PlayerIsInAZone()
+    public bool PlayerIsInZone(CameraZone zone)
+    {
+        return currentPlayerZones.Contains(zone);
+    }
+
+    public bool PlayerIsInAnyZone()
     {
         return currentPlayerZones.Count > 0;
     }
 
     public CameraZone GetCurrentZone()
     {
-        if (!PlayerIsInAZone())
+        if (!PlayerIsInAnyZone())
         {
             return null;
         }
@@ -89,7 +97,7 @@ public class RegionManager : Singleton<RegionManager>
 
     private void AlertBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
-        if (PlayerIsInAZone() && toCamera == GetCurrentZone().mainCamera)  // we do not want to care about unrelated camera blending events
+        if (PlayerIsInAnyZone() && toCamera == GetCurrentZone().mainCamera)  // we do not want to care about unrelated camera blending events
         {
             CameraManager.Instance.OnBlendingComplete -= AlertBlendingComplete;
             OnPlayerEnterZone?.Invoke(GetCurrentZone());

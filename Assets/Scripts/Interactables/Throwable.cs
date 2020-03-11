@@ -30,8 +30,8 @@ public class Throwable : Interactable
         {
             base.OnInteract();
 
-            PlayerManager playerManager = Utils.GetRequiredComponent<PlayerManager>(player);
-            playerManager.AddThrowable(gameObject);
+            ThrowController throwController = Utils.GetRequiredComponent<ThrowController>(player);
+            throwController.AddThrowable(gameObject);
             hasBeenAcquired = true;
             enableInteract = false;  // the player should not be able to interact with this object anymore
             FMODUnity.RuntimeManager.PlayOneShot(pickUpSFX, transform.position);
