@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -350,7 +349,7 @@ public class NPCInteractable : DialogueInteractable
 
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
-        StartCoroutine(RotateAnimation(gameObject, rotation, player.GetComponent<PlayerController>().turnSpeed));
+        StartCoroutine(RotateAnimation(gameObject, rotation, GameManager.Instance.GetMovementController().turnSpeed));
     }
 
 

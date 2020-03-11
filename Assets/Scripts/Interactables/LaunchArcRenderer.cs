@@ -1,68 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaunchArcRenderer : MonoBehaviour
 {
+    public float minThrowAngle = 0f;
+    public float maxThrowAngle = 45f;
+    
     public float velocity;
     public float angle;
     public int resolution = 10;
-
-    public GameObject endTargetDisplayPrefab;
-    private GameObject endTargetDisplay;
 
     private float g;  // force of gravity on the y-axis
     private float radianAngle;
 
     private LineRenderer lr;
+    private Vector3 mousePosition;
 
     private void Awake()
     {
         lr = Utils.GetRequiredComponent<LineRenderer>(this);
         g = Mathf.Abs(Physics.gravity.y);
-
-        if (endTargetDisplayPrefab)
-        {
-            endTargetDisplay = Instantiate(endTargetDisplayPrefab, Vector3.zero, endTargetDisplayPrefab.transform.rotation, transform.parent);
-        }
     }
 
-    private void OnValidate()
+    private void Start()
     {
-        if (lr != null && Application.isPlaying)
-        {
-            RenderArc();
-        }
+        mousePosition = transform.position;
     }
 
-    void Start()
+    // populating the line renderer with the appropriate settings
+    private void RenderArc()
     {
-        RenderArc();
-    }
-
-    // populating the line renderer withthe appropriate settings
-    public void RenderArc()
-    {
+        float mouseAngle = Vector3.Distance(transform.position, mousePosition);
+        angle = Mathf.Clamp(mouseAngle, minThrowAngle, maxThrowAngle);
+        
         lr.positionCount = resolution + 1;
-
         Vector3[] arcArray = CalculateArcArray();
         lr.SetPositions(arcArray);
-
-        if (endTargetDisplay)
-        {
-            // Set the z position of the endTargetDisplay to the x of the last point (because of darn parent-relative rotations), or zero
-            endTargetDisplay.transform.localPosition = new Vector3(0f, 0f, (arcArray?[arcArray.Length - 1] ?? Vector3.zero).x);
-        
-            // Only have the display active if the velocity or angle are both not 0
-            endTargetDisplay.SetActive(!Mathf.Approximately(velocity, 0f) && !Mathf.Approximately(angle, 0f));
-        }
-    }
-    
-    public void RenderArc(float newAngle)
-    {
-        angle = newAngle;
-        RenderArc();
     }
 
     Vector3[] CalculateArcArray()
@@ -86,5 +60,20 @@ public class LaunchArcRenderer : MonoBehaviour
         float x = t * maxDistance;
         float y = x * Mathf.Tan(radianAngle) - ((g * x * x) / (2 * velocity * velocity * Mathf.Cos(radianAngle) * Mathf.Cos(radianAngle)));
         return new Vector3(x, y);
+    }
+
+    private void OnEnable()
+    {
+        // Allows arc to be rendered in correct position when re-enabled
+        Update();
+    }
+
+    private void Update()
+    {
+        mousePosition = GameManager.Instance.GetThrowController().GetMousePosition();
+        transform.LookAt(mousePosition);
+        transform.Rotate(0, 270, 0);
+            
+        RenderArc();
     }
 }

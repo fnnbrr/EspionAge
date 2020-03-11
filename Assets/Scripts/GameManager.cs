@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -17,21 +16,26 @@ public class GameManager : Singleton<GameManager>
     public bool enableGameStart = false;
     public SkipSettings skipSettings;
 
-    private PlayerManager playerManager;
+    private ThrowController throwController;
     private PlayerController playerController;
     private Animator playerAnimator;
+    private MovementController movementController;
 
-    private void Start()
+    private void Awake()
     {
         if (!player)
         {
             Utils.LogErrorAndStopPlayMode("GameManager expects a reference to a main player GameObject!");
         }
-
-        playerManager = player.GetComponent<PlayerManager>();
-        playerController = player.GetComponent<PlayerController>();
+        
+        throwController = Utils.GetRequiredComponent<ThrowController>(player);
+        playerController = Utils.GetRequiredComponent<PlayerController>(player);
+        movementController = Utils.GetRequiredComponent<MovementController>(player);
         playerAnimator = player.GetComponentInChildren<Animator>();
+    }
 
+    private void Start()
+    {
         if (enableGameStart)
         {
             GameStart();
@@ -43,14 +47,19 @@ public class GameManager : Singleton<GameManager>
         return player.transform;
     }
 
-    public PlayerManager GetPlayerManager()
+    public ThrowController GetThrowController()
     {
-        return playerManager;
+        return throwController;
     }
 
     public PlayerController GetPlayerController()
     {
         return playerController;
+    }
+    
+    public MovementController GetMovementController()
+    {
+        return movementController;
     }
 
     public Animator GetPlayerAnimator()
@@ -69,7 +78,7 @@ public class GameManager : Singleton<GameManager>
                 cameraZone.mainCamera.gameObject.SetActive(false);
             }
         }
-        RegionManager.Instance.birdiesRoom.mainCamera.gameObject.SetActive(true);
+        RegionManager.Instance.nursesRoom.mainCamera.gameObject.SetActive(true);
         MissionManager.Instance.StartMission(MissionsEnum.MissionTutorial);
     }
 }

@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class RestArea : MonoBehaviour
 {
-    private PlayerManager GetPlayerManager(GameObject o)
+    private ThrowController GetPlayerManager(GameObject o)
     {
-        return Utils.GetRequiredComponent<PlayerManager>(o, $"Object with tag '{Constants.TAG_PLAYER}' found without 'PlayerManager' component.");
+        return Utils.GetRequiredComponent<ThrowController>(o, $"Object with tag '{Constants.TAG_PLAYER}' found without 'ThrowController' component.");
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Constants.TAG_PLAYER))
         {
             // Tell the player that they can rest
-            PlayerManager playerManager = GetPlayerManager(other.gameObject);
-            //playerManager.CanRest = true;
+            ThrowController throwController = GetPlayerManager(other.gameObject);
+            //throwController.CanRest = true;
         }
     }
 
@@ -23,8 +23,8 @@ public class RestArea : MonoBehaviour
         if (other.CompareTag(Constants.TAG_PLAYER))
         {
             // Tell the player they can no longer rest
-            PlayerManager playerManager = GetPlayerManager(other.gameObject);
-            //playerManager.CanRest = false;
+            ThrowController throwController = GetPlayerManager(other.gameObject);
+            //throwController.CanRest = false;
         }
     }
 }

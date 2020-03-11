@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum InteractableType
@@ -22,8 +21,8 @@ public class InteractableAutoSpawner : MonoBehaviour
 
         if (interactableType == InteractableType.Throwable)
         {
-            GameManager.Instance.GetPlayerManager().OnThrow += OnInteractEnd;
-            GameManager.Instance.GetPlayerManager().OnThrowableReset += Initialize;
+            GameManager.Instance.GetThrowController().OnThrow += OnInteractEnd;
+            GameManager.Instance.GetThrowController().OnThrowableReset += Initialize;
         }
     }
 
