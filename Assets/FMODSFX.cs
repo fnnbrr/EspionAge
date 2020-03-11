@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class FMODSFX : MonoBehaviour
 {
+    // Used and called from Animation events mostly
     void FMODPlayOneShot(string path)
     {
         FMODUnity.RuntimeManager.PlayOneShot(path);
-        Debug.Log($"Triggered OneShot: {path}");
     }
 }
