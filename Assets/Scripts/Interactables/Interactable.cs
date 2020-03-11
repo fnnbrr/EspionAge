@@ -22,7 +22,6 @@ public class Interactable : MonoBehaviour, IInteractable
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
-
     protected virtual void Start()
     {
         player = GameManager.Instance.GetPlayerTransform().gameObject;
@@ -60,7 +59,6 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
-
     // Handle the dialogue for this interactable
     public virtual void OnInteract()
     {
@@ -91,7 +89,7 @@ public class Interactable : MonoBehaviour, IInteractable
         // Animation of facing the interactable
         // Possible issue to prevent another coroutine being called if player is already rotating
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-        StartCoroutine(RotateAnimation(player, rotation, GameManager.Instance.GetPlayerController().turnSpeed, () => UnfreezePlayer()));
+        StartCoroutine(RotateAnimation(player, rotation, GameManager.Instance.GetMovementController().turnSpeed, () => UnfreezePlayer()));
 
     }
 

@@ -1,9 +1,16 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 public class AwakenessManager : Singleton<AwakenessManager>
 {
+    [Header("Awakeness Calculation")]
+    public float awakenessIncrease = 0.01f;
+    public float dangerRadius = 50.0f;
+    
+    private List<Coroutine> spawnedCoroutines;
+    
     [Header("Post Processing")]
     public Volume globalVolume;
     public float vignetteMultiplier = 0.45f;
@@ -12,7 +19,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
     public float brightnessMultiplier = -0.5f;
 
     [Header("Movement Buffs")]
-    public PlayerController playerController;
+    public MovementController movementController;
     public float movementSpeedBuff = 5f;
     public float turnSpeedBuff = 5f;
 
@@ -29,6 +36,8 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private void Start()
     {
+        spawnedCoroutines = new List<Coroutine>();
+        
         globalVolume.profile.TryGet(out vignette);
         globalVolume.profile.TryGet(out motionBlur);
         globalVolume.profile.TryGet(out filmGrain);
@@ -42,9 +51,62 @@ public class AwakenessManager : Singleton<AwakenessManager>
         UIManager.Instance.staminaBar.OnChange += UpdateFilmGrain;
         UIManager.Instance.staminaBar.OnChange += UpdateColorGrading;
         UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
-        
+
+        movementController = GameManager.Instance.GetMovementController();
         UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
     }
+    
+    private void FixedUpdate()
+    {
+        float minDistance = DistToClosestEnemy();
+
+        if (minDistance < dangerRadius)
+        {
+            float awakenessGain = Mathf.Pow(((dangerRadius - minDistance) / dangerRadius), 2.0f);
+            HandleIncreaseAwakeness(awakenessGain);
+        }
+    }
+    
+    private float DistToClosestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float minDistance = Mathf.Infinity;
+        Vector3 position = transform.position;
+        foreach (GameObject enemy in enemies)
+        {
+            float curDistance = Vector3.Distance(enemy.transform.position, position);
+            if (curDistance < minDistance)
+            {
+                minDistance = curDistance;
+            }
+        }
+        return minDistance;
+    }
+    
+    void HandleIncreaseAwakeness(float multiplier)
+    {
+        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseFillBy(multiplier * awakenessIncrease)));
+    }
+    
+    // Note: Might need to do more testing if this is actually doing anything considerable...
+    //  but better safe than sorry to make sure coroutines we spawn are no longer running when we enter a minigame
+    void StopAllSpawnedCoroutines()
+    {
+        // No loose coroutines in MY house!
+        foreach (Coroutine c in spawnedCoroutines)
+        {
+            StopCoroutine(c);
+        }
+        spawnedCoroutines.Clear();
+    }
+
+    private void OnDisable()
+    {
+        StopAllSpawnedCoroutines();
+    }
+    
+    
+    // // //  AWAKENESS LISTENERS // // //
 
     private float GetInterpolatedFillAmount(float fillAmount)
     {
@@ -76,8 +138,8 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private void UpdateMovementBuffs(float fillAmount)
     {
-        playerController.movementSpeed = playerController.baseMovementSpeed + (movementSpeedBuff * GetInterpolatedFillAmount(fillAmount));
-        playerController.turnSpeed = playerController.baseTurnSpeed + (turnSpeedBuff * GetInterpolatedFillAmount(fillAmount));
+        movementController.movementSpeed = movementController.baseMovementSpeed + (movementSpeedBuff * GetInterpolatedFillAmount(fillAmount));
+        movementController.turnSpeed = movementController.baseTurnSpeed + (turnSpeedBuff * GetInterpolatedFillAmount(fillAmount));
     }
 
     private void UpdateCameraDistance(float fillAmount)

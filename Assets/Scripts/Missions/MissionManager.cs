@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Cinemachine;
 
 [System.Serializable]
 public class MissionObject
@@ -44,12 +45,14 @@ public class MissionManager : Singleton<MissionManager>
     private Dictionary<MissionsEnum, MissionMapping> missionMapping;
 
     private List<InProgressMissionContainer> activeMissions;
+    private List<GameObject> camerasToCleanUp;
 
     private void Awake()
     {
         InitializeMissionMapping();
 
         activeMissions = new List<InProgressMissionContainer>();
+        camerasToCleanUp = new List<GameObject>();
     }
 
     private void InitializeMissionMapping()
@@ -190,6 +193,91 @@ public class MissionManager : Singleton<MissionManager>
         missionObjects.ForEach(o =>
         {
             DestroyMissionObject(o);
+        });
+    }
+
+    public IEnumerator PlayCutscenePart(CinemachineVirtualCamera startCamera, GameObject cameraPrefab, GameObject cutsceneTextPrefab, Transform focusTransform, bool doHardBlend = false)
+    {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
+        GameObject cutsceneCameraInstance = CameraManager.Instance.SpawnCameraFromPrefab(cameraPrefab);
+
+        if (doHardBlend)
+        {
+            CinemachineBlenderSettings.CustomBlend hardBlend = new CinemachineBlenderSettings.CustomBlend
+            {
+                m_From = CinemachineBlenderSettings.kBlendFromAnyCameraLabel,
+                m_To = cutsceneCameraInstance.name,
+                m_Blend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Style.Cut, 0f)
+            };
+            CameraManager.Instance.brain.m_CustomBlends.m_CustomBlends =
+                CameraManager.Instance.brain.m_CustomBlends.m_CustomBlends.Append(hardBlend).ToArray();
+        }
+
+        cutsceneCameraInstance.GetComponent<CinemachineVirtualCamera>().LookAt = focusTransform;
+        camerasToCleanUp.Add(cutsceneCameraInstance);
+        CameraManager.Instance.BlendTo(cutsceneCameraInstance.GetComponent<CinemachineVirtualCamera>(), alertGlobally: false);
+
+        yield return StartCoroutine(PlayCutsceneText(cutsceneTextPrefab));
+
+        CameraManager.Instance.BlendTo(startCamera, alertGlobally: false);
+        CameraManager.Instance.OnBlendingComplete += CleanupCamerasAfterBlending;
+    }
+
+    public IEnumerator PlayMovingCameraCutscene(GameObject cameraPrefab, Transform focusTransform, float extraEndWaitMultiplier = 1f, bool fadeBack = false)
+    {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
+        CinemachineVirtualCamera currentCamera = CameraManager.Instance.GetActiveVirtualCamera();
+
+        GameObject cutsceneCameraInstance = CameraManager.Instance.SpawnCameraFromPrefab(cameraPrefab);
+        CinemachineVirtualCamera virtualCamera = cutsceneCameraInstance.GetComponentInChildren<CinemachineVirtualCamera>();
+        Animator virtualCameraAnim = cutsceneCameraInstance.GetComponentInChildren<Animator>();
+
+        if (!virtualCamera || !virtualCameraAnim)
+        {
+            Destroy(cutsceneCameraInstance);
+            yield break;
+        }
+
+        virtualCamera.LookAt = focusTransform;
+        CameraManager.Instance.BlendTo(virtualCamera, alertGlobally: false);
+
+        yield return new WaitForSeconds(virtualCameraAnim.GetCurrentAnimatorStateInfo(0).length * extraEndWaitMultiplier);
+
+        if (fadeBack)
+        {
+            UIManager.Instance.FadeOut();
+            yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
+            Destroy(cutsceneCameraInstance);
+            UIManager.Instance.FadeIn();
+        }
+        else
+        {
+            Destroy(cutsceneCameraInstance);
+        }
+
+        CameraManager.Instance.BlendTo(currentCamera, alertGlobally: false);
+    }
+
+    public IEnumerator PlayCutsceneText(GameObject cutsceneTextPrefab)
+    {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
+        GameObject instantiatedCutsceneText = Instantiate(cutsceneTextPrefab, UIManager.Instance.mainUICanvas.transform);
+        Animator textAnimator = Utils.GetRequiredComponentInChildren<Animator>(instantiatedCutsceneText);
+        float textAnimationLength = textAnimator.GetCurrentAnimatorStateInfo(0).length;
+
+        yield return new WaitForSecondsRealtime(textAnimationLength);
+        Destroy(instantiatedCutsceneText);
+    }
+
+    private void CleanupCamerasAfterBlending(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        CameraManager.Instance.OnBlendingComplete -= CleanupCamerasAfterBlending;
+        camerasToCleanUp.ForEach(c =>
+        {
+            Destroy(c);
         });
     }
 }

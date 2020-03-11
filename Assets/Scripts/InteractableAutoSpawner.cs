@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public enum InteractableType
@@ -18,15 +17,26 @@ public class InteractableAutoSpawner : MonoBehaviour
 
     void Start()
     {
+        Initialize();
+
+        if (interactableType == InteractableType.Throwable)
+        {
+            GameManager.Instance.GetThrowController().OnThrow += OnInteractEnd;
+            GameManager.Instance.GetThrowController().OnThrowableReset += Initialize;
+        }
+    }
+
+    private void Initialize()
+    {
+        if (currentInteractables != null)
+        {
+            currentInteractables.ForEach(Destroy);
+        }
+
         currentInteractables = new List<GameObject>();
         for (int i = 0; i < spawnCount; i++)
         {
             currentInteractables.Add(SpawnInteractable());
-        }
-
-        if (interactableType == InteractableType.Throwable)
-        {
-            GameManager.Instance.GetPlayerManager().OnThrow += OnInteractEnd;
         }
     }
 

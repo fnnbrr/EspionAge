@@ -663,9 +663,11 @@ GameObject:
   - component: {fileID: 2998625688478654432}
   - component: {fileID: 2998625688478654437}
   - component: {fileID: 2998625688478654436}
+  - component: {fileID: 5395218959478522881}
   - component: {fileID: 539325392}
   - component: {fileID: 2126534817}
   - component: {fileID: 2126534818}
+  - component: {fileID: 5039089060021181399}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -740,17 +742,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba6f3e7740cfc64d8318f91e597a077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMovementSpeed: 5
+  controllerConnected: 0
+--- !u!114 &5395218959478522881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2998625688478654463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34f693fa0d06e104889f6081b3e10304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseMovementSpeed: 0
   baseTurnSpeed: 2
-  canMoveRotationThreshold: 1
+  canMoveRotationThreshold: 0.1
   consideredMovementThreshold: 0.1
+  movementSpeed: 0
+  turnSpeed: 0
   dashForce: 10
   specialAwakenessDecrease: 0.5
   specialTrailRenderers:
   - {fileID: 1392470110}
   - {fileID: 1530555049}
-  movementSpeed: 3
-  turnSpeed: 2
 --- !u!114 &539325392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,16 +778,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b90a0b037436d40a57a0db182920e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  awakenessIncrease: 0.01
-  dangerRadius: 15
+  sensitivityMouse: 2
+  sensitivityController: 2
   throwPosition: {fileID: 9141267454401288687}
   throwableDestroyTime: 5
   throwMultiplier: 0.08
-  angleIncreaseSpeed: 22.5
-  minThrowAngle: 0
-  maxThrowAngle: 45
-  minThrowVelocity: 8
-  maxThrowVelocity: 12
+  minThrowVelocity: 10
+  maxThrowVelocity: 20
 --- !u!114 &2126534817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -801,6 +813,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   charTypeSpeed: 0.05
   textMesh: {fileID: 4161434416140384690}
+--- !u!114 &5039089060021181399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2998625688478654463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b131c0bb73ec86846af1b8c72e117677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  awakenessIncrease: 0.01
+  dangerRadius: 50
+  globalVolume: {fileID: 0}
+  vignetteMultiplier: 0.45
+  saturationMultiplier: -100
+  contrastMultiplier: 10
+  brightnessMultiplier: -0.5
+  movementController: {fileID: 5395218959478522881}
+  movementSpeedBuff: 5
+  turnSpeedBuff: 5
+  zoomInAmount: 20
 --- !u!1 &3418821350365183018
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,11 +1394,6 @@ GameObject:
   - component: {fileID: 266898264022257303}
   - component: {fileID: 6213561825049778206}
   - component: {fileID: 2063364861}
-  - component: {fileID: 2063364862}
-  - component: {fileID: 4339275362522602481}
-  - component: {fileID: 6020091685612507305}
-  - component: {fileID: 784940851590820014}
-  - component: {fileID: 6098033672677451275}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -1407,42 +1437,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &2063364861
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7684491723540393777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 189a08c6c96227845a99ed7ab73f9ed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2063364862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7684491723540393777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 189a08c6c96227845a99ed7ab73f9ed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &784940851590820014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7684491723540393777}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 189a08c6c96227845a99ed7ab73f9ed2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6098033672677451275
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

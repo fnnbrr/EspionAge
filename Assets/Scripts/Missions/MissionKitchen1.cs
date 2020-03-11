@@ -52,8 +52,12 @@ public class MissionEnemy
 public class MissionKitchen1 : AMission
 {
     public Vector3 respawnPosition;
+    public Vector3 denturesCheckpointRespawnPosition;
 
-    public GameObject startCutsceneCamera;
+    [Header("Cutscenes")]
+    public GameObject denturesCutsceneCamera;
+    public GameObject collectedDenturesCutsceneCamera;
+    public float collectedDenturesCutsceneWait;
 
     public List<MissionEnemy> startEnemies;
 
@@ -67,6 +71,7 @@ public class MissionKitchen1 : AMission
 
     private bool isRestarting = false;
     private bool startCutscenePlayed = false;
+    private bool denturesCollected = false;
 
     private void Awake()
     {
@@ -74,6 +79,11 @@ public class MissionKitchen1 : AMission
 
         // TODO: this should probably be changed to a generic enemy type at some point
         instantiatedEnemies = new List<Chaser>();
+
+        if (missionCriticalInteractables.Count == 0)
+        {
+            Utils.LogErrorAndStopPlayMode("Need at least one missionCriticalInteractables for the Kitchen Mission!");
+        }
     }
 
     protected override void Initialize()
@@ -84,7 +94,7 @@ public class MissionKitchen1 : AMission
         SpawnInteractables(missionCriticalInteractables);
         SpawnEnemies(startEnemies);
 
-        RegionManager.Instance.OnPlayerEnterZone += StartCutscene;
+        RegionManager.Instance.OnPlayerEnterZone += StartDenturesCutscene;
     }
 
     protected override void Cleanup()
@@ -101,7 +111,7 @@ public class MissionKitchen1 : AMission
 
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.OnPlayerEnterZone -= StartCutscene;
+            RegionManager.Instance.OnPlayerEnterZone -= StartDenturesCutscene;
         }
         startCutscenePlayed = false;
     }
@@ -172,7 +182,7 @@ public class MissionKitchen1 : AMission
         });
     }
 
-    private void StartCutscene(CameraZone zone)
+    private void StartDenturesCutscene(CameraZone zone)
     {
         if (zone != RegionManager.Instance.kitchen) return;
 
@@ -181,37 +191,26 @@ public class MissionKitchen1 : AMission
         //  - and it will have an already created Animator with a single state that it will start on Awake
         //
         // So we can just destroy it after the animation time is over and it should switch back to whatever the current camera was
-        RegionManager.Instance.OnPlayerEnterZone -= StartCutscene;
+        RegionManager.Instance.OnPlayerEnterZone -= StartDenturesCutscene;
 
         if (startCutscenePlayed) return;
-
         startCutscenePlayed = true;
 
-        if (!startCutsceneCamera || instantiatedMissionInteractables.Count == 0) return;
+        if (instantiatedMissionInteractables.Count == 0) return;
 
-        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-
-        GameObject instantiatedCutscenePrefab = Instantiate(startCutsceneCamera);
-        CinemachineVirtualCamera virtualCamera = instantiatedCutscenePrefab.GetComponentInChildren<CinemachineVirtualCamera>();
-        Animator virtualCameraAnim = instantiatedCutscenePrefab.GetComponentInChildren<Animator>();
-        if (!virtualCamera || !virtualCameraAnim) return;
-
-        virtualCamera.LookAt = instantiatedMissionInteractables[0].transform;
-
-        StartCoroutine(EndCutsceneOperations(instantiatedCutscenePrefab, virtualCameraAnim.GetCurrentAnimatorStateInfo(0).length * 1.5f));
+        StartCoroutine(StartDenturesCutsceneCoroutine());
     }
 
-    private IEnumerator EndCutsceneOperations(GameObject cutsceneObject, float cutsceneLength)
+    private IEnumerator StartDenturesCutsceneCoroutine()
     {
-        yield return new WaitForSeconds(cutsceneLength);
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
 
-        UIManager.Instance.FadeOut();
-
-        yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
-
-        Destroy(cutsceneObject);
-
-        UIManager.Instance.FadeIn();
+        yield return StartCoroutine(
+            MissionManager.Instance.PlayMovingCameraCutscene(
+                denturesCutsceneCamera, 
+                instantiatedMissionInteractables[0].transform, 
+                extraEndWaitMultiplier: 1.5f, 
+                fadeBack: true));
 
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
@@ -230,7 +229,10 @@ public class MissionKitchen1 : AMission
         UIManager.Instance.FadeOut();
 
         // Tell any listeners (looking at you ProgressManager) that we need to reset whatever mission status
-        AlertMissionReset();
+        if (!denturesCollected)  // if we already collected the dentures, we arent technically reseting the mission status
+        {
+            AlertMissionReset();
+        }
     }
 
     private void OnFadingCompleteRestartMission()
@@ -239,14 +241,37 @@ public class MissionKitchen1 : AMission
 
         bool alreadyPlayedCutscene = startCutscenePlayed;
 
+        if (CameraManager.Instance.GetActiveVirtualCamera() != RegionManager.Instance.kitchen.mainCamera)
+        {
+            Destroy(CameraManager.Instance.GetActiveVirtualCamera().gameObject);
+            CameraManager.Instance.BlendTo(RegionManager.Instance.kitchen.mainCamera, doHardBlend: true);
+        }
+        UIManager.Instance.staminaBar.ResetAwakeness();
         Cleanup();
         Initialize();
-        GameManager.Instance.GetPlayerTransform().position = respawnPosition;
-        GameManager.Instance.GetPlayerManager().ResetThrowables();
-        UIManager.Instance.staminaBar.fillImage.fillAmount = 0f;  // TODO: remove with proper function once its merged in
+        if (denturesCollected)
+        {
+            GameManager.Instance.GetPlayerTransform().position = denturesCheckpointRespawnPosition;
+            DestroyGameObjects(instantiatedMissionInteractables);
+        }
+        else
+        {
+            GameManager.Instance.GetPlayerTransform().position = respawnPosition;
+        }
+        GameManager.Instance.GetThrowController().ResetThrowables();
         startCutscenePlayed = alreadyPlayedCutscene;
 
         isRestarting = false;
+
+        if (denturesCollected)
+        {
+            SpawnFinalEnemyWave(0);  // just spawn the enemies for the first enemy wave (which we use every time anyways)
+
+            CameraManager.Instance.BlendToCameraPrefabForSeconds(
+                collectedDenturesCutsceneCamera, 
+                collectedDenturesCutsceneWait, 
+                doHardBlend: true);
+        }
 
         UIManager.Instance.FadeIn();
     }
@@ -268,12 +293,12 @@ public class MissionKitchen1 : AMission
 
         if (interactedCount == missionCriticalInteractables.Count())
         {
+            denturesCollected = true;
+
             // Logic based on the interactable object for spawning
-            int interactableIndex = instantiatedMissionInteractables.IndexOf(interactable.gameObject);
+            SpawnFinalEnemyWave(instantiatedMissionInteractables.IndexOf(interactable.gameObject));
 
-            SpawnEnemies(missionCriticalInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
-
-            CameraManager.Instance.BlendToFarCameraForSeconds(2);
+            StartCoroutine(HandleDenturesCollectedCutscene());
 
             AlertMissionComplete();
         }
@@ -283,5 +308,17 @@ public class MissionKitchen1 : AMission
         // - this way be something like a coroutine which will animate the fade away and then destroy the object
         // - nice animation for fading away the entire object would be cool as well (POLISH)
         Destroy(interactable.gameObject);
+    }
+
+    private void SpawnFinalEnemyWave(int missionCriticalInteractableIndex)
+    {
+        SpawnEnemies(missionCriticalInteractables[missionCriticalInteractableIndex].enemiesToSpawnIfLastCollected);
+    }
+
+    private IEnumerator HandleDenturesCollectedCutscene()
+    {
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        yield return CameraManager.Instance.BlendToCameraPrefabForSeconds(collectedDenturesCutsceneCamera, collectedDenturesCutsceneWait);
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 }
