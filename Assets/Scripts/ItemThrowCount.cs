@@ -7,19 +7,19 @@ using UnityEngine;
 public class ItemThrowCount : MonoBehaviour
 {
     private int numItemsHeld = 0;
-    PlayerManager playerManager;
+    ThrowController throwController;
     TextMeshProUGUI text;
 
     void Start()
     {
-        playerManager = GameManager.Instance.GetPlayerManager();
-        if(playerManager == null)
+        throwController = GameManager.Instance.GetThrowController();
+        if(throwController == null)
         {
             Utils.LogErrorAndStopPlayMode("Player manager does not exist");
         }
-        playerManager.OnThrow += HandleOnThrewBottle;
-        playerManager.OnPickup += HandleOnPickup;
-        playerManager.OnThrowableReset += HandleResetThrowableCount;
+        throwController.OnThrow += HandleOnThrewBottle;
+        throwController.OnPickup += HandleOnPickup;
+        throwController.OnThrowableReset += HandleResetThrowableCount;
 
         text = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this, "Throwable Object text is null!");
         DisplayUpdate();

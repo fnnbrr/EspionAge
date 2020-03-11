@@ -20,9 +20,9 @@ public class NoisePinger : MonoBehaviour
     {
         FMODUnity.RuntimeManager.PlayOneShot(breakable, transform.position);
         Vector3 hitPoint = other.GetContact(0).point;
-        Vector3 hitNormal = other.GetContact(0).normal;
+        hitPoint.y = pingFloorOffset;
         
-        GameObject pingInstance = Instantiate(pingPrefab, hitPoint + (pingFloorOffset * hitNormal), Quaternion.LookRotation(hitPoint));
+        GameObject pingInstance = Instantiate(pingPrefab, hitPoint, Quaternion.identity);
         Utils.GetRequiredComponent<NoisePing>(pingInstance).Initialize(pingRadius, pingGrowthScale);
     }
     
