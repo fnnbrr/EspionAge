@@ -755,7 +755,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34f693fa0d06e104889f6081b3e10304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMovementSpeed: 5
+  baseMovementSpeed: 0
   baseTurnSpeed: 2
   canMoveRotationThreshold: 0.1
   consideredMovementThreshold: 0.1
@@ -783,8 +783,8 @@ MonoBehaviour:
   throwPosition: {fileID: 9141267454401288687}
   throwableDestroyTime: 5
   throwMultiplier: 0.08
-  minThrowVelocity: 8
-  maxThrowVelocity: 12
+  minThrowVelocity: 10
+  maxThrowVelocity: 20
 --- !u!114 &2126534817
 MonoBehaviour:
   m_ObjectHideFlags: 0

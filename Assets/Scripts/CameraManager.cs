@@ -161,12 +161,12 @@ public class CameraManager : Singleton<CameraManager>
         yield return null;
     }
 
-    public Coroutine BlendToCameraPrefabForSeconds(GameObject cameraPrefab, float seconds)
+    public Coroutine BlendToCameraPrefabForSeconds(GameObject cameraPrefab, float seconds, bool doHardBlend = false)
     {
-        return StartCoroutine(BlendToCameraPrefabForSeconds_Internal(cameraPrefab, seconds));
+        return StartCoroutine(BlendToCameraPrefabForSeconds_Internal(cameraPrefab, seconds, doHardBlend));
     }
 
-    private IEnumerator BlendToCameraPrefabForSeconds_Internal(GameObject cameraPrefab, float seconds)
+    private IEnumerator BlendToCameraPrefabForSeconds_Internal(GameObject cameraPrefab, float seconds, bool doHardBlend)
     {
         // First see if we have a registered distance pair for the current camera
         CinemachineVirtualCamera currentCamera = GetActiveVirtualCamera();
@@ -176,7 +176,7 @@ public class CameraManager : Singleton<CameraManager>
         if (!virtualCamera) yield break;
 
         // Start blending to the far camera (and do not alert global listeners of this)
-        BlendTo(virtualCamera, alertGlobally: false);
+        BlendTo(virtualCamera, alertGlobally: false, doHardBlend: doHardBlend);
 
         // Wait for the blending to completely finish
         while (CinemachineCore.Instance.IsLive(currentCamera))
