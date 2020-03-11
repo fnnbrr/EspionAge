@@ -8,7 +8,7 @@ public class FMODAwakeness : MonoBehaviour
     public string parameter;
     [FMODUnity.EventRef]
     public string sfx;
-    private bool IsFull = false;
+    private bool isFull = false;
 
     // Start is called before the first frame update
     void Start()
@@ -18,17 +18,18 @@ public class FMODAwakeness : MonoBehaviour
 
     private void UpdateFMODAudio(float fillAmount)
     {
-        FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, fillAmount);
-        if (fillAmount == 1f && !IsFull)
+     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, fillAmount);
         {
-            IsFull = true;
-            FMODUnity.RuntimeManager.PlayOneShot(sfx, transform.position);
+          if (fillAmount == 1f && !isFull)
+            {
+                isFull = true;
+                FMODUnity.RuntimeManager.PlayOneShot(sfx, transform.position);
+            }
         }
-        else
-        {
-            IsFull = false;
-        }
-
+       if (fillAmount != 1f && isFull)
+       { 
+            isFull = false;
+       }
     }
 
     
