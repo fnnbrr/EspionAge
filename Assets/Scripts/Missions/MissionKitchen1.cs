@@ -245,8 +245,8 @@ public class MissionKitchen1 : AMission
             CameraManager.Instance.GetActiveVirtualCamera() != RegionManager.Instance.diningArea.mainCamera)
         {
             Destroy(CameraManager.Instance.GetActiveVirtualCamera().gameObject);
-            CameraManager.Instance.BlendTo(RegionManager.Instance.kitchen.mainCamera, doHardBlend: true);
         }
+        CameraManager.Instance.BlendTo(RegionManager.Instance.kitchen.mainCamera, doHardBlend: true);
         UIManager.Instance.staminaBar.ResetAwakeness();
         Cleanup();
         Initialize();
