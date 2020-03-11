@@ -76,7 +76,8 @@ public class PlayerController : MonoBehaviour
 
     private void PerformDash()
     {
-        rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
+        //rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
+        anim.SetTrigger(Constants.ANIMATION_BIRDIE_DASH);
     }
 
     void FixedUpdate()
