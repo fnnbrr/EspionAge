@@ -15,6 +15,9 @@ public class MovementController : MonoBehaviour
     private Rigidbody rb;
     private Animator anim;
     private Vector3 movement;
+    [FMODUnity.EventRef]
+    public string boost;
+
 
     [Header("Special / Dash")]
     public float dashForce;
@@ -70,6 +73,7 @@ public class MovementController : MonoBehaviour
     private void PerformDash()
     {
         rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
+        FMODUnity.RuntimeManager.PlayOneShot(boost, transform.position);
     }
 
     void FixedUpdate()
