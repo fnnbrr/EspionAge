@@ -761,6 +761,7 @@ MonoBehaviour:
   consideredMovementThreshold: 0.1
   movementSpeed: 0
   turnSpeed: 0
+  boost: event:/SFX/BirdieBoost
   dashForce: 10
   specialAwakenessDecrease: 0.5
   specialTrailRenderers:
@@ -779,12 +780,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensitivityMouse: 2
-  sensitivityController: 2
+  sensitivityController: 5
   throwPosition: {fileID: 9141267454401288687}
   throwableDestroyTime: 5
   throwMultiplier: 0.08
-  minThrowVelocity: 10
-  maxThrowVelocity: 20
+  minThrowVelocity: 8
+  maxThrowVelocity: 12
 --- !u!114 &2126534817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1394,6 +1395,7 @@ GameObject:
   - component: {fileID: 266898264022257303}
   - component: {fileID: 6213561825049778206}
   - component: {fileID: 2063364861}
+  - component: {fileID: 1920200229}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -1446,6 +1448,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 189a08c6c96227845a99ed7ab73f9ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1920200229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7684491723540393777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee1211b31dfae2f4d9fb52b96fc1faaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8037286574114638974

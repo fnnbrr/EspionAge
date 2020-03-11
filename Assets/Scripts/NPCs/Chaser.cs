@@ -85,6 +85,8 @@ public class Chaser : MonoBehaviour
     {
         if (chase && numTargetsInRange > 0 && currentState != ActionStates.Chasing)
         {
+            if (!agent.enabled) return;
+
             ChaseTarget();
             SetState(ActionStates.Chasing);
         }
@@ -187,7 +189,7 @@ public class Chaser : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.gameObject.CompareTag("Noise")) return;
+        if (!other.gameObject.CompareTag("Noise") && agent.enabled) return;
         
         SetState(ActionStates.Responding);
         
