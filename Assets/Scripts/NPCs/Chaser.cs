@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -6,7 +7,8 @@ using Random = UnityEngine.Random;
 public class Chaser : MonoBehaviour
 {
     [HideInInspector] public NavMeshAgent agent;
-    
+    protected Animator animator;
+
     [Header("Chasing")]
     public bool chase = true;
     public Transform targetTransform;
@@ -24,8 +26,9 @@ public class Chaser : MonoBehaviour
     
     [Header("Waiting")]
     public float waitDurationSec = 1.0f;
+    protected bool isWaiting = false;
 
-    private float waitTimer;
+    protected float waitTimer;
 
     protected enum ActionStates
     {
@@ -44,6 +47,11 @@ public class Chaser : MonoBehaviour
 
     public delegate void CollideWithPlayerAction();
     public event CollideWithPlayerAction OnCollideWithPlayer;
+
+    private void Awake()
+    {
+        animator = Utils.GetRequiredComponentInChildren<Animator>(this);
+    }
 
     public void Start()
     {
@@ -91,11 +99,14 @@ public class Chaser : MonoBehaviour
         waitTimer -= Time.deltaTime;
         if (waitTimer > 0)
         {
-            agent.SetDestination(transform.position);
+            isWaiting = true;
+            agent.enabled = false;
             return false;
         }
 
         waitTimer = waitDurationSec;
+        agent.enabled = true;
+        isWaiting = false;
         return true;
     }
     
@@ -108,12 +119,16 @@ public class Chaser : MonoBehaviour
         {
             navHit.position = searchBoundsCenter;
         }
- 
+
+        animator.SetBool(Constants.ANIMATION_STEVE_MOVING, true);
+
         agent.SetDestination(navHit.position);
     }
 
     protected void ChaseTarget()
     {
+        animator.SetBool(Constants.ANIMATION_STEVE_MOVING, true);
+
         Vector3 targetPosition = targetTransform.position;
         Vector3 thisPosition = transform.position;
         Vector3 dirToTarget = thisPosition - targetPosition;
@@ -124,6 +139,19 @@ public class Chaser : MonoBehaviour
 
     private void Update()
     {
+        // TEMP, we gotta refactor this logic to make this work better and be more robust
+        if (isWaiting)
+        {
+            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, false);
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0f)
+            {
+                agent.enabled = true;
+                isWaiting = false;
+            }
+            return;
+        }
+
         if (!agent.isOnNavMesh || agent.pathPending || !(agent.remainingDistance < 0.5f)) return;
         
         // Choose the next destination point when the agent gets close to the current one.
