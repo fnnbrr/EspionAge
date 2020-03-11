@@ -252,6 +252,7 @@ public class MissionKitchen1 : AMission
         if (denturesCollected)
         {
             GameManager.Instance.GetPlayerTransform().position = denturesCheckpointRespawnPosition;
+            DestroyGameObjects(instantiatedMissionInteractables);
         }
         else
         {
