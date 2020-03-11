@@ -194,6 +194,8 @@ public class MissionTutorial : AMission
     private IEnumerator VaseCutsceneCoroutine(GameObject focusObject)
     {
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        UIManager.Instance.staminaBar.overrideValue = true;
+        UIManager.Instance.staminaBar.overrideTo = 0f;
         CinemachineVirtualCamera currentCamera = CameraManager.Instance.GetActiveVirtualCamera();
 
         // Cutscene Order: Vase Focus -> Outline Awakeness Meter -> Enemies Come -> Birdie Runs Away
@@ -206,10 +208,10 @@ public class MissionTutorial : AMission
         yield return StartCoroutine(MissionManager.Instance.PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].gameObject.transform, doHardBlend: true));
         ResetEnemySpeed();  // reset to assigned speeds
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+        UIManager.Instance.staminaBar.OnLightningEnabled += StartSpecialAbilityTutorial;
+        UIManager.Instance.staminaBar.overrideValue = false;
 
         yield return StartCoroutine(MissionManager.Instance.PlayCutsceneText(birdieRunawayCutsceneText));
-
-        UIManager.Instance.staminaBar.OnLightningEnabled += StartSpecialAbilityTutorial;
     }
 
     private void StartSpecialAbilityTutorial(bool enabled)
