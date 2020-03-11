@@ -103,12 +103,9 @@ public class MissionManager : Singleton<MissionManager>
 
     public void SetObjectiveTextForList(MissionsEnum missionEnumValue, AMission mission)
     {
-        print(missionMapping[missionEnumValue].objective);
         if (missionMapping[missionEnumValue].objective) 
         {
             ObjectiveList.Instance.DisplayObjectiveList();
-            print(missionMapping[missionEnumValue].objective.line);
-            // print(missionMapping[missionEnumValue].objective.Line);
             ObjectiveList.Instance.DisplayObjectiveText(missionMapping[missionEnumValue].objective.line);
         }
     }
@@ -136,7 +133,7 @@ public class MissionManager : Singleton<MissionManager>
         if (missionComponent is AMission)
         {
             AMission mission = missionComponent as AMission;
-            SetObjectiveTextForList(missionEnumValue, mission); //Start mission in ObjectiveList 
+            SetObjectiveTextForList(missionEnumValue, mission);
 
             SetInstantiatedMissionForEnum(missionEnumValue, mission);
             ProgressManager.Instance.AddMission(mission);
