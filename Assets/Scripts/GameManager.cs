@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -17,19 +16,24 @@ public class GameManager : Singleton<GameManager>
     public bool enableGameStart = false;
     public SkipSettings skipSettings;
 
-    private PlayerManager playerManager;
+    private ThrowController throwController;
     private PlayerController playerController;
+    private MovementController movementController;
 
-    private void Start()
+    private void Awake()
     {
         if (!player)
         {
             Utils.LogErrorAndStopPlayMode("GameManager expects a reference to a main player GameObject!");
         }
+        
+        throwController = Utils.GetRequiredComponent<ThrowController>(player);
+        playerController = Utils.GetRequiredComponent<PlayerController>(player);
+        movementController = Utils.GetRequiredComponent<MovementController>(player);
+    }
 
-        playerManager = player.GetComponent<PlayerManager>();
-        playerController = player.GetComponent<PlayerController>();
-
+    private void Start()
+    {
         if (enableGameStart)
         {
             GameStart();
@@ -41,14 +45,19 @@ public class GameManager : Singleton<GameManager>
         return player.transform;
     }
 
-    public PlayerManager GetPlayerManager()
+    public ThrowController GetThrowController()
     {
-        return playerManager;
+        return throwController;
     }
 
     public PlayerController GetPlayerController()
     {
         return playerController;
+    }
+    
+    public MovementController GetMovementController()
+    {
+        return movementController;
     }
 
     private void GameStart()

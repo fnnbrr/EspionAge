@@ -89,7 +89,7 @@ public class Interactable : MonoBehaviour, IInteractable
         // Animation of facing the interactable
         // Possible issue to prevent another coroutine being called if player is already rotating
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-        StartCoroutine(RotateAnimation(player, rotation, GameManager.Instance.GetPlayerController().turnSpeed, () => UnfreezePlayer()));
+        StartCoroutine(RotateAnimation(player, rotation, GameManager.Instance.GetMovementController().turnSpeed, () => UnfreezePlayer()));
 
     }
 
