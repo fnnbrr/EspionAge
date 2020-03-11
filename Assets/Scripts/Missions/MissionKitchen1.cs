@@ -52,6 +52,7 @@ public class MissionEnemy
 public class MissionKitchen1 : AMission
 {
     public Vector3 respawnPosition;
+    public Vector3 denturesCheckpointRespawnPosition;
 
     [Header("Cutscenes")]
     public GameObject denturesCutsceneCamera;
@@ -70,6 +71,7 @@ public class MissionKitchen1 : AMission
 
     private bool isRestarting = false;
     private bool startCutscenePlayed = false;
+    private bool denturesCollected = false;
 
     private void Awake()
     {
@@ -77,6 +79,11 @@ public class MissionKitchen1 : AMission
 
         // TODO: this should probably be changed to a generic enemy type at some point
         instantiatedEnemies = new List<Chaser>();
+
+        if (missionCriticalInteractables.Count == 0)
+        {
+            Utils.LogErrorAndStopPlayMode("Need at least one missionCriticalInteractables for the Kitchen Mission!");
+        }
     }
 
     protected override void Initialize()
@@ -222,7 +229,10 @@ public class MissionKitchen1 : AMission
         UIManager.Instance.FadeOut();
 
         // Tell any listeners (looking at you ProgressManager) that we need to reset whatever mission status
-        AlertMissionReset();
+        if (!denturesCollected)  // if we already collected the dentures, we arent technically reseting the mission status
+        {
+            AlertMissionReset();
+        }
     }
 
     private void OnFadingCompleteRestartMission()
@@ -239,12 +249,29 @@ public class MissionKitchen1 : AMission
         UIManager.Instance.staminaBar.ResetAwakeness();
         Cleanup();
         Initialize();
-        GameManager.Instance.GetPlayerTransform().position = respawnPosition;
+        if (denturesCollected)
+        {
+            GameManager.Instance.GetPlayerTransform().position = denturesCheckpointRespawnPosition;
+            DestroyGameObjects(instantiatedMissionInteractables);
+        }
+        else
+        {
+            GameManager.Instance.GetPlayerTransform().position = respawnPosition;
+        }
         GameManager.Instance.GetThrowController().ResetThrowables();
-        UIManager.Instance.staminaBar.fillImage.fillAmount = 0f;  // TODO: remove with proper function once its merged in
         startCutscenePlayed = alreadyPlayedCutscene;
 
         isRestarting = false;
+
+        if (denturesCollected)
+        {
+            SpawnFinalEnemyWave(0);  // just spawn the enemies for the first enemy wave (which we use every time anyways)
+
+            CameraManager.Instance.BlendToCameraPrefabForSeconds(
+                collectedDenturesCutsceneCamera, 
+                collectedDenturesCutsceneWait, 
+                doHardBlend: true);
+        }
 
         UIManager.Instance.FadeIn();
     }
@@ -266,10 +293,10 @@ public class MissionKitchen1 : AMission
 
         if (interactedCount == missionCriticalInteractables.Count())
         {
-            // Logic based on the interactable object for spawning
-            int interactableIndex = instantiatedMissionInteractables.IndexOf(interactable.gameObject);
+            denturesCollected = true;
 
-            SpawnEnemies(missionCriticalInteractables[interactableIndex].enemiesToSpawnIfLastCollected);
+            // Logic based on the interactable object for spawning
+            SpawnFinalEnemyWave(instantiatedMissionInteractables.IndexOf(interactable.gameObject));
 
             StartCoroutine(HandleDenturesCollectedCutscene());
 
@@ -281,6 +308,11 @@ public class MissionKitchen1 : AMission
         // - this way be something like a coroutine which will animate the fade away and then destroy the object
         // - nice animation for fading away the entire object would be cool as well (POLISH)
         Destroy(interactable.gameObject);
+    }
+
+    private void SpawnFinalEnemyWave(int missionCriticalInteractableIndex)
+    {
+        SpawnEnemies(missionCriticalInteractables[missionCriticalInteractableIndex].enemiesToSpawnIfLastCollected);
     }
 
     private IEnumerator HandleDenturesCollectedCutscene()
