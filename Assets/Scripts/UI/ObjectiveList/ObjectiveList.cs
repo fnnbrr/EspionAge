@@ -6,7 +6,6 @@ using TMPro;
 
 public class ObjectiveList : Singleton<ObjectiveList>
 {
-    private bool displayed = false;
     private Image background;
     private TMP_Text objectiveText;
     private Animator root;
@@ -17,10 +16,8 @@ public class ObjectiveList : Singleton<ObjectiveList>
         background = GetComponentInChildren<Image>();
         objectiveText = GetComponentInChildren<TMP_Text>();
         root =  GetComponentInChildren<Animator>();
-        if (root) 
-        {
-            HideObjectiveList();
-        }
+        
+        HideObjectiveList();
     }
 
     // Update is called once per frame
@@ -31,13 +28,13 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     public void DisplayObjectiveList()
     {
-        displayed = true;
         root.gameObject.SetActive(true);
     }
 
     public void DisplayObjectiveText(string textToSet)
     {
         DisplayObjectiveList();
+        
         if (objectiveText != null) 
         {   
             objectiveText.text = textToSet;
@@ -47,15 +44,11 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     public void CrossOutObjectiveText()
     {
-        if (objectiveText)
-        {
-            objectiveText.text = "<s>" + objectiveText.text + "</s>";
-        }
+        objectiveText.text = "<s>" + objectiveText.text + "</s>";
     }
 
     public void HideObjectiveList()
     {
-        displayed = false;
         root.gameObject.SetActive(false);
     }
 }
