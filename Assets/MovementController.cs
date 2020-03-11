@@ -15,8 +15,8 @@ public class MovementController : MonoBehaviour
     private Rigidbody rb;
     private Animator anim;
     private Vector3 movement;
-    [FMODUnity.EventRef]
-    public string boost;
+    //[FMODUnity.EventRef]
+    //public string boost;
 
 
     [Header("Special / Dash")]
@@ -74,7 +74,7 @@ public class MovementController : MonoBehaviour
     {
         //rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
         anim.SetTrigger(Constants.ANIMATION_BIRDIE_DASH);
-        FMODUnity.RuntimeManager.PlayOneShot(boost, transform.position);
+        //FMODUnity.RuntimeManager.PlayOneShot(boost, transform.position);
     }
 
     void FixedUpdate()
