@@ -19,16 +19,16 @@ public class FMODAwakeness : MonoBehaviour
     private void UpdateFMODAudio(float fillAmount)
     {
      FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, fillAmount);
-        {
-          if (fillAmount == 1f && !isFull)
-            {
-                isFull = true;
-                FMODUnity.RuntimeManager.PlayOneShot(sfx, transform.position);
-            }
-        }
-       if (fillAmount != 1f && isFull)
-       { 
-            isFull = false;
-       }
+//        {
+//          if (fillAmount == 1f && !isFull)
+//            {
+//                isFull = true;
+//                FMODUnity.RuntimeManager.PlayOneShot(sfx, transform.position);
+//            }
+//        }
+//     if (fillAmount != 1f && isFull)
+//       { 
+//            isFull = false;
+//       }
     }
 }

@@ -37,7 +37,7 @@ public class MissionTutorial : AMission
 
     [Header("Chaser Enemies")]
     public GameObject chaserPrefab;
-    public float enemyCutsceneSpeed = 3;
+    public float enemyCutsceneAnimationSpeed = 0.2f;
     public List<TutorialChaserGroup> chaserGroups;
 
     //[Header("Note")]
@@ -204,7 +204,7 @@ public class MissionTutorial : AMission
         Time.timeScale = 1f;
         yield return StartCoroutine(MissionManager.Instance.PlayCutscenePart(currentCamera, vaseFocusCameraPrefab, vaseDropCutsceneText, focusObject.transform));
         SpawnEnemies();
-        SetEnemySpeed(enemyCutsceneSpeed);  // make all slower than usual for now
+        SetEnemyAnimationSpeed(enemyCutsceneAnimationSpeed);  // make all slower than usual for now
         yield return StartCoroutine(MissionManager.Instance.PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].gameObject.transform, doHardBlend: true));
         ResetEnemySpeed();  // reset to assigned speeds
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
@@ -252,6 +252,15 @@ public class MissionTutorial : AMission
         });
     }
 
+    private void SetEnemyAnimationSpeed(float speed)
+    {
+        spawnedEnemies.ForEach(enemy =>
+        {
+            PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemy.gameObject);
+            chaser.SetAnimationSpeed(speed);
+        });
+    }
+
     private void SetEnemySpeed(float speed)
     {
         spawnedEnemies.ForEach(enemy =>
@@ -266,6 +275,7 @@ public class MissionTutorial : AMission
         spawnedEnemies.ForEach(enemy =>
         {
             PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemy.gameObject);
+            chaser.SetAnimationSpeed(1f);
             chaser.SetSpeed(enemy.chaserGroup.chaseSpeed);
         });
     }
