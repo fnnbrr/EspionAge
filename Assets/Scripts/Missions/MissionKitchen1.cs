@@ -258,7 +258,7 @@ public class MissionKitchen1 : AMission
         {
             GameManager.Instance.GetPlayerTransform().position = respawnPosition;
         }
-        GameManager.Instance.GetPlayerManager().ResetThrowables();
+        GameManager.Instance.GetThrowController().ResetThrowables();
         startCutscenePlayed = alreadyPlayedCutscene;
 
         isRestarting = false;
