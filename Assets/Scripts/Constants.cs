@@ -11,6 +11,10 @@ public static class Constants
     public const string LAYER_PLAYER = "PLAYER";
     
     public const string ANIMATION_BIRDIE_ISWALKING = "IsWalking";
+    public const string ANIMATION_BIRDIE_AWAKENESS = "Awakeness";
+    public const string ANIMATION_BIRDIE_DASH= "Dash";
+
+    public const string ANIMATION_STEVE_MOVING = "IsMoving";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
