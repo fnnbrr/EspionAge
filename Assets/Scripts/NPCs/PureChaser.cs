@@ -8,6 +8,7 @@ public class PureChaser : MonoBehaviour
     public Transform targetTransform;
     public float startChaseRadius = 100f;
 
+    private ChildRootMotionController rootMotionController;
     private NavMeshAgent agent;
     private bool shouldChase = false;
 
@@ -20,11 +21,17 @@ public class PureChaser : MonoBehaviour
     private void Awake()
     {
         agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+        rootMotionController = Utils.GetRequiredComponentInChildren<ChildRootMotionController>(this);
     }
 
     public void SetSpeed(float speed)
     {
         agent.speed = speed;
+    }
+
+    public void SetAnimationSpeed(float speed)
+    {
+        rootMotionController.SetAnimationSpeed(speed);
     }
 
     public void SetDestination(Vector3 position)
@@ -42,11 +49,24 @@ public class PureChaser : MonoBehaviour
 
     private void Update()
     {
-        if (!agent.isOnNavMesh) return;
+        if (!agent.isOnNavMesh)
+        {
+            SetMoving(false);
+            return;
+        }
 
         CheckRemainingDistance();
 
-        if (!targetTransform) return;  // below are all about using targetTransform
+        // below are all about using targetTransform
+        if (!targetTransform || agent.speed <= 0f)
+        {
+            SetMoving(false);
+            return;
+        }
+        else if (shouldChase)
+        {
+            SetMoving(true);
+        }
 
         if (!shouldChase && Vector3.Distance(transform.position, targetTransform.position) <= startChaseRadius)
         {
@@ -54,6 +74,11 @@ public class PureChaser : MonoBehaviour
         }
 
         ChaseTarget();
+    }
+
+    private void SetMoving(bool isMoving)
+    {
+        rootMotionController.SetBool(Constants.ANIMATION_STEVE_MOVING, isMoving);
     }
 
     private void CheckRemainingDistance()
