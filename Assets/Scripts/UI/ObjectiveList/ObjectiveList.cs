@@ -20,12 +20,6 @@ public class ObjectiveList : Singleton<ObjectiveList>
         HideObjectiveList();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void DisplayObjectiveList()
     {
         root.gameObject.SetActive(true);
