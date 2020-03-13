@@ -19,8 +19,8 @@ public class TeleportCheats : MonoBehaviour
     [MenuItem(Constants.CHEATS_TELEPORT_NURSESROOM)]
     public static void TeleportNursesRoom()
     {
-        GameManager.Instance.GetPlayerTransform().position = new Vector3(-158f, 3f, 235f);
-        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 90f, 0f);
+        GameManager.Instance.GetPlayerTransform().position = new Vector3(-141f, 3f, 241f);
+        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 135f, 0f);
     }
 
     [MenuItem(Constants.CHEATS_TELEPORT_DININGHALL, true)]

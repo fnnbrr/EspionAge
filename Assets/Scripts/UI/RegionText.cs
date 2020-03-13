@@ -17,6 +17,11 @@ public class RegionText : MonoBehaviour
         textMesh = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this);
     }
 
+    public void SetEmptyText()
+    {
+        textMesh.text = string.Empty;
+    }
+
     public void DisplayText(string text)
     {
         if (!isTyping)

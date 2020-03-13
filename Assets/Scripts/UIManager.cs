@@ -11,6 +11,7 @@ public class UIManager : Singleton<UIManager>
     public PauseMenuManager pauseMenu;
     public UITextOverlay textOverlay;
     public GameObject pressAPrompt;
+    public RegionText regionText;
 
     [Header("Fading Settings")]
     public Image fader;

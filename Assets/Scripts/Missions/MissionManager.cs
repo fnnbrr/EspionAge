@@ -101,7 +101,7 @@ public class MissionManager : Singleton<MissionManager>
         missionMapping[missionEnumValue].instantiatedMission = mission;
     }
 
-    public void SetObjectiveTextForList(MissionsEnum missionEnumValue, AMission mission)
+    public void SetObjectiveTextForList(MissionsEnum missionEnumValue)
     {
         if (missionMapping[missionEnumValue].objective) 
         {
@@ -121,7 +121,6 @@ public class MissionManager : Singleton<MissionManager>
             Debug.LogWarning($"Unmapped MissionsEnum value: {missionEnumValue} passed into GetMissionFromEnum!");
             return null;
         }
-
     }
 
     public AMission StartMission(MissionsEnum missionEnumValue)
@@ -133,7 +132,7 @@ public class MissionManager : Singleton<MissionManager>
         if (missionComponent is AMission)
         {
             AMission mission = missionComponent as AMission;
-            SetObjectiveTextForList(missionEnumValue, mission);
+            SetObjectiveTextForList(missionEnumValue);
 
             SetInstantiatedMissionForEnum(missionEnumValue, mission);
             ProgressManager.Instance.AddMission(mission);
@@ -168,6 +167,7 @@ public class MissionManager : Singleton<MissionManager>
     {
         AMission mission = GetInstantiatedMissionFromEnum(missionEnumValue);
         InProgressMissionContainer container = activeMissions.Find(m => m.mission == mission);
+        ObjectiveList.Instance.HideObjectiveList();
 
         if (container != null)
         {

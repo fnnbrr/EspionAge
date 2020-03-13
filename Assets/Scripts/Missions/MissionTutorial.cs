@@ -164,8 +164,10 @@ public class MissionTutorial : AMission
             yield return UIManager.Instance.textOverlay.SetText(text);
         }
 
-        // Fade in
+        // Fade in, and start typing the correct region name from this point
+        UIManager.Instance.regionText.SetEmptyText();
         UIManager.Instance.FadeIn();
+        UIManager.Instance.regionText.DisplayText(RegionManager.Instance.GetCurrentZone().regionName);
 
         // Start the note spawning and start the animation
         //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
