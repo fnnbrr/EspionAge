@@ -72,7 +72,7 @@ public class RegionManager : Singleton<RegionManager>
 
         HandleRestrictedZone(currentZone.isRestricted);
         HandleCameraChange(currentZone.mainCamera);
-        HandleRegionText(currentZone.regionName);
+        HandleRegionText(currentZone.regionName, currentZone.isRestricted);
     }
 
     private void HandleRestrictedZone(bool isRestricted)
@@ -105,8 +105,8 @@ public class RegionManager : Singleton<RegionManager>
         }
     }
 
-    private void HandleRegionText(string regionName)
+    private void HandleRegionText(string regionName, bool isRestricted)
     {
-        UIManager.Instance.regionText.DisplayText(regionName);
+        UIManager.Instance.regionText.DisplayText(regionName, isRestricted);
     }
 }

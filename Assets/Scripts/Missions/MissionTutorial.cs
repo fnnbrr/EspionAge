@@ -165,9 +165,10 @@ public class MissionTutorial : AMission
         }
 
         // Fade in, and start typing the correct region name from this point
-        UIManager.Instance.regionText.SetEmptyText();
+        CameraZone currentZone = RegionManager.Instance.GetCurrentZone();
+        UIManager.Instance.regionText.SetEmptyText(currentZone.isRestricted);
         UIManager.Instance.FadeIn();
-        UIManager.Instance.regionText.DisplayText(RegionManager.Instance.GetCurrentZone().regionName);
+        UIManager.Instance.regionText.DisplayText(currentZone.regionName, currentZone.isRestricted);
 
         // Start the note spawning and start the animation
         //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);

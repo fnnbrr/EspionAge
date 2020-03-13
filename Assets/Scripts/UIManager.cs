@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Cinemachine;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -30,6 +31,21 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         fader.gameObject.SetActive(true);
+        if (CameraManager.Instance)
+        {
+            CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
+            CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
+        }
+    }
+
+    private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        mainUICanvas.enabled = false;
+    }
+
+    private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        mainUICanvas.enabled = true;
     }
 
     private void Update()

@@ -9,7 +9,13 @@ public class RegionText : MonoBehaviour
     public float charTypeSpeedMax = 0.2f;
     public float stayTime = 3f;
 
+    [Header("Colors")]
+    public string defaultColor = "white";
+    public string restrictedZoneColor = "red";
+
     private TextMeshProUGUI textMesh;
+    private string currentTextValue = string.Empty;  // without rich text formatting
+    private bool currentIsRestricted = false;
     private bool isTyping = false;
 
     private void Awake()
@@ -17,62 +23,71 @@ public class RegionText : MonoBehaviour
         textMesh = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this);
     }
 
-    public void SetEmptyText()
+    public void SetEmptyText(bool isRestricted)
     {
         textMesh.text = string.Empty;
+        currentTextValue = string.Empty;
+        currentIsRestricted = isRestricted;
     }
 
-    public void DisplayText(string text)
+    private void SetText(string text, bool isRestricted)
+    {
+        textMesh.text = $"<color=\"{(isRestricted ? restrictedZoneColor : defaultColor)}\">{text}";
+        currentTextValue = text;
+        currentIsRestricted = isRestricted;
+    }
+
+    public void DisplayText(string text, bool isRestricted = false)
     {
         if (!isTyping)
         {
-            StartCoroutine(Display(text));
+            StartCoroutine(Display(text, isRestricted));
         }
         else
         {
             StopAllCoroutines();
-            StartCoroutine(DeleteThenDisplay(text));
+            StartCoroutine(DeleteThenDisplay(text, isRestricted));
         }
     }
 
-    private IEnumerator Display(string text)
+    private IEnumerator Display(string text, bool isRestricted)
     {
         isTyping = true;
-        yield return TypeText(text);
+        yield return TypeText(text, isRestricted);
         yield return new WaitForSeconds(stayTime);
-        yield return UntypeText(text);
+        yield return UntypeText(text, isRestricted);
         isTyping = false;
     }
 
-    private IEnumerator DeleteThenDisplay(string text)
+    private IEnumerator DeleteThenDisplay(string text, bool isRestricted)
     {
-        yield return UntypeText(textMesh.text);
+        yield return UntypeText(currentTextValue, currentIsRestricted);
         isTyping = false;
-        DisplayText(text);
+        DisplayText(text, isRestricted);
     }
 
-    private IEnumerator TypeText(string text)
+    private IEnumerator TypeText(string text, bool isRestricted)
     {
-        textMesh.text = string.Empty;
+        SetEmptyText(isRestricted);
 
         int currentCharIndex = 0;
         while (currentCharIndex < text.Length)
         {
             currentCharIndex += 1;
-            textMesh.text = text.Substring(0, currentCharIndex);
+            SetText(text.Substring(0, currentCharIndex), isRestricted);
             yield return new WaitForSeconds(GetCharTypeSpeed());
         }
     }
 
-    private IEnumerator UntypeText(string text)
+    private IEnumerator UntypeText(string text, bool isRestricted)
     {
-        textMesh.text = text;
+        SetText(text, isRestricted);
 
         int currentCharIndex = text.Length - 1;
         while (currentCharIndex > 0)
         {
             currentCharIndex -= 1;
-            textMesh.text = text.Substring(0, currentCharIndex);
+            SetText(text.Substring(0, currentCharIndex), isRestricted);
             yield return new WaitForSeconds(GetCharTypeSpeed());
         }
     }
