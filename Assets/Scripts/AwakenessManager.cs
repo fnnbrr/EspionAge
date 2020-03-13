@@ -47,7 +47,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
         startContrast = colorAdjustments.contrast.value;
 
         UIManager.Instance.staminaBar.OnChange += UpdateVignette;
-        UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
+        //UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
         UIManager.Instance.staminaBar.OnChange += UpdateFilmGrain;
         UIManager.Instance.staminaBar.OnChange += UpdateColorGrading;
         UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
