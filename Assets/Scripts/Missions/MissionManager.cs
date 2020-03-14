@@ -121,7 +121,6 @@ public class MissionManager : Singleton<MissionManager>
             Debug.LogWarning($"Unmapped MissionsEnum value: {missionEnumValue} passed into GetMissionFromEnum!");
             return null;
         }
-
     }
 
     public AMission StartMission(MissionsEnum missionEnumValue)
