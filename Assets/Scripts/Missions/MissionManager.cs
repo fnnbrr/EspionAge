@@ -33,6 +33,7 @@ public class MissionMapping
     [Header("Make sure this mission is unique among the list!")]
     public MissionsEnum mission;
     public GameObject prefab;
+    public Objective objective;
     public StampCollectible collectible;
     [HideInInspector]
     public AMission instantiatedMission;
@@ -100,6 +101,15 @@ public class MissionManager : Singleton<MissionManager>
         missionMapping[missionEnumValue].instantiatedMission = mission;
     }
 
+    public void SetObjectiveTextForList(MissionsEnum missionEnumValue)
+    {
+        if (missionMapping[missionEnumValue].objective) 
+        {
+            ObjectiveList.Instance.DisplayObjectiveList();
+            ObjectiveList.Instance.DisplayObjectiveText(missionMapping[missionEnumValue].objective.line);
+        }
+    }
+
     public StampCollectible GetStampCollectibleFromEnum(MissionsEnum missionEnumValue)
     {
         if (missionMapping.TryGetValue(missionEnumValue, out MissionMapping mission))
@@ -111,7 +121,6 @@ public class MissionManager : Singleton<MissionManager>
             Debug.LogWarning($"Unmapped MissionsEnum value: {missionEnumValue} passed into GetMissionFromEnum!");
             return null;
         }
-
     }
 
     public AMission StartMission(MissionsEnum missionEnumValue)
@@ -123,6 +132,7 @@ public class MissionManager : Singleton<MissionManager>
         if (missionComponent is AMission)
         {
             AMission mission = missionComponent as AMission;
+            SetObjectiveTextForList(missionEnumValue);
 
             SetInstantiatedMissionForEnum(missionEnumValue, mission);
             ProgressManager.Instance.AddMission(mission);
@@ -149,6 +159,7 @@ public class MissionManager : Singleton<MissionManager>
     public void CompleteMissionObjective(MissionsEnum missionEnumValue)
     {
         ProgressManager.Instance.UpdateMissionStatus(GetInstantiatedMissionFromEnum(missionEnumValue), MissionStatusCode.Completed);
+        ObjectiveList.Instance.CrossOutObjectiveText();
         Debug.Log("Objective Complete");
     }
 
@@ -156,6 +167,7 @@ public class MissionManager : Singleton<MissionManager>
     {
         AMission mission = GetInstantiatedMissionFromEnum(missionEnumValue);
         InProgressMissionContainer container = activeMissions.Find(m => m.mission == mission);
+        ObjectiveList.Instance.HideObjectiveList();
 
         if (container != null)
         {

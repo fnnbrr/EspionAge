@@ -47,13 +47,14 @@ public class AwakenessManager : Singleton<AwakenessManager>
         startContrast = colorAdjustments.contrast.value;
 
         UIManager.Instance.staminaBar.OnChange += UpdateVignette;
-        UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
+        //UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
         UIManager.Instance.staminaBar.OnChange += UpdateFilmGrain;
         UIManager.Instance.staminaBar.OnChange += UpdateColorGrading;
         UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
+        UIManager.Instance.staminaBar.OnChange += UpdatePlayerAnimation;
+        UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
 
         movementController = GameManager.Instance.GetMovementController();
-        UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
     }
     
     private void FixedUpdate()
@@ -107,6 +108,11 @@ public class AwakenessManager : Singleton<AwakenessManager>
     
     
     // // //  AWAKENESS LISTENERS // // //
+
+    private void UpdatePlayerAnimation(float fillAmount)
+    {
+        GameManager.Instance.GetPlayerAnimator().SetFloat(Constants.ANIMATION_BIRDIE_AWAKENESS, fillAmount);
+    }
 
     private float GetInterpolatedFillAmount(float fillAmount)
     {

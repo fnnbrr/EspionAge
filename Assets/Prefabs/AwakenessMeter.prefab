@@ -170,6 +170,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1317986145}
   - component: {fileID: 1317986146}
+  - component: {fileID: 6534996850923531064}
   m_Layer: 5
   m_Name: Lightning
   m_TagString: Untagged
@@ -217,6 +218,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6534996850923531064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317986144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 118cf3e47fcc81d47b6e841d97db0e4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1318518564
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,3 +852,6 @@ MonoBehaviour:
   fadeSpeed: 2
   decreasePerSecond: 0.1
   waitUntilDecreaseTime: 2
+  lightningActive: 0
+  overrideValue: 0
+  overrideTo: 0

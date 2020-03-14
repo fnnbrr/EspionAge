@@ -7,6 +7,7 @@ using Cinemachine;
 public class CameraZone : MonoBehaviour 
 {
     public CinemachineVirtualCamera mainCamera;
+    public string regionName;
     public bool isRestricted;
 
     private void OnTriggerEnter(Collider other)

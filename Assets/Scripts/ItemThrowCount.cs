@@ -45,6 +45,6 @@ public class ItemThrowCount : MonoBehaviour
 
     void DisplayUpdate()
     {
-        text.SetText("x" + numItemsHeld.ToString());
+        text.SetText(numItemsHeld.ToString());
     }
 }

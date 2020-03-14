@@ -43,8 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c1d0aef40d99c0498c4f85642bb2045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStartPosition: {x: -158, y: 3, z: 235}
-  playerStartRotation: {x: 0, y: 90, z: 0}
+  playerStartPosition: {x: -141, y: 3, z: 241}
+  playerStartRotation: {x: 0, y: 131, z: 0}
   playerRespawnPosition: {x: -128, y: 3, z: 235}
   playerRespawnRotation: {x: 0, y: 90, z: 0}
   startCutsceneTexts:
@@ -63,7 +63,7 @@ MonoBehaviour:
     type: 3}
   birdieRunawayCutsceneText: {fileID: 160906416572943929, guid: 9a79d206011450549865f12b94658580,
     type: 3}
-  specialAbilityPointerUIAnimation: {fileID: 1514660232831533162, guid: 51ddaed157568da429c348c6a7152cc1,
+  specialAbilityPointerUIAnimation: {fileID: 400517345567650604, guid: c8136373351c44c039df4150878a2ec9,
     type: 3}
   vasePrefab: {fileID: 6872363483067291833, guid: 23f56f3b92555d04a801b412248a65f1,
     type: 3}
@@ -77,21 +77,21 @@ MonoBehaviour:
   - {x: -60, y: 3, z: 86}
   chaserPrefab: {fileID: 3862208129692031431, guid: e9c98b9dbdfbaf3468d9f310c9ed292e,
     type: 3}
-  enemyCutsceneSpeed: 1
+  enemyCutsceneAnimationSpeed: 0.2
   chaserGroups:
   - startChaseRadius: 70
-    chaseSpeed: 8
+    chaseSpeed: 0.1
     enemyStartPositions:
     - {x: -83, y: 3, z: 257}
     - {x: -93, y: 3, z: 268}
   - startChaseRadius: 55
-    chaseSpeed: 9
+    chaseSpeed: 0.3
     enemyStartPositions:
     - {x: -137, y: 3, z: 124}
     - {x: -121, y: 3, z: 125.5}
     - {x: -127.5, y: 3, z: 135}
   - startChaseRadius: 45
-    chaseSpeed: 10
+    chaseSpeed: 2
     enemyStartPositions:
     - {x: -36, y: 3, z: 167}
     - {x: -35, y: 3, z: 187}

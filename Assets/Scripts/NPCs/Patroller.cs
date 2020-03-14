@@ -17,6 +17,7 @@ public class Patroller : Chaser
     private void Awake()
     {
         defaultState = ActionStates.Patrolling;
+        animator = Utils.GetRequiredComponentInChildren<Animator>(this);
     }
 
     // Start is called before the first frame update
@@ -43,10 +44,7 @@ public class Patroller : Chaser
     private void GotoNextPatrolPoint()
     {
         // Returns if only the starting position is present
-        if (points.Count < 2)
-        {
-            return;
-        }
+        if (points.Count < 2) return;
 
         // Set the agent to go to the currently selected destination.
         agent.SetDestination(points[Utils.PingPong(destinationCount, points.Count - 1)]);
@@ -55,8 +53,31 @@ public class Patroller : Chaser
 
     void Update()
     {
-        if (!agent.isOnNavMesh || agent.pathPending || !(agent.remainingDistance < 0.5f)) return;
-        
+        // TEMP, we gotta refactor this logic to make this work better and be more robust
+        if (isWaiting)
+        {
+            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, false);
+            waitTimer -= Time.deltaTime;
+            if (waitTimer <= 0f)
+            {
+                agent.enabled = true;
+                isWaiting = false;
+            }
+            return;
+        }
+
+        if (!agent.isOnNavMesh || agent.pathPending)
+        {
+            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, false);
+            return;
+        }
+
+        if (agent.remainingDistance > 0.5f)
+        {
+            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, true);
+            return;
+        }
+
         // Choose the next destination point when the agent gets close to the current one.
         switch (currentState)
         {

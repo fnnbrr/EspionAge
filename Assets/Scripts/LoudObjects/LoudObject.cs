@@ -59,7 +59,7 @@ public class LoudObject : MonoBehaviour
 
     public void Drop()
     {
-        rb.AddForce(GameManager.Instance.GetPlayerTransform().forward * thrustForce, ForceMode.Impulse);
+        rb.AddForce((transform.position - GameManager.Instance.GetPlayerTransform().position).normalized * thrustForce, ForceMode.Impulse);
         hasBeenBumped = true;
     }
 

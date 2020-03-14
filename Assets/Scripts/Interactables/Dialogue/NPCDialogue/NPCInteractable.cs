@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using NaughtyAttributes;
 
 [System.Serializable]
 public enum ENPCReactiveAction
@@ -15,11 +16,17 @@ public class NPCReactiveAction
 {
     public ENPCReactiveAction actionType;
 
-    [Header("Used for Teleport")]
+    [ShowIf("ShowIfTeleport")]
+    [AllowNesting]
     public Vector3 actionPosition;
 
-    [Header("Used for Destroy")]
+    // bug opened with NaughtyAttributes since this is not working with Lists currently https://github.com/dbrizov/NaughtyAttributes/issues/142
+    [ShowIf("ShowIfDestroy")] 
+    [AllowNesting]
     public List<GameObject> objects;
+
+    public bool ShowIfTeleport => actionType == ENPCReactiveAction.Teleport;
+    public bool ShowIfDestroy => actionType == ENPCReactiveAction.Destroy;
 }
 
 [System.Serializable]
@@ -203,7 +210,6 @@ public class NPCInteractable : DialogueInteractable
 
     private void TryReactiveActions()
     {
-        print("TryReactiveActions");
         currentMissionConvos.doOnComplete.ForEach(a =>
         {
             switch (a.actionType)
@@ -225,7 +231,6 @@ public class NPCInteractable : DialogueInteractable
 
     private void TryResetReactiveActions()
     {
-        print("TryResetReactiveActions");
         currentMissionConvos.doOnComplete.ForEach(a =>
         {
             switch (a.actionType)
