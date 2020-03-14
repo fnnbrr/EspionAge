@@ -54,17 +54,32 @@ MonoBehaviour:
   - enemyType: 0
     prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
       type: 3}
-    spawnPosition: {x: -15, y: 3, z: -14}
+    spawnPosition: {x: -21, y: 3, z: 6}
     spawnRotation: {x: 0, y: 0, z: 0}
     isInitiallyResponding: 0
     waypoints:
-    - position: {x: -15, y: 0, z: 26}
+    - position: {x: -21, y: 0, z: 6}
       stayTime: 0
-    - position: {x: -34, y: 0, z: -14}
+    - position: {x: -21, y: 0, z: 5}
       stayTime: 0
-    - position: {x: 0, y: 0, z: -14}
+    startResponsePoint: {x: -21, y: 0, z: 6}
+    wanderBounds:
+      position: {x: 0, y: 0, z: 0}
+      radius: 0
+  - enemyType: 0
+    prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+      type: 3}
+    spawnPosition: {x: -11, y: 3, z: -16}
+    spawnRotation: {x: 0, y: 0, z: 0}
+    isInitiallyResponding: 0
+    waypoints:
+    - position: {x: -11, y: 0, z: -16}
       stayTime: 0
-    startResponsePoint: {x: -15, y: 3, z: -14}
+    - position: {x: -31, y: 0, z: -16}
+      stayTime: 0
+    - position: {x: -21, y: 0, z: -28}
+      stayTime: 0
+    startResponsePoint: {x: -11, y: 0, z: -16}
     wanderBounds:
       position: {x: 0, y: 0, z: 0}
       radius: 0
@@ -80,11 +95,13 @@ MonoBehaviour:
         type: 3}
       spawnPosition: {x: -85, y: 0, z: -36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      isInitiallyResponding: 1
+      isInitiallyResponding: 0
       waypoints:
-      - position: {x: 33, y: 0, z: 16}
+      - position: {x: -11, y: 0, z: -28}
         stayTime: 0
-      - position: {x: 9, y: 0, z: 40}
+      - position: {x: -21, y: 0, z: -16}
+        stayTime: 0
+      - position: {x: -31, y: 0, z: -28}
         stayTime: 0
       startResponsePoint: {x: 24, y: 0, z: -2}
       wanderBounds:
@@ -95,13 +112,13 @@ MonoBehaviour:
         type: 3}
       spawnPosition: {x: -85, y: 0, z: 36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      isInitiallyResponding: 1
+      isInitiallyResponding: 0
       waypoints:
-      - position: {x: 11, y: 0, z: -40}
+      - position: {x: -42, y: 0, z: 24}
         stayTime: 0
-      - position: {x: 24, y: 0, z: -12}
+      - position: {x: -42, y: 0, z: 24}
         stayTime: 0
-      startResponsePoint: {x: 37.5, y: 0, z: 0}
+      startResponsePoint: {x: -42, y: 0, z: 24}
       wanderBounds:
         position: {x: 14, y: 0, z: -14}
         radius: 20
