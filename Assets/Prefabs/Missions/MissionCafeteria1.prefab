@@ -44,8 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnPosition: {x: -41, y: 0, z: 37}
-  objective: {fileID: 11400000, guid: 97e9a5bc67d254d0ebbbedb536a80eba, type: 2}
-  respawnPosition: {x: -41, y: 3, z: 37}
   denturesCheckpointRespawnPosition: {x: 39, y: 3, z: 4}
   denturesCutsceneCamera: {fileID: 7195809638926452591, guid: e7b20ea3988940148b454be95c3fae4d,
     type: 3}
@@ -73,7 +71,7 @@ MonoBehaviour:
   missionCriticalInteractables:
   - prefab: {fileID: 1033882117269768695, guid: 788d7aafe44acf5458be76d50aa1a708,
       type: 3}
-    position: {x: 39.5, y: 4, z: 4}
+    position: {x: 30, y: 3, z: 4}
     rotation: {x: 0, y: 0, z: 0}
     spawnedInstance: {fileID: 0}
     enemiesToSpawnIfLastCollected:
@@ -107,19 +105,4 @@ MonoBehaviour:
       wanderBounds:
         position: {x: 14, y: 0, z: -14}
         radius: 20
-  missionObjects:
-  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
-      type: 3}
-    position: {x: 20, y: 3, z: 35}
-    rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
-  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
-      type: 3}
-    position: {x: 20, y: 3, z: 46.06}
-    rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
-  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
-      type: 3}
-    position: {x: -1, y: 3, z: -9}
-    rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
+  missionObjects: []
