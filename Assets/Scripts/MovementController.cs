@@ -41,27 +41,11 @@ public class MovementController : MonoBehaviour
 
         ToggleSpecialTrailRenderers(false);
 
-        if (CameraManager.Instance)
-        {
-            CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
-            CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
-        }
+        OnMovementChange += UpdateMovementAxis;
     }
 
-    private void HandleCameraOnBlendingStart(Cinemachine.CinemachineVirtualCamera fromCamera, Cinemachine.CinemachineVirtualCamera toCamera)
+    private void UpdateMovementAxis()
     {
-        OnMovementChange -= UpdateMovementAxisOnStopMoving;
-    }
-    
-    private void HandleCameraOnBlendingComplete(Cinemachine.CinemachineVirtualCamera fromCamera, Cinemachine.CinemachineVirtualCamera toCamera)
-    {
-        OnMovementChange += UpdateMovementAxisOnStopMoving;
-    }
-
-    private void UpdateMovementAxisOnStopMoving()
-    {
-        OnMovementChange -= UpdateMovementAxisOnStopMoving;
-
         if (currentMovementAxisInitialized && CameraManager.Instance.GetActiveCamera() != null)
         {
             currentMovementAxis = CameraManager.Instance.GetActiveCameraTransform().transform.forward;
