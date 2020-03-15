@@ -94,7 +94,7 @@ public class MissionKitchen1 : AMission
         SpawnInteractables(missionCriticalInteractables);
         SpawnEnemies(startEnemies);
 
-        RegionManager.Instance.OnPlayerEnterZone += StartDenturesCutscene;
+        RegionManager.Instance.OnPlayerEnterZone += HandleEnterKitchen;
     }
 
     protected override void Cleanup()
@@ -111,7 +111,7 @@ public class MissionKitchen1 : AMission
 
         if (!startCutscenePlayed && RegionManager.Instance)
         {
-            RegionManager.Instance.OnPlayerEnterZone -= StartDenturesCutscene;
+            RegionManager.Instance.OnPlayerEnterZone -= HandleEnterKitchen;
         }
         startCutscenePlayed = false;
     }
@@ -182,21 +182,28 @@ public class MissionKitchen1 : AMission
         });
     }
 
-    private void StartDenturesCutscene(CameraZone zone)
+    private void HandleEnterKitchen(CameraZone zone)
     {
         if (zone != RegionManager.Instance.kitchen) return;
 
-        // The current assumptions are gonna be that:
-        //  - we will have a camera where we need to set the look at
-        //  - and it will have an already created Animator with a single state that it will start on Awake
-        //
-        // So we can just destroy it after the animation time is over and it should switch back to whatever the current camera was
-        RegionManager.Instance.OnPlayerEnterZone -= StartDenturesCutscene;
+        RegionManager.Instance.OnPlayerEnterZone -= HandleEnterKitchen;
 
         if (startCutscenePlayed) return;
+
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        CameraManager.Instance.OnBlendingComplete += StartDenturesCutscene;
+    }
+
+    private void StartDenturesCutscene(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        CameraManager.Instance.OnBlendingComplete -= StartDenturesCutscene;
+
         startCutscenePlayed = true;
 
-        if (instantiatedMissionInteractables.Count == 0) return;
+        if (instantiatedMissionInteractables.Count == 0)  // nothing to zoom into
+        {
+            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+        }
 
         StartCoroutine(StartDenturesCutsceneCoroutine());
     }

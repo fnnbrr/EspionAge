@@ -89,20 +89,8 @@ public class RegionManager : Singleton<RegionManager>
 
     private void HandleCameraChange(CinemachineVirtualCamera camera)
     {
-        if (camera)
-        {
-            CameraManager.Instance.OnBlendingComplete += AlertBlendingComplete;
-            CameraManager.Instance.BlendTo(camera);
-        }
-    }
-
-    private void AlertBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
-    {
-        if (PlayerIsInAnyZone() && toCamera == GetCurrentZone().mainCamera)  // we do not want to care about unrelated camera blending events
-        {
-            CameraManager.Instance.OnBlendingComplete -= AlertBlendingComplete;
-            OnPlayerEnterZone?.Invoke(GetCurrentZone());
-        }
+        CameraManager.Instance.BlendTo(camera);
+        OnPlayerEnterZone?.Invoke(GetCurrentZone());
     }
 
     private void HandleRegionText(string regionName, bool isRestricted)

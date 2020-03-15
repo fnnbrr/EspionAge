@@ -62,7 +62,7 @@ public class CameraManager : Singleton<CameraManager>
 
     public ICinemachineCamera GetActiveCamera()
     {
-        return brain.ActiveVirtualCamera;
+        return brain == null ? null : brain.ActiveVirtualCamera as CinemachineVirtualCamera;
     }
 
     public CinemachineVirtualCamera GetActiveVirtualCamera()
