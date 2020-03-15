@@ -24,6 +24,10 @@ public static class Constants
     public const string INPUT_THROW_GETDOWN = "Fire1";
     public const string INPUT_STARTBUTTON_GETDOWN = "Start";
     public const string INPUT_SPECIAL_GETDOWN = "Special";
+    public const string INPUT_AXIS_HORIZONTAL = "Horizontal";
+    public const string INPUT_AXIS_VERTICAL = "Vertical";
+    public const string INPUT_AXIS_HORIZONTAL_RIGHT_STICK = "Horizontal Right Stick";
+    public const string INPUT_AXIS_VERTICAL_RIGHT_STICK = "Vertical Right Stick";
 
     public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
     public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
