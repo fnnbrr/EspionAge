@@ -5,28 +5,36 @@ using UnityEngine;
 public class FMODMissionComplete : MonoBehaviour
 {
     [FMODUnity.ParamRef]
-    public string param;
-    private bool completed;
-    private bool SeekSpeed = true;
+    public string parameter;
+    public bool isComplete = false;
+
+    private FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
+    private Interactable interactable;
+
+    void Start()
+    {
+        interactable = Utils.GetRequiredComponent<Interactable>(this);
+        interactable.OnInteractEnd += missionComplete;
+        FMODUnity.RuntimeManager.StudioSystem.getParameterDescriptionByName(parameter, out parameterDescription);
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player" == !completed)
+        if (!isComplete)
         {
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(param, 1f, SeekSpeed);
-            completed = true;
-            Debug.Log("param 1f");
-            ifCompleted();
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, 1f);
+            Debug.Log("param set to 1f");
+            isComplete = true;
         }
     }
 
-    void ifCompleted ()
+    private void missionComplete(Interactable source)
     {
-        if (completed)
+        Debug.Log("missionComplete");
+        if (isComplete)
         {
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(param, 0f);
-            completed = false;
-            Debug.Log("param 0f");
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, 0f);
+            isComplete = false;
         }
     }
 }
