@@ -7,12 +7,13 @@ public class FMODMissionComplete : MonoBehaviour
     [FMODUnity.ParamRef]
     public string param;
     private bool completed;
+    private bool SeekSpeed = true;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player" == !completed)
         {
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(param, 1f);
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(param, 1f, SeekSpeed);
             completed = true;
             Debug.Log("param 1f");
             ifCompleted();
