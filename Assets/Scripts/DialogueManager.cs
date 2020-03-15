@@ -9,6 +9,13 @@ public class SpeakerContainer
     public string id;
     public GameObject speakerObject;
     public string npcVoicePath;
+
+    public SpeakerContainer(string _id, GameObject _speakerObject, string _npcVoicePath)
+    {
+        id = _id;
+        speakerObject = _speakerObject;
+        npcVoicePath = _npcVoicePath;
+    }
 }
 
 public class DialogueManager : Singleton<DialogueManager>
@@ -65,12 +72,24 @@ public class DialogueManager : Singleton<DialogueManager>
             if (!skipRequest)
             {
                 skipRequest = true;
+                Debug.Log("skippping");
             }
             if (waitingForNext)
             {
                 waitingForNext = false;
             }
         }
+    }
+
+    public void AddSpeaker(SpeakerContainer speaker)
+    {
+        if (speakers.ContainsKey(speaker.id))
+        {
+            Debug.LogError("Trying to add a speaker that already exists");
+            return;
+        }
+
+        speakers.Add(speaker.id, speaker);
     }
 
 

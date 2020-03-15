@@ -43,8 +43,10 @@ public class NPCMissionConvos
     public List<NPCReactiveAction> doOnComplete;
 }
 
-public class NPCInteractable : DialogueInteractable
+public class NPCInteractable : Interactable
 {
+    public Conversation conversation;
+
     public float boundaryRadius = Constants.INTERACT_BOUNDARY_RADIUS;
 
     public List<Conversation> defaultConvos;
@@ -77,7 +79,7 @@ public class NPCInteractable : DialogueInteractable
         if(IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
         {
             // Prevent loading during a conversation
-            if (!isConversing && !autoPlaying)
+            if (!DialogueManager.Instance.CheckIsConversing() && !DialogueManager.Instance.CheckIsAutoPlaying())
             {
                 LoadConversation();
             }
@@ -91,22 +93,19 @@ public class NPCInteractable : DialogueInteractable
             // Autoplay
             if (conversation.autoplayConversation)
             {
-                if(!autoPlaying)
+                if(!DialogueManager.Instance.CheckIsAutoPlaying())
                 {
-                    TriggerAutoplay();
                     OnInteract();
                 }
             }
             // Enter collider to interact
             else
             {
-                if(conversation.autoInitiate && !isConversing)
+                if(conversation.autoInitiate && !DialogueManager.Instance.CheckIsConversing())
 				{
                     interactableOn = true;
                     OnInteract();
 				}
-
-                base.Update();
             }
         }
         else
@@ -117,9 +116,18 @@ public class NPCInteractable : DialogueInteractable
             }
         }
 
-        if(isFollowing)
+        if (!DialogueManager.Instance.CheckIsConversing() && !DialogueManager.Instance.CheckIsAutoPlaying())
+        {
+            base.Update();
+        }
+
+        if (isFollowing)
         {
             FollowTarget();
+            if (!DialogueManager.Instance.CheckIsConversing())
+            {
+                StopFollow();
+            }
         }
     }
 
@@ -152,7 +160,7 @@ public class NPCInteractable : DialogueInteractable
 
     public override void OnInteract()
     {
-        if (!isConversing)
+        if (!DialogueManager.Instance.CheckIsConversing())
         {
             // If input already disabled, then we won't continue from here and start a conversation
             if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
@@ -199,13 +207,15 @@ public class NPCInteractable : DialogueInteractable
                     return;
                 }
             }
+
             if (!conversation.shouldFollow && !conversation.autoplayConversation)
             {
                 NPCFacePlayer();
             }
-        }
 
-        base.OnInteract();
+            DialogueManager.Instance.StartConversation(conversation);
+            base.OnInteract();
+        }
     }
 
     private void TryReactiveActions()
@@ -269,28 +279,28 @@ public class NPCInteractable : DialogueInteractable
         });
     }
 
-    protected override void OnAutoplayComplete()
-    {
-        base.OnAutoplayComplete();
-        if(conversation.shouldFollow)
-        {
-            StopFollow();
-            ReturnToOrigin();
-        }
-    }
+    //protected override void OnAutoplayComplete()
+    //{
+    //    base.OnAutoplayComplete();
+    //    if(conversation.shouldFollow)
+    //    {
+    //        StopFollow();
+    //        ReturnToOrigin();
+    //    }
+    //}
 
     // Not sure if we'll need this funtionality but putting it here anyway
     // Would happen when shouldFollow is true and autoPlaying is false for that conversation
-    protected override void EndConversation()
-    {
-        base.EndConversation();
+    //protected override void EndConversation()
+    //{
+    //    base.EndConversation();
 
-        if(isFollowing && !autoPlaying)
-        {
-            StopFollow();
-            ReturnToOrigin();
-        }
-    }
+    //    if(isFollowing && !autoPlaying)
+    //    {
+    //        StopFollow();
+    //        ReturnToOrigin();
+    //    }
+    //}
 
     void FollowTarget()
     {

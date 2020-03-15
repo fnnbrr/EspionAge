@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public struct Line
 {
-    public bool isBirdie;
+    public string id;
 
     [TextArea(2, 5)]
     public string text;

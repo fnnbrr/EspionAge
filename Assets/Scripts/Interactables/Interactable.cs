@@ -13,11 +13,11 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected bool enableInteract = true;
     protected bool interactableOn = false;
-    protected bool continueInteracting = false;
+    protected bool withinInteractRadius;
 
     public float interactRadius = Constants.INTERACT_POPUP_RADIUS;
 
-    protected bool withinInteractRadius;
+    //public bool withinInteractRadius;
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
@@ -31,7 +31,7 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         withinInteractRadius = IsWithinRadius(transform.position, player.transform, interactRadius);
 
-        if (!interactableOn && withinInteractRadius && !continueInteracting)
+        if (!interactableOn && withinInteractRadius)
         {
             interactableOn = true;
             ShowInteractUI();
@@ -42,8 +42,9 @@ public class Interactable : MonoBehaviour, IInteractable
             HideInteractUI();
         }
 
+
         //Ensures text is always facing the camera
-        if ((enableInteract && interactableOn) || continueInteracting)
+        if ((enableInteract && interactableOn))
         {
             // Interact Text always faces towards camera
             interactTransform.LookAt(CameraManager.Instance.GetActiveCameraTransform());
