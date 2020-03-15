@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NPCs;
+using NPCs.Components;
 using UnityEngine;
 
 public class FieldOfVision : MonoBehaviour
@@ -19,7 +20,7 @@ public class FieldOfVision : MonoBehaviour
 	public int edgeResolveInterations;
 	public float edgeDstThreshold;
 
-	private BaseAi baseAi;
+	private Chaser chaser;
 
 	[Header("View Mesh Options")]
 	public GameObject viewMeshObject;
@@ -38,7 +39,7 @@ public class FieldOfVision : MonoBehaviour
 
 	void Start()
 	{
-		baseAi = Utils.GetRequiredComponent<BaseAi>(this);
+		chaser = Utils.GetRequiredComponent<Chaser>(this);
 
 		viewMeshFilter = Utils.GetRequiredComponent<MeshFilter>(viewMeshObject);
 		viewMesh = new Mesh();
@@ -99,7 +100,7 @@ public class FieldOfVision : MonoBehaviour
 		}
 
 		// Can also do stuff with visibleTargets.Count
-		baseAi.HandleTargetsInRange(visibleTargets.Count);
+		chaser.HandleTargetsInRange(visibleTargets.Count);
 	}
 
 	void UpdateViewColor()

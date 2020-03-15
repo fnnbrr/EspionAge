@@ -151,29 +151,16 @@ public class MissionKitchen1 : AMission
                 GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
              
                 // All enemies will be chasers, so we need to set the target transform for all.
-                BaseAi enemyComponent = Utils.GetRequiredComponent<BaseAi>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Chaser component!");
-                enemyComponent.targetTransform = GameManager.Instance.GetPlayerTransform();
-                enemyComponent.OnCollideWithPlayer += OnCollideWithPlayer;
-
-                switch (enemy.enemyType)
+                BasicNurse enemyComponent = Utils.GetRequiredComponent<BasicNurse>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Chaser component!");
+                enemyComponent.chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
+                enemyComponent.chaser.OnCollideWithPlayer += OnCollideWithPlayer;
+                
+                enemyComponent.patroller.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+                if (enemy.isInitiallyResponding)
                 {
-                    case MissionEnemy.EnemyType.Patroller:
-                        Patroller patrol = enemyComponent as Patroller;
-                        patrol.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
-                        if (enemy.isInitiallyResponding)
-                        {
-                            patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
-                        }
-                        break;
-                    case MissionEnemy.EnemyType.BaseAi:
-                        BaseAi baseAi = enemyComponent as BaseAi;
-                        baseAi.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
-                        break;
-                    default:
-                        Debug.LogError($"Unknown enemy type: {enemy.enemyType}!");
-                        break;
+                    enemyComponent.responder.InitializeResponderParameters(enemy.startResponsePoint);
                 }
-
+                
                 instantiatedEnemies.Add(enemyComponent);
             }
             else

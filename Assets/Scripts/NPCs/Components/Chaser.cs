@@ -3,11 +3,12 @@ using UnityEngine.AI;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(BaseAi))]
     public class Chaser : MonoBehaviour
     {
         public Transform targetTransform;
 
+        private BaseAi baseAi;
         private NavMeshAgent agent;
         private bool isChasing = false;
         public delegate void CollideWithPlayerAction();
@@ -15,23 +16,24 @@ namespace NPCs.Components
 
         private void Awake()
         {
-            agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
+            agent = baseAi.agent;
         }
 
         public void HandleTargetsInRange(int numTargetsInRange)
         {
-            if (numTargetsInRange > 0 && !isChasing && agent.enabled)
+            if (numTargetsInRange > 0 && !baseAi.currentState.Equals("Chasing") && agent.enabled)
             {
-                isChasing = true;
                 ChaseTarget();
+                baseAi.SetState("Chasing");
             }
-            else if (numTargetsInRange == 0 && isChasing)
+            else if (numTargetsInRange == 0 && baseAi.currentState.Equals("Chasing"))
             {
-                isChasing = false;
+                baseAi.SetState(baseAi.defaultState);
             }
         }
         
-        protected void ChaseTarget()
+        public void ChaseTarget()
         {
             Vector3 targetPosition = targetTransform.position;
             Vector3 thisPosition = transform.position;

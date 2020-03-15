@@ -4,18 +4,20 @@ using UnityEngine.AI;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(BaseAi))]
     public class Patroller : MonoBehaviour
     {
         public Transform patrolWaypoints;
         
+        private BaseAi baseAi;
         private NavMeshAgent agent;
         private List<Vector3> patrolPositions = new List<Vector3>();
         private int destinationCount;
 
         private void Awake()
         {
-            agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
+            agent = baseAi.agent;
         }
         
         private void Start()
@@ -35,7 +37,7 @@ namespace NPCs.Components
             patrolPositions = new List<Vector3>(newPoints);
         }
 
-        private void GotoNextPatrolPoint(bool loop)
+        public void GotoNextPatrolPoint(bool loop=true)
         {
             // Returns if only the starting position is present
             if (patrolPositions.Count < 2) return;

@@ -4,38 +4,51 @@ using UnityEngine.AI;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(BaseAi))]
     public class Responder : MonoBehaviour
     {
         public Vector3 responsePoint;
+        public bool initiallyResponding = false;
 
+        private BaseAi baseAi;
         private NavMeshAgent agent;
-        private bool isResponding = false;
 
         private void Awake()
         {
-            agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
+            agent = baseAi.agent;
         }
 
         private void Start()
         {
-            agent.SetDestination(responsePoint);
+            if (initiallyResponding)
+            {
+                baseAi.SetState("Responding");
+                agent.SetDestination(responsePoint);
+            }
         }
 
         public void InitializeResponderParameters(Vector3 newResponsePoint)
         {
-            isResponding = true;
             responsePoint = newResponsePoint;
+            baseAi.SetState("Responding");
+            agent.SetDestination(responsePoint);
         }
         
         private void OnTriggerEnter(Collider other)
         {
             if (!other.gameObject.CompareTag("Noise") && agent.enabled) return;
-        
-            isResponding = true;
+            
+            baseAi.SetState("Responding");
         
             responsePoint = other.gameObject.transform.position;
             agent.SetDestination(responsePoint);
+            
+            Searcher relatedSearcher = GetComponentInParent<Searcher>();
+            if (relatedSearcher != null)
+            {
+                relatedSearcher.searchBoundsCenter = responsePoint;
+            }
         }
     }
 }

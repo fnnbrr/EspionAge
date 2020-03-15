@@ -1,24 +1,34 @@
-﻿using UnityEngine;
-using UnityEngine.AI;
+﻿using NPCs.Components;
+using UnityEngine;
 
 namespace NPCs
 {
+    [RequireComponent(typeof(Chaser))]
     public class PureChaser : BaseAi
     {
         public float startChaseRadius = 100f;
-
+        
+        public Chaser chaser;
         private ChildRootMotionController rootMotionController;
         private bool shouldChase = false;
 
         public const float ReportReachedDistance = 2f;
+        
 
         public delegate void ReachedDestinationAction();
         public event ReachedDestinationAction OnReachDestination;
 
-        private void Awake()
+        private new void Awake()
         {
-            agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+            base.Awake();
             rootMotionController = Utils.GetRequiredComponentInChildren<ChildRootMotionController>(this);
+        }
+        
+        private new void Start()
+        {
+            base.Start();
+            
+            chaser = Utils.GetRequiredComponent<Chaser>(this);
         }
 
         public void SetSpeed(float speed)
@@ -38,10 +48,15 @@ namespace NPCs
 
         private new void ChaseTarget()
         {
-            if (shouldChase && targetTransform)
+            if (shouldChase && chaser.targetTransform)
             {
-                SetDestination(targetTransform.position);
+                SetDestination(chaser.targetTransform.position);
             }
+        }
+
+        public override void SetState(string newState)
+        {
+            throw new System.NotImplementedException();
         }
 
         protected override void Update()
@@ -55,7 +70,7 @@ namespace NPCs
             CheckRemainingDistance();
 
             // below are all about using targetTransform
-            if (!targetTransform || agent.speed <= 0f)
+            if (!chaser.targetTransform || agent.speed <= 0f)
             {
                 SetMoving(false);
                 return;
@@ -65,7 +80,7 @@ namespace NPCs
                 SetMoving(true);
             }
 
-            if (!shouldChase && Vector3.Distance(transform.position, targetTransform.position) <= startChaseRadius)
+            if (!shouldChase && Vector3.Distance(transform.position, chaser.targetTransform.position) <= startChaseRadius)
             {
                 shouldChase = true;
             }

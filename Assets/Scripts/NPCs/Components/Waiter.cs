@@ -1,41 +1,35 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(BaseAi))]
     public class Waiter : MonoBehaviour
     {
-        public float defaultWaitDuration = 1.0f;
-
         private float waitTimer = 0f;
 
+        private BaseAi baseAi;
         private NavMeshAgent agent;
-        private bool isWaiting = false;
 
         private void Awake()
         {
-            agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
+            agent = baseAi.agent;
         }
 
-        protected bool WaitComplete()
-        {
-            return WaitComplete(defaultWaitDuration);
-        }
-
-        protected bool WaitComplete(float waitDuration)
+        public bool WaitComplete(float waitDuration=1.0f)
         {
             waitTimer += Time.deltaTime;
             if (waitTimer < waitDuration)
             {
-                isWaiting = true;
                 agent.enabled = false;
                 return false;
             }
             
-            isWaiting = false;
             agent.enabled = true;
             waitTimer = 0f;
             return true;

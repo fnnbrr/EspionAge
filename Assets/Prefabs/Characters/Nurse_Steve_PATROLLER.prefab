@@ -124,6 +124,11 @@ GameObject:
   - component: {fileID: 2450668294617206675}
   - component: {fileID: 4186571339833994720}
   - component: {fileID: 5638750586541568652}
+  - component: {fileID: 8399060607170567938}
+  - component: {fileID: 8040559180144460867}
+  - component: {fileID: -7711432056760366613}
+  - component: {fileID: -4738247284353703669}
+  - component: {fileID: 7041540442067974479}
   m_Layer: 0
   m_Name: Nurse_Steve_PATROLLER
   m_TagString: Enemy
@@ -277,17 +282,81 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  chase: 1
-  targetTransform: {fileID: 0}
-  responsePoint: {x: 0, y: 0, z: 0}
-  searchBounds: {fileID: 0}
-  noiseSearchRadius: 15
-  waitDurationSec: 1
-  questionMark: {fileID: 5902039246049778213}
-  currentState: 3
-  defaultState: 3
-  patrolWaypoints: {fileID: 0}
+  currentState: Responding
+  defaultState: Searching
+  chaser: {fileID: 0}
+  responder: {fileID: 0}
+  searcher: {fileID: 0}
+  patroller: {fileID: 0}
+  waiter: {fileID: 0}
   numSearches: 5
+  questionMark: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
+    type: 3}
+--- !u!114 &8399060607170567938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e0130efb1f09049b14a178024d1a43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noiseSearchRadius: 15
+--- !u!114 &8040559180144460867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTransform: {fileID: 0}
+--- !u!114 &-7711432056760366613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98e2dd5f1eba5b44da7e20f29593d3d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  responsePoint: {x: 0, y: 0, z: 0}
+  initiallyResponding: 0
+--- !u!114 &-4738247284353703669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d0a3cb99b1483143827d0aca833b072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7041540442067974479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488879eb17e80e3499a7f06bed5ef670, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolWaypoints: {fileID: 0}
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,12 +580,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0d8b49d3bcafe045a92b55d4d468979, type: 3}
---- !u!1 &5902039246049778213 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
-    type: 3}
-  m_PrefabInstance: {fileID: 63018854010067028}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3953487963611659546 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3891812714996491598, guid: a0d8b49d3bcafe045a92b55d4d468979,

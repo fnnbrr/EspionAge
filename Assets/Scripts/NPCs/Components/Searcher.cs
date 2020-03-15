@@ -4,29 +4,23 @@ using Random = UnityEngine.Random;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(BaseAi))]
     public class Searcher : MonoBehaviour
     {
-        [Tooltip("After hearing a noise, how close should I search to that noise?")]
-        public float noiseSearchRadius = 15.0f;
+        public Vector3 searchBoundsCenter;
+        public float searchBoundsRadius = 15.0f;
 
-        private Vector3 searchBoundsCenter;
-        private float searchBoundsRadius;
-
+        private BaseAi baseAi;
         private NavMeshAgent agent;
         private bool isSearching = false;
 
         private void Awake()
         {
-            agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
+            agent = baseAi.agent;
         }
 
-        private void Start()
-        {
-            searchBoundsRadius = noiseSearchRadius;
-        }
-
-        protected void GotoNextSearchPoint()
+        public void GotoNextSearchPoint()
         {
             Vector3 randomPoint = searchBoundsCenter + Random.insideUnitSphere * searchBoundsRadius;
             NavMeshHit navHit;
