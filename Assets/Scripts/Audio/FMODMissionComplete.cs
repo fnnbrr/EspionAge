@@ -23,14 +23,12 @@ public class FMODMissionComplete : MonoBehaviour
         if (!isComplete)
         {
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, 1f);
-            Debug.Log("param set to 1f");
             isComplete = true;
         }
     }
 
     private void missionComplete(Interactable source)
     {
-        Debug.Log("missionComplete");
         if (isComplete)
         {
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, 0f);
