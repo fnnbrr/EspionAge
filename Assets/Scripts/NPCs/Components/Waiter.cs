@@ -26,11 +26,11 @@ namespace NPCs.Components
             waitTimer += Time.deltaTime;
             if (waitTimer < waitDuration)
             {
-                agent.enabled = false;
+                agent.isStopped = true;
                 return false;
             }
-            
-            agent.enabled = true;
+
+            agent.isStopped = false;
             waitTimer = 0f;
             return true;
         }

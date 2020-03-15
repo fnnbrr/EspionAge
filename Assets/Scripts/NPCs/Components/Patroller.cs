@@ -11,7 +11,7 @@ namespace NPCs.Components
         
         private BaseAi baseAi;
         private NavMeshAgent agent;
-        private List<Vector3> patrolPositions = new List<Vector3>();
+        public List<Vector3> patrolPositions = new List<Vector3>();
         private int destinationCount;
 
         private void Awake()
@@ -46,7 +46,11 @@ namespace NPCs.Components
             {
                 agent.SetDestination(patrolPositions[destinationCount % patrolPositions.Count]);
             }
-            agent.SetDestination(patrolPositions[Utils.PingPong(destinationCount, patrolPositions.Count - 1)]);
+            else
+            {
+                agent.SetDestination(patrolPositions[Utils.PingPong(destinationCount, patrolPositions.Count - 1)]);
+            }
+            
             destinationCount++;
         }
     }

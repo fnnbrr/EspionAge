@@ -8,7 +8,7 @@ namespace NPCs
     {
         public float startChaseRadius = 100f;
         
-        public Chaser chaser;
+        [HideInInspector] public Chaser chaser;
         private ChildRootMotionController rootMotionController;
         private bool shouldChase = false;
 
@@ -22,12 +22,6 @@ namespace NPCs
         {
             base.Awake();
             rootMotionController = Utils.GetRequiredComponentInChildren<ChildRootMotionController>(this);
-        }
-        
-        private new void Start()
-        {
-            base.Start();
-            
             chaser = Utils.GetRequiredComponent<Chaser>(this);
         }
 

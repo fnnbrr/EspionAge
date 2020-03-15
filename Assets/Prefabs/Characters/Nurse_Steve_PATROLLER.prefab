@@ -281,9 +281,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bbd1dc618b965549a3f827dce25aa6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: Patrolling
+  defaultState: Patrolling
   agent: {fileID: 0}
-  currentState: Responding
-  defaultState: Searching
   chaser: {fileID: 0}
   responder: {fileID: 0}
   searcher: {fileID: 0}
@@ -304,7 +304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80e0130efb1f09049b14a178024d1a43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noiseSearchRadius: 15
+  searchBoundsCenter: {x: 0, y: 0, z: 0}
+  searchBoundsRadius: 15
 --- !u!114 &8040559180144460867
 MonoBehaviour:
   m_ObjectHideFlags: 0

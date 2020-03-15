@@ -33,14 +33,11 @@ namespace NPCs
         
         public GameObject questionMark;
         private Animator animator;
-        
-        private new void Start()
+
+        private new void Awake()
         {
-            base.Start();
-            
-            currentState = "Responding";
-            defaultState = "Searching";
-            
+            base.Awake();
+
             chaser = Utils.GetRequiredComponent<Chaser>(this);
             responder = Utils.GetRequiredComponent<Responder>(this);
             searcher = Utils.GetRequiredComponent<Searcher>(this);

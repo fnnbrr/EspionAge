@@ -31,8 +31,7 @@ public class MissionEnemy
 
     public enum EnemyType
     {
-        Patroller,
-        BaseAi
+        BasicNurse
     }
     [SerializeField] public EnemyType enemyType;
 
@@ -151,7 +150,7 @@ public class MissionKitchen1 : AMission
                 GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
              
                 // All enemies will be chasers, so we need to set the target transform for all.
-                BasicNurse enemyComponent = Utils.GetRequiredComponent<BasicNurse>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Chaser component!");
+                BasicNurse enemyComponent = Utils.GetRequiredComponent<BasicNurse>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a BasicNurse component!");
                 enemyComponent.chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 enemyComponent.chaser.OnCollideWithPlayer += OnCollideWithPlayer;
                 

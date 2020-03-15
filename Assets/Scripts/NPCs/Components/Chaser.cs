@@ -10,7 +10,7 @@ namespace NPCs.Components
 
         private BaseAi baseAi;
         private NavMeshAgent agent;
-        private bool isChasing = false;
+        
         public delegate void CollideWithPlayerAction();
         public event CollideWithPlayerAction OnCollideWithPlayer;
 
