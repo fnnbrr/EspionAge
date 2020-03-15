@@ -18,6 +18,12 @@ public class DoorBehaviour : MonoBehaviour
     public event OpenDoorAction OnDoorOpen;
     public event CloseDoorAction OnDoorClose;
 
+    [Header("FMOD Audio")]
+    [FMODUnity.EventRef]
+    public string DoorSqueak;
+    [FMODUnity.EventRef]
+    public string DoorSlam;
+
     private void Awake()
     {
         impulseSource = GetComponent<CinemachineImpulseSource>();
@@ -36,9 +42,11 @@ public class DoorBehaviour : MonoBehaviour
             {
                 OnDoorClose?.Invoke();
                 isClosed = true;
+
                 if (shakeCameraOnClose && impulseSource)
                 {
                     impulseSource.GenerateImpulse();
+                    FMODUnity.RuntimeManager.PlayOneShot(DoorSlam, transform.position);
                 }
             }
         } 
@@ -47,6 +55,8 @@ public class DoorBehaviour : MonoBehaviour
             if (isClosed)
             {
                 OnDoorOpen?.Invoke();
+                FMODUnity.RuntimeManager.PlayOneShot(DoorSqueak, transform.position);
+                Debug.Log("Played FMOD");
                 isClosed = false;
             }
         }
