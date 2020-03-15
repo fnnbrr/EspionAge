@@ -44,9 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnPosition: {x: -41, y: 0, z: 37}
-  objective: {fileID: 11400000, guid: 97e9a5bc67d254d0ebbbedb536a80eba, type: 2}
-  respawnPosition: {x: -41, y: 3, z: 37}
-  denturesCheckpointRespawnPosition: {x: 39, y: 3, z: 4}
+  denturesCheckpointRespawnPosition: {x: 27, y: 3, z: 4}
   denturesCutsceneCamera: {fileID: 7195809638926452591, guid: e7b20ea3988940148b454be95c3fae4d,
     type: 3}
   collectedDenturesCutsceneCamera: {fileID: 8850312929650882434, guid: 5a56c5f1ca08b7a4eac7953e66f7ed18,
@@ -56,24 +54,39 @@ MonoBehaviour:
   - enemyType: 0
     prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
       type: 3}
-    spawnPosition: {x: -15, y: 3, z: -14}
+    spawnPosition: {x: -21, y: 3, z: 6}
     spawnRotation: {x: 0, y: 0, z: 0}
     isInitiallyResponding: 0
     waypoints:
-    - position: {x: -15, y: 0, z: 26}
+    - position: {x: -21, y: 0, z: 6}
       stayTime: 0
-    - position: {x: -34, y: 0, z: -14}
+    - position: {x: -21, y: 0, z: 5}
       stayTime: 0
-    - position: {x: 0, y: 0, z: -14}
+    startResponsePoint: {x: -21, y: 0, z: 6}
+    wanderBounds:
+      position: {x: 0, y: 0, z: 0}
+      radius: 0
+  - enemyType: 0
+    prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+      type: 3}
+    spawnPosition: {x: -11, y: 3, z: -16}
+    spawnRotation: {x: 0, y: 0, z: 0}
+    isInitiallyResponding: 0
+    waypoints:
+    - position: {x: -11, y: 0, z: -16}
       stayTime: 0
-    startResponsePoint: {x: -15, y: 3, z: -14}
+    - position: {x: -31, y: 0, z: -16}
+      stayTime: 0
+    - position: {x: -21, y: 0, z: -28}
+      stayTime: 0
+    startResponsePoint: {x: -11, y: 0, z: -16}
     wanderBounds:
       position: {x: 0, y: 0, z: 0}
       radius: 0
   missionCriticalInteractables:
   - prefab: {fileID: 1033882117269768695, guid: 788d7aafe44acf5458be76d50aa1a708,
       type: 3}
-    position: {x: 39.5, y: 4, z: 4}
+    position: {x: 30, y: 3, z: 4}
     rotation: {x: 0, y: 0, z: 0}
     spawnedInstance: {fileID: 0}
     enemiesToSpawnIfLastCollected:
@@ -82,11 +95,13 @@ MonoBehaviour:
         type: 3}
       spawnPosition: {x: -85, y: 0, z: -36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      isInitiallyResponding: 1
+      isInitiallyResponding: 0
       waypoints:
-      - position: {x: 33, y: 0, z: 16}
+      - position: {x: -11, y: 0, z: -28}
         stayTime: 0
-      - position: {x: 9, y: 0, z: 40}
+      - position: {x: -21, y: 0, z: -16}
+        stayTime: 0
+      - position: {x: -31, y: 0, z: -28}
         stayTime: 0
       startResponsePoint: {x: 24, y: 0, z: -2}
       wanderBounds:
@@ -97,29 +112,14 @@ MonoBehaviour:
         type: 3}
       spawnPosition: {x: -85, y: 0, z: 36}
       spawnRotation: {x: 0, y: 0, z: 0}
-      isInitiallyResponding: 1
+      isInitiallyResponding: 0
       waypoints:
-      - position: {x: 11, y: 0, z: -40}
+      - position: {x: -42, y: 0, z: 24}
         stayTime: 0
-      - position: {x: 24, y: 0, z: -12}
+      - position: {x: -42, y: 0, z: 24}
         stayTime: 0
-      startResponsePoint: {x: 37.5, y: 0, z: 0}
+      startResponsePoint: {x: -42, y: 0, z: 24}
       wanderBounds:
         position: {x: 14, y: 0, z: -14}
         radius: 20
-  missionObjects:
-  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
-      type: 3}
-    position: {x: 20, y: 3, z: 35}
-    rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
-  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
-      type: 3}
-    position: {x: 20, y: 3, z: 46.06}
-    rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
-  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
-      type: 3}
-    position: {x: -1, y: 3, z: -9}
-    rotation: {x: 0, y: 0, z: 0}
-    spawnedInstance: {fileID: 0}
+  missionObjects: []
