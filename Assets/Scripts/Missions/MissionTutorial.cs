@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Cinemachine;
 using NaughtyAttributes;
+using NPCs;
 
 public class MissionTutorial : AMission
 {

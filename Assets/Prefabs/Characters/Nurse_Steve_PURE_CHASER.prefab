@@ -268,7 +268,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eb0217b58fda1d408cc72a67b461043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  chase: 1
   targetTransform: {fileID: 0}
+  responsePoint: {x: 0, y: 0, z: 0}
+  searchBounds: {fileID: 0}
+  noiseSearchRadius: 15
+  waitDurationSec: 1
+  questionMark: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
+    type: 3}
+  currentState: 1
+  defaultState: 2
   startChaseRadius: 100
 --- !u!1 &4848029577287680884
 GameObject:

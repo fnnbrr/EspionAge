@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using Cinemachine;
+using NPCs;
 
 [System.Serializable]
 public class MissionCriticalInteractable : MissionObject
@@ -31,7 +32,7 @@ public class MissionEnemy
     public enum EnemyType
     {
         Patroller,
-        Chaser
+        BaseAi
     }
     [SerializeField] public EnemyType enemyType;
 
@@ -66,7 +67,7 @@ public class MissionKitchen1 : AMission
     public List<MissionObject> missionObjects;
 
     private List<GameObject> instantiatedMissionInteractables;
-    private List<Chaser> instantiatedEnemies;
+    private List<BaseAi> instantiatedEnemies;
     private int interactedCount = 0;
 
     private bool isRestarting = false;
@@ -78,7 +79,7 @@ public class MissionKitchen1 : AMission
         instantiatedMissionInteractables = new List<GameObject>();
 
         // TODO: this should probably be changed to a generic enemy type at some point
-        instantiatedEnemies = new List<Chaser>();
+        instantiatedEnemies = new List<BaseAi>();
 
         if (missionCriticalInteractables.Count == 0)
         {
@@ -150,7 +151,7 @@ public class MissionKitchen1 : AMission
                 GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
              
                 // All enemies will be chasers, so we need to set the target transform for all.
-                Chaser enemyComponent = Utils.GetRequiredComponent<Chaser>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Chaser component!");
+                BaseAi enemyComponent = Utils.GetRequiredComponent<BaseAi>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a Chaser component!");
                 enemyComponent.targetTransform = GameManager.Instance.GetPlayerTransform();
                 enemyComponent.OnCollideWithPlayer += OnCollideWithPlayer;
 
@@ -164,9 +165,9 @@ public class MissionKitchen1 : AMission
                             patrol.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
                         }
                         break;
-                    case MissionEnemy.EnemyType.Chaser:
-                        Chaser chaser = enemyComponent as Chaser;
-                        chaser.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
+                    case MissionEnemy.EnemyType.BaseAi:
+                        BaseAi baseAi = enemyComponent as BaseAi;
+                        baseAi.InitializeResponderParameters(enemy.startResponsePoint, enemy.wanderBounds.position, enemy.wanderBounds.radius);
                         break;
                     default:
                         Debug.LogError($"Unknown enemy type: {enemy.enemyType}!");
