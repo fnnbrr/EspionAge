@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85ee462f4b7334f118fe3d0f9f6176c1, type: 3}
   m_Name: NPC1 During Mission
   m_EditorClassIdentifier: 
-  npcVoice: event:/Characters/OldManNPC
+  autoplayConversation: 0
+  autoInitiate: 0
+  shouldFollow: 0
   lines:
-  - isBirdie: 1
+  - id: Birdie
     text: G'day! I'm working on the mission, don't worrry. I will secure the dentures
       soon.
-  - isBirdie: 0
+  - id: NurseNPC-Mission1
     text: 'Shake a leg and let''s get going! I''m still on a liquid diet here! '

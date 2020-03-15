@@ -29,7 +29,7 @@ public class ThrowController : MonoBehaviour
     public delegate void OnThrowableResetEventHandler();
     public event OnThrowableResetEventHandler OnThrowableReset;
 
-    public delegate void OnInteractEventHandler(DialogueInteractable source);
+    public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractBegin;
 
     private void Start()
@@ -206,7 +206,7 @@ public class ThrowController : MonoBehaviour
         }
     }
     
-    public void InteractPlayer(DialogueInteractable source)
+    public void InteractPlayer(Interactable source)
     {
         OnInteractBegin?.Invoke(source);
     }
