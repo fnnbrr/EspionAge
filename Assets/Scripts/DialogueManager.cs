@@ -6,8 +6,9 @@ using UnityEngine;
 [System.Serializable]
 public class SpeakerContainer
 {
-    public int id;
+    public string id;
     public GameObject speakerObject;
+    public string npcVoicePath;
 }
 
 public class DialogueManager : Singleton<DialogueManager>
@@ -24,13 +25,14 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public TextMeshProUGUI textMesh;
     private Conversation currentConvo;
-    private SpeakerUI currentSpeaker;
+    private SpeakerUI speakerUI;
+    private SpeakerContainer currentSpeaker;
 
     private Coroutine coroutine;
     private Coroutine currentTypingCoroutine;
 
     public List<SpeakerContainer> allSpeakers;
-    private Dictionary<int, GameObject> speakers;
+    private Dictionary<string, SpeakerContainer> speakers;
 
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
@@ -39,12 +41,12 @@ public class DialogueManager : Singleton<DialogueManager>
     // Start is called before the first frame update
     void Start()
     {
-        speakers = new Dictionary<int, GameObject>();
+        speakers = new Dictionary<string, SpeakerContainer>();
 
         //Load all speakers into dictionary
         foreach(SpeakerContainer speaker in allSpeakers)
         {
-            speakers.Add(speaker.id, speaker.speakerObject);
+            speakers.Add(speaker.id, speaker);
         }
     }
 
@@ -102,26 +104,28 @@ public class DialogueManager : Singleton<DialogueManager>
         }
     }
 
-    void SetDialogue(SpeakerUI activeSpeakerUI, string text)
+    void SetDialogue(string text)
     {
-        if (currentSpeaker != null)
+        // Hide previous speaker if there was one
+        if (speakerUI != null)
         {
-            currentSpeaker.Hide();
+            speakerUI.Hide();
         }
-        //who is speaking
-        currentSpeaker = activeSpeakerUI;
 
-        currentSpeaker.Show();
-        textMesh = currentSpeaker.textMesh;
+        speakerUI = Utils.GetRequiredComponent<SpeakerUI>(currentSpeaker.speakerObject);
+
+        speakerUI.Show();
+        textMesh = speakerUI.conversationText;
+        PlayVoice(currentSpeaker.npcVoicePath);
         currentTypingCoroutine = SetText(text);
     }
 
     void DisplayLine()
     {
         Line line = currentConvo.lines[activeLineIndex];
-        currentSpeaker = Utils.GetRequiredComponent<SpeakerUI>(speakers[line.id]);
+        currentSpeaker = speakers[line.id];
 
-        SetDialogue(currentSpeaker, line.text);
+        SetDialogue(line.text);
     }
 
     private bool ContinueConversation()
@@ -155,7 +159,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
     protected virtual void FinishConversation()
     {
-        currentSpeaker.Hide();
+        speakerUI.Hide();
         activeLineIndex = 0;
         isTyping = false;
     }
@@ -171,13 +175,8 @@ public class DialogueManager : Singleton<DialogueManager>
         OnAutoplayComplete();
     }
 
-    protected virtual void OnAutoplayComplete()
+    private void OnAutoplayComplete()
     {
-        //if (currentConvo.shouldFollow)
-        //{
-        //    currentSpeaker.StopFollow();
-        //    ReturnToOrigin();
-        //}
         autoPlaying = false;
     }
 
@@ -224,8 +223,15 @@ public class DialogueManager : Singleton<DialogueManager>
         skipRequest = false;
         isTyping = false;
 
-        currentSpeaker.Hide();
         AdvanceConversation();
+    }
+
+    private void PlayVoice(string fmodPath)
+    {
+        if (!string.IsNullOrEmpty(fmodPath.Trim()))
+        {
+            FMODUnity.RuntimeManager.PlayOneShot(fmodPath, currentSpeaker.speakerObject.transform.position);
+        }
     }
 
     private void TriggerAutoplay()
@@ -261,5 +267,10 @@ public class DialogueManager : Singleton<DialogueManager>
     public void EndTyping()
     {
         isTyping = false;
+    }
+
+    public bool CheckIsAutoPlaying()
+    {
+        return autoPlaying;
     }
 }
