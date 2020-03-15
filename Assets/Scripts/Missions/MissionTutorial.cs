@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Cinemachine;
+using NaughtyAttributes;
 
 public class MissionTutorial : AMission
 {
@@ -30,6 +31,7 @@ public class MissionTutorial : AMission
     private SpawnedVase firstVase;
 
     [Header("Row of Vases")]
+    [ReorderableList]
     public List<Vector3> vasePositions;
     private List<SpawnedVase> spawnedVases;
     private List<GameObject> spawnedBrokenVases;
