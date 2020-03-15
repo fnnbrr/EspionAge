@@ -72,6 +72,8 @@ namespace NPCs
 
         protected override void Update()
         {
+            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, !agent.isStopped);
+            
             if (!agent.isOnNavMesh || agent.pathPending)
             {
                 animator.SetBool(Constants.ANIMATION_STEVE_MOVING, false);
