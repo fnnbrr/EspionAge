@@ -91,7 +91,7 @@ namespace NPCs
             switch (currentState)
             {
                 case "Patrolling":
-                    if (waiter.WaitComplete())
+                    if (waiter.WaitComplete(patroller.curStayTime))
                     {
                         patroller.GotoNextPatrolPoint();
                     }

@@ -19,7 +19,8 @@ public class MissionEnemy
     public class EnemyWaypoint
     {
         public Vector3 position;
-        public float stayTime;
+        public Vector3 rotation;
+        public float stayTime = 1.0f;
     }
 
     [System.Serializable]
@@ -154,7 +155,9 @@ public class MissionKitchen1 : AMission
                 enemyComponent.chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 enemyComponent.chaser.OnCollideWithPlayer += OnCollideWithPlayer;
                 
-                enemyComponent.patroller.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList());
+                enemyComponent.patroller.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList(), 
+                                                   enemy.waypoints.Select(waypoint => waypoint.rotation).ToList(),
+                                                   enemy.waypoints.Select(waypoint => waypoint.stayTime).ToList());
                 if (enemy.isInitiallyResponding)
                 {
                     enemyComponent.responder.InitializeResponderParameters(enemy.startResponsePoint);
