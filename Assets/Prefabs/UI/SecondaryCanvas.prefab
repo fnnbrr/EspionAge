@@ -1,20 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &1093004979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8001213164493620058}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2a146b2f60f1492c836891f8a776db7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charTypeSpeed: 0.05
-  textMesh: {fileID: 8001213164493620056}
-  optionalPrompt: {fileID: 1468011983318057884}
 --- !u!1 &1255714825009490413
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +102,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1093004979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8001213164493620058}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2a146b2f60f1492c836891f8a776db7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  charTypeSpeed: 0.05
+  textMesh: {fileID: 8001213164493620056}
+  optionalPrompt: {fileID: 1468011983318057884}
 --- !u!1001 &454726014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -592,7 +592,7 @@ PrefabInstance:
     - target: {fileID: 2852504352029178498, guid: 5b1cf84d4eb9cca4b8907825c56e2400,
         type: 3}
       propertyPath: m_Name
-      value: RegionText
+      value: ZoneText
       objectReference: {fileID: 0}
     - target: {fileID: 2852504352029178499, guid: 5b1cf84d4eb9cca4b8907825c56e2400,
         type: 3}
