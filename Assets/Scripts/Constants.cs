@@ -24,6 +24,10 @@ public static class Constants
     public const string INPUT_THROW_GETDOWN = "Fire1";
     public const string INPUT_STARTBUTTON_GETDOWN = "Start";
     public const string INPUT_SPECIAL_GETDOWN = "Special";
+    public const string INPUT_AXIS_HORIZONTAL = "Horizontal";
+    public const string INPUT_AXIS_VERTICAL = "Vertical";
+    public const string INPUT_AXIS_HORIZONTAL_RIGHT_STICK = "Horizontal Right Stick";
+    public const string INPUT_AXIS_VERTICAL_RIGHT_STICK = "Vertical Right Stick";
 
     public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
     public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
@@ -35,7 +39,6 @@ public static class Constants
     public const string CHEATS_TELEPORT_NURSESROOM = "Cheats/Teleport/Nurse's Room";
     public const string CHEATS_TELEPORT_DININGHALL = "Cheats/Teleport/Dining Hall";
     public const string CHEATS_TELEPORT_DENTURES = "Cheats/Teleport/Dentures";
-    public const string CHEATS_TELEPORT_PANTRY = "Cheats/Teleport/Pantry";
     public const string CHEATS_TELEPORT_KITCHENSTART = "Cheats/Teleport/Kitchen Start";
     public const string CHEATS_TELEPORT_PIANO = "Cheats/Teleport/Piano";
     public const string CHEATS_TELEPORT_HALLWAY = "Cheats/Teleport/Hallway";

@@ -91,4 +91,9 @@ public static class Utils
             return length - r;
         }
     }
+
+    public static bool InputAxisInUse(string axisName)
+    {
+        return !Mathf.Approximately(Input.GetAxis(axisName), 0f);
+    }
 }
