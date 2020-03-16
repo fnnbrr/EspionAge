@@ -37,7 +37,7 @@ public class FieldOfVision : MonoBehaviour
 
 	void Start()
 	{
-		chaser = Utils.GetRequiredComponent<Chaser>(this);
+		chaser = GetComponent<Chaser>();
 
 		viewMeshFilter = Utils.GetRequiredComponent<MeshFilter>(viewMeshObject);
 		viewMesh = new Mesh();
@@ -98,7 +98,10 @@ public class FieldOfVision : MonoBehaviour
 		}
 
 		// Can also do stuff with visibleTargets.Count
-		chaser.HandleTargetsInRange(visibleTargets.Count);
+		if (chaser)
+		{
+			chaser.HandleTargetsInRange(visibleTargets.Count);
+		}
 	}
 
 	void UpdateViewColor()
