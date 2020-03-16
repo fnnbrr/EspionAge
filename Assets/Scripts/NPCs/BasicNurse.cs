@@ -56,25 +56,25 @@ namespace NPCs
                 case "Searching":
                     agent.isStopped = false;
                     agent.speed = searcher.movementSpeed;
-                    ShowQuestionMark();
+                    questionMark.SetActive(true);
                     break;
                 case "Responding":
                     agent.isStopped = false;
                     agent.speed = responder.movementSpeed;
-                    ShowQuestionMark();
+                    questionMark.SetActive(true);
                     break;
                 case "Chasing":
                     agent.isStopped = false;
                     agent.speed = chaser.movementSpeed;
-                    HideQuestionMark();
+                    questionMark.SetActive(false);
                     break;
                 case "Patrolling":
                     agent.isStopped = false;
                     agent.speed = patroller.movementSpeed;
-                    HideQuestionMark();
+                    questionMark.SetActive(false);
                     break;
                 default:
-                    HideQuestionMark();
+                    questionMark.SetActive(false);
                     throw new UnityException("Invalid state name passed to " + GetType().Name);
             }
         
@@ -91,10 +91,9 @@ namespace NPCs
             switch (currentState)
             {
                 case "Patrolling":
-                    if (waiter.WaitComplete(patroller.curStayTime))
-                    {
-                        patroller.GotoNextPatrolPoint();
-                    }
+                    if (!patroller.RotationComplete()) break;
+                    if (!waiter.WaitComplete(patroller.curStayTime)) break;
+                    patroller.GotoNextPatrolPoint();
                     break;
                 case "Chasing":
                     SetState("Searching");
@@ -103,33 +102,21 @@ namespace NPCs
                     SetState("Searching");
                     break;
                 case "Searching":
-                    if (waiter.WaitComplete())
+                    if (!waiter.WaitComplete()) break;
+                    if (curNumSearches < numSearches)
                     {
-                        if (curNumSearches < numSearches)
-                        {
-                            curNumSearches += 1;
-                            searcher.GotoNextSearchPoint();
-                        }
-                        else
-                        {
-                            curNumSearches = 0;
-                            SetState("Patrolling");
-                        }
+                        curNumSearches += 1;
+                        searcher.GotoNextSearchPoint();
+                    }
+                    else
+                    {
+                        curNumSearches = 0;
+                        SetState("Patrolling");
                     }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private void ShowQuestionMark()
-        {
-            questionMark.SetActive(true);
-        }
-
-        private void HideQuestionMark()
-        {
-            questionMark.SetActive(false);
         }
     }
 }
