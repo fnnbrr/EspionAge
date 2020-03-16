@@ -7,6 +7,7 @@ namespace NPCs.Components
     [RequireComponent(typeof(BaseAi))]
     public class Searcher : MonoBehaviour
     {
+        public float movementSpeed = 5.0f;
         public Vector3 searchBoundsCenter;
         public float searchBoundsRadius = 15.0f;
 

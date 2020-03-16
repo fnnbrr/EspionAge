@@ -6,6 +6,7 @@ namespace NPCs.Components
     [RequireComponent(typeof(BaseAi))]
     public class Chaser : MonoBehaviour
     {
+        public float movementSpeed = 10.0f;
         public Transform targetTransform;
 
         private BaseAi baseAi;
@@ -27,20 +28,11 @@ namespace NPCs.Components
                 ChaseTarget();
                 baseAi.SetState("Chasing");
             }
-            else if (numTargetsInRange == 0 && baseAi.currentState.Equals("Chasing"))
-            {
-                baseAi.SetState(baseAi.defaultState);
-            }
         }
         
         public void ChaseTarget()
         {
-            Vector3 targetPosition = targetTransform.position;
-            Vector3 thisPosition = transform.position;
-            Vector3 dirToTarget = thisPosition - targetPosition;
-            Vector3 newPos = thisPosition - dirToTarget;
-
-            agent.SetDestination(newPos);
+            agent.SetDestination(targetTransform.position);
         }
         
         private void OnCollisionEnter(Collision collision)

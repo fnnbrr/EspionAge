@@ -7,11 +7,12 @@ namespace NPCs.Components
     [RequireComponent(typeof(BaseAi))]
     public class Patroller : MonoBehaviour
     {
+        public float movementSpeed = 6.0f;
         public Transform patrolWaypoints;
         
         private BaseAi baseAi;
         private NavMeshAgent agent;
-        public List<Vector3> patrolPositions = new List<Vector3>();
+        private List<Vector3> patrolPositions = new List<Vector3>();
         private int destinationCount;
 
         private void Awake()

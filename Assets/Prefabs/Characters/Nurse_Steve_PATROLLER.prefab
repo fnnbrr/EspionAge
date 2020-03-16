@@ -282,14 +282,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: Patrolling
-  defaultState: Patrolling
+  defaultState: Searching
   agent: {fileID: 0}
   chaser: {fileID: 0}
   responder: {fileID: 0}
   searcher: {fileID: 0}
   patroller: {fileID: 0}
   waiter: {fileID: 0}
-  numSearches: 5
+  numSearches: 3
   questionMark: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
     type: 3}
 --- !u!114 &8399060607170567938
@@ -304,6 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80e0130efb1f09049b14a178024d1a43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 5
   searchBoundsCenter: {x: 0, y: 0, z: 0}
   searchBoundsRadius: 15
 --- !u!114 &8040559180144460867
@@ -318,6 +319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 10
   targetTransform: {fileID: 0}
 --- !u!114 &-7711432056760366613
 MonoBehaviour:
@@ -331,6 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98e2dd5f1eba5b44da7e20f29593d3d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 7
   responsePoint: {x: 0, y: 0, z: 0}
   initiallyResponding: 0
 --- !u!114 &-4738247284353703669
@@ -357,6 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 488879eb17e80e3499a7f06bed5ef670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementSpeed: 5
   patrolWaypoints: {fileID: 0}
 --- !u!1 &4848029577287680884
 GameObject:
@@ -522,7 +526,7 @@ PrefabInstance:
     - target: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7452608441132839010, guid: a0d8b49d3bcafe045a92b55d4d468979,
         type: 3}

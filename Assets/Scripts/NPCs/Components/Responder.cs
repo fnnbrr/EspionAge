@@ -7,6 +7,7 @@ namespace NPCs.Components
     [RequireComponent(typeof(BaseAi))]
     public class Responder : MonoBehaviour
     {
+        public float movementSpeed = 8.0f;
         public Vector3 responsePoint;
         public bool initiallyResponding = false;
 

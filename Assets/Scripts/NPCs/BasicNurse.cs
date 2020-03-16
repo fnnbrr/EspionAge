@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FMOD.Studio;
 using NPCs.Components;
 using UnityEngine;
 
@@ -28,10 +27,10 @@ namespace NPCs
         [HideInInspector] public Patroller patroller;
         [HideInInspector] public Waiter waiter;
 
-        public int numSearches = 5;
+        public int numSearches = 3;
         private int curNumSearches = 0;
         
-        public GameObject questionMark;
+        private GameObject questionMark;
         private Animator animator;
 
         private new void Awake()
@@ -44,6 +43,10 @@ namespace NPCs
             patroller = Utils.GetRequiredComponent<Patroller>(this);
             waiter = Utils.GetRequiredComponent<Waiter>(this);
             animator = Utils.GetRequiredComponentInChildren<Animator>(this);
+
+            questionMark = transform.Find("QuestionMark").gameObject;
+            
+            SetState(currentState);
         }
 
         public override void SetState(string newState)
@@ -51,15 +54,23 @@ namespace NPCs
             switch (newState)
             {
                 case "Searching":
+                    agent.isStopped = false;
+                    agent.speed = searcher.movementSpeed;
                     ShowQuestionMark();
                     break;
                 case "Responding":
+                    agent.isStopped = false;
+                    agent.speed = responder.movementSpeed;
                     ShowQuestionMark();
                     break;
                 case "Chasing":
+                    agent.isStopped = false;
+                    agent.speed = chaser.movementSpeed;
                     HideQuestionMark();
                     break;
                 case "Patrolling":
+                    agent.isStopped = false;
+                    agent.speed = patroller.movementSpeed;
                     HideQuestionMark();
                     break;
                 default:
@@ -74,19 +85,9 @@ namespace NPCs
         {
             animator.SetBool(Constants.ANIMATION_STEVE_MOVING, !agent.isStopped);
             
-            if (!agent.isOnNavMesh || agent.pathPending)
-            {
-                animator.SetBool(Constants.ANIMATION_STEVE_MOVING, false);
-                return;
-            }
+            if (!agent.isOnNavMesh || agent.pathPending || agent.remainingDistance > 0.5f) return;
 
-            if (agent.remainingDistance > 0.5f)
-            {
-                animator.SetBool(Constants.ANIMATION_STEVE_MOVING, true);
-                return;
-            }
-
-            // Choose the next destination point when the agent gets close to the current one.
+            // Choose the next state/behavior when the agent gets close to the current destination.
             switch (currentState)
             {
                 case "Patrolling":
@@ -96,13 +97,10 @@ namespace NPCs
                     }
                     break;
                 case "Chasing":
-                    chaser.ChaseTarget();
+                    SetState("Searching");
                     break;
                 case "Responding":
-                    if (waiter.WaitComplete())
-                    {
-                        SetState("Searching");
-                    }
+                    SetState("Searching");
                     break;
                 case "Searching":
                     if (waiter.WaitComplete())
@@ -115,7 +113,7 @@ namespace NPCs
                         else
                         {
                             curNumSearches = 0;
-                            SetState(defaultState);
+                            SetState("Patrolling");
                         }
                     }
                     break;

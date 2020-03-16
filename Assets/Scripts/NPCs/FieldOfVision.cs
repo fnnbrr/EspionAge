@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NPCs;
 using NPCs.Components;
@@ -48,30 +49,14 @@ public class FieldOfVision : MonoBehaviour
 
 		viewMeshRenderer = Utils.GetRequiredComponent<MeshRenderer>(viewMeshObject);
 		viewMeshRenderer.material = defaultMaterial;
-
-		StartCoroutine(FindTargetsWithDelay(.2f));
 	}
 
-	private void FixedUpdate()
+	private void Update()
 	{
+		FindVisibleTargets();
 		UpdateViewColor();
-	}
-
-	void LateUpdate ()
-	{
 		DrawFieldOfView();
 	}
-
-
-	IEnumerator FindTargetsWithDelay(float delay)
-	{
-		while (true)
-		{
-			yield return new WaitForSeconds(delay);
-			FindVisibleTargets();
-		}
-	}
-
 
 	void FindVisibleTargets()
 	{
