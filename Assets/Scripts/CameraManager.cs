@@ -116,7 +116,7 @@ public class CameraManager : Singleton<CameraManager>
             OnBlendingStart?.Invoke(fromCamera, blendToCamera);
         }
 
-        CinemachineBlenderSettings.CustomBlend[] currentBlendSettings = brain.m_CustomBlends.m_CustomBlends;
+        CinemachineBlenderSettings.CustomBlend[] currentBlendSettings = brain.m_CustomBlends.m_CustomBlends.Clone() as CinemachineBlenderSettings.CustomBlend[];
         if (doHardBlend)
         {
             CinemachineBlenderSettings.CustomBlend hardBlend = new CinemachineBlenderSettings.CustomBlend

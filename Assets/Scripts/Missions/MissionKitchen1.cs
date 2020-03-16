@@ -241,41 +241,56 @@ public class MissionKitchen1 : AMission
 
         bool alreadyPlayedCutscene = startCutscenePlayed;
 
-        //if (CameraManager.Instance.GetActiveVirtualCamera() != RegionManager.Instance.kitchen.mainCamera &&
-        //    CameraManager.Instance.GetActiveVirtualCamera() != RegionManager.Instance.diningArea.mainCamera)
-        //{
-        //    Destroy(CameraManager.Instance.GetActiveVirtualCamera().gameObject);
-        //}
-        //CameraManager.Instance.BlendTo(RegionManager.Instance.kitchen.mainCamera, doHardBlend: true);
-        UIManager.Instance.staminaBar.ResetAwakeness();
+        // Cleanup and Initialize again, easiest way to make sure conditions are as close as possible as mission restart
         Cleanup();
         Initialize();
+
+        // Reset the awakeness and throwables to 0, weird if its still full when we restart
+        UIManager.Instance.staminaBar.ResetAwakeness();
+        GameManager.Instance.GetThrowController().ResetThrowables();
+        startCutscenePlayed = alreadyPlayedCutscene;
+
+        // Specific logic for different cases when we collect dentures vs not yet
         if (denturesCollected)
         {
-            GameManager.Instance.GetPlayerTransform().position = denturesCheckpointRespawnPosition;
             DestroyGameObjects(instantiatedMissionInteractables);
+            SpawnFinalEnemyWave(0);  // just spawn the enemies for the first enemy wave (which we use every time anyways)
+
+            // If we are in a different region with a different camera...
+            if (!RegionManager.Instance.GetCurrentZone() != RegionManager.Instance.kitchen && 
+                CameraManager.Instance.GetActiveVirtualCamera() != RegionManager.Instance.kitchen.mainCamera)
+            {
+                // Need to FIRST wait for the player to be back in the zone...
+                //  or else there will be multiple overlapping camera blending events (with RegionManager) as its switching
+                CameraManager.Instance.OnBlendingComplete += OnBackInKichenDoCollectedCutscene;
+            }
+            // Otherwise we should be safe, so just start the dentures collected cutscene
+            else
+            {
+                StartCoroutine(HandleDenturesCollectedCutscene(true));
+                UIManager.Instance.FadeIn();
+                isRestarting = false;
+            }
+
+            GameManager.Instance.GetPlayerTransform().position = denturesCheckpointRespawnPosition;
         }
         else
         {
             GameManager.Instance.GetPlayerTransform().position = respawnPosition;
+            UIManager.Instance.FadeIn();
+            isRestarting = false;
         }
-        GameManager.Instance.GetThrowController().ResetThrowables();
-        startCutscenePlayed = alreadyPlayedCutscene;
+    }
 
-        isRestarting = false;
+    private void OnBackInKichenDoCollectedCutscene(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    {
+        if (toCamera != RegionManager.Instance.kitchen.mainCamera) return;
 
-        if (denturesCollected)
-        {
-            SpawnFinalEnemyWave(0);  // just spawn the enemies for the first enemy wave (which we use every time anyways)
+        CameraManager.Instance.OnBlendingComplete -= OnBackInKichenDoCollectedCutscene;
 
-            CameraManager.Instance.BlendToCameraPrefabForSeconds(
-                RegionManager.Instance.kitchen.mainCamera,
-                collectedDenturesCutsceneCamera, 
-                collectedDenturesCutsceneWait, 
-                doHardBlend: true);
-        }
-
+        StartCoroutine(HandleDenturesCollectedCutscene(true));
         UIManager.Instance.FadeIn();
+        isRestarting = false;
     }
 
     private void DestroyGameObjects(List<GameObject> gameObjects)
@@ -317,13 +332,14 @@ public class MissionKitchen1 : AMission
         SpawnEnemies(missionCriticalInteractables[missionCriticalInteractableIndex].enemiesToSpawnIfLastCollected);
     }
 
-    private IEnumerator HandleDenturesCollectedCutscene()
+    private IEnumerator HandleDenturesCollectedCutscene(bool doHardBlend = false)
     {
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
         yield return CameraManager.Instance.BlendToCameraPrefabForSeconds(
             RegionManager.Instance.kitchen.mainCamera,
             collectedDenturesCutsceneCamera, 
-            collectedDenturesCutsceneWait);
+            collectedDenturesCutsceneWait,
+            doHardBlend: doHardBlend);
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 }
