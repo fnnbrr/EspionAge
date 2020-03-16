@@ -6,7 +6,7 @@ public class FMODMissionComplete : MonoBehaviour
 {
     [FMODUnity.ParamRef]
     public string parameter;
-    public bool isComplete = false;
+    public bool OnMissionComplete = false;
 
     private FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
     private Interactable interactable;
@@ -27,7 +27,7 @@ public class FMODMissionComplete : MonoBehaviour
         }
     }
 
-    private void missionComplete(Interactable source)
+    private void OnMissionComplete(Interactable source)
     {
         if (isComplete)
         {
