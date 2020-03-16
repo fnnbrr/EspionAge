@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
+using NaughtyAttributes;
 
 [System.Serializable]
 public class SpeakerContainer
@@ -40,20 +41,19 @@ public class DialogueManager : Singleton<DialogueManager>
     private Coroutine coroutine;
     private Coroutine currentTypingCoroutine;
 
+    [ReorderableList]
     public List<SpeakerContainer> allSpeakers;
     private Dictionary<string, SpeakerContainer> speakers;
 
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         speakers = new Dictionary<string, SpeakerContainer>();
 
         //Load all speakers into dictionary
-        foreach(SpeakerContainer speaker in allSpeakers)
+        foreach (SpeakerContainer speaker in allSpeakers)
         {
             speakers.Add(speaker.id, speaker);
         }
@@ -87,6 +87,17 @@ public class DialogueManager : Singleton<DialogueManager>
         }
 
         speakers.Add(speaker.id, speaker);
+    }
+
+    public void RemoveSpeaker(string speakerId)
+    {
+        if (!speakers.ContainsKey(speakerId))
+        {
+            Debug.LogError("Trying to remove a speaker that doesn't exist");
+            return;
+        }
+
+        speakers.Remove(speakerId);
     }
 
 

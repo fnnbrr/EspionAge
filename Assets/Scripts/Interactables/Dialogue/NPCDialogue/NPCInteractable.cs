@@ -76,6 +76,8 @@ public class NPCInteractable : Interactable
 
     protected override void Update()
     {
+        if (conversation == null) return;
+
         if(IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
         {
             // Prevent loading during a conversation
@@ -137,7 +139,7 @@ public class NPCInteractable : Interactable
         if (missionsOffered.Count == 0)
         {
             // Random default convo (Temporary until better system is set for default convos)
-            conversation = defaultConvos[Random.Range(0, defaultConvos.Count)];
+            conversation = defaultConvos.Count > 0 ? defaultConvos[Random.Range(0, defaultConvos.Count)] : null;
         }
         else
         {

@@ -19,5 +19,6 @@ public class Conversation : ScriptableObject
     public bool autoplayConversation = false;
     public bool autoInitiate = false;
     public bool shouldFollow = false;
+    [ReorderableList]
     public Line[] lines;
 }
