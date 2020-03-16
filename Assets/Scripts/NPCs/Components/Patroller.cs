@@ -35,7 +35,7 @@ namespace NPCs.Components
             patrolStayTimes.Clear();
             
             patrolPositions = new List<Vector3>(newPositions);
-            patrolRotations = newRotations.Select(i => new Quaternion(i.x, i.y, i.z, 1f)).ToList();
+            patrolRotations = newRotations.Select(i => Quaternion.Euler(i.x, i.y, i.z)).ToList();
             patrolStayTimes = new List<float>(newStayTimes);
 
             if (patrolPositions.Count != patrolRotations.Count  || patrolPositions.Count != patrolStayTimes.Count)
@@ -49,7 +49,11 @@ namespace NPCs.Components
 
         public bool RotationComplete()
         {
-            if (transform.rotation == curRotation) return true;
+            if (transform.rotation == curRotation)
+            {
+                baseAi.agent.isStopped = false;
+                return true;
+            }
 
             baseAi.agent.isStopped = true;
             transform.rotation = Quaternion.RotateTowards(transform.rotation, curRotation, Time.deltaTime * rotationSpeed);
