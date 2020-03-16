@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NaughtyAttributes;
 
 [System.Serializable]
 public struct Line
 {
-    public bool isBirdie;
+    public string id;
 
-    [TextArea(2, 5)]
+    [ResizableTextArea]
     public string text;
 }
 
