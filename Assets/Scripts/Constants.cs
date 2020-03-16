@@ -39,7 +39,6 @@ public static class Constants
     public const string CHEATS_TELEPORT_NURSESROOM = "Cheats/Teleport/Nurse's Room";
     public const string CHEATS_TELEPORT_DININGHALL = "Cheats/Teleport/Dining Hall";
     public const string CHEATS_TELEPORT_DENTURES = "Cheats/Teleport/Dentures";
-    public const string CHEATS_TELEPORT_PANTRY = "Cheats/Teleport/Pantry";
     public const string CHEATS_TELEPORT_KITCHENSTART = "Cheats/Teleport/Kitchen Start";
     public const string CHEATS_TELEPORT_PIANO = "Cheats/Teleport/Piano";
     public const string CHEATS_TELEPORT_HALLWAY = "Cheats/Teleport/Hallway";

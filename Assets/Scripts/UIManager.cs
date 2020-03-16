@@ -31,21 +31,6 @@ public class UIManager : Singleton<UIManager>
     private void Start()
     {
         fader.gameObject.SetActive(true);
-        if (CameraManager.Instance)
-        {
-            CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
-            CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
-        }
-    }
-
-    private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
-    {
-        mainUICanvas.enabled = false;
-    }
-
-    private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
-    {
-        mainUICanvas.enabled = true;
     }
 
     private void Update()
