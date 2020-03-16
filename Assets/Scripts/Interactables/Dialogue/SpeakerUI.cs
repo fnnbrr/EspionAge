@@ -8,13 +8,13 @@ public class SpeakerUI : MonoBehaviour
 {
     public GameObject textBoxContainer;
     public GameObject canvas;
-    private UITextOverlay textOverlay;
+    public TextMeshProUGUI characterName;
+    public TextMeshProUGUI conversationText;
     
     private Vector3 textPosition;
 
     void Start()
     {
-        textOverlay = Utils.GetRequiredComponent<UITextOverlay>(this);
         Hide();
     }
 
@@ -22,11 +22,6 @@ public class SpeakerUI : MonoBehaviour
     {
         textPosition = Camera.main.WorldToScreenPoint(transform.position);
         textBoxContainer.transform.position = textPosition;
-    }
-
-    public Coroutine SetDialogue(string textToSet)
-    {
-        return textOverlay.SetText(textToSet);
     }
 
     public void Show()
