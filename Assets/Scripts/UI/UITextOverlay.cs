@@ -8,6 +8,7 @@ public class UITextOverlay : MonoBehaviour
     public float charTypeSpeed = 0.05f;
 
     public TextMeshProUGUI textMesh;
+    public GameObject optionalPrompt;
 
     private bool isTyping = false;
     private bool skipRequest = false;
@@ -21,7 +22,10 @@ public class UITextOverlay : MonoBehaviour
 
     private void Update()
     {
-        UIManager.Instance.pressAPrompt.SetActive(isTyping);
+        if (optionalPrompt)
+        {
+            optionalPrompt.SetActive(isTyping);
+        }
 
         HandleInput();
     }
