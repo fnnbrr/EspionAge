@@ -15,9 +15,11 @@ public class MovementController : MonoBehaviour
     private Rigidbody rb;
     private Animator anim;
     private Vector3 movement;
+    private Vector3 currentMovementAxis;
+    private bool currentMovementAxisInitialized = false;
+
     //[FMODUnity.EventRef]
     //public string boost;
-
 
     [Header("Special / Dash")]
     public float dashForce;
@@ -25,6 +27,10 @@ public class MovementController : MonoBehaviour
     public List<TrailRenderer> specialTrailRenderers;
 
     public bool IsMoving { get; set; } = false;
+
+    public delegate void MovementAction();
+    public event MovementAction OnMovementChange;
+    public event MovementAction OnStopMoving;
 
     void Start()
     {
@@ -34,6 +40,16 @@ public class MovementController : MonoBehaviour
         anim = Utils.GetRequiredComponentInChildren<Animator>(this);
 
         ToggleSpecialTrailRenderers(false);
+
+        OnMovementChange += UpdateMovementAxis;
+    }
+
+    private void UpdateMovementAxis()
+    {
+        if (currentMovementAxisInitialized && CameraManager.Instance.GetActiveCamera() != null)
+        {
+            currentMovementAxis = CameraManager.Instance.GetActiveCameraTransform().transform.forward;
+        }
     }
 
     private void Update()
@@ -41,6 +57,17 @@ public class MovementController : MonoBehaviour
         if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
 
         HandleSpecialInput();
+    }
+
+    private void LateUpdate()
+    {
+        // to resolve issues with Cinemachine initializing after Start: 
+        //  https://forum.unity.com/threads/activevirtualcamera-is-null-not-sure-why.561541/
+        if (!currentMovementAxisInitialized && CameraManager.Instance.GetActiveCamera() != null)
+        {
+            currentMovementAxis = CameraManager.Instance.GetActiveCameraTransform().forward;
+            currentMovementAxisInitialized = true;
+        }
     }
 
     private void HandleSpecialInput()
@@ -91,14 +118,13 @@ public class MovementController : MonoBehaviour
             return;
         }
 
-        Vector3 relativeForward = CleanForwardVector(CameraManager.Instance.GetActiveCameraTransform().forward);
+        Vector3 relativeForward = CleanForwardVector(currentMovementAxis);
         Vector3 relativeRight = CalculateRightVector(relativeForward);
 
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float horizontal = Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL);
+        float vertical = Input.GetAxis(Constants.INPUT_AXIS_VERTICAL);
 
-        movement = relativeForward * vertical + relativeRight * horizontal;
-        movement.Normalize();
+        SetIsMovement(relativeForward * vertical + relativeRight * horizontal);
         bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
         bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;    // to be used later for animations and such
@@ -109,8 +135,22 @@ public class MovementController : MonoBehaviour
 
     public void SetIsWalking(bool isWalking)
     {
+        if (IsMoving && !isWalking)
+        {
+            // Then we stopped walking
+            OnStopMoving?.Invoke();
+        }
         IsMoving = isWalking;
         anim.SetBool(Constants.ANIMATION_BIRDIE_ISWALKING, isWalking);
+    }
+
+    public void SetIsMovement(Vector3 newMovement)
+    {
+        if (movement != newMovement.normalized)
+        {
+            OnMovementChange?.Invoke();
+        }
+        movement = newMovement.normalized;  // always want to normalize
     }
 
     private Vector3 CleanForwardVector(Vector3 forwardVector)

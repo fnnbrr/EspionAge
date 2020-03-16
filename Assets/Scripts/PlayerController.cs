@@ -9,12 +9,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        if (CameraManager.Instance)
-        {
-            CameraManager.Instance.OnBlendingStart += HandleCameraOnBlendingStart;
-            CameraManager.Instance.OnBlendingComplete += HandleCameraOnBlendingComplete;
-        }
-
         SetControllerConnected();
     }
 
@@ -41,10 +35,5 @@ public class PlayerController : MonoBehaviour
     private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
     {
         EnablePlayerInput = true;
-    }
-    
-    public static bool InputAxisInUse(string axisName)
-    {
-        return !Mathf.Approximately(Input.GetAxis(axisName), 0f);
     }
 }
