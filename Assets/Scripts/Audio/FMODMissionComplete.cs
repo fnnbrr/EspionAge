@@ -6,7 +6,7 @@ public class FMODMissionComplete : MonoBehaviour
 {
     [FMODUnity.ParamRef]
     public string parameter;
-    public bool OnMissionComplete = false;
+    public bool isComplete = false;
 
     private FMOD.Studio.PARAMETER_DESCRIPTION parameterDescription;
     private Interactable interactable;
@@ -14,7 +14,7 @@ public class FMODMissionComplete : MonoBehaviour
     void Start()
     {
         interactable = Utils.GetRequiredComponent<Interactable>(this);
-        interactable.OnInteractEnd += missionComplete;
+        interactable.OnInteractEnd += OnMissionComplete;
         FMODUnity.RuntimeManager.StudioSystem.getParameterDescriptionByName(parameter, out parameterDescription);
     }
 
