@@ -8,6 +8,7 @@ public class SpeakerContainer
 {
     public string id;
     public GameObject speakerObject;
+    [FMODUnity.EventRef]
     public string npcVoicePath;
 
     public SpeakerContainer(string _id, GameObject _speakerObject, string _npcVoicePath)
