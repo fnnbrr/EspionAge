@@ -23,6 +23,7 @@ public class DialogueManager : Singleton<DialogueManager>
     public float charTypeSpeed = 0.05f;
     public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
     private int activeLineIndex = 0;
+    private int startFrame;
 
     private bool isConversing;
     private bool autoPlaying = false;
@@ -67,12 +68,11 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (UIManager.Instance.IsGamePaused()) return;
 
-        if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
+        if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN) && Time.frameCount != startFrame)
         {
             if (!skipRequest)
             {
                 skipRequest = true;
-                Debug.Log("skippping");
             }
             if (waitingForNext)
             {
@@ -95,7 +95,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public void StartConversation(Conversation convo)
     {
-        Debug.Log("Being called");
         // Stop any autoplay conversation
         if (coroutine != null)
         {
@@ -104,6 +103,7 @@ public class DialogueManager : Singleton<DialogueManager>
         }
 
         currentConvo = convo;
+        startFrame = Time.frameCount;
 
         if (convo.autoplayConversation)
         {
@@ -113,7 +113,6 @@ public class DialogueManager : Singleton<DialogueManager>
         if (!autoPlaying)
         {
             StartConversing();
-            StartTyping();
             GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
             AdvanceConversation();
         }
@@ -168,9 +167,6 @@ public class DialogueManager : Singleton<DialogueManager>
             //what happens 
             FinishConversation();
 
-            EndConversing();
-            //continueInteracting = false;
-
             // Unfreeze player when done
             GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
         }
@@ -181,6 +177,7 @@ public class DialogueManager : Singleton<DialogueManager>
         speakerUI.Hide();
         activeLineIndex = 0;
         isTyping = false;
+        EndConversing();
     }
 
     IEnumerator AutoplayConversation()
