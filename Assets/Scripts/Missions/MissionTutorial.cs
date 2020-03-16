@@ -12,6 +12,17 @@ public class MissionTutorial : AMission
     public Vector3 playerRespawnPosition;
     public Vector3 playerRespawnRotation;
 
+    [BoxGroup("Nurse Room Sequence")]
+    public MissionObject tutorialNurse;
+    [BoxGroup("Nurse Room Sequence")]
+    public string tutorialNurseSpeakerId;
+    [BoxGroup("Nurse Room Sequence")]
+    [FMODUnity.EventRef]
+    public string tutorialNurseVoicePath;
+    [BoxGroup("Nurse Room Sequence")]
+    [ReorderableList]
+    public List<Conversation> nurseConversations;
+
     [Header("Cutscenes")]
     public List<string> startCutsceneTexts;
     public GameObject awakenessPointerUIAnimation;
@@ -137,6 +148,15 @@ public class MissionTutorial : AMission
         SpawnRegularVases();
         SpawnExtraObjects();
 
+        // Tutorial Nurse Section Init
+        tutorialNurse.spawnedInstance = MissionManager.Instance.SpawnMissionObject(tutorialNurse);
+        DialogueManager.Instance.AddSpeaker(
+            new SpeakerContainer(
+                tutorialNurseSpeakerId, 
+                tutorialNurse.spawnedInstance, 
+                tutorialNurseVoicePath));
+        RegionManager.Instance.nurseRoomDoor.SetLocked(true);
+
         // Listen for the player to pass through the final door
         RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
 
@@ -166,11 +186,11 @@ public class MissionTutorial : AMission
             yield return UIManager.Instance.textOverlay.SetText(text);
         }
 
-        // Fade in, and start typing the correct region name from this point
+        // Fade in, and start typing the correct zone name from this point
         CameraZone currentZone = RegionManager.Instance.GetCurrentZone();
-        UIManager.Instance.regionText.SetEmptyText(currentZone.isRestricted);
+        UIManager.Instance.zoneText.SetEmptyText(currentZone.isRestricted);
         UIManager.Instance.FadeIn();
-        UIManager.Instance.regionText.DisplayText(currentZone.regionName, currentZone.isRestricted);
+        UIManager.Instance.zoneText.DisplayText(currentZone.regionName, currentZone.isRestricted);
 
         // Start the note spawning and start the animation
         //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
@@ -348,6 +368,12 @@ public class MissionTutorial : AMission
         {
             // Delete the note if it still exists
             //MissionManager.Instance.DestroyMissionObject(note);
+            MissionManager.Instance.DestroyMissionObject(tutorialNurse);
+        }
+
+        if (RegionManager.Instance)
+        {
+            RegionManager.Instance.nurseRoomDoor.SetLocked(false);
         }
 
         // Handle the cutscene event handlers

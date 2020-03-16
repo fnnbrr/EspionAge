@@ -11,6 +11,9 @@ public class DoorBehaviour : MonoBehaviour
     private float closedYRotation;
     private bool isClosed = true;
 
+    private HingeJoint hinge;
+    private JointLimits startHingeLimits;
+    private JointLimits lockedHingeLimits;
     private CinemachineImpulseSource impulseSource;
 
     public delegate void OpenDoorAction();
@@ -26,12 +29,23 @@ public class DoorBehaviour : MonoBehaviour
 
     private void Awake()
     {
+        hinge = Utils.GetRequiredComponent<HingeJoint>(this);
+        startHingeLimits = hinge.limits;
+        lockedHingeLimits = startHingeLimits;
+        lockedHingeLimits.min = 0f;
+        lockedHingeLimits.max = 0f;
+
         impulseSource = GetComponent<CinemachineImpulseSource>();
     }
 
     private void Start()
     {
         closedYRotation = transform.rotation.eulerAngles.y;
+    }
+
+    public void SetLocked(bool locked)
+    {
+        hinge.limits = locked? lockedHingeLimits : startHingeLimits;
     }
 
     private void Update()

@@ -43,10 +43,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c1d0aef40d99c0498c4f85642bb2045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStartPosition: {x: -141, y: 3, z: 241}
-  playerStartRotation: {x: 0, y: 131, z: 0}
+  playerStartPosition: {x: -161, y: 3, z: 224.5}
+  playerStartRotation: {x: 0, y: 0, z: 0}
   playerRespawnPosition: {x: -128, y: 3, z: 235}
   playerRespawnRotation: {x: 0, y: 90, z: 0}
+  tutorialNurse:
+    prefab: {fileID: 7903426102794624195, guid: 1fa45bfd1f5a308439052b5ea656f726,
+      type: 3}
+    position: {x: -165, y: 0, z: 234}
+    rotation: {x: 0, y: 180, z: 0}
+    spawnedInstance: {fileID: 0}
+  tutorialNurseSpeakerId: NurseNPC-TUTORIAL
+  tutorialNurseVoicePath: event:/Characters/OldManNPC
+  nurseConversations:
+  - {fileID: 11400000, guid: 868f1662f216ea0488e2e4dcc3ed4450, type: 2}
+  - {fileID: 11400000, guid: 0fc85623a4c89c14283b7e0cb96d064e, type: 2}
+  - {fileID: 11400000, guid: cef52c6d7f27aa34db6cc5379c1d71df, type: 2}
+  - {fileID: 11400000, guid: 733fca5998923d44ab045aa763695c84, type: 2}
+  - {fileID: 11400000, guid: 9157b4d74ee54d34abf7a32ccae0b460, type: 2}
   startCutsceneTexts:
   - ...I don't belong here...
   - I still have some steam in me!
