@@ -17,8 +17,6 @@ public class Interactable : MonoBehaviour, IInteractable
 
     public float interactRadius = Constants.INTERACT_POPUP_RADIUS;
 
-    //public bool withinInteractRadius;
-
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 

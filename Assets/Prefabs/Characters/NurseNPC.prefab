@@ -578,7 +578,6 @@ GameObject:
   - component: {fileID: 6528124939642928881}
   - component: {fileID: 6528124939642928880}
   - component: {fileID: 1964985108}
-  - component: {fileID: 1998687901}
   - component: {fileID: 1998687900}
   m_Layer: 0
   m_Name: NurseNPC
@@ -661,20 +660,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1998687901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6528124939642928886}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2a146b2f60f1492c836891f8a776db7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  charTypeSpeed: -0.9
-  textMesh: {fileID: 1642425273217987422}
 --- !u!114 &1998687900
 MonoBehaviour:
   m_ObjectHideFlags: 0

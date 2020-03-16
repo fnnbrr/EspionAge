@@ -68,16 +68,12 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (UIManager.Instance.IsGamePaused()) return;
 
+        // Using Time.frameCount != startFrame because of an issue of skipping the first convo when beginning interaction
+        // This happened because it the getdown of interacting and skipping happened in the same frame
         if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN) && Time.frameCount != startFrame)
         {
-            if (!skipRequest)
-            {
-                skipRequest = true;
-            }
-            if (waitingForNext)
-            {
-                waitingForNext = false;
-            }
+            skipRequest = true;
+            waitingForNext = false;
         }
     }
 
@@ -109,16 +105,11 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             TriggerAutoplay();
         }
- 
-        if (!autoPlaying)
+        else
         {
             StartConversing();
             GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
             AdvanceConversation();
-        }
-        else
-        {
-            coroutine = StartCoroutine(AutoplayConversation());
         }
     }
 
@@ -163,8 +154,6 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (!ContinueConversation())
         {
-            //Once the conversation is over 
-            //what happens 
             FinishConversation();
 
             // Unfreeze player when done
@@ -209,7 +198,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private IEnumerator StartTypeText(string text)
     {
-
         isTyping = true;
 
         int currentCharIndex = 0;
@@ -253,6 +241,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private void TriggerAutoplay()
     {
         autoPlaying = true;
+        coroutine = StartCoroutine(AutoplayConversation());
     }
 
     public bool CheckIsConversing()
