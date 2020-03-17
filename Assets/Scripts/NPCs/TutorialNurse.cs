@@ -47,11 +47,18 @@ public class TutorialNurse : MonoBehaviour
         if (followPlayer)
         {
             agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
-            anim.SetBool(Constants.ANIMATION_STEVE_MOVING, true);
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                anim.SetBool(Constants.ANIMATION_STEVE_MOVING, false);
+            }
+            else
+            {
+                anim.SetBool(Constants.ANIMATION_STEVE_MOVING, true);
+            }
         }
         else if (!rotatedToOrigin)
         {
-            if (agent.remainingDistance <= 0.5f)
+            if (agent.remainingDistance <= agent.stoppingDistance)
             {
                 RotateBackToOrigin();
                 anim.SetBool(Constants.ANIMATION_STEVE_MOVING, false);
