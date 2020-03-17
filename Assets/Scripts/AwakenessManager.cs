@@ -9,8 +9,6 @@ public class AwakenessManager : Singleton<AwakenessManager>
     public float awakenessIncrease = 0.01f;
     public float dangerRadius = 50.0f;
     
-    private List<Coroutine> spawnedCoroutines;
-    
     [Header("Post Processing")]
     public Volume globalVolume;
     public float vignetteMultiplier = 0.45f;
@@ -25,11 +23,11 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     [Header("Occlusion Effect")]
     public Material occlusionMaterial;
-    public Color startOcclusionColor = Color.red;
-    public Color endOcclusionColor = Color.yellow;
 
     [Header("Other Effects")]
     public float zoomInAmount;
+    public Color emptyColor = Color.red;
+    public Color fullColor = Color.yellow;
 
     private Vignette vignette;
     private MotionBlur motionBlur;
@@ -40,9 +38,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
     private float startContrast;
 
     private void Start()
-    {
-        spawnedCoroutines = new List<Coroutine>();
-        
+    {   
         globalVolume.profile.TryGet(out vignette);
         globalVolume.profile.TryGet(out motionBlur);
         globalVolume.profile.TryGet(out filmGrain);
@@ -93,26 +89,13 @@ public class AwakenessManager : Singleton<AwakenessManager>
     
     void HandleIncreaseAwakeness(float multiplier)
     {
-        spawnedCoroutines.Add(StartCoroutine(UIManager.Instance.staminaBar.IncreaseFillBy(multiplier * awakenessIncrease)));
-    }
-    
-    // Note: Might need to do more testing if this is actually doing anything considerable...
-    //  but better safe than sorry to make sure coroutines we spawn are no longer running when we enter a minigame
-    void StopAllSpawnedCoroutines()
-    {
-        // No loose coroutines in MY house!
-        foreach (Coroutine c in spawnedCoroutines)
-        {
-            StopCoroutine(c);
-        }
-        spawnedCoroutines.Clear();
+        StartCoroutine(UIManager.Instance.staminaBar.IncreaseFillBy(multiplier * awakenessIncrease));
     }
 
     private void OnDisable()
     {
-        StopAllSpawnedCoroutines();
-
-        occlusionMaterial.SetColor("_BaseColor", startOcclusionColor);
+        // because this affect the actual asset, we reset the color back to the start color every time we end the game
+        occlusionMaterial.SetColor("_BaseColor", emptyColor);
     }
 
 
@@ -159,13 +142,13 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private void UpdateOcclusionColor(float fillAmount)
     {
-        occlusionMaterial.SetColor("_BaseColor", Color.Lerp(startOcclusionColor, endOcclusionColor, GetInterpolatedFillAmount(fillAmount)));
+        occlusionMaterial.SetColor("_BaseColor", Color.Lerp(emptyColor, fullColor, GetInterpolatedFillAmount(fillAmount)));
     }
 
     private void UpdateAwakenessBarFillColor(float fillAmount)
     {
         float currentAlpha = UIManager.Instance.staminaBar.fillImage.color.a;
-        Color lerpedColor = Color.Lerp(startOcclusionColor, endOcclusionColor, GetInterpolatedFillAmount(fillAmount));
+        Color lerpedColor = Color.Lerp(emptyColor, fullColor, GetInterpolatedFillAmount(fillAmount));
         UIManager.Instance.staminaBar.fillImage.color = new Color(lerpedColor.r, lerpedColor.g, lerpedColor.b, currentAlpha);
     }
 
