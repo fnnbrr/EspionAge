@@ -44,19 +44,7 @@ public class TeleportCheats : MonoBehaviour
     [MenuItem(Constants.CHEATS_TELEPORT_DENTURES)]
     public static void TeleportDentures()
     {
-        GameManager.Instance.GetPlayerTransform().position = new Vector3(33.91f, 3f, 0.22f);
-    }
-
-    [MenuItem(Constants.CHEATS_TELEPORT_PANTRY, true)]
-    public static bool ValidateTeleportPantry()
-    {
-        return ValidateTeleport();
-    }
-
-    [MenuItem(Constants.CHEATS_TELEPORT_PANTRY)]
-    public static void TeleportPantry()
-    {
-        GameManager.Instance.GetPlayerTransform().position = new Vector3(32f, 3f, 39.6f);
+        GameManager.Instance.GetPlayerTransform().position = new Vector3(27f, 3f, 4f);
     }
 
     [MenuItem(Constants.CHEATS_TELEPORT_KITCHENSTART, true)]
@@ -68,7 +56,7 @@ public class TeleportCheats : MonoBehaviour
     [MenuItem(Constants.CHEATS_TELEPORT_KITCHENSTART)]
     public static void TeleportKitchenStart()
     {
-        GameManager.Instance.GetPlayerTransform().position = new Vector3(-42.8f, 3f, 36.76f);
+        GameManager.Instance.GetPlayerTransform().position = new Vector3(-42f, 3f, 23f);
     }
 
     [MenuItem(Constants.CHEATS_TELEPORT_PIANO, true)]
@@ -105,7 +93,7 @@ public class TeleportCheats : MonoBehaviour
     [MenuItem(Constants.CHEATS_TELEPORT_NPC1)]
     public static void TeleportNPC1()
     {
-        GameManager.Instance.GetPlayerTransform().position = new Vector3(-60f, 3f, 40f);
-        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 0f, 0f);
+        GameManager.Instance.GetPlayerTransform().position = new Vector3(-60f, 3f, 32f);
+        GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(0f, 180f, 0f);
     }
 }

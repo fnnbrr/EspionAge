@@ -12,15 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85ee462f4b7334f118fe3d0f9f6176c1, type: 3}
   m_Name: NPC1 After Mission
   m_EditorClassIdentifier: 
-  npcVoice: event:/Characters/OldManNPC
+  autoplayConversation: 0
+  autoInitiate: 0
+  shouldFollow: 0
   lines:
-  - isBirdie: 1
+  - id: Birdie
     text: Here are Wilbur's dentures!
-  - isBirdie: 0
+  - id: NurseNPC-MISSION1
     text: Gee, Birdie! Thanks a lot, I owe you one!
-  - isBirdie: 1
+  - id: Birdie
     text: Looks like there's still some cabbage stuck in there...
-  - isBirdie: 1
+  - id: Birdie
     text: You better give it a good rinse.
-  - isBirdie: 0
+  - id: NurseNPC-MISSION1
     text: Ooh wee, cabbage is the bee's knees!

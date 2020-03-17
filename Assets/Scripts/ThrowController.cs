@@ -29,7 +29,7 @@ public class ThrowController : MonoBehaviour
     public delegate void OnThrowableResetEventHandler();
     public event OnThrowableResetEventHandler OnThrowableReset;
 
-    public delegate void OnInteractEventHandler(DialogueInteractable source);
+    public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractBegin;
 
     private void Start()
@@ -62,11 +62,11 @@ public class ThrowController : MonoBehaviour
             
             // Handle controller input
             if (GameManager.Instance.GetPlayerController().controllerConnected && 
-                (PlayerController.InputAxisInUse("Horizontal Right Stick") || 
-                 PlayerController.InputAxisInUse("Vertical Right Stick")))
+                (Utils.InputAxisInUse(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK) || 
+                 Utils.InputAxisInUse(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK)))
             {
-                float horizontal = 10 * sensitivityController * Input.GetAxis("Vertical Right Stick");
-                float vertical = 10 * sensitivityController * Input.GetAxis("Horizontal Right Stick");
+                float horizontal = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK);
+                float vertical = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK);
                 
                 return new Vector3(position.x + horizontal, position.y, position.z + vertical);
             }
@@ -96,11 +96,11 @@ public class ThrowController : MonoBehaviour
         // Handle controller input
         if (GameManager.Instance.GetPlayerController().controllerConnected)
         {
-            bool isTriggerDown = PlayerController.InputAxisInUse(Constants.INPUT_THROW_GETDOWN);
+            bool isTriggerDown = Utils.InputAxisInUse(Constants.INPUT_THROW_GETDOWN);
 
             // Right joystick is being used
-            if (PlayerController.InputAxisInUse("Horizontal Right Stick") || 
-                PlayerController.InputAxisInUse("Vertical Right Stick"))
+            if (Utils.InputAxisInUse(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK) || 
+                Utils.InputAxisInUse(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK))
             {
                 if (!launchArcRenderer.gameObject.activeInHierarchy)
                 {
@@ -206,7 +206,7 @@ public class ThrowController : MonoBehaviour
         }
     }
     
-    public void InteractPlayer(DialogueInteractable source)
+    public void InteractPlayer(Interactable source)
     {
         OnInteractBegin?.Invoke(source);
     }
