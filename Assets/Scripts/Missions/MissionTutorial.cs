@@ -149,7 +149,7 @@ public class MissionTutorial : AMission
         spawnedEnemies.ForEach(e =>
         {
             // Send back all enemies to around the area of their start (mostly to get them off camera)
-            e.pureChaser.chaser.targetTransform = null;
+            e.pureChaser.targetTransform = null;
             e.pureChaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
             e.pureChaser.OnReachDestination += HandleEnemyReachedStartPoint;
         });
@@ -248,7 +248,7 @@ public class MissionTutorial : AMission
                 GameObject enemyInstance = Instantiate(chaserPrefab, position, Quaternion.identity);
 
                 PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemyInstance);
-                chaser.chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
+                chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 chaser.SetSpeed(group.chaseSpeed);
                 chaser.startChaseRadius = group.startChaseRadius;
                 chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;

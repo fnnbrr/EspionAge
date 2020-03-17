@@ -281,9 +281,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bbd1dc618b965549a3f827dce25aa6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: Patrolling
-  defaultState: Searching
   agent: {fileID: 0}
+  currentState: 3
+  defaultState: 3
   chaser: {fileID: 0}
   responder: {fileID: 0}
   searcher: {fileID: 0}
@@ -319,7 +319,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 10
-  targetTransform: {fileID: 0}
 --- !u!114 &-7711432056760366613
 MonoBehaviour:
   m_ObjectHideFlags: 0

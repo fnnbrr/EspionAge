@@ -6,19 +6,19 @@ namespace NPCs
     public enum PureChaserStates
     {
         // Can add to & actually use this if we refactor PureChaser
-        Chasing,
     }
     
     [RequireComponent(typeof(Chaser))]
     public class PureChaser : BaseStateAi<PureChaserStates>
     {
         public float startChaseRadius = 100f;
+        [HideInInspector] public Transform targetTransform;
         
         [HideInInspector] public Chaser chaser;
         private ChildRootMotionController rootMotionController;
         private bool shouldChase = false;
 
-        public const float ReportReachedDistance = 2f;
+        private const float REPORT_REACHED_DISTANCE = 2f;
         
 
         public delegate void ReachedDestinationAction();
@@ -46,11 +46,11 @@ namespace NPCs
             agent.SetDestination(position);
         }
 
-        private new void ChaseTarget()
+        private void ChaseTarget()
         {
-            if (shouldChase && chaser.targetTransform)
+            if (shouldChase && targetTransform)
             {
-                SetDestination(chaser.targetTransform.position);
+                SetDestination(targetTransform.position);
             }
         }
 
@@ -71,7 +71,7 @@ namespace NPCs
             CheckRemainingDistance();
 
             // below are all about using targetTransform
-            if (!chaser.targetTransform || agent.speed <= 0f)
+            if (!targetTransform || agent.speed <= 0f)
             {
                 SetMoving(false);
                 return;
@@ -81,7 +81,7 @@ namespace NPCs
                 SetMoving(true);
             }
 
-            if (!shouldChase && Vector3.Distance(transform.position, chaser.targetTransform.position) <= startChaseRadius)
+            if (!shouldChase && Vector3.Distance(transform.position, targetTransform.position) <= startChaseRadius)
             {
                 shouldChase = true;
             }
@@ -96,7 +96,7 @@ namespace NPCs
 
         private void CheckRemainingDistance()
         {
-            if (Vector3.Distance(transform.position, agent.destination) <= ReportReachedDistance)
+            if (Vector3.Distance(transform.position, agent.destination) <= REPORT_REACHED_DISTANCE)
             {
                 OnReachDestination?.Invoke();
             }

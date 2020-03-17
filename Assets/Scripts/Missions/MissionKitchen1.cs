@@ -145,7 +145,6 @@ public class MissionKitchen1 : AMission
              
                 // All enemies will be chasers, so we need to set the target transform for all.
                 BasicNurse enemyComponent = Utils.GetRequiredComponent<BasicNurse>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a BasicNurse component!");
-                enemyComponent.chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 enemyComponent.chaser.OnCollideWithPlayer += OnCollideWithPlayer;
                 
                 enemyComponent.patroller.SetPoints(enemy.waypoints);

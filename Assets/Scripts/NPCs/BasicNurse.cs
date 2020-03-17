@@ -45,12 +45,19 @@ namespace NPCs
             SetState(currentState);
         }
 
+        public void Start()
+        {
+            chaser.OnSeePlayer += () => SetState(BasicNurseStates.Chasing);
+            chaser.OnLosePlayer += () => SetState(BasicNurseStates.Searching);
+        }
+
         protected override void SetState(BasicNurseStates newState)
         {
             switch (newState)
             {
                 case BasicNurseStates.Searching:
                     agent.speed = searcher.movementSpeed;
+                    searcher.searchBoundsCenter = agent.destination;
                     questionMark.SetActive(true);
                     break;
                 case BasicNurseStates.Responding:
@@ -60,6 +67,7 @@ namespace NPCs
                     break;
                 case BasicNurseStates.Chasing:
                     agent.speed = chaser.movementSpeed;
+                    agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
                     questionMark.SetActive(false);
                     break;
                 case BasicNurseStates.Patrolling:
