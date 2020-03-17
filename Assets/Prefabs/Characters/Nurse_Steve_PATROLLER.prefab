@@ -284,13 +284,13 @@ MonoBehaviour:
   currentState: Patrolling
   defaultState: Searching
   agent: {fileID: 0}
-  animator: {fileID: 0}
   chaser: {fileID: 0}
   responder: {fileID: 0}
   searcher: {fileID: 0}
   patroller: {fileID: 0}
   waiter: {fileID: 0}
   numSearches: 3
+  questionMark: {fileID: 5902039246049778213}
 --- !u!114 &8399060607170567938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,7 +334,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 7
   responsePoint: {x: 0, y: 0, z: 0}
-  initiallyResponding: 0
 --- !u!114 &-4738247284353703669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -585,6 +584,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0d8b49d3bcafe045a92b55d4d468979, type: 3}
+--- !u!1 &5902039246049778213 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5852324622868546161, guid: a0d8b49d3bcafe045a92b55d4d468979,
+    type: 3}
+  m_PrefabInstance: {fileID: 63018854010067028}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3953487963611659546 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3891812714996491598, guid: a0d8b49d3bcafe045a92b55d4d468979,

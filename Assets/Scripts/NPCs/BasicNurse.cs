@@ -10,7 +10,6 @@ namespace NPCs
     [RequireComponent(typeof(Searcher))]
     [RequireComponent(typeof(Patroller))]
     [RequireComponent(typeof(Waiter))]
-    [RequireComponent(typeof(Animator))]
     public class BasicNurse : BaseAi
     {
         private static readonly HashSet<string> States = new HashSet<string>()
@@ -30,10 +29,10 @@ namespace NPCs
         public int numSearches = 3;
         private int curNumSearches = 0;
         
-        private GameObject questionMark;
+        public GameObject questionMark;
         private Animator animator;
 
-        private new void Awake()
+        public override void Awake()
         {
             base.Awake();
 
@@ -43,8 +42,6 @@ namespace NPCs
             patroller = Utils.GetRequiredComponent<Patroller>(this);
             waiter = Utils.GetRequiredComponent<Waiter>(this);
             animator = Utils.GetRequiredComponentInChildren<Animator>(this);
-
-            questionMark = transform.Find("QuestionMark").gameObject;
             
             SetState(currentState);
         }

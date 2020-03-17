@@ -9,7 +9,6 @@ namespace NPCs.Components
     {
         public float movementSpeed = 8.0f;
         public Vector3 responsePoint;
-        public bool initiallyResponding = false;
 
         private BaseAi baseAi;
         private NavMeshAgent agent;
@@ -18,15 +17,6 @@ namespace NPCs.Components
         {
             baseAi = Utils.GetRequiredComponent<BaseAi>(this);
             agent = baseAi.agent;
-        }
-
-        private void Start()
-        {
-            if (initiallyResponding)
-            {
-                baseAi.SetState("Responding");
-                agent.SetDestination(responsePoint);
-            }
         }
 
         public void InitializeResponderParameters(Vector3 newResponsePoint)

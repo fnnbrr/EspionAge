@@ -24,9 +24,8 @@ namespace NPCs.Components
         public void GotoNextSearchPoint()
         {
             Vector3 randomPoint = searchBoundsCenter + Random.insideUnitSphere * searchBoundsRadius;
-            NavMeshHit navHit;
 
-            if (!NavMesh.SamplePosition(randomPoint, out navHit, searchBoundsRadius, NavMesh.AllAreas))
+            if (!NavMesh.SamplePosition(randomPoint, out NavMeshHit navHit, searchBoundsRadius, NavMesh.AllAreas))
             {
                 navHit.position = searchBoundsCenter;
             }

@@ -18,7 +18,7 @@ namespace NPCs
         public delegate void ReachedDestinationAction();
         public event ReachedDestinationAction OnReachDestination;
 
-        private new void Awake()
+        public override void Awake()
         {
             base.Awake();
             rootMotionController = Utils.GetRequiredComponentInChildren<ChildRootMotionController>(this);

@@ -10,10 +10,10 @@ namespace NPCs.Components
     {
         public float movementSpeed = 6.0f;
         public float rotationSpeed = 180.0f;
-        
-        private List<Vector3> patrolPositions = new List<Vector3>();
-        private List<Quaternion> patrolRotations = new List<Quaternion>();
-        private List<float> patrolStayTimes = new List<float>();
+
+        private List<Vector3> patrolPositions;
+        private List<Quaternion> patrolRotations;
+        private List<float> patrolStayTimes;
         
         private int destinationCount;
         private Quaternion curRotation;
@@ -26,14 +26,14 @@ namespace NPCs.Components
         {
             baseAi = Utils.GetRequiredComponent<BaseAi>(this);
             agent = baseAi.agent;
+            
+            patrolPositions = new List<Vector3>();
+            patrolRotations = new List<Quaternion>();
+            patrolStayTimes = new List<float>();
         }
 
         public void SetPoints(List<Vector3> newPositions, List<Vector3> newRotations, List<float> newStayTimes)
         {
-            patrolPositions.Clear();
-            patrolRotations.Clear();
-            patrolStayTimes.Clear();
-            
             patrolPositions = new List<Vector3>(newPositions);
             patrolRotations = newRotations.Select(i => Quaternion.Euler(i.x, i.y, i.z)).ToList();
             patrolStayTimes = new List<float>(newStayTimes);
@@ -67,8 +67,14 @@ namespace NPCs.Components
             if (patrolPositions.Count < 2) return;
 
             int newIndex;
-            if (loop) newIndex = destinationCount % patrolPositions.Count;
-            else newIndex = Utils.PingPong(destinationCount, patrolPositions.Count - 1);
+            if (loop)
+            {
+                newIndex = destinationCount % patrolPositions.Count;
+            }
+            else
+            {
+                newIndex = Utils.PingPong(destinationCount, patrolPositions.Count - 1);
+            }
 
             agent.SetDestination(patrolPositions[newIndex]);
             curRotation = patrolRotations[newIndex];

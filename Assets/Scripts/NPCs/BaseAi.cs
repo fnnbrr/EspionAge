@@ -15,7 +15,7 @@ namespace NPCs
         
         [HideInInspector] public NavMeshAgent agent;
 
-        public void Awake()
+        public virtual void Awake()
         {
             agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
             agent.avoidancePriority = Random.Range(0, 99);
