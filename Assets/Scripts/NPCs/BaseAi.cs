@@ -18,6 +18,7 @@ namespace NPCs
         public void Awake()
         {
             agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
+            agent.avoidancePriority = Random.Range(0, 99);
         }
 
         public abstract void SetState(string newState);

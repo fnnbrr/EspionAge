@@ -77,17 +77,14 @@ MonoBehaviour:
   - enemyType: 0
     prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
       type: 3}
-    spawnPosition: {x: -21, y: 3, z: -28}
+    spawnPosition: {x: -11, y: 3, z: -16}
     spawnRotation: {x: 0, y: 0, z: 0}
     isInitiallyResponding: 0
     waypoints:
-    - position: {x: -21, y: 0, z: -28}
-      rotation: {x: 0, y: 0, z: 0}
-      stayTime: 1
-    - position: {x: -31, y: 0, z: -16}
+    - position: {x: -11, y: 0, z: -16}
       rotation: {x: 0, y: 180, z: 0}
       stayTime: 2
-    - position: {x: -11, y: 0, z: -16}
+    - position: {x: -31, y: 0, z: -16}
       rotation: {x: 0, y: 180, z: 0}
       stayTime: 3
     startResponsePoint: {x: -11, y: 0, z: -16}
@@ -111,12 +108,9 @@ MonoBehaviour:
       - position: {x: -11, y: 0, z: -28}
         rotation: {x: 0, y: 0, z: 0}
         stayTime: 3
-      - position: {x: -21, y: 0, z: -16}
-        rotation: {x: 0, y: 180, z: 0}
-        stayTime: 2
       - position: {x: -31, y: 0, z: -28}
         rotation: {x: 0, y: 0, z: 0}
-        stayTime: 1
+        stayTime: 2
       startResponsePoint: {x: 24, y: 0, z: -2}
       wanderBounds:
         position: {x: 19, y: 0, z: 7}
@@ -128,8 +122,11 @@ MonoBehaviour:
       spawnRotation: {x: 0, y: 0, z: 0}
       isInitiallyResponding: 0
       waypoints:
-      - position: {x: -42, y: 0, z: 24}
+      - position: {x: -38, y: 0, z: 26}
         rotation: {x: 0, y: 100, z: 0}
+        stayTime: 3
+      - position: {x: -40, y: 0, z: 22}
+        rotation: {x: 0, y: 180, z: 0}
         stayTime: 3
       startResponsePoint: {x: -42, y: 0, z: 24}
       wanderBounds:
