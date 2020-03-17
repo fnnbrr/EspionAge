@@ -13,14 +13,16 @@ public class SpeakerUI : MonoBehaviour
 
     private RectTransform textBoxRect;
     private Vector2 tbAnchor;
-    private float anchorX;
-    private float anchorY;
     
     private Vector3 textPosition;
 
-    void Start()
+    private void Awake()
     {
         textBoxRect = Utils.GetRequiredComponent<RectTransform>(textBoxContainer);
+    }
+
+    void Start()
+    {
         Hide();
     }
 
@@ -30,14 +32,9 @@ public class SpeakerUI : MonoBehaviour
         textBoxContainer.transform.position = textPosition;
 
         tbAnchor = textBoxRect.anchoredPosition;
-        anchorX = tbAnchor.x;
-        anchorY = tbAnchor.y;
 
-        anchorX = Mathf.Clamp(anchorX, 0, Mathf.Max(0, Screen.width - textBoxRect.sizeDelta.x));
-        anchorY = Mathf.Clamp(anchorY, -Screen.height + textBoxRect.sizeDelta.y, 0);
-
-        tbAnchor.x = anchorX;
-        tbAnchor.y = anchorY;
+        tbAnchor.x = Mathf.Clamp(tbAnchor.x, 0, Mathf.Max(0, Screen.width - textBoxRect.sizeDelta.x));
+        tbAnchor.y = Mathf.Clamp(tbAnchor.y, Mathf.Min(-Screen.height + textBoxRect.sizeDelta.y, 0), 0);
 
         textBoxRect.anchoredPosition = tbAnchor;
     }
