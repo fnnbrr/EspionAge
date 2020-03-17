@@ -49,6 +49,7 @@ namespace NPCs
         {
             chaser.OnSeePlayer += () => SetState(BasicNurseStates.Chasing);
             chaser.OnLosePlayer += () => SetState(BasicNurseStates.Searching);
+            responder.OnStartResponding += () => SetState(BasicNurseStates.Responding);
         }
 
         protected override void SetState(BasicNurseStates newState)
@@ -57,13 +58,14 @@ namespace NPCs
             {
                 case BasicNurseStates.Searching:
                     agent.speed = searcher.movementSpeed;
-                    searcher.searchBoundsCenter = agent.destination;
+                    searcher.searchPosition = agent.destination;
                     questionMark.SetActive(true);
                     break;
                 case BasicNurseStates.Responding:
                     agent.speed = responder.movementSpeed;
+                    agent.SetDestination(responder.responsePoint);
+                    searcher.SetSearchPoint(responder.responsePoint);
                     questionMark.SetActive(true);
-                    searcher.ResetSearchPoint();
                     break;
                 case BasicNurseStates.Chasing:
                     agent.speed = chaser.movementSpeed;
@@ -106,7 +108,7 @@ namespace NPCs
                     if (curNumSearches < numSearches)
                     {
                         curNumSearches += 1;
-                        searcher.GotoNextSearchPoint();
+                        agent.destination = searcher.GetNextSearchPoint();
                     }
                     else
                     {

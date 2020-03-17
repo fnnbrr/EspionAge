@@ -4,37 +4,27 @@ using Random = UnityEngine.Random;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(BaseNavAi))]
     public class Searcher : MonoBehaviour
     {
         public float movementSpeed = 5.0f;
-        public Vector3 searchBoundsCenter;
-        public float searchBoundsRadius = 15.0f;
+        public Vector3 searchPosition;
+        public float searchRadius = 15.0f;
 
-        private BaseNavAi baseNavAi;
-        private NavMeshAgent agent;
-
-        private void Awake()
+        public Vector3 GetNextSearchPoint()
         {
-            baseNavAi = Utils.GetRequiredComponent<BaseNavAi>(this);
-            agent = baseNavAi.agent;
-        }
+            Vector3 randomPoint = searchPosition + Random.insideUnitSphere * searchRadius;
 
-        public void GotoNextSearchPoint()
-        {
-            Vector3 randomPoint = searchBoundsCenter + Random.insideUnitSphere * searchBoundsRadius;
-
-            if (!NavMesh.SamplePosition(randomPoint, out NavMeshHit navHit, searchBoundsRadius, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(randomPoint, out NavMeshHit navHit, searchRadius, NavMesh.AllAreas))
             {
-                navHit.position = searchBoundsCenter;
+                return navHit.position;
             }
 
-            agent.SetDestination(navHit.position);
+            return searchPosition;
         }
 
-        public void ResetSearchPoint()
+        public void SetSearchPoint(Vector3 newSearchPosition)
         {
-            searchBoundsCenter = agent.destination;
+            searchPosition = newSearchPosition;
         }
     }
 }
