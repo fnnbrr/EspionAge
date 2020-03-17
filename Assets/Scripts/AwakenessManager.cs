@@ -19,9 +19,14 @@ public class AwakenessManager : Singleton<AwakenessManager>
     public float brightnessMultiplier = -0.5f;
 
     [Header("Movement Buffs")]
-    public MovementController movementController;
     public float movementSpeedBuff = 5f;
     public float turnSpeedBuff = 5f;
+    private MovementController movementController;
+
+    [Header("Occlusion Effect")]
+    public Material occlusionMaterial;
+    public Color startOcclusionColor = Color.red;
+    public Color endOcclusionColor = Color.yellow;
 
     [Header("Other Effects")]
     public float zoomInAmount;
@@ -53,10 +58,11 @@ public class AwakenessManager : Singleton<AwakenessManager>
         UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
         UIManager.Instance.staminaBar.OnChange += UpdatePlayerAnimation;
         UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
+        UIManager.Instance.staminaBar.OnChange += UpdateOcclusionColor;
 
         movementController = GameManager.Instance.GetMovementController();
     }
-    
+
     private void FixedUpdate()
     {
         float minDistance = DistToClosestEnemy();
@@ -104,9 +110,11 @@ public class AwakenessManager : Singleton<AwakenessManager>
     private void OnDisable()
     {
         StopAllSpawnedCoroutines();
+
+        occlusionMaterial.SetColor("_BaseColor", startOcclusionColor);
     }
-    
-    
+
+
     // // //  AWAKENESS LISTENERS // // //
 
     private void UpdatePlayerAnimation(float fillAmount)
@@ -146,6 +154,11 @@ public class AwakenessManager : Singleton<AwakenessManager>
     {
         movementController.movementSpeed = movementController.baseMovementSpeed + (movementSpeedBuff * GetInterpolatedFillAmount(fillAmount));
         movementController.turnSpeed = movementController.baseTurnSpeed + (turnSpeedBuff * GetInterpolatedFillAmount(fillAmount));
+    }
+
+    private void UpdateOcclusionColor(float fillAmount)
+    {
+        occlusionMaterial.SetColor("_BaseColor", Color.Lerp(startOcclusionColor, endOcclusionColor, GetInterpolatedFillAmount(fillAmount)));
     }
 
     private void UpdateCameraDistance(float fillAmount)
