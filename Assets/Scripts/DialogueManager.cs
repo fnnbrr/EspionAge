@@ -32,6 +32,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private bool isTyping = false;
     private bool skipRequest = false;
     private bool waitingForNext = false;
+    private bool convoAllowMovement = true;
 
     public TextMeshProUGUI textMesh;
     private Conversation currentConvo;
@@ -121,6 +122,7 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             StartConversing();
             GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+            convoAllowMovement = false;
             AdvanceConversation();
         }
     }
@@ -170,6 +172,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
             // Unfreeze player when done
             GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+            convoAllowMovement = true;
         }
     }
 
@@ -254,6 +257,11 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         autoPlaying = true;
         coroutine = StartCoroutine(AutoplayConversation());
+    }
+
+    public bool RestrictMoveWhenConversing()
+    {
+        return !convoAllowMovement && CheckIsConversing();
     }
 
     public bool CheckIsConversing()
