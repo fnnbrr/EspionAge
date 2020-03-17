@@ -33,11 +33,18 @@ public class RegionManager : Singleton<RegionManager>
 
     // Regions
     private List<RegionTrigger> currentPlayerRegions;
+    private Dictionary<GameObject, List<RegionTrigger>> trackedObjectRegions;
+
+    public delegate void EnterRegionAction(RegionTrigger region);
+    public delegate void ExitRegionAction(RegionTrigger region);
+    public event EnterRegionAction OnPlayerEnterRegion;
+    public event ExitRegionAction OnPlayerExitRegion;
 
     private void Awake()
     {
         currentPlayerZones = new List<CameraZone>();
         currentPlayerRegions = new List<RegionTrigger>();
+        trackedObjectRegions = new Dictionary<GameObject, List<RegionTrigger>>();
     }
 
     public bool PlayerIsInZone(CameraZone zone)
@@ -117,11 +124,36 @@ public class RegionManager : Singleton<RegionManager>
     {
         Debug.Log($"Entered region {region.name}");
         currentPlayerRegions.Add(region);
+        OnPlayerEnterRegion?.Invoke(region);
     }
 
     public void ReportPlayerExitRegion(RegionTrigger region)
     {
         Debug.Log($"Exited region {region.name}");
         currentPlayerRegions.Remove(region);
+        OnPlayerExitRegion?.Invoke(region);
+    }
+
+    public bool IsInRegion(GameObject trackedObject, RegionTrigger region)
+    {
+        return trackedObjectRegions.ContainsKey(trackedObject) && trackedObjectRegions[trackedObject].Contains(region);
+    }
+
+    public void ReportTrackedObjectEnterRegion(GameObject trackedObject, RegionTrigger region)
+    {
+        if (trackedObjectRegions.ContainsKey(trackedObject))
+        {
+            Debug.Log($"Tracked object {trackedObject.name} entered region {region.name}");
+            trackedObjectRegions[trackedObject].Add(region);
+        }
+    }
+
+    public void ReportTrackedObjectExitRegion(GameObject trackedObject, RegionTrigger region)
+    {
+        if (trackedObjectRegions.ContainsKey(trackedObject))
+        {
+            Debug.Log($"Tracked object {trackedObject.name} exited region {region.name}");
+            trackedObjectRegions[trackedObject].Remove(region);
+        }
     }
 }

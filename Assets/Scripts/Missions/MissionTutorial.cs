@@ -12,16 +12,19 @@ public class MissionTutorial : AMission
     public Vector3 playerRespawnPosition;
     public Vector3 playerRespawnRotation;
 
-    [BoxGroup("Nurse Room Sequence")]
-    public MissionObject tutorialNurse;
-    [BoxGroup("Nurse Room Sequence")]
-    public string tutorialNurseSpeakerId;
-    [BoxGroup("Nurse Room Sequence")]
+    [BoxGroup("Nurse Room Sequence")] public MissionObject tutorialNurse;
+    [BoxGroup("Nurse Room Sequence")] public string tutorialNurseSpeakerId;
     [FMODUnity.EventRef]
-    public string tutorialNurseVoicePath;
-    [BoxGroup("Nurse Room Sequence")]
+    [BoxGroup("Nurse Room Sequence")] public string tutorialNurseVoicePath;
     [ReorderableList]
-    public List<Conversation> nurseConversations;
+    [BoxGroup("Nurse Room Sequence")]  public List<Conversation> nurseConversations;
+    [ReorderableList]
+    [BoxGroup("Nurse Room Sequence")] public List<Conversation> birdieCaughtConversations;
+    // private nurse room variables
+    private bool nurseIsFollowingPlayer = false;
+    private TutorialNurse tutorialNurseAI;
+    private FieldOfVision tutorialNurseFOV;
+    private int currentCaughtConversationIndex = 0;
 
     [Header("Cutscenes")]
     public List<string> startCutsceneTexts;
@@ -155,12 +158,60 @@ public class MissionTutorial : AMission
                 tutorialNurseSpeakerId, 
                 tutorialNurse.spawnedInstance, 
                 tutorialNurseVoicePath));
+        tutorialNurseAI = Utils.GetRequiredComponent<TutorialNurse>(tutorialNurse.spawnedInstance);
+        tutorialNurseFOV = Utils.GetRequiredComponent<FieldOfVision>(tutorialNurse.spawnedInstance);
+        tutorialNurseFOV.OnTargetSpotted += HandleTutorialNurseSpottingPlayer;
         RegionManager.Instance.nurseRoomDoor.SetLocked(true);
 
         // Listen for the player to pass through the final door
         RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
 
         StartCoroutine(StartMissionLogic());
+    }
+
+    private void HandleTutorialNurseSpottingPlayer()
+    {
+        if (nurseIsFollowingPlayer) return;
+
+        if (RegionManager.Instance.PlayerIsInRegion(RegionManager.Instance.nurseRoomDoorArea) ||
+            RegionManager.Instance.PlayerIsInRegion(RegionManager.Instance.nurseRoomOtherBedArea))
+        {
+            if (birdieCaughtConversations.Count == 0)
+            {
+                Debug.LogError("Need at least one element in birdieCaughtConversations!");
+                return;
+            }
+            DialogueManager.Instance.StartConversation(
+                birdieCaughtConversations[currentCaughtConversationIndex++ % birdieCaughtConversations.Count]);
+            nurseIsFollowingPlayer = true;
+
+            RegionManager.Instance.OnPlayerEnterRegion += WaitForBirdieToGoBackToBed;
+        }
+        else if (RegionManager.Instance.PlayerIsInRegion(RegionManager.Instance.nurseRoomBirdiesBedArea))
+        {
+            if (nurseConversations.Count == 0) return;
+
+            DialogueManager.Instance.StartConversation(nurseConversations.First());
+            nurseConversations.RemoveAt(0);
+
+            if (nurseConversations.Count == 0)
+            {
+                RegionManager.Instance.nurseRoomDoor.SetLocked(false);
+            }
+        }
+        else
+        {
+            Debug.LogError("Player is not in any of the expected nurse room regions when tutorial nurse spotted her!");
+        }
+    }
+
+    private void WaitForBirdieToGoBackToBed(RegionTrigger region)
+    {
+        if (region != RegionManager.Instance.nurseRoomBirdiesBedArea) return;
+        RegionManager.Instance.OnPlayerEnterRegion -= WaitForBirdieToGoBackToBed;
+
+        tutorialNurseAI.StopFollowingPlayer();
+        nurseIsFollowingPlayer = false;
     }
 
     private void CommenceCompleteMission()

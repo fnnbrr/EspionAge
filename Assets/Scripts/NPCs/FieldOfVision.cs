@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class FieldOfVision : MonoBehaviour
 {
+	[Header("General Settings")]
 	public float viewRadius;
 	[Range(0, 360)]
 	public float viewAngle;
-
 	public LayerMask targetMask;
 	public LayerMask obstacleMask;
 
 	[HideInInspector]
-	public List<Transform> visibleTargets = new List<Transform>();
+	public List<Transform> visibleTargets;
 
+	[Header("Mesh Interaction Settings")]
 	public float meshResolution;
 	public int edgeResolveInterations;
 	public float edgeDstThreshold;
-
-	private Chaser chaser;
 
 	[Header("View Mesh Options")]
 	public GameObject viewMeshObject;
@@ -35,13 +34,24 @@ public class FieldOfVision : MonoBehaviour
     public float notCaught = 0f;
     public float isCaught = 1f;
 
+	private Chaser chaser;
+	private bool targetsVisible = false;
+
+	public delegate void TargetSpottedAction();
+	public event TargetSpottedAction OnTargetLost;
+	public event TargetSpottedAction OnTargetSpotted;
+
+	private void Awake()
+	{
+		visibleTargets = new List<Transform>();
+	}
+
 	void Start()
 	{
 		chaser = GetComponent<Chaser>();
 
 		viewMeshFilter = Utils.GetRequiredComponent<MeshFilter>(viewMeshObject);
-		viewMesh = new Mesh();
-		viewMesh.name = "View Mesh";
+		viewMesh = new Mesh { name = "View Mesh" };
 		viewMeshFilter.mesh = viewMesh;
 
 		viewMeshRenderer = Utils.GetRequiredComponent<MeshRenderer>(viewMeshObject);
@@ -110,7 +120,12 @@ public class FieldOfVision : MonoBehaviour
 		{
 			viewMeshRenderer.material = defaultMaterial;
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, notCaught);
-        }
+			if (targetsVisible)
+			{
+				OnTargetLost?.Invoke();
+			}
+			targetsVisible = false;
+		}
         else
 		{
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, isCaught);
@@ -121,6 +136,11 @@ public class FieldOfVision : MonoBehaviour
 				spottedMaterial.color,
 				Mathf.PingPong(Time.time * flashingSpeed, 1f)
 			));
+			if (!targetsVisible)
+			{
+				OnTargetSpotted?.Invoke();
+			}
+			targetsVisible = true;
 		}
 	}
 

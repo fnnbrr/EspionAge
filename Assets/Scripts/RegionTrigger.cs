@@ -13,6 +13,10 @@ public class RegionTrigger : MonoBehaviour
         {
             RegionManager.Instance.ReportPlayerEnterRegion(this);
         }
+        else if (other.gameObject.HasComponent<RegionTrackable>())
+        {
+            RegionManager.Instance.ReportTrackedObjectEnterRegion(other.gameObject, this);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -21,6 +25,10 @@ public class RegionTrigger : MonoBehaviour
         {
             RegionManager.Instance.ReportPlayerExitRegion(this);
             OnPlayerPassThrough?.Invoke();
+        }
+        else if (other.gameObject.HasComponent<RegionTrackable>())
+        {
+            RegionManager.Instance.ReportTrackedObjectExitRegion(other.gameObject, this);
         }
     }
 }
