@@ -54,22 +54,18 @@ namespace NPCs
             switch (newState)
             {
                 case "Searching":
-                    agent.isStopped = false;
                     agent.speed = searcher.movementSpeed;
                     questionMark.SetActive(true);
                     break;
                 case "Responding":
-                    agent.isStopped = false;
                     agent.speed = responder.movementSpeed;
                     questionMark.SetActive(true);
                     break;
                 case "Chasing":
-                    agent.isStopped = false;
                     agent.speed = chaser.movementSpeed;
                     questionMark.SetActive(false);
                     break;
                 case "Patrolling":
-                    agent.isStopped = false;
                     agent.speed = patroller.movementSpeed;
                     questionMark.SetActive(false);
                     break;
@@ -77,17 +73,16 @@ namespace NPCs
                     questionMark.SetActive(false);
                     throw new UnityException("Invalid state name passed to " + GetType().Name);
             }
-        
+            
             currentState = newState;
+            ToggleAnimations(true);
         }
 
         protected override void Update()
         {
-            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, !agent.isStopped);
-            
-            if (!agent.isOnNavMesh || agent.pathPending || agent.remainingDistance > 0.5f) return;
+            if (agent.hasPath || !agent.isOnNavMesh || agent.pathPending) return;
 
-            // Choose the next state/behavior when the agent gets close to the current destination.
+            // Choose the next state/behavior when the agent reaches current destination.
             switch (currentState)
             {
                 case "Patrolling":
@@ -117,6 +112,15 @@ namespace NPCs
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public override void ToggleAnimations(bool toggle)
+        {
+            // TODO: for whoever adds in walking or other animations here:
+            // I was thinking that toggle=false just turns off all animations (disable the animator?)
+            // and toggle=true can do specific behaivor based on currentState
+            
+            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, toggle);
         }
     }
 }

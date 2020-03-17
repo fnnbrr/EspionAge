@@ -26,11 +26,11 @@ namespace NPCs.Components
             waitTimer += Time.deltaTime;
             if (waitTimer < waitDuration)
             {
-                agent.isStopped = true;
+                baseAi.ToggleAnimations(false);
                 return false;
             }
 
-            agent.isStopped = false;
+            baseAi.ToggleAnimations(true);
             waitTimer = 0f;
             return true;
         }

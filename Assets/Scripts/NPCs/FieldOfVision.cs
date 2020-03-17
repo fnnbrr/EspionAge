@@ -51,7 +51,7 @@ public class FieldOfVision : MonoBehaviour
 		viewMeshRenderer.material = defaultMaterial;
 	}
 
-	private void Update()
+	private void LateUpdate()
 	{
 		FindVisibleTargets();
 		UpdateViewColor();

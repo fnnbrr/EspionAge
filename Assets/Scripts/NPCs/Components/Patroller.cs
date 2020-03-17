@@ -42,7 +42,8 @@ namespace NPCs.Components
             {
                 throw new UnityException("Patroller passed waypoint information of differing lengths");
             }
-            
+
+            baseAi.agent.SetDestination(patrolPositions[0]);
             curRotation = patrolRotations[0];
             curStayTime = patrolStayTimes[0];
         }
@@ -51,11 +52,11 @@ namespace NPCs.Components
         {
             if (transform.rotation == curRotation)
             {
-                baseAi.agent.isStopped = false;
+                baseAi.ToggleAnimations(true);
                 return true;
             }
 
-            baseAi.agent.isStopped = true;
+            baseAi.ToggleAnimations(false);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, curRotation, Time.deltaTime * rotationSpeed);
             return false;
         }

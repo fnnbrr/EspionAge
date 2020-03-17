@@ -50,6 +50,13 @@ namespace NPCs
 
         public override void SetState(string newState)
         {
+            // Ignore unless you want to refactor PureChaser later on
+            throw new System.NotImplementedException();
+        }
+        
+        public override void ToggleAnimations(bool toggle)
+        {
+            // Ignore unless you want to refactor PureChaser later on
             throw new System.NotImplementedException();
         }
 

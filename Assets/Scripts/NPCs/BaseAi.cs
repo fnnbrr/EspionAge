@@ -20,16 +20,10 @@ namespace NPCs
             agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
         }
 
-        public void Start()
-        {
-            // Disabling auto-braking allows for continuous movement
-            // between points (ie, the agent doesn't slow down as it
-            // approaches a destination point).
-            agent.autoBraking = false;
-        }
-
         public abstract void SetState(string newState);
     
         protected abstract void Update();
+
+        public abstract void ToggleAnimations(bool toggle);
     }
 }
