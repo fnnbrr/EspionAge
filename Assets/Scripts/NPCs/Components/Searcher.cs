@@ -13,7 +13,6 @@ namespace NPCs.Components
 
         private BaseAi baseAi;
         private NavMeshAgent agent;
-        private bool isSearching = false;
 
         private void Awake()
         {
@@ -31,7 +30,11 @@ namespace NPCs.Components
             }
 
             agent.SetDestination(navHit.position);
-            isSearching = true;
+        }
+
+        public void ResetSearchPoint()
+        {
+            searchBoundsCenter = agent.destination;
         }
     }
 }

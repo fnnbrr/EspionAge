@@ -30,16 +30,10 @@ namespace NPCs.Components
         {
             if (!other.gameObject.CompareTag("Noise") && agent.enabled) return;
             
-            baseAi.SetState("Responding");
-        
             responsePoint = other.gameObject.transform.position;
             agent.SetDestination(responsePoint);
             
-            Searcher relatedSearcher = GetComponentInParent<Searcher>();
-            if (relatedSearcher != null)
-            {
-                relatedSearcher.searchBoundsCenter = responsePoint;
-            }
+            baseAi.SetState("Responding");
         }
     }
 }

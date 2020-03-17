@@ -57,6 +57,7 @@ namespace NPCs
                 case "Responding":
                     agent.speed = responder.movementSpeed;
                     questionMark.SetActive(true);
+                    searcher.ResetSearchPoint();
                     break;
                 case "Chasing":
                     agent.speed = chaser.movementSpeed;
