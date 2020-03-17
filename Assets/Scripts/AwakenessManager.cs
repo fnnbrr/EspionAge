@@ -59,6 +59,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
         UIManager.Instance.staminaBar.OnChange += UpdatePlayerAnimation;
         UIManager.Instance.staminaBar.OnChange += UpdateMovementBuffs;
         UIManager.Instance.staminaBar.OnChange += UpdateOcclusionColor;
+        UIManager.Instance.staminaBar.OnChange += UpdateAwakenessBarFillColor;
 
         movementController = GameManager.Instance.GetMovementController();
     }
@@ -159,6 +160,13 @@ public class AwakenessManager : Singleton<AwakenessManager>
     private void UpdateOcclusionColor(float fillAmount)
     {
         occlusionMaterial.SetColor("_BaseColor", Color.Lerp(startOcclusionColor, endOcclusionColor, GetInterpolatedFillAmount(fillAmount)));
+    }
+
+    private void UpdateAwakenessBarFillColor(float fillAmount)
+    {
+        float currentAlpha = UIManager.Instance.staminaBar.fillImage.color.a;
+        Color lerpedColor = Color.Lerp(startOcclusionColor, endOcclusionColor, GetInterpolatedFillAmount(fillAmount));
+        UIManager.Instance.staminaBar.fillImage.color = new Color(lerpedColor.r, lerpedColor.g, lerpedColor.b, currentAlpha);
     }
 
     private void UpdateCameraDistance(float fillAmount)
