@@ -14,11 +14,12 @@ namespace NPCs
         [SerializeField] public string defaultState;
         
         [HideInInspector] public NavMeshAgent agent;
+        private static int _spawnOrder = 0;
 
         public virtual void Awake()
         {
             agent = Utils.GetRequiredComponent<NavMeshAgent>(this);
-            agent.avoidancePriority = Random.Range(0, 99);
+            agent.avoidancePriority = _spawnOrder++ % 100;
         }
 
         public abstract void SetState(string newState);
