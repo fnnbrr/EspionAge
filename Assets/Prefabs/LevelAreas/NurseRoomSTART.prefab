@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 1367901250295069368}
   - component: {fileID: 1367901250295069369}
   m_Layer: 0
-  m_Name: BirdieRoom
+  m_Name: NurseRoomSTART
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,6 +69,7 @@ Transform:
   - {fileID: 5710637495928964303}
   - {fileID: 9203470550741445523}
   - {fileID: 7815645192133547901}
+  - {fileID: 2773532602973307423}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3456,6 +3457,29 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &57603077972134988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8960939207879678252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  Event: event:/Music/Tutorial Music
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 0
+  OverrideMaxDistance: 0
 --- !u!114 &1367901252145973804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3472,6 +3496,7 @@ MonoBehaviour:
   shakeCameraOnClose: 1
   DoorSqueak: event:/SFX/DoorSqueak
   DoorSlam: event:/SFX/DoorClose
+  TutorialMusic: {fileID: 57603077972134988}
 --- !u!114 &1367901252145973807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3934,6 +3959,86 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 27250249222716577, guid: 23facc39c8b1c6c4b8efdd1bbb3bd081,
     type: 3}
   m_PrefabInstance: {fileID: 1367901252002093207}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2950504751073765678
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1367901250295069374}
+    m_Modifications:
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -120.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 223.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1295857603365401484, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: m_Name
+      value: FMODChaseStartsParam
+      objectReference: {fileID: 0}
+    - target: {fileID: 4668625519037457657, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+        type: 3}
+      propertyPath: Emitters.Array.data[0].Target
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1c14e27323a0c9b4b9c2498e43f2b977, type: 3}
+--- !u!4 &2773532602973307423 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1049300528483986225, guid: 1c14e27323a0c9b4b9c2498e43f2b977,
+    type: 3}
+  m_PrefabInstance: {fileID: 2950504751073765678}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3575610898741435471
 PrefabInstance:
