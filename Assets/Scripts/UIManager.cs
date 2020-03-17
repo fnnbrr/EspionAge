@@ -100,6 +100,9 @@ public class UIManager : Singleton<UIManager>
         }
         isPaused = toPause;
         pauseMenu.gameObject.SetActive(toPause);
+
+        // Fixes bug where player can move again after pausing and un-pausing durind mid conversation
+        if (DialogueManager.Instance.RestrictMoveWhenConversing()) return;
         GameManager.Instance.GetPlayerController().EnablePlayerInput = !toPause;
     }
 }
