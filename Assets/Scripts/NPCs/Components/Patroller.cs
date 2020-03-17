@@ -12,7 +12,6 @@ namespace NPCs.Components
         public float stayTime;
     }
     
-    [RequireComponent(typeof(BaseAi))]
     public class Patroller : MonoBehaviour
     {
         public float movementSpeed = 6.0f;
@@ -24,22 +23,11 @@ namespace NPCs.Components
         private Quaternion curRotation;
         [HideInInspector] public float curStayTime = 1.0f;
 
-        private BaseAi baseAi;
-        private NavMeshAgent agent;
-
-        private void Awake()
-        {
-            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
-            agent = baseAi.agent;
-            
-            patrolWaypoints = new List<PatrolWaypoint>();
-        }
-
         public void SetPoints(List<PatrolWaypoint> newWaypoints)
         {
             patrolWaypoints = newWaypoints;
 
-            baseAi.agent.SetDestination(patrolWaypoints[0].position);
+            // agent.SetDestination(patrolWaypoints[0].position); TODO replace with Event
             curRotation = Quaternion.Euler(patrolWaypoints[0].rotation);
             curStayTime = patrolWaypoints[0].stayTime;
         }
@@ -48,11 +36,11 @@ namespace NPCs.Components
         {
             if (transform.rotation == curRotation)
             {
-                baseAi.ToggleAnimations(true);
+                // baseStateAi.ToggleAnimations(true); TODO replace with Event
                 return true;
             }
 
-            baseAi.ToggleAnimations(false);
+            // baseStateAi.ToggleAnimations(false); TODO replace with Event
             transform.rotation = Quaternion.RotateTowards(transform.rotation, curRotation, Time.deltaTime * rotationSpeed);
             return false;
         }
@@ -72,7 +60,7 @@ namespace NPCs.Components
                 newIndex = Utils.PingPong(destinationCount, patrolWaypoints.Count - 1);
             }
 
-            baseAi.agent.SetDestination(patrolWaypoints[newIndex].position);
+            // agent.SetDestination(patrolWaypoints[newIndex].position); TODO replace with Event
             curRotation = Quaternion.Euler(patrolWaypoints[newIndex].rotation);
             curStayTime = patrolWaypoints[newIndex].stayTime;
 

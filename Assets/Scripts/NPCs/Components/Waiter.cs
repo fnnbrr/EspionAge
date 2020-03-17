@@ -7,30 +7,20 @@ using Random = UnityEngine.Random;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(BaseAi))]
     public class Waiter : MonoBehaviour
     {
         private float waitTimer = 0f;
-
-        private BaseAi baseAi;
-        private NavMeshAgent agent;
-
-        private void Awake()
-        {
-            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
-            agent = baseAi.agent;
-        }
 
         public bool WaitComplete(float waitDuration=1.0f)
         {
             waitTimer += Time.deltaTime;
             if (waitTimer < waitDuration)
             {
-                baseAi.ToggleAnimations(false);
+                // baseStateAi.ToggleAnimations(false); TODO replace with Event
                 return false;
             }
 
-            baseAi.ToggleAnimations(true);
+            // baseStateAi.ToggleAnimations(true); TODO replace with Event
             waitTimer = 0f;
             return true;
         }

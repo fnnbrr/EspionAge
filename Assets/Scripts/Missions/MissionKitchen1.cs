@@ -60,7 +60,7 @@ public class MissionKitchen1 : AMission
     public List<MissionObject> missionObjects;
 
     private List<GameObject> instantiatedMissionInteractables;
-    private List<BaseAi> instantiatedEnemies;
+    private List<BaseNavAi> instantiatedEnemies;
     private int interactedCount = 0;
 
     private bool isRestarting = false;
@@ -72,7 +72,7 @@ public class MissionKitchen1 : AMission
         instantiatedMissionInteractables = new List<GameObject>();
 
         // TODO: this should probably be changed to a generic enemy type at some point
-        instantiatedEnemies = new List<BaseAi>();
+        instantiatedEnemies = new List<BaseNavAi>();
 
         if (missionCriticalInteractables.Count == 0)
         {

@@ -1,7 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using NPCs.Components;
 using UnityEngine;
+
+public enum BasicNurseStates
+{
+    Chasing,
+    Responding,
+    Searching,
+    Patrolling,
+}
 
 namespace NPCs
 {
@@ -10,16 +17,8 @@ namespace NPCs
     [RequireComponent(typeof(Searcher))]
     [RequireComponent(typeof(Patroller))]
     [RequireComponent(typeof(Waiter))]
-    public class BasicNurse : BaseAi
+    public class BasicNurse : BaseStateAi<BasicNurseStates>
     {
-        private static readonly HashSet<string> States = new HashSet<string>()
-        {
-            "Chasing",
-            "Responding",
-            "Searching",
-            "Patrolling",
-        };
-
         [HideInInspector] public Chaser chaser;
         [HideInInspector] public Responder responder;
         [HideInInspector] public Searcher searcher;
@@ -46,24 +45,24 @@ namespace NPCs
             SetState(currentState);
         }
 
-        public override void SetState(string newState)
+        protected override void SetState(BasicNurseStates newState)
         {
             switch (newState)
             {
-                case "Searching":
+                case BasicNurseStates.Searching:
                     agent.speed = searcher.movementSpeed;
                     questionMark.SetActive(true);
                     break;
-                case "Responding":
+                case BasicNurseStates.Responding:
                     agent.speed = responder.movementSpeed;
                     questionMark.SetActive(true);
                     searcher.ResetSearchPoint();
                     break;
-                case "Chasing":
+                case BasicNurseStates.Chasing:
                     agent.speed = chaser.movementSpeed;
                     questionMark.SetActive(false);
                     break;
-                case "Patrolling":
+                case BasicNurseStates.Patrolling:
                     agent.speed = patroller.movementSpeed;
                     questionMark.SetActive(false);
                     break;
@@ -83,18 +82,18 @@ namespace NPCs
             // Choose the next state/behavior when the agent reaches current destination.
             switch (currentState)
             {
-                case "Patrolling":
+                case BasicNurseStates.Patrolling:
                     if (!patroller.RotationComplete()) break;
                     if (!waiter.WaitComplete(patroller.curStayTime)) break;
                     patroller.GotoNextPatrolPoint();
                     break;
-                case "Chasing":
-                    SetState("Searching");
+                case BasicNurseStates.Chasing:
+                    SetState(BasicNurseStates.Searching);
                     break;
-                case "Responding":
-                    SetState("Searching");
+                case BasicNurseStates.Responding:
+                    SetState(BasicNurseStates.Searching);
                     break;
-                case "Searching":
+                case BasicNurseStates.Searching:
                     if (!waiter.WaitComplete()) break;
                     if (curNumSearches < numSearches)
                     {
@@ -104,7 +103,7 @@ namespace NPCs
                     else
                     {
                         curNumSearches = 0;
-                        SetState("Patrolling");
+                        SetState(BasicNurseStates.Patrolling);
                     }
                     break;
                 default:
@@ -112,7 +111,7 @@ namespace NPCs
             }
         }
 
-        public override void ToggleAnimations(bool toggle)
+        private void ToggleAnimations(bool toggle)
         {
             // TODO: for whoever adds in walking or other animations here:
             // I was thinking that toggle=false just turns off all animations (disable the animator?)

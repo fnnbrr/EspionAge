@@ -4,36 +4,27 @@ using UnityEngine.AI;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(BaseAi))]
     public class Responder : MonoBehaviour
     {
         public float movementSpeed = 8.0f;
         public Vector3 responsePoint;
 
-        private BaseAi baseAi;
-        private NavMeshAgent agent;
-
-        private void Awake()
-        {
-            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
-            agent = baseAi.agent;
-        }
 
         public void InitializeResponderParameters(Vector3 newResponsePoint)
         {
             responsePoint = newResponsePoint;
-            baseAi.SetState("Responding");
-            agent.SetDestination(responsePoint);
+            // baseNavAi.SetState("Responding"); TODO replace with Event
+            //baseNavAi.agent.SetDestination(responsePoint); TODO replace with Event
         }
         
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.gameObject.CompareTag("Noise") && agent.enabled) return;
+            if (!other.gameObject.CompareTag("Noise")) return;
             
             responsePoint = other.gameObject.transform.position;
-            agent.SetDestination(responsePoint);
+            // baseNavAi.agent.SetDestination(responsePoint); TODO replace with Event
             
-            baseAi.SetState("Responding");
+            // baseNavAi.SetState("Responding"); TODO replace with Event
         }
     }
 }

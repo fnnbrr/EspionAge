@@ -4,20 +4,20 @@ using Random = UnityEngine.Random;
 
 namespace NPCs.Components
 {
-    [RequireComponent(typeof(BaseAi))]
+    [RequireComponent(typeof(BaseNavAi))]
     public class Searcher : MonoBehaviour
     {
         public float movementSpeed = 5.0f;
         public Vector3 searchBoundsCenter;
         public float searchBoundsRadius = 15.0f;
 
-        private BaseAi baseAi;
+        private BaseNavAi baseNavAi;
         private NavMeshAgent agent;
 
         private void Awake()
         {
-            baseAi = Utils.GetRequiredComponent<BaseAi>(this);
-            agent = baseAi.agent;
+            baseNavAi = Utils.GetRequiredComponent<BaseNavAi>(this);
+            agent = baseNavAi.agent;
         }
 
         public void GotoNextSearchPoint()

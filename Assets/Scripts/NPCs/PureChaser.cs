@@ -3,8 +3,14 @@ using UnityEngine;
 
 namespace NPCs
 {
+    public enum PureChaserStates
+    {
+        // Can add to & actually use this if we refactor PureChaser
+        Chasing,
+    }
+    
     [RequireComponent(typeof(Chaser))]
-    public class PureChaser : BaseAi
+    public class PureChaser : BaseStateAi<PureChaserStates>
     {
         public float startChaseRadius = 100f;
         
@@ -48,13 +54,7 @@ namespace NPCs
             }
         }
 
-        public override void SetState(string newState)
-        {
-            // Ignore unless you want to refactor PureChaser later on
-            throw new System.NotImplementedException();
-        }
-        
-        public override void ToggleAnimations(bool toggle)
+        protected override void SetState(PureChaserStates newState)
         {
             // Ignore unless you want to refactor PureChaser later on
             throw new System.NotImplementedException();
