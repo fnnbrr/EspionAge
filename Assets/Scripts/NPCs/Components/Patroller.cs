@@ -1,20 +1,25 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace NPCs.Components
 {
+    [System.Serializable]
+    public class PatrolWaypoint
+    {
+        public Vector3 position;
+        public Vector3 rotation;
+        public float stayTime;
+    }
+    
     [RequireComponent(typeof(BaseAi))]
     public class Patroller : MonoBehaviour
     {
         public float movementSpeed = 6.0f;
         public float rotationSpeed = 180.0f;
 
-        private List<Vector3> patrolPositions;
-        private List<Quaternion> patrolRotations;
-        private List<float> patrolStayTimes;
-        
+        private List<PatrolWaypoint> patrolWaypoints;
+
         private int destinationCount;
         private Quaternion curRotation;
         [HideInInspector] public float curStayTime = 1.0f;
@@ -27,25 +32,16 @@ namespace NPCs.Components
             baseAi = Utils.GetRequiredComponent<BaseAi>(this);
             agent = baseAi.agent;
             
-            patrolPositions = new List<Vector3>();
-            patrolRotations = new List<Quaternion>();
-            patrolStayTimes = new List<float>();
+            patrolWaypoints = new List<PatrolWaypoint>();
         }
 
-        public void SetPoints(List<Vector3> newPositions, List<Vector3> newRotations, List<float> newStayTimes)
+        public void SetPoints(List<PatrolWaypoint> newWaypoints)
         {
-            patrolPositions = new List<Vector3>(newPositions);
-            patrolRotations = newRotations.Select(i => Quaternion.Euler(i.x, i.y, i.z)).ToList();
-            patrolStayTimes = new List<float>(newStayTimes);
+            patrolWaypoints = newWaypoints;
 
-            if (patrolPositions.Count != patrolRotations.Count  || patrolPositions.Count != patrolStayTimes.Count)
-            {
-                throw new UnityException("Patroller passed waypoint information of differing lengths");
-            }
-
-            baseAi.agent.SetDestination(patrolPositions[0]);
-            curRotation = patrolRotations[0];
-            curStayTime = patrolStayTimes[0];
+            baseAi.agent.SetDestination(patrolWaypoints[0].position);
+            curRotation = Quaternion.Euler(patrolWaypoints[0].rotation);
+            curStayTime = patrolWaypoints[0].stayTime;
         }
 
         public bool RotationComplete()
@@ -64,21 +60,21 @@ namespace NPCs.Components
         public void GotoNextPatrolPoint(bool loop=true)
         {
             // Returns if only the starting position is present
-            if (patrolPositions.Count < 2) return;
+            if (patrolWaypoints.Count < 2) return;
 
             int newIndex;
             if (loop)
             {
-                newIndex = destinationCount % patrolPositions.Count;
+                newIndex = destinationCount % patrolWaypoints.Count;
             }
             else
             {
-                newIndex = Utils.PingPong(destinationCount, patrolPositions.Count - 1);
+                newIndex = Utils.PingPong(destinationCount, patrolWaypoints.Count - 1);
             }
 
-            agent.SetDestination(patrolPositions[newIndex]);
-            curRotation = patrolRotations[newIndex];
-            curStayTime = patrolStayTimes[newIndex];
+            baseAi.agent.SetDestination(patrolWaypoints[newIndex].position);
+            curRotation = Quaternion.Euler(patrolWaypoints[newIndex].rotation);
+            curStayTime = patrolWaypoints[newIndex].stayTime;
 
             destinationCount++;
         }

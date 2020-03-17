@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Cinemachine;
 using NPCs;
+using NPCs.Components;
 
 [System.Serializable]
 public class MissionCriticalInteractable : MissionObject
@@ -15,14 +16,6 @@ public class MissionCriticalInteractable : MissionObject
 [System.Serializable]
 public class MissionEnemy
 {
-    [System.Serializable]
-    public class EnemyWaypoint
-    {
-        public Vector3 position;
-        public Vector3 rotation;
-        public float stayTime = 1.0f;
-    }
-
     [System.Serializable]
     public class ChaserWanderBounds
     {
@@ -43,7 +36,7 @@ public class MissionEnemy
     public bool isInitiallyResponding = false;
 
     [Header("Specific Patroller Settings")]
-    public List<EnemyWaypoint> waypoints;
+    public List<PatrolWaypoint> waypoints;
 
     [Header("Specific Chaser Settings")]
     public Vector3 startResponsePoint;
@@ -155,9 +148,7 @@ public class MissionKitchen1 : AMission
                 enemyComponent.chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 enemyComponent.chaser.OnCollideWithPlayer += OnCollideWithPlayer;
                 
-                enemyComponent.patroller.SetPoints(enemy.waypoints.Select(waypoint => waypoint.position).ToList(), 
-                                                   enemy.waypoints.Select(waypoint => waypoint.rotation).ToList(),
-                                                   enemy.waypoints.Select(waypoint => waypoint.stayTime).ToList());
+                enemyComponent.patroller.SetPoints(enemy.waypoints);
                 if (enemy.isInitiallyResponding)
                 {
                     enemyComponent.responder.InitializeResponderParameters(enemy.startResponsePoint);
