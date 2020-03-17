@@ -48,7 +48,7 @@ public class MovementController : MonoBehaviour
     {
         if (currentMovementAxisInitialized && CameraManager.Instance.GetActiveCamera() != null)
         {
-            currentMovementAxis = CameraManager.Instance.GetActiveCameraTransform().transform.forward;
+            currentMovementAxis = CameraManager.Instance.brain.transform.forward;
         }
     }
 
