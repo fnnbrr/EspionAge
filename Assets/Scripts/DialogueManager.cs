@@ -23,7 +23,7 @@ public class SpeakerContainer
 public class ActiveConversation
 {
     public Conversation conversation;
-    public Coroutine coroutine;
+    public Coroutine mainCoroutine;
     public Coroutine typingCoroutine;
     public int activeLineIndex;
     public bool isTyping;
@@ -33,7 +33,6 @@ public class ActiveConversation
 
     public ActiveConversation(Conversation _conversation)
     {
-        conversation = _conversation;
         activeLineIndex = 0;
         isTyping = false;
         isAutoPlaying = false;
@@ -43,7 +42,7 @@ public class ActiveConversation
 
     public void SetCoroutine(Coroutine _coroutine)
     {
-        coroutine = _coroutine;
+        mainCoroutine = _coroutine;
     }
 
     public void SetTypingCoroutine(Coroutine _coroutine)
@@ -51,12 +50,12 @@ public class ActiveConversation
         typingCoroutine = _coroutine;
     }
 
-    public void ResetIndex()
+    public void ResetActiveLineIndex()
     {
         activeLineIndex = 0;
     }
 
-    public void IncrementIndex()
+    public void IncrementActiveLineIndex()
     {
         activeLineIndex++;
     }
@@ -69,7 +68,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private int startFrame;
 
     private bool isAdvancing;
-    private bool convoAllowMovement = true;
+    private bool convoAllowInput = true;
 
     private Conversation advancingConversation;
 
@@ -108,7 +107,7 @@ public class DialogueManager : Singleton<DialogueManager>
         // Using Time.frameCount != startFrame because of an issue of skipping the first convo when beginning interaction
         // This happened because it the getdown of interacting and skipping happened in the same frame
         // Should be only able to advance the advancing conversation
-        if (advancingConversation != null)
+        if (CheckIsAdvancing())
         {
             if (activeConversations[advancingConversation].isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN) && Time.frameCount != startFrame)
             {
@@ -134,13 +133,8 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         startFrame = Time.frameCount;
 
-        // Get all speakers from the convo
-        List<string> convoSpeakers = conversation.GetAllSpeakers();
-
-        StopAllConversations(convoSpeakers);
-
-        ActiveConversation startedConvo = new ActiveConversation(conversation);
-        activeConversations.Add(conversation, startedConvo);
+        StopAllConversations(conversation.GetAllSpeakers());
+        activeConversations.Add(conversation, new ActiveConversation(conversation));
 
         if (conversation.autoplayConversation)
         {
@@ -151,7 +145,7 @@ public class DialogueManager : Singleton<DialogueManager>
         // There should only be one conversation being forwarded
         else
         {
-            // Stop any currently advancing conversations
+            // Stop currently advancing conversation
             if(advancingConversation != null)
             {
                 FinishConversation(advancingConversation);
@@ -160,8 +154,7 @@ public class DialogueManager : Singleton<DialogueManager>
             StartAdvancing();
             advancingConversation = conversation;
 
-            GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-            convoAllowMovement = false;
+            AllowPlayerInput(false);
 
             AdvanceConversation(conversation);
         }
@@ -196,8 +189,7 @@ public class DialogueManager : Singleton<DialogueManager>
             FinishConversation(conversation);
 
             // Unfreeze player when done
-            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
-            convoAllowMovement = true;
+            AllowPlayerInput(true);
         }
     }
 
@@ -218,7 +210,7 @@ public class DialogueManager : Singleton<DialogueManager>
         if (shouldShowLine)
         {
             SetDialogueLine(conversation);
-            activeConversations[conversation].IncrementIndex();
+            activeConversations[conversation].IncrementActiveLineIndex();
         }
 
         return shouldShowLine;
@@ -285,9 +277,9 @@ public class DialogueManager : Singleton<DialogueManager>
 
         // Stop any coroutines that are part of the conversation
         // Null checks are done to be super safe just incase coroutines have not been set
-        if (activeConversations[conversation].coroutine != null)
+        if (activeConversations[conversation].mainCoroutine != null)
         {
-            StopCoroutine(activeConversations[conversation].coroutine);
+            StopCoroutine(activeConversations[conversation].mainCoroutine);
         }
         if (activeConversations[conversation].typingCoroutine != null)
         {
@@ -323,17 +315,18 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public bool IsActiveConversation(Conversation conversation)
     {
-        if(conversation == null)
-        {
-            return false;
-        }
+        return conversation != null && activeConversations.ContainsKey(conversation);
+    }
 
-        return activeConversations.ContainsKey(conversation);
+    private void AllowPlayerInput(bool allowInput)
+    {
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = allowInput;
+        convoAllowInput = allowInput;
     }
 
     public bool RestrictMoveWhenConversing()
     {
-        return !convoAllowMovement && CheckIsAdvancing();
+        return !convoAllowInput && CheckIsAdvancing();
     }
 
     public bool CheckIsAdvancing()

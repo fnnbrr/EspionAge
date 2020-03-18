@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using System.Linq;
 
 [System.Serializable]
 public struct Line
@@ -22,16 +23,6 @@ public class Conversation : ScriptableObject
 
     public List<string> GetAllSpeakers()
     {
-        List<string> allSpeakers = new List<string>();
-
-        foreach(Line line in lines)
-        {
-            if(!allSpeakers.Contains(line.id))
-            {
-                allSpeakers.Add(line.id);
-            }
-        }
-
-        return allSpeakers;
+        return lines.Select(line => line.id).Distinct().ToList();
     }
 }

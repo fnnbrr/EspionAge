@@ -47,6 +47,7 @@ public class NPCInteractable : Interactable
 {
     public Conversation conversation;
 
+    [ValidateInput("IsGreaterEqualThanInteractRadius", "boundaryRadius must be greater than or equal to interactRadius")]
     public float boundaryRadius = Constants.INTERACT_BOUNDARY_RADIUS;
 
     public List<Conversation> defaultConvos;
@@ -104,7 +105,6 @@ public class NPCInteractable : Interactable
         // Ensure player cannot interact with another character if already advancing a conversation
         if (!DialogueManager.Instance.CheckIsAdvancing() && !conversation.autoplayConversation && !conversation.autoInitiate)
         {
-            Debug.Log("going into update");
             base.Update();
         }
     }
@@ -322,6 +322,11 @@ public class NPCInteractable : Interactable
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
         StartCoroutine(RotateAnimation(gameObject, rotation, GameManager.Instance.GetMovementController().turnSpeed));
+    }
+
+    private bool IsGreaterEqualThanInteractRadius(float value)
+    {
+        return value >= interactRadius;
     }
 
 
