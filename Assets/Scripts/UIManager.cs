@@ -20,6 +20,22 @@ public class UIManager : Singleton<UIManager>
 
     private bool isPaused = false;
 
+    private bool _canPause = true;
+    public bool CanPause
+    { 
+        get { return _canPause; }
+        set 
+        {
+            // should never happen, but if we set CanPause to false, but are aleady paused...
+            //  this should unpause the game first so we are not stuck in the pause screen
+            if (!value && isPaused)
+            {
+                PauseGame(false);
+            }
+            _canPause = value; 
+        }
+    }
+
     public delegate void FadingComplete();
     public event FadingComplete OnFadingComplete;
 
@@ -90,6 +106,8 @@ public class UIManager : Singleton<UIManager>
 
     public void PauseGame(bool toPause)
     {
+        if (!CanPause) return;
+
         if (toPause)
         {
             Time.timeScale = 0f;
