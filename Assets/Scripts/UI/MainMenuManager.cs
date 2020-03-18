@@ -24,15 +24,13 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
     public new UIMainMenuButtonData[] buttonData;  // REQUIRED OVERRIDE HERE
 
     public Light mainLight;
-    public Renderer lightBulbRenderer;
+    public Animator lightBulbAnimator;
     [FMODUnity.EventRef]
     public string LightSFX;
 
     [Header("Camera Switching")]
     public List<CinemachineVirtualCamera> onPressPlayCameras;
 
-    private Material lightBulbMaterial;
-    private Color lightBulbStartColor;
     private bool isStarting;
 
     [Serializable]
@@ -67,9 +65,6 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
 
         previousButton = EMainMenuButton.None;
         currentButton = EMainMenuButton.None;
-
-        lightBulbMaterial = lightBulbRenderer.material;
-        lightBulbStartColor = lightBulbMaterial.GetColor("_EmissionColor");
     }
 
     protected override bool ShouldUpdate()
@@ -84,11 +79,11 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
         switch (mainMenuButton)
         {
             case EMainMenuButton.Start:
-                mainLight.enabled = false;
+                lightBulbAnimator.SetBool(Constants.ANIMATION_MAINMENU_LIGHTBULB_FLICKER, true);
                 FMODUnity.RuntimeManager.PlayOneShot(LightSFX, transform.position);
                 break;
             case EMainMenuButton.Quit:
-                lightBulbMaterial.SetColor("_EmissionColor", Color.red);
+                lightBulbAnimator.SetBool(Constants.ANIMATION_MAINMENU_LIGHTBULB_RED, true);
                 break;
             default:
                 break;
@@ -102,10 +97,10 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
         switch (mainMenuButton)
         {
             case EMainMenuButton.Start:
-                mainLight.enabled = true;
+                lightBulbAnimator.SetBool(Constants.ANIMATION_MAINMENU_LIGHTBULB_FLICKER, false);
                 break;
             case EMainMenuButton.Quit:
-                lightBulbMaterial.SetColor("_EmissionColor", lightBulbStartColor);
+                lightBulbAnimator.SetBool(Constants.ANIMATION_MAINMENU_LIGHTBULB_RED, false);
                 break;
             default:
                 break;
@@ -115,6 +110,10 @@ public class MainMenuManager : UIMenuStatic<EMainMenuButton>
     public void HandlePressStart()
     {
         isStarting = true;
+
+        mainLight.enabled = false;
+        lightBulbAnimator.SetBool(Constants.ANIMATION_MAINMENU_LIGHTBULB_FLICKER, false);
+        lightBulbAnimator.SetBool(Constants.ANIMATION_MAINMENU_LIGHTBULB_RED, false);
 
         if (onPressPlayCameras.Count > 0)
         {
