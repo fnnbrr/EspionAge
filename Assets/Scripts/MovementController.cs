@@ -44,14 +44,6 @@ public class MovementController : MonoBehaviour
         OnMovementChange += UpdateMovementAxis;
     }
 
-    private void UpdateMovementAxis()
-    {
-        if (currentMovementAxisInitialized && CameraManager.Instance.GetActiveCamera() != null)
-        {
-            currentMovementAxis = CameraManager.Instance.GetActiveCameraTransform().transform.forward;
-        }
-    }
-
     private void Update()
     {
         if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
@@ -67,6 +59,19 @@ public class MovementController : MonoBehaviour
         {
             currentMovementAxis = CameraManager.Instance.GetActiveCameraTransform().forward;
             currentMovementAxisInitialized = true;
+        }
+    }
+
+    public void ResetVelocity()
+    {
+        rb.velocity = Vector3.zero;
+    }
+
+    private void UpdateMovementAxis()
+    {
+        if (currentMovementAxisInitialized && CameraManager.Instance.GetActiveCamera() != null)
+        {
+            currentMovementAxis = CameraManager.Instance.brain.transform.forward;
         }
     }
 

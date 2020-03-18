@@ -267,6 +267,7 @@ public class MissionKitchen1 : AMission
             UIManager.Instance.FadeIn();
             isRestarting = false;
         }
+        GameManager.Instance.GetMovementController().ResetVelocity();
     }
 
     private void OnBackInKichenDoCollectedCutscene(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
