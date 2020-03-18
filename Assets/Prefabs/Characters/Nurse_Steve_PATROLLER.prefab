@@ -290,6 +290,7 @@ MonoBehaviour:
   searcher: {fileID: 0}
   patroller: {fileID: 0}
   waiter: {fileID: 0}
+  numSearches: 3
   questionMark: {fileID: 5902039246049778213}
 --- !u!114 &8399060607170567938
 MonoBehaviour:
@@ -304,7 +305,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
-  numSearches: 3
   searchPosition: {x: 0, y: 0, z: 0}
   searchRadius: 15
 --- !u!114 &8040559180144460867
@@ -320,6 +320,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 10
+  reacquireInterval: 0.1
+  isChasing: 0
 --- !u!114 &-7711432056760366613
 MonoBehaviour:
   m_ObjectHideFlags: 0

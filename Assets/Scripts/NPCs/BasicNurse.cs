@@ -48,6 +48,7 @@ namespace NPCs
         {
             chaser.OnSeePlayer += () => SetState(BasicNurseStates.Chasing);
             chaser.OnLosePlayer += () => nextState = BasicNurseStates.Searching; SetState(BasicNurseStates.Waiting);
+            chaser.OnReacquireTarget += () => agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
             responder.OnStartResponding += () => SetState(BasicNurseStates.Responding);
             patroller.OnRotationComplete += () => SetState(BasicNurseStates.Waiting);
             waiter.OnWaitComplete += () => SetState(nextState);
@@ -187,14 +188,6 @@ namespace NPCs
                 
                 default:
                     throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            if (currentState == BasicNurseStates.Chasing && chaser.isChasing)
-            {
-                agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
             }
         }
 
