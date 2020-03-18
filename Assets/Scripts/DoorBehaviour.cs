@@ -56,7 +56,6 @@ public class DoorBehaviour : MonoBehaviour
             {
                 OnDoorOpen?.Invoke();
                 FMODUnity.RuntimeManager.PlayOneShot(DoorSqueak, transform.position);
-                Debug.Log("Played FMOD");
                 isClosed = false;
             }
         }
