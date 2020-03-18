@@ -38,7 +38,7 @@ public class ActiveConversation
         isTyping = false;
         isAutoPlaying = false;
         skipRequest = false;
-        waitingForNext = false;
+        waitingForNext = true;
 }
 
     public void SetCoroutine(Coroutine _coroutine)
@@ -114,7 +114,6 @@ public class DialogueManager : Singleton<DialogueManager>
             {
                 activeConversations[advancingConversation].skipRequest = true;
                 activeConversations[advancingConversation].waitingForNext = false;
-                Debug.Log("trying to skip: ");
             }
         }
     }
@@ -165,7 +164,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     void StopAllConversations(List<string> convoSpeakers)
     {
-        List<Coroutine> coroutinesToStop = new List<Coroutine>();
         List<Conversation> conversationsToStop = new List<Conversation>();
 
         // Stop any conversations that are currently happening (check current advancing convo and all autoplaying convos)
@@ -175,24 +173,14 @@ public class DialogueManager : Singleton<DialogueManager>
             {
                 if (convo.Key.GetAllSpeakers().Contains(speaker) && !conversationsToStop.Contains(convo.Key))
                 {
-                    if (convo.Value.coroutine != null && !coroutinesToStop.Contains(convo.Value.coroutine))
-                    {
-                        coroutinesToStop.Add(convo.Value.coroutine);
-                    }
-
                     conversationsToStop.Add(convo.Key);
                 }
             }
         }
 
-        foreach (Coroutine coroutine in coroutinesToStop)
-        {
-            StopCoroutine(coroutine);
-        }
-
         foreach (Conversation convo in conversationsToStop)
         {
-            activeConversations.Remove(convo);
+            FinishConversation(convo);
         }
 
     }
@@ -264,7 +252,6 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             if (activeConversations[conversation].skipRequest)
             {
-                Debug.Log("skip request Completed");
                 activeConversations[conversation].skipRequest = false;
                 currentCharIndex = text.Length;
             }
@@ -275,14 +262,11 @@ public class DialogueManager : Singleton<DialogueManager>
             textMesh.text = text.Substring(0, currentCharIndex);
             yield return new WaitForSeconds(charTypeSpeed);
         }
-        Debug.Log("waiting now");
         activeConversations[conversation].waitingForNext = true;
         while (activeConversations[conversation].waitingForNext)
         {
-            Debug.Log("waitingForNext: " + activeConversations[conversation].waitingForNext);
             yield return new WaitForFixedUpdate();
         }
-        Debug.Log("go to next line");
 
         textMesh.text = string.Empty;
 
@@ -295,13 +279,23 @@ public class DialogueManager : Singleton<DialogueManager>
     private void FinishConversation(Conversation conversation)
     {
         HideAllSpeakers(conversation);
-        StopCoroutine(activeConversations[conversation].typingCoroutine);
+
+        // Stop any coroutines that are part of the conversation
+        if (activeConversations[conversation].coroutine != null)
+        {
+            StopCoroutine(activeConversations[conversation].coroutine);
+        }
+
+        if (activeConversations[conversation].typingCoroutine != null)
+        {
+            StopCoroutine(activeConversations[conversation].typingCoroutine);
+        }
+
         activeConversations.Remove(conversation);
         Debug.Log("Removed:  " + activeConversations.Count);
 
         if (advancingConversation == conversation)
         {
-            Debug.Log("end advancing convo");
             EndAdvancing();
         }
     }

@@ -100,7 +100,7 @@ public class NPCInteractable : Interactable
             }
 
             // Ensure player cannot interact with another character if already advancing a conversation
-            if (!DialogueManager.Instance.CheckIsAdvancing())
+            if (!DialogueManager.Instance.CheckIsAdvancing() && !conversation.autoplayConversation && !conversation.autoInitiate)
             {
                 base.Update();
             }
