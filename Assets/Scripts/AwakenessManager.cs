@@ -15,6 +15,8 @@ public class AwakenessManager : Singleton<AwakenessManager>
     public float saturationMultiplier = -100f;
     public float contrastMultiplier = 10f;
     public float brightnessMultiplier = -0.5f;
+    public float chromaticAberrationMultiplier = 0.25f;
+    public float filmGrainMultiplier = 0.5f;
 
     [Header("Movement Buffs")]
     public float movementSpeedBuff = 5f;
@@ -33,6 +35,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
     private MotionBlur motionBlur;
     private FilmGrain filmGrain;
     private ColorAdjustments colorAdjustments;
+    private ChromaticAberration chromaticAberration;
 
     private float startExposure;
     private float startContrast;
@@ -43,6 +46,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
         globalVolume.profile.TryGet(out motionBlur);
         globalVolume.profile.TryGet(out filmGrain);
         globalVolume.profile.TryGet(out colorAdjustments);
+        globalVolume.profile.TryGet(out chromaticAberration);
 
         startExposure = colorAdjustments.postExposure.value;
         startContrast = colorAdjustments.contrast.value;
@@ -50,6 +54,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
         UIManager.Instance.staminaBar.OnChange += UpdateVignette;
         //UIManager.Instance.staminaBar.OnChange += UpdateMotionBlur;
         UIManager.Instance.staminaBar.OnChange += UpdateFilmGrain;
+        UIManager.Instance.staminaBar.OnChange += UpdateChromaticAberration;
         UIManager.Instance.staminaBar.OnChange += UpdateColorGrading;
         UIManager.Instance.staminaBar.OnChange += UpdateCameraDistance;
         UIManager.Instance.staminaBar.OnChange += UpdatePlayerAnimation;
@@ -124,7 +129,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private void UpdateFilmGrain(float fillAmount)
     {
-        filmGrain.intensity.value = GetInterpolatedFillAmount(fillAmount);
+        filmGrain.intensity.value = filmGrainMultiplier * GetInterpolatedFillAmount(fillAmount);
     }
 
     private void UpdateColorGrading(float fillAmount)
@@ -150,6 +155,11 @@ public class AwakenessManager : Singleton<AwakenessManager>
         float currentAlpha = UIManager.Instance.staminaBar.fillImage.color.a;
         Color lerpedColor = Color.Lerp(emptyColor, fullColor, GetInterpolatedFillAmount(fillAmount));
         UIManager.Instance.staminaBar.fillImage.color = new Color(lerpedColor.r, lerpedColor.g, lerpedColor.b, currentAlpha);
+    }
+
+    private void UpdateChromaticAberration(float fillAmount)
+    {
+        chromaticAberration.intensity.value = chromaticAberrationMultiplier * GetInterpolatedFillAmount(fillAmount);
     }
 
     private void UpdateCameraDistance(float fillAmount)
