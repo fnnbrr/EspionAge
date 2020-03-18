@@ -801,6 +801,7 @@ MonoBehaviour:
   canvas: {fileID: 7185473039910826158}
   characterName: {fileID: 8567942562175942774}
   conversationText: {fileID: 4161434416140384690}
+  extraXPadding: 20
 --- !u!114 &5039089060021181399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -820,9 +821,11 @@ MonoBehaviour:
   saturationMultiplier: -100
   contrastMultiplier: 10
   brightnessMultiplier: -0.5
-  movementController: {fileID: 5395218959478522881}
   movementSpeedBuff: 5
   turnSpeedBuff: 5
+  occlusionMaterial: {fileID: 2100000, guid: 81d08de6be64130499ba9353a7bcca5a, type: 2}
+  startOcclusionColor: {r: 1, g: 0, b: 0, a: 1}
+  endOcclusionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomInAmount: 20
 --- !u!1 &3418821350365183018
 GameObject:
@@ -1956,12 +1959,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3523627329398201330}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &7185473039910826159 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3523627329398201330}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &9041373143426380379 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5593216317928565161, guid: c819a38dde8924f49a4bf8b5448e832a,
@@ -1998,3 +1995,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &7185473039910826159 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
+    type: 3}
+  m_PrefabInstance: {fileID: 3523627329398201330}
+  m_PrefabAsset: {fileID: 0}
