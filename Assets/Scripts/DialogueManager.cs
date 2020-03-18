@@ -152,6 +152,11 @@ public class DialogueManager : Singleton<DialogueManager>
         else
         {
             // Stop any currently advancing conversations
+            if(advancingConversation != null)
+            {
+                FinishConversation(advancingConversation);
+            }
+
             StartAdvancing();
             advancingConversation = conversation;
 
@@ -204,7 +209,6 @@ public class DialogueManager : Singleton<DialogueManager>
         }
 
         FinishConversation(conversation);
-        activeConversations.Remove(conversation);
     }
 
     private bool ContinueConversation(Conversation conversation)
