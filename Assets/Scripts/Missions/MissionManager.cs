@@ -277,10 +277,19 @@ public class MissionManager : Singleton<MissionManager>
         if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
 
         GameObject instantiatedCutsceneText = Instantiate(cutsceneTextPrefab, UIManager.Instance.mainUICanvas.transform);
+        instantiatedCutsceneText.transform.SetAsFirstSibling();  // this way, it will be covered by all other UI elements, like the pause menu
         Animator textAnimator = Utils.GetRequiredComponentInChildren<Animator>(instantiatedCutsceneText);
         float textAnimationLength = textAnimator.GetCurrentAnimatorStateInfo(0).length;
 
-        yield return new WaitForSecondsRealtime(textAnimationLength);
+        // wait the appropriate amount of scaled seconds according to the update type of the animation we have
+        if (textAnimator.updateMode == AnimatorUpdateMode.UnscaledTime)
+        {
+            yield return new WaitForSecondsRealtime(textAnimationLength);
+        }
+        else
+        {
+            yield return new WaitForSeconds(textAnimationLength);
+        }
         Destroy(instantiatedCutsceneText);
     }
 
