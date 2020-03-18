@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Cinemachine;
 using NaughtyAttributes;
+using NPCs;
 
 public class MissionTutorial : AMission
 {
@@ -48,8 +49,12 @@ public class MissionTutorial : AMission
     [Header("Misc. Objects")]
     public List<MissionObject> extraObjects;
 
+    [Header("FMOD Audio")]
+    private FMODUnity.StudioEventEmitter musicEv;
+
     private bool startCutscenePlayed = false;
     private bool respawning = false;
+    private bool missionCompleting = false;
 
     private List<SpawnedEnemy> spawnedEnemies;
 
@@ -81,13 +86,13 @@ public class MissionTutorial : AMission
     public class SpawnedEnemy
     {
         public GameObject gameObject;
-        public PureChaser chaser;
+        public PureChaser pureChaser;
         public TutorialChaserGroup chaserGroup;
 
         public SpawnedEnemy(GameObject o, PureChaser c, TutorialChaserGroup g)
         {
             gameObject = o;
-            chaser = c;
+            pureChaser = c;
             chaserGroup = g;
         }
     }
@@ -113,6 +118,7 @@ public class MissionTutorial : AMission
         spawnedVases = new List<SpawnedVase>();
         spawnedBrokenVases = new List<GameObject>();
         spawnedEnemies = new List<SpawnedEnemy>();
+        musicEv = GetComponent<FMODUnity.StudioEventEmitter>();
     }
 
     protected override void Initialize()
@@ -145,12 +151,19 @@ public class MissionTutorial : AMission
 
     private void CommenceCompleteMission()
     {
+        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough -= CommenceCompleteMission;
+
+        if (missionCompleting) return;
+        missionCompleting = true;
+
+        FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 1f);
+
         spawnedEnemies.ForEach(e =>
         {
             // Send back all enemies to around the area of their start (mostly to get them off camera)
-            e.chaser.targetTransform = null;
-            e.chaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
-            e.chaser.OnReachDestination += HandleEnemyReachedStartPoint;
+            e.pureChaser.targetTransform = null;
+            e.pureChaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
+            e.pureChaser.OnReachDestination += HandleEnemyReachedStartPoint;
         });
     }
     private void HandleEnemyReachedStartPoint()
@@ -161,10 +174,12 @@ public class MissionTutorial : AMission
 
     private IEnumerator StartMissionLogic()
     {
+        UIManager.Instance.CanPause = false;
         foreach (string text in startCutsceneTexts)
         {
             yield return UIManager.Instance.textOverlay.SetText(text);
         }
+        UIManager.Instance.CanPause = true;
 
         // Fade in, and start typing the correct region name from this point
         CameraZone currentZone = RegionManager.Instance.GetCurrentZone();
@@ -185,6 +200,8 @@ public class MissionTutorial : AMission
         {
             RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
 
+            musicEv.Play();
+
             startCutscenePlayed = true;
             firstVase.loudObject.Drop();
             firstVase.breakableObject.OnBreak += StartVaseFocus;
@@ -199,6 +216,7 @@ public class MissionTutorial : AMission
     private IEnumerator VaseCutsceneCoroutine(GameObject focusObject)
     {
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        UIManager.Instance.CanPause = false;
         UIManager.Instance.staminaBar.overrideValue = true;
         UIManager.Instance.staminaBar.overrideTo = 0f;
         CinemachineVirtualCamera currentCamera = CameraManager.Instance.GetActiveVirtualCamera();
@@ -213,6 +231,7 @@ public class MissionTutorial : AMission
         yield return StartCoroutine(MissionManager.Instance.PlayCutscenePart(currentCamera, enemyFocusCameraPrefab, enemyCutsceneText, spawnedEnemies[0].gameObject.transform, doHardBlend: true));
         ResetEnemySpeed();  // reset to assigned speeds
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+        UIManager.Instance.CanPause = true;
         UIManager.Instance.staminaBar.OnLightningEnabled += StartSpecialAbilityTutorial;
         UIManager.Instance.staminaBar.overrideValue = false;
 
@@ -232,9 +251,11 @@ public class MissionTutorial : AMission
     private IEnumerator DisplaySpecialAbilityTutorial()
     {
         Time.timeScale = 0f;
+        UIManager.Instance.CanPause = false;
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
         yield return StartCoroutine(MissionManager.Instance.PlayCutsceneText(specialAbilityPointerUIAnimation));
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+        UIManager.Instance.CanPause = true;
         Time.timeScale = 1f;
     }
 
@@ -250,7 +271,7 @@ public class MissionTutorial : AMission
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 chaser.SetSpeed(group.chaseSpeed);
                 chaser.startChaseRadius = group.startChaseRadius;
-                chaser.OnCollideWithPlayer += RestartAfterCutscene;
+                chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
 
                 spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group));
             });
@@ -266,15 +287,6 @@ public class MissionTutorial : AMission
         });
     }
 
-    private void SetEnemySpeed(float speed)
-    {
-        spawnedEnemies.ForEach(enemy =>
-        {
-            PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemy.gameObject);
-            chaser.SetSpeed(speed);
-        });
-    }
-
     private void ResetEnemySpeed()
     {
         spawnedEnemies.ForEach(enemy =>
@@ -287,7 +299,7 @@ public class MissionTutorial : AMission
 
     private void RestartAfterCutscene()
     {
-        if (!respawning)
+        if (!respawning && !missionCompleting)
         {
             respawning = true;
             StartCoroutine(RestartAfterCutsceneCoroutine());
@@ -300,6 +312,7 @@ public class MissionTutorial : AMission
         yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
         GameManager.Instance.GetPlayerTransform().position = playerRespawnPosition;
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(playerRespawnRotation);
+        GameManager.Instance.GetMovementController().ResetVelocity();
         UIManager.Instance.staminaBar.ResetAwakeness();
 
         // would be weird if it disappeared, but the first vase should still be destroyed at this point

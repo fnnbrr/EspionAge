@@ -26,13 +26,7 @@ public class FMODRadio : MonoBehaviour
         if (isPlaying)
         {
             musicEv.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            isPlaying = false;
-        }
-
-        if (!isPlaying)
-        {
             musicEv.start();
-            isPlaying = true;
         }
     }
 }
