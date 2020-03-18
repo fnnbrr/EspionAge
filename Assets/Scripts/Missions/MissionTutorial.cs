@@ -127,7 +127,12 @@ public class MissionTutorial : AMission
         // Force fade out
         UIManager.Instance.InstantFadeOut();
 
+        // Init some general vars
+        UIManager.Instance.CanPause = false;
+
         // Move player to a set position
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        GameManager.Instance.GetPlayerRigidbody().isKinematic = true;
         GameManager.Instance.GetPlayerTransform().position = playerStartPosition;
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(playerStartRotation);
 
@@ -173,21 +178,22 @@ public class MissionTutorial : AMission
 
     private IEnumerator StartMissionLogic()
     {
-        UIManager.Instance.CanPause = false;
         foreach (string text in startCutsceneTexts)
         {
             yield return UIManager.Instance.textOverlay.SetText(text);
         }
         UIManager.Instance.CanPause = true;
+        UIManager.Instance.regionText.ClearText();
 
         // Fade in, and start typing the correct region name from this point
-        CameraZone currentZone = RegionManager.Instance.GetCurrentZone();
-        UIManager.Instance.regionText.SetEmptyText(currentZone.isRestricted);
         UIManager.Instance.FadeIn();
-        UIManager.Instance.regionText.DisplayText(currentZone.regionName, currentZone.isRestricted);
+        GameManager.Instance.GetPlayerAnimator().SetTrigger(Constants.ANIMATION_BIRDIE_WAKEUP);
+        float animationLength = GameManager.Instance.GetPlayerAnimator().GetCurrentAnimatorClipInfo(0)[0].clip.length; // should always be there
+        yield return new WaitForSeconds(animationLength * 0.8f);  // fine-tuned for best visuals
+        GameManager.Instance.GetPlayerRigidbody().isKinematic = false;
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
-        // Start the note spawning and start the animation
-        //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
+        UIManager.Instance.regionText.DisplayText(RegionManager.Instance.GetCurrentZone().regionName, RegionManager.Instance.GetCurrentZone().isRestricted);
 
         // Cutscene for once they enter the hallway
         RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
@@ -348,6 +354,12 @@ public class MissionTutorial : AMission
         // Here we have checks for all the instances specifically because this can be called on App shutdown
         //  this means its possible for some Singletons to have already been garbage collected by the time we get here
         Debug.Log("MissionTutorial Cleanup()!");
+
+        if (GameManager.Instance)
+        {
+            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+            GameManager.Instance.GetPlayerRigidbody().isKinematic = false;
+        }
 
         // Update GameEventManager
         if (GameEventManager.Instance)

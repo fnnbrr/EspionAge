@@ -710,9 +710,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.8201189
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.022097748, z: 0}
 --- !u!54 &2998625688478654437
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -824,9 +824,9 @@ MonoBehaviour:
   movementSpeedBuff: 5
   turnSpeedBuff: 5
   occlusionMaterial: {fileID: 2100000, guid: 81d08de6be64130499ba9353a7bcca5a, type: 2}
-  startOcclusionColor: {r: 1, g: 0, b: 0, a: 1}
-  endOcclusionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomInAmount: 20
+  emptyColor: {r: 1, g: 0, b: 0, a: 1}
+  fullColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &3418821350365183018
 GameObject:
   m_ObjectHideFlags: 0
