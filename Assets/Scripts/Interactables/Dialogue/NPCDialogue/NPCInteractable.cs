@@ -93,17 +93,20 @@ public class NPCInteractable : Interactable
                     //Prevent from auto-initiating in the middle of advancing a conversation
                     if (conversation.autoInitiate && !DialogueManager.Instance.CheckIsAdvancing())
                     {
-                        interactableOn = true;
+                        //interactableOn = true;
                         OnInteract();
                     }
                 }
             }
+        }
 
-            // Ensure player cannot interact with another character if already advancing a conversation
-            if (!DialogueManager.Instance.CheckIsAdvancing() && !conversation.autoplayConversation && !conversation.autoInitiate)
-            {
-                base.Update();
-            }
+        // TODO: Boundary Radius should always be >= Interact Radius Possible issues will arise otherwise
+        // This is so the animations for InteractBox work
+        // Ensure player cannot interact with another character if already advancing a conversation
+        if (!DialogueManager.Instance.CheckIsAdvancing() && !conversation.autoplayConversation && !conversation.autoInitiate)
+        {
+            Debug.Log("going into update");
+            base.Update();
         }
     }
 
@@ -184,7 +187,7 @@ public class NPCInteractable : Interactable
                 }
             }
 
-            if (!conversation.shouldFollow && !conversation.autoplayConversation)
+            if (!conversation.autoplayConversation)
             {
                 NPCFacePlayer();
             }

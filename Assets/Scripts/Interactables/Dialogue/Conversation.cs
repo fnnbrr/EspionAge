@@ -18,7 +18,6 @@ public class Conversation : ScriptableObject
     [Header("Note: Autoplay Conversation takes precedence over Auto Initiate")]
     public bool autoplayConversation = false;
     public bool autoInitiate = false;
-    public bool shouldFollow = false;
     public Line[] lines;
 
     public List<string> GetAllSpeakers()
