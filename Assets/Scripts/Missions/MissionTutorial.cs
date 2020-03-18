@@ -49,7 +49,7 @@ public class MissionTutorial : AMission
     public List<MissionObject> extraObjects;
 
     [Header("FMOD Audio")]
-    private FMODUnity.StudioEventEmitter MusicEv;
+    private FMODUnity.StudioEventEmitter musicEv;
 
     private bool startCutscenePlayed = false;
     private bool respawning = false;
@@ -116,7 +116,7 @@ public class MissionTutorial : AMission
         spawnedVases = new List<SpawnedVase>();
         spawnedBrokenVases = new List<GameObject>();
         spawnedEnemies = new List<SpawnedEnemy>();
-        MusicEv = GetComponent<FMODUnity.StudioEventEmitter>();
+        musicEv = GetComponent<FMODUnity.StudioEventEmitter>();
     }
 
     protected override void Initialize()
@@ -149,13 +149,13 @@ public class MissionTutorial : AMission
 
     private void CommenceCompleteMission()
     {
+        FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 1f);
         spawnedEnemies.ForEach(e =>
         {
             // Send back all enemies to around the area of their start (mostly to get them off camera)
             e.chaser.targetTransform = null;
             e.chaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
             e.chaser.OnReachDestination += HandleEnemyReachedStartPoint;
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 1f);
         });
     }
     private void HandleEnemyReachedStartPoint()
@@ -190,7 +190,7 @@ public class MissionTutorial : AMission
         {
             RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
 
-            MusicEv.Play();
+            musicEv.Play();
 
             startCutscenePlayed = true;
             firstVase.loudObject.Drop();
