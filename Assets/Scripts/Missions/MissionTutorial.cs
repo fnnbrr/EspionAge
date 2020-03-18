@@ -49,7 +49,7 @@ public class MissionTutorial : AMission
     public List<MissionObject> extraObjects;
 
     [Header("FMOD Audio")]
-    public FMODUnity.StudioEventEmitter MusicEv;
+    private FMODUnity.StudioEventEmitter MusicEv;
 
     private bool startCutscenePlayed = false;
     private bool respawning = false;
@@ -155,6 +155,7 @@ public class MissionTutorial : AMission
             e.chaser.targetTransform = null;
             e.chaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
             e.chaser.OnReachDestination += HandleEnemyReachedStartPoint;
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 1f);
         });
     }
     private void HandleEnemyReachedStartPoint()
