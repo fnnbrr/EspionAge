@@ -134,13 +134,13 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         startFrame = Time.frameCount;
 
-        ActiveConversation startedConvo = new ActiveConversation(conversation);
-        activeConversations.Add(conversation, startedConvo);
-
         // Get all speakers from the convo
         List<string> convoSpeakers = conversation.GetAllSpeakers();
 
-        //StopAllConversations(convoSpeakers);
+        StopAllConversations(convoSpeakers);
+
+        ActiveConversation startedConvo = new ActiveConversation(conversation);
+        activeConversations.Add(conversation, startedConvo);
 
         if (conversation.autoplayConversation)
         {
@@ -182,7 +182,6 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             FinishConversation(convo);
         }
-
     }
 
     void AdvanceConversation(Conversation conversation)
@@ -281,18 +280,17 @@ public class DialogueManager : Singleton<DialogueManager>
         HideAllSpeakers(conversation);
 
         // Stop any coroutines that are part of the conversation
+        // Null checks are done to be super safe just incase coroutines have not been set
         if (activeConversations[conversation].coroutine != null)
         {
             StopCoroutine(activeConversations[conversation].coroutine);
         }
-
         if (activeConversations[conversation].typingCoroutine != null)
         {
             StopCoroutine(activeConversations[conversation].typingCoroutine);
         }
 
         activeConversations.Remove(conversation);
-        Debug.Log("Removed:  " + activeConversations.Count);
 
         if (advancingConversation == conversation)
         {

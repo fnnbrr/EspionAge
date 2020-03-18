@@ -136,7 +136,6 @@ public class NPCInteractable : Interactable
 
     public override void OnInteract()
     {
-        Debug.Log("interacted");
         if (!DialogueManager.Instance.CheckIsAdvancing())
         {
             // If input already disabled, then we won't continue from here and start a conversation
