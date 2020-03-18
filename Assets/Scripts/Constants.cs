@@ -13,11 +13,15 @@ public static class Constants
     public const string ANIMATION_BIRDIE_ISWALKING = "IsWalking";
     public const string ANIMATION_BIRDIE_AWAKENESS = "Awakeness";
     public const string ANIMATION_BIRDIE_DASH= "Dash";
+    public const string ANIMATION_BIRDIE_WAKEUP = "WakeUp";
 
     public const string ANIMATION_STEVE_MOVING = "IsMoving";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
+
+    public const string ANIMATION_MAINMENU_LIGHTBULB_FLICKER = "Flicker";
+    public const string ANIMATION_MAINMENU_LIGHTBULB_RED = "Red";
 
     public const string INPUT_INTERACTABLE_GETDOWN = "Interact";
     public const string INPUT_CANCEL_GETDOWN = "Cancel";
