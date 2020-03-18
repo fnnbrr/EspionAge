@@ -2043,7 +2043,7 @@ GameObject:
   - component: {fileID: 7880404464499619340}
   - component: {fileID: 753684940419010905}
   - component: {fileID: 4718450864398960314}
-  - component: {fileID: 3508877275874523494}
+  - component: {fileID: 972487048003890212}
   m_Layer: 0
   m_Name: FMODTrigger
   m_TagString: Untagged
@@ -2125,7 +2125,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3508877275874523494
+--- !u!114 &972487048003890212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2134,16 +2134,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2639753012852594426}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b0e04e2572f9a940a47465f6f3c2f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CollisionTag: Player
-  Emitters:
-  - Target: {fileID: 0}
-    Params:
-    - Name: ChaseStarts
-      Value: 1
+  parameter: ChaseStarts
   TriggerEvent: 3
+  value: 1
 --- !u!1 &4097684759303152573
 GameObject:
   m_ObjectHideFlags: 0
@@ -3570,29 +3567,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &57603077972134988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8960939207879678252}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  Event: event:/Music/Tutorial Music
-  PlayEvent: 0
-  StopEvent: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 0
-  OverrideMaxDistance: 0
 --- !u!114 &1367901252145973804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3609,7 +3583,6 @@ MonoBehaviour:
   shakeCameraOnClose: 1
   DoorSqueak: event:/SFX/DoorSqueak
   DoorSlam: event:/SFX/DoorClose
-  TutorialMusic: {fileID: 57603077972134988}
 --- !u!114 &1367901252145973807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4061,15 +4034,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23facc39c8b1c6c4b8efdd1bbb3bd081, type: 3}
---- !u!4 &1340679633050297398 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 27250249222716577, guid: 23facc39c8b1c6c4b8efdd1bbb3bd081,
-    type: 3}
-  m_PrefabInstance: {fileID: 1367901252002093207}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8960939207879678252 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7971481615726297531, guid: 23facc39c8b1c6c4b8efdd1bbb3bd081,
+    type: 3}
+  m_PrefabInstance: {fileID: 1367901252002093207}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1340679633050297398 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 27250249222716577, guid: 23facc39c8b1c6c4b8efdd1bbb3bd081,
     type: 3}
   m_PrefabInstance: {fileID: 1367901252002093207}
   m_PrefabAsset: {fileID: 0}
@@ -4297,15 +4270,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 992c920c43ef0c04ba9b99310a100e92, type: 3}
---- !u!1 &1276748959555443799 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6400519317013028563, guid: 992c920c43ef0c04ba9b99310a100e92,
-    type: 3}
-  m_PrefabInstance: {fileID: 5288591565725401732}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9203470550741445523 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3953476260524910871, guid: 992c920c43ef0c04ba9b99310a100e92,
+    type: 3}
+  m_PrefabInstance: {fileID: 5288591565725401732}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1276748959555443799 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6400519317013028563, guid: 992c920c43ef0c04ba9b99310a100e92,
     type: 3}
   m_PrefabInstance: {fileID: 5288591565725401732}
   m_PrefabAsset: {fileID: 0}

@@ -7,7 +7,7 @@ public class FMODAwakeness : MonoBehaviour
     [FMODUnity.ParamRef]
     public string parameter;
     [FMODUnity.EventRef]
-    public string sfx;
+//    public string sfx;
     private bool isFull = false;
 
     // Start is called before the first frame update
