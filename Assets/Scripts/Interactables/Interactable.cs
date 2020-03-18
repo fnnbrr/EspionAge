@@ -40,7 +40,6 @@ public class Interactable : MonoBehaviour, IInteractable
             HideInteractUI();
         }
 
-
         //Ensures text is always facing the camera
         if ((enableInteract && interactableOn))
         {

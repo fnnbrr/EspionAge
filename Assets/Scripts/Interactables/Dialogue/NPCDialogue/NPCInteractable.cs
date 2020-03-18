@@ -93,7 +93,6 @@ public class NPCInteractable : Interactable
                     //Prevent from auto-initiating in the middle of advancing a conversation
                     if (conversation.autoInitiate && !DialogueManager.Instance.CheckIsAdvancing())
                     {
-                        //interactableOn = true;
                         OnInteract();
                     }
                 }
