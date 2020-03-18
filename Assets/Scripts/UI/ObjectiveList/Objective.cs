@@ -1,11 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using NaughtyAttributes;
 
 [CreateAssetMenu(fileName = "New Objective", menuName = "Objective")]
 public class Objective : ScriptableObject 
 {
-    [TextArea(2, 5)]
-    public string line;
+    public string[] tags;
+    public string[] objectives;
 }
 
 

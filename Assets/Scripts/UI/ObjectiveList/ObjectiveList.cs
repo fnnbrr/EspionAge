@@ -25,15 +25,15 @@ public class ObjectiveList : Singleton<ObjectiveList>
         root.gameObject.SetActive(true);
     }
 
-    public void DisplayObjectiveText(string textToSet)
+    public void DisplayObjectiveText(string[] tags, string[] objectives)
     {
         DisplayObjectiveList();
         
-        if (objectiveText != null) 
-        {   
-            objectiveText.text = textToSet;
+        // if (objectiveText != null) 
+        // {   
+        //     objectiveText.text = textToSet;
             
-        }
+        // }
     }
 
     public void CrossOutObjectiveText()

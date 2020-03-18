@@ -106,7 +106,7 @@ public class MissionManager : Singleton<MissionManager>
         if (missionMapping[missionEnumValue].objective) 
         {
             ObjectiveList.Instance.DisplayObjectiveList();
-            ObjectiveList.Instance.DisplayObjectiveText(missionMapping[missionEnumValue].objective.line);
+            ObjectiveList.Instance.DisplayObjectiveText(missionMapping[missionEnumValue].objective.tags ,missionMapping[missionEnumValue].objective.objectives);
         }
     }
 
