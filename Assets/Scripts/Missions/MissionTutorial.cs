@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Cinemachine;
 using NaughtyAttributes;
+using NPCs;
 
 public class MissionTutorial : AMission
 {
@@ -85,13 +86,13 @@ public class MissionTutorial : AMission
     public class SpawnedEnemy
     {
         public GameObject gameObject;
-        public PureChaser chaser;
+        public PureChaser pureChaser;
         public TutorialChaserGroup chaserGroup;
 
         public SpawnedEnemy(GameObject o, PureChaser c, TutorialChaserGroup g)
         {
             gameObject = o;
-            chaser = c;
+            pureChaser = c;
             chaserGroup = g;
         }
     }
@@ -127,7 +128,12 @@ public class MissionTutorial : AMission
         // Force fade out
         UIManager.Instance.InstantFadeOut();
 
+        // Init some general vars
+        UIManager.Instance.CanPause = false;
+
         // Move player to a set position
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        GameManager.Instance.GetPlayerRigidbody().isKinematic = true;
         GameManager.Instance.GetPlayerTransform().position = playerStartPosition;
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(playerStartRotation);
 
@@ -160,9 +166,9 @@ public class MissionTutorial : AMission
         spawnedEnemies.ForEach(e =>
         {
             // Send back all enemies to around the area of their start (mostly to get them off camera)
-            e.chaser.targetTransform = null;
-            e.chaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
-            e.chaser.OnReachDestination += HandleEnemyReachedStartPoint;
+            e.pureChaser.targetTransform = null;
+            e.pureChaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
+            e.pureChaser.OnReachDestination += HandleEnemyReachedStartPoint;
         });
     }
     private void HandleEnemyReachedStartPoint()
@@ -173,21 +179,22 @@ public class MissionTutorial : AMission
 
     private IEnumerator StartMissionLogic()
     {
-        UIManager.Instance.CanPause = false;
         foreach (string text in startCutsceneTexts)
         {
             yield return UIManager.Instance.textOverlay.SetText(text);
         }
         UIManager.Instance.CanPause = true;
+        UIManager.Instance.regionText.ClearText();
 
         // Fade in, and start typing the correct region name from this point
-        CameraZone currentZone = RegionManager.Instance.GetCurrentZone();
-        UIManager.Instance.regionText.SetEmptyText(currentZone.isRestricted);
         UIManager.Instance.FadeIn();
-        UIManager.Instance.regionText.DisplayText(currentZone.regionName, currentZone.isRestricted);
+        GameManager.Instance.GetPlayerAnimator().SetTrigger(Constants.ANIMATION_BIRDIE_WAKEUP);
+        float animationLength = GameManager.Instance.GetPlayerAnimator().GetCurrentAnimatorClipInfo(0)[0].clip.length; // should always be there
+        yield return new WaitForSeconds(animationLength * 0.8f);  // fine-tuned for best visuals
+        GameManager.Instance.GetPlayerRigidbody().isKinematic = false;
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
-        // Start the note spawning and start the animation
-        //note.spawnedInstance = MissionManager.Instance.SpawnMissionObject(note);
+        UIManager.Instance.regionText.DisplayText(RegionManager.Instance.GetCurrentZone().regionName, RegionManager.Instance.GetCurrentZone().isRestricted);
 
         // Cutscene for once they enter the hallway
         RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
@@ -270,7 +277,7 @@ public class MissionTutorial : AMission
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 chaser.SetSpeed(group.chaseSpeed);
                 chaser.startChaseRadius = group.startChaseRadius;
-                chaser.OnCollideWithPlayer += RestartAfterCutscene;
+                chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
 
                 spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group));
             });
@@ -348,6 +355,12 @@ public class MissionTutorial : AMission
         // Here we have checks for all the instances specifically because this can be called on App shutdown
         //  this means its possible for some Singletons to have already been garbage collected by the time we get here
         Debug.Log("MissionTutorial Cleanup()!");
+
+        if (GameManager.Instance)
+        {
+            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+            GameManager.Instance.GetPlayerRigidbody().isKinematic = false;
+        }
 
         // Update GameEventManager
         if (GameEventManager.Instance)
