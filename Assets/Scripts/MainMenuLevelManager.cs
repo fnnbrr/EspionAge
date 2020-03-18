@@ -8,8 +8,6 @@ public class MainMenuLevelManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        print(other.gameObject.name);
-        print(objectsToTurnAround.Contains(other.gameObject));
         if (objectsToTurnAround.Contains(other.gameObject))
         {
             other.transform.Rotate(Vector3.up, 180f);
