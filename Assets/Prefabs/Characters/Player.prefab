@@ -818,15 +818,17 @@ MonoBehaviour:
   dangerRadius: 50
   globalVolume: {fileID: 0}
   vignetteMultiplier: 0.45
-  saturationMultiplier: -100
+  saturationMultiplier: 40
   contrastMultiplier: 10
-  brightnessMultiplier: -0.5
+  brightnessMultiplier: 0.2
+  chromaticAberrationMultiplier: 0.25
+  filmGrainMultiplier: 0.5
   movementSpeedBuff: 5
   turnSpeedBuff: 5
   occlusionMaterial: {fileID: 2100000, guid: 81d08de6be64130499ba9353a7bcca5a, type: 2}
-  startOcclusionColor: {r: 1, g: 0, b: 0, a: 1}
-  endOcclusionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   zoomInAmount: 20
+  emptyColor: {r: 1, g: 0, b: 0, a: 1}
+  fullColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!1 &3418821350365183018
 GameObject:
   m_ObjectHideFlags: 0
