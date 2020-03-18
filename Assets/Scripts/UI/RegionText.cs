@@ -23,11 +23,15 @@ public class RegionText : MonoBehaviour
         textMesh = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this);
     }
 
-    public void SetEmptyText(bool isRestricted)
+    public void ClearText()
     {
-        textMesh.text = string.Empty;
-        currentTextValue = string.Empty;
-        currentIsRestricted = isRestricted;
+        StopAllCoroutines();
+        SetEmptyText(false);
+    }
+
+    private void SetEmptyText(bool isRestricted)
+    {
+        SetText(string.Empty, isRestricted);
     }
 
     private void SetText(string text, bool isRestricted)

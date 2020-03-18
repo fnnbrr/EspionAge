@@ -13,6 +13,7 @@ public static class Constants
     public const string ANIMATION_BIRDIE_ISWALKING = "IsWalking";
     public const string ANIMATION_BIRDIE_AWAKENESS = "Awakeness";
     public const string ANIMATION_BIRDIE_DASH= "Dash";
+    public const string ANIMATION_BIRDIE_WAKEUP = "WakeUp";
 
     public const string ANIMATION_STEVE_MOVING = "IsMoving";
 
