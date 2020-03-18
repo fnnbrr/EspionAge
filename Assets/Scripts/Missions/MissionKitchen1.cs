@@ -280,15 +280,14 @@ public class MissionKitchen1 : AMission
             }
 
             GameManager.Instance.GetPlayerTransform().position = denturesCheckpointRespawnPosition;
-            GameManager.Instance.GetMovementController().ResetVelocity();
         }
         else
         {
             GameManager.Instance.GetPlayerTransform().position = respawnPosition;
-            GameManager.Instance.GetMovementController().ResetVelocity();
             UIManager.Instance.FadeIn();
             isRestarting = false;
         }
+        GameManager.Instance.GetMovementController().ResetVelocity();
     }
 
     private void OnBackInKichenDoCollectedCutscene(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
