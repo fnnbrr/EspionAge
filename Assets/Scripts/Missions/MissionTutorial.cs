@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Cinemachine;
 using NaughtyAttributes;
+using NPCs;
 
 public class MissionTutorial : AMission
 {
@@ -85,13 +86,13 @@ public class MissionTutorial : AMission
     public class SpawnedEnemy
     {
         public GameObject gameObject;
-        public PureChaser chaser;
+        public PureChaser pureChaser;
         public TutorialChaserGroup chaserGroup;
 
         public SpawnedEnemy(GameObject o, PureChaser c, TutorialChaserGroup g)
         {
             gameObject = o;
-            chaser = c;
+            pureChaser = c;
             chaserGroup = g;
         }
     }
@@ -165,9 +166,9 @@ public class MissionTutorial : AMission
         spawnedEnemies.ForEach(e =>
         {
             // Send back all enemies to around the area of their start (mostly to get them off camera)
-            e.chaser.targetTransform = null;
-            e.chaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
-            e.chaser.OnReachDestination += HandleEnemyReachedStartPoint;
+            e.pureChaser.targetTransform = null;
+            e.pureChaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
+            e.pureChaser.OnReachDestination += HandleEnemyReachedStartPoint;
         });
     }
     private void HandleEnemyReachedStartPoint()
@@ -276,7 +277,7 @@ public class MissionTutorial : AMission
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 chaser.SetSpeed(group.chaseSpeed);
                 chaser.startChaseRadius = group.startChaseRadius;
-                chaser.OnCollideWithPlayer += RestartAfterCutscene;
+                chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
 
                 spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group));
             });
