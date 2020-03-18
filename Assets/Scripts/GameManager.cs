@@ -19,6 +19,7 @@ public class GameManager : Singleton<GameManager>
     private ThrowController throwController;
     private PlayerController playerController;
     private Animator playerAnimator;
+    private Rigidbody playerRigidbody;
     private MovementController movementController;
 
     private void Awake()
@@ -31,7 +32,8 @@ public class GameManager : Singleton<GameManager>
         throwController = Utils.GetRequiredComponent<ThrowController>(player);
         playerController = Utils.GetRequiredComponent<PlayerController>(player);
         movementController = Utils.GetRequiredComponent<MovementController>(player);
-        playerAnimator = player.GetComponentInChildren<Animator>();
+        playerAnimator = Utils.GetRequiredComponentInChildren<Animator>(player);
+        playerRigidbody = Utils.GetRequiredComponent<Rigidbody>(player);
     }
 
     private void Start()
@@ -65,6 +67,11 @@ public class GameManager : Singleton<GameManager>
     public Animator GetPlayerAnimator()
     {
         return playerAnimator;
+    }
+
+    public Rigidbody GetPlayerRigidbody()
+    {
+        return playerRigidbody;
     }
 
     private void GameStart()

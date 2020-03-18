@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 2450668294617206675}
   - component: {fileID: 4186571339833994720}
   - component: {fileID: 135029655}
+  - component: {fileID: 7386060355856096771}
   m_Layer: 0
   m_Name: Nurse_Steve_PURE_CHASER
   m_TagString: Enemy
@@ -268,8 +269,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eb0217b58fda1d408cc72a67b461043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTransform: {fileID: 0}
+  currentState: Chasing
+  defaultState: Chasing
+  agent: {fileID: 0}
   startChaseRadius: 100
+  chaser: {fileID: 0}
+--- !u!114 &7386060355856096771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetTransform: {fileID: 0}
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0
