@@ -20,4 +20,19 @@ public class Conversation : ScriptableObject
     public bool autoInitiate = false;
     public bool shouldFollow = false;
     public Line[] lines;
+
+    public List<string> GetAllSpeakers()
+    {
+        List<string> allSpeakers = new List<string>();
+
+        foreach(Line line in lines)
+        {
+            if(!allSpeakers.Contains(line.id))
+            {
+                allSpeakers.Add(line.id);
+            }
+        }
+
+        return allSpeakers;
+    }
 }
