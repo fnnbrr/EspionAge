@@ -24,6 +24,7 @@ public class ActiveConversation
 {
     public Conversation conversation;
     public Coroutine coroutine;
+    public Coroutine typingCoroutine;
     public int activeLineIndex;
     public bool isTyping;
     public bool isAutoPlaying;
@@ -43,6 +44,11 @@ public class ActiveConversation
     public void SetCoroutine(Coroutine _coroutine)
     {
         coroutine = _coroutine;
+    }
+
+    public void SetTypingCoroutine(Coroutine _coroutine)
+    {
+        typingCoroutine = _coroutine;
     }
 
     public void ResetIndex()
@@ -67,8 +73,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private Conversation advancingConversation;
 
-    private Coroutine currentTypingCoroutine;
-
     public List<SpeakerContainer> allSpeakers;
     private Dictionary<string, SpeakerContainer> speakers;
 
@@ -79,8 +83,7 @@ public class DialogueManager : Singleton<DialogueManager>
     public event FinishTypingEvent OnFinishTyping;
 
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         activeConversations = new Dictionary<Conversation, ActiveConversation>();
         speakers = new Dictionary<string, SpeakerContainer>();
@@ -105,10 +108,14 @@ public class DialogueManager : Singleton<DialogueManager>
         // Using Time.frameCount != startFrame because of an issue of skipping the first convo when beginning interaction
         // This happened because it the getdown of interacting and skipping happened in the same frame
         // Should be only able to advance the advancing conversation
-        if (activeConversations[advancingConversation].isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN) && Time.frameCount != startFrame)
+        if (advancingConversation != null)
         {
-            activeConversations[advancingConversation].skipRequest = true;
-            activeConversations[advancingConversation].waitingForNext = false;
+            if (activeConversations[advancingConversation].isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN) && Time.frameCount != startFrame)
+            {
+                activeConversations[advancingConversation].skipRequest = true;
+                activeConversations[advancingConversation].waitingForNext = false;
+                Debug.Log("trying to skip: ");
+            }
         }
     }
 
@@ -134,20 +141,19 @@ public class DialogueManager : Singleton<DialogueManager>
         // Get all speakers from the convo
         List<string> convoSpeakers = conversation.GetAllSpeakers();
 
-        StopAllConversations(convoSpeakers);
+        //StopAllConversations(convoSpeakers);
 
         if (conversation.autoplayConversation)
         {
-            Coroutine coroutine = StartCoroutine(AutoplayConversation(conversation));
-            activeConversations[conversation].SetCoroutine(coroutine);
             activeConversations[conversation].isAutoPlaying = true;
-
+            activeConversations[conversation].SetCoroutine(StartCoroutine(AutoplayConversation(conversation)));
         }
         // Conversation must be manually forwarded
         // There should only be one conversation being forwarded
         else
         {
             // Stop any currently advancing conversations
+            StartAdvancing();
             advancingConversation = conversation;
 
             GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
@@ -159,46 +165,37 @@ public class DialogueManager : Singleton<DialogueManager>
 
     void StopAllConversations(List<string> convoSpeakers)
     {
+        List<Coroutine> coroutinesToStop = new List<Coroutine>();
+        List<Conversation> conversationsToStop = new List<Conversation>();
+
         // Stop any conversations that are currently happening (check current advancing convo and all autoplaying convos)
         foreach (string speaker in convoSpeakers)
         {
             foreach (KeyValuePair<Conversation, ActiveConversation> convo in activeConversations)
             {
-                Conversation conversation = convo.Key;
-                if (conversation.GetAllSpeakers().Contains(speaker))
+                if (convo.Key.GetAllSpeakers().Contains(speaker) && !conversationsToStop.Contains(convo.Key))
                 {
-                    if (convo.Value.coroutine != null)
+                    if (convo.Value.coroutine != null && !coroutinesToStop.Contains(convo.Value.coroutine))
                     {
-                        StopCoroutine(convo.Value.coroutine);
+                        coroutinesToStop.Add(convo.Value.coroutine);
                     }
-                    activeConversations.Remove(convo.Key);
+
+                    conversationsToStop.Add(convo.Key);
                 }
             }
         }
-    }
 
-    void SetDialogueLine(Conversation conversation)
-    {
-        //Display Line
-        Line line = conversation.lines[activeConversations[conversation].activeLineIndex];
-        SpeakerContainer currentSpeaker = speakers[line.id];
-
-        // Hide all speakers from that conversation
-        HideAllSpeakers(conversation);
-
-        SpeakerUI speakerUI = Utils.GetRequiredComponent<SpeakerUI>(currentSpeaker.speakerObject);
-        TextMeshProUGUI textMesh = speakerUI.conversationText;
-        speakerUI.Show();
-
-        PlayVoice(currentSpeaker.npcVoicePath, currentSpeaker);
-
-        if (activeConversations[conversation].isTyping && currentTypingCoroutine != null)
+        foreach (Coroutine coroutine in coroutinesToStop)
         {
-            StopCoroutine(currentTypingCoroutine);
+            StopCoroutine(coroutine);
         }
-        currentTypingCoroutine = StartCoroutine(StartTypeText(conversation, textMesh, line.text));
-    }
 
+        foreach (Conversation convo in conversationsToStop)
+        {
+            activeConversations.Remove(convo);
+        }
+
+    }
 
     void AdvanceConversation(Conversation conversation)
     {
@@ -236,6 +233,28 @@ public class DialogueManager : Singleton<DialogueManager>
         return shouldShowLine;
     }
 
+    void SetDialogueLine(Conversation conversation)
+    {
+        //Display Line
+        Line line = conversation.lines[activeConversations[conversation].activeLineIndex];
+        SpeakerContainer currentSpeaker = speakers[line.id];
+
+        // Hide all speakers from that conversation
+        HideAllSpeakers(conversation);
+
+        SpeakerUI speakerUI = Utils.GetRequiredComponent<SpeakerUI>(currentSpeaker.speakerObject);
+        TextMeshProUGUI textMesh = speakerUI.conversationText;
+        speakerUI.Show();
+
+        PlayVoice(currentSpeaker.npcVoicePath, currentSpeaker);
+
+        if (activeConversations[conversation].isTyping && activeConversations[conversation].typingCoroutine != null)
+        {
+            StopCoroutine(activeConversations[conversation].typingCoroutine);
+        }
+        activeConversations[conversation].SetTypingCoroutine(StartCoroutine(StartTypeText(conversation, textMesh, line.text)));
+    }
+
     private IEnumerator StartTypeText(Conversation conversation, TextMeshProUGUI textMesh, string text)
     {
         activeConversations[conversation].isTyping = true;
@@ -245,6 +264,7 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             if (activeConversations[conversation].skipRequest)
             {
+                Debug.Log("skip request Completed");
                 activeConversations[conversation].skipRequest = false;
                 currentCharIndex = text.Length;
             }
@@ -255,12 +275,14 @@ public class DialogueManager : Singleton<DialogueManager>
             textMesh.text = text.Substring(0, currentCharIndex);
             yield return new WaitForSeconds(charTypeSpeed);
         }
-
+        Debug.Log("waiting now");
         activeConversations[conversation].waitingForNext = true;
         while (activeConversations[conversation].waitingForNext)
         {
+            Debug.Log("waitingForNext: " + activeConversations[conversation].waitingForNext);
             yield return new WaitForFixedUpdate();
         }
+        Debug.Log("go to next line");
 
         textMesh.text = string.Empty;
 
@@ -273,10 +295,13 @@ public class DialogueManager : Singleton<DialogueManager>
     private void FinishConversation(Conversation conversation)
     {
         HideAllSpeakers(conversation);
+        StopCoroutine(activeConversations[conversation].typingCoroutine);
         activeConversations.Remove(conversation);
+        Debug.Log("Removed:  " + activeConversations.Count);
 
         if (advancingConversation == conversation)
         {
+            Debug.Log("end advancing convo");
             EndAdvancing();
         }
     }
@@ -300,6 +325,16 @@ public class DialogueManager : Singleton<DialogueManager>
         }
     }
 
+    public bool IsActiveConversation(Conversation conversation)
+    {
+        if(conversation == null)
+        {
+            return false;
+        }
+
+        return activeConversations.ContainsKey(conversation);
+    }
+
     public bool RestrictMoveWhenConversing()
     {
         return !convoAllowMovement && CheckIsAdvancing();
@@ -318,5 +353,6 @@ public class DialogueManager : Singleton<DialogueManager>
     public void EndAdvancing()
     {
         isAdvancing = false;
+        advancingConversation = null;
     }
 }

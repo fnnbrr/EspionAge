@@ -76,57 +76,33 @@ public class NPCInteractable : Interactable
 
     protected override void Update()
     {
-        if(IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
+        if (IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
         {
             // Prevent loading during a conversation
-            if (!DialogueManager.Instance.CheckIsConversing() && !DialogueManager.Instance.CheckIsAutoPlaying())
+            if (!DialogueManager.Instance.IsActiveConversation(conversation))
             {
                 LoadConversation();
-            }
 
-            if (conversation.shouldFollow)
-            {
-                TriggerFollow(player);
-            }
-
-
-            // Autoplay
-            if (conversation.autoplayConversation)
-            {
-                if(!DialogueManager.Instance.CheckIsAutoPlaying())
+                // Autoplay
+                if (conversation.autoplayConversation)
                 {
                     OnInteract();
                 }
+                else
+                {
+                    //Prevent from auto-initiating in the middle of advancing a conversation
+                    if (conversation.autoInitiate && !DialogueManager.Instance.CheckIsAdvancing())
+                    {
+                        interactableOn = true;
+                        OnInteract();
+                    }
+                }
             }
-            // Enter collider to interact
-            else
-            {
-                if(conversation.autoInitiate && !DialogueManager.Instance.CheckIsConversing())
-				{
-                    interactableOn = true;
-                    OnInteract();
-				}
-            }
-        }
-        else
-        {
-            if (isFollowing)
-            {
-                StopFollow();
-            }
-        }
 
-        if (!DialogueManager.Instance.CheckIsConversing() && !DialogueManager.Instance.CheckIsAutoPlaying())
-        {
-            base.Update();
-        }
-
-        if (isFollowing)
-        {
-            FollowTarget();
-            if (!DialogueManager.Instance.CheckIsConversing())
+            // Ensure player cannot interact with another character if already advancing a conversation
+            if (!DialogueManager.Instance.CheckIsAdvancing())
             {
-                StopFollow();
+                base.Update();
             }
         }
     }
@@ -160,7 +136,8 @@ public class NPCInteractable : Interactable
 
     public override void OnInteract()
     {
-        if (!DialogueManager.Instance.CheckIsConversing())
+        Debug.Log("interacted");
+        if (!DialogueManager.Instance.CheckIsAdvancing())
         {
             // If input already disabled, then we won't continue from here and start a conversation
             if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
