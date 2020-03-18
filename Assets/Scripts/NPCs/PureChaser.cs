@@ -60,7 +60,7 @@ namespace NPCs
             throw new System.NotImplementedException();
         }
 
-        protected override void Update()
+        protected void Update()
         {
             if (!agent.isOnNavMesh)
             {

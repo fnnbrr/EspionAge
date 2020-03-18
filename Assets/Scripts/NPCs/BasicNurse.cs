@@ -8,6 +8,8 @@ public enum BasicNurseStates
     Responding,
     Searching,
     Patrolling,
+    Rotating,
+    Waiting,
 }
 
 namespace NPCs
@@ -26,10 +28,9 @@ namespace NPCs
         [HideInInspector] public Waiter waiter;
 
         public int numSearches = 3;
-        private int curNumSearches = 0;
-        
         public GameObject questionMark;
         private Animator animator;
+        private int curNumSearches = 0;
 
         public override void Awake()
         {
@@ -41,40 +42,41 @@ namespace NPCs
             patroller = Utils.GetRequiredComponent<Patroller>(this);
             waiter = Utils.GetRequiredComponent<Waiter>(this);
             animator = Utils.GetRequiredComponentInChildren<Animator>(this);
-            
-            SetState(currentState);
         }
 
         public void Start()
         {
             chaser.OnSeePlayer += () => SetState(BasicNurseStates.Chasing);
-            chaser.OnLosePlayer += () => SetState(BasicNurseStates.Searching);
+            chaser.OnLosePlayer += () => nextState = BasicNurseStates.Searching; SetState(BasicNurseStates.Waiting);
             responder.OnStartResponding += () => SetState(BasicNurseStates.Responding);
+            patroller.OnRotationComplete += () => SetState(BasicNurseStates.Waiting);
+            waiter.OnWaitComplete += () => SetState(nextState);
+            chaser.OnCollideWithPlayer += () => questionMark.SetActive(false);
+            
+            SetState(currentState);
         }
 
         protected override void SetState(BasicNurseStates newState)
         {
             switch (newState)
             {
-                case BasicNurseStates.Searching:
-                    agent.speed = searcher.movementSpeed;
-                    searcher.searchPosition = agent.destination;
-                    questionMark.SetActive(true);
+                case BasicNurseStates.Chasing:
+                    SetChasing();
                     break;
                 case BasicNurseStates.Responding:
-                    agent.speed = responder.movementSpeed;
-                    agent.SetDestination(responder.responsePoint);
-                    searcher.SetSearchPoint(responder.responsePoint);
-                    questionMark.SetActive(true);
+                    SetResponding();
                     break;
-                case BasicNurseStates.Chasing:
-                    agent.speed = chaser.movementSpeed;
-                    agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
-                    questionMark.SetActive(false);
+                case BasicNurseStates.Searching:
+                    SetSearching();
                     break;
                 case BasicNurseStates.Patrolling:
-                    agent.speed = patroller.movementSpeed;
-                    questionMark.SetActive(false);
+                    SetPatrolling();
+                    break;
+                case BasicNurseStates.Rotating:
+                    SetRotating();
+                    break;
+                case BasicNurseStates.Waiting:
+                    SetWaiting();
                     break;
                 default:
                     questionMark.SetActive(false);
@@ -82,42 +84,117 @@ namespace NPCs
             }
             
             currentState = newState;
-            ToggleAnimations(true);
         }
 
-        protected override void Update()
+        private void SetChasing()
+        {
+            ToggleAnimations(true);
+            agent.speed = chaser.movementSpeed;
+            questionMark.SetActive(false);
+            
+            StopAllCoroutines();
+            
+            agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
+        }
+
+        private void SetResponding()
+        {
+            ToggleAnimations(true);
+            agent.speed = responder.movementSpeed;
+            questionMark.SetActive(true);
+                    
+            agent.SetDestination(responder.responsePoint);
+            searcher.SetSearchPoint(responder.responsePoint);
+        }
+
+        private void SetSearching()
+        {
+            ToggleAnimations(true);
+            agent.speed = searcher.movementSpeed;
+            questionMark.SetActive(true);
+            
+            searcher.SetSearchPoint(agent.destination);
+            agent.SetDestination(searcher.GetNextSearchPoint());
+        }
+
+        private void SetPatrolling()
+        {
+            ToggleAnimations(true);
+            agent.speed = patroller.movementSpeed;
+            questionMark.SetActive(false);
+                    
+            agent.SetDestination(patroller.GetNextPatrolWaypoint().position);
+        }
+
+        private void SetRotating()
+        {
+            ToggleAnimations(false);
+            StartCoroutine(patroller.StartRotating());
+        }
+
+        private void SetWaiting()
+        {
+            ToggleAnimations(false);
+            if (currentState == BasicNurseStates.Patrolling)
+            {
+                StartCoroutine(waiter.StartWaiting(patroller.curPatrolWaypoint.stayTime));
+            }
+            else
+            {
+                StartCoroutine(waiter.StartWaiting());
+            }
+        }
+
+        protected void Update()
         {
             if (agent.hasPath || !agent.isOnNavMesh || agent.pathPending) return;
 
             // Choose the next state/behavior when the agent reaches current destination.
             switch (currentState)
             {
-                case BasicNurseStates.Patrolling:
-                    if (!patroller.RotationComplete()) break;
-                    if (!waiter.WaitComplete(patroller.curStayTime)) break;
-                    patroller.GotoNextPatrolPoint();
-                    break;
                 case BasicNurseStates.Chasing:
-                    SetState(BasicNurseStates.Searching);
+                    nextState = BasicNurseStates.Searching;
+                    SetState(BasicNurseStates.Waiting);
                     break;
+                
                 case BasicNurseStates.Responding:
                     SetState(BasicNurseStates.Searching);
                     break;
+                
                 case BasicNurseStates.Searching:
-                    if (!waiter.WaitComplete()) break;
-                    if (curNumSearches < numSearches)
+                    if (curNumSearches++ >= numSearches)
                     {
-                        curNumSearches += 1;
-                        agent.destination = searcher.GetNextSearchPoint();
+                        curNumSearches = 0;
+                        nextState = BasicNurseStates.Patrolling;
                     }
                     else
                     {
-                        curNumSearches = 0;
-                        SetState(BasicNurseStates.Patrolling);
+                        nextState = BasicNurseStates.Searching;
                     }
+                    SetState(BasicNurseStates.Waiting);
                     break;
+                
+                case BasicNurseStates.Patrolling:
+                    nextState = BasicNurseStates.Patrolling;
+                    SetState(BasicNurseStates.Rotating);
+                    break;
+                
+                case BasicNurseStates.Rotating:
+                    break;
+                
+                case BasicNurseStates.Waiting:
+                    break;
+                
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (currentState == BasicNurseStates.Chasing && chaser.isChasing)
+            {
+                agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
             }
         }
 

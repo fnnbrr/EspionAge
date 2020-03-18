@@ -6,7 +6,7 @@ namespace NPCs.Components
     public class Chaser : MonoBehaviour
     {
         public float movementSpeed = 10.0f;
-        private bool isChasing = false;
+        public bool isChasing = false;
 
         public event Action OnSeePlayer;
         public event Action OnLosePlayer;

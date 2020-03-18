@@ -1,28 +1,18 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
-using Random = UnityEngine.Random;
 
 namespace NPCs.Components
 {
     public class Waiter : MonoBehaviour
     {
-        private float waitTimer = 0f;
+        public event Action OnWaitComplete;
 
-        public bool WaitComplete(float waitDuration=1.0f)
+        public IEnumerator StartWaiting(float waitDuration=1.0f)
         {
-            waitTimer += Time.deltaTime;
-            if (waitTimer < waitDuration)
-            {
-                // baseStateAi.ToggleAnimations(false); TODO replace with Event
-                return false;
-            }
-
-            // baseStateAi.ToggleAnimations(true); TODO replace with Event
-            waitTimer = 0f;
-            return true;
+            yield return new WaitForSeconds(waitDuration);
+            
+            OnWaitComplete?.Invoke();
         }
     }
 }

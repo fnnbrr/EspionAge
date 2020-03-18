@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace NPCs.Components
 {
-    [System.Serializable]
+    [Serializable]
     public class PatrolWaypoint
     {
         public Vector3 position;
@@ -18,38 +19,34 @@ namespace NPCs.Components
         public float rotationSpeed = 180.0f;
 
         private List<PatrolWaypoint> patrolWaypoints;
+        public PatrolWaypoint curPatrolWaypoint;
 
         private int destinationCount;
-        private Quaternion curRotation;
-        [HideInInspector] public float curStayTime = 1.0f;
+        
+        public event Action OnRotationComplete;
 
         public void SetPoints(List<PatrolWaypoint> newWaypoints)
         {
             patrolWaypoints = newWaypoints;
-
-            // agent.SetDestination(patrolWaypoints[0].position); TODO replace with Event
-            curRotation = Quaternion.Euler(patrolWaypoints[0].rotation);
-            curStayTime = patrolWaypoints[0].stayTime;
+            curPatrolWaypoint = patrolWaypoints[0];
         }
 
-        public bool RotationComplete()
+        public IEnumerator StartRotating()
         {
-            if (transform.rotation == curRotation)
+            Quaternion curRotation = Quaternion.Euler(curPatrolWaypoint.rotation);
+
+            while (transform.rotation != curRotation)
             {
-                // baseStateAi.ToggleAnimations(true); TODO replace with Event
-                return true;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, curRotation, 
+                    Time.deltaTime * rotationSpeed);
+                yield return new WaitForSeconds(Time.deltaTime);
             }
-
-            // baseStateAi.ToggleAnimations(false); TODO replace with Event
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, curRotation, Time.deltaTime * rotationSpeed);
-            return false;
+            
+            OnRotationComplete?.Invoke();
         }
 
-        public void GotoNextPatrolPoint(bool loop=true)
+        public PatrolWaypoint GetNextPatrolWaypoint(bool loop=true)
         {
-            // Returns if only the starting position is present
-            if (patrolWaypoints.Count < 2) return;
-
             int newIndex;
             if (loop)
             {
@@ -59,12 +56,11 @@ namespace NPCs.Components
             {
                 newIndex = Utils.PingPong(destinationCount, patrolWaypoints.Count - 1);
             }
-
-            // agent.SetDestination(patrolWaypoints[newIndex].position); TODO replace with Event
-            curRotation = Quaternion.Euler(patrolWaypoints[newIndex].rotation);
-            curStayTime = patrolWaypoints[newIndex].stayTime;
-
+            
             destinationCount++;
+            
+            curPatrolWaypoint = patrolWaypoints[newIndex];
+            return curPatrolWaypoint;
         }
     }
 }

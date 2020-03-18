@@ -23,9 +23,8 @@ namespace NPCs
         [Header("State Management")]
         [SerializeField] public T currentState;
         [SerializeField] public T defaultState;
+        [SerializeField] public T nextState;
 
         protected abstract void SetState(T newState);
-        
-        protected abstract void Update();
     }
 }

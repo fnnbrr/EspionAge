@@ -213,7 +213,7 @@ NavMeshAgent:
   m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 1000
-  m_StoppingDistance: 2
+  m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -284,12 +284,12 @@ MonoBehaviour:
   agent: {fileID: 0}
   currentState: 3
   defaultState: 3
+  nextState: 3
   chaser: {fileID: 0}
   responder: {fileID: 0}
   searcher: {fileID: 0}
   patroller: {fileID: 0}
   waiter: {fileID: 0}
-  numSearches: 3
   questionMark: {fileID: 5902039246049778213}
 --- !u!114 &8399060607170567938
 MonoBehaviour:
@@ -304,8 +304,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
-  searchBoundsCenter: {x: 0, y: 0, z: 0}
-  searchBoundsRadius: 15
+  numSearches: 3
+  searchPosition: {x: 0, y: 0, z: 0}
+  searchRadius: 15
 --- !u!114 &8040559180144460867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,7 +360,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 6
   rotationSpeed: 180
-  curStayTime: 1
+  curPatrolWaypoint:
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    stayTime: 0
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0
