@@ -27,6 +27,10 @@ namespace NPCs.Components
 
         public void SetPoints(List<PatrolWaypoint> newWaypoints)
         {
+            if (newWaypoints.Count < 1)
+            {
+                throw new UnityException("Cannot set Patroller waypoints using an empty list");
+            }
             patrolWaypoints = newWaypoints;
             curPatrolWaypoint = patrolWaypoints[0];
         }
@@ -38,8 +42,8 @@ namespace NPCs.Components
             while (transform.rotation != curRotation)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, curRotation, 
-                    Time.deltaTime * rotationSpeed);
-                yield return new WaitForSeconds(Time.deltaTime);
+                    Time.fixedDeltaTime * rotationSpeed);
+                yield return new WaitForSeconds(Time.fixedDeltaTime);
             }
             
             OnRotationComplete?.Invoke();
