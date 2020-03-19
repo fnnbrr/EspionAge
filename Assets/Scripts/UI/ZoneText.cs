@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class RegionText : MonoBehaviour
+public class ZoneText : MonoBehaviour
 {
     public float charTypeSpeedMin = 0.1f;
     public float charTypeSpeedMax = 0.2f;

@@ -38,6 +38,24 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &-878737859060497926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804bf49869d3b4315a850958d8530433, type: 3}
+  m_Name: SobelFilter
+  m_EditorClassIdentifier: 
+  settings:
+    Event: 500
+    blitMaterial: {fileID: 2100000, guid: fe13ce233e954bc4fb1bf4720d9f61a3, type: 2}
+    blitMaterialPassIndex: -1
+    destination: 0
+    textureId: _BlitPassTexture
 --- !u!114 &-780751906011717640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,7 +109,7 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -780751906011717640}
   - {fileID: -4517663146314970007}
-  - {fileID: 8171536951905257821}
+  - {fileID: -878737859060497926}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}

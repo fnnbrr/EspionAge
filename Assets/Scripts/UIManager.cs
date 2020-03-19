@@ -12,7 +12,8 @@ public class UIManager : Singleton<UIManager>
     public PauseMenuManager pauseMenu;
     public UITextOverlay textOverlay;
     public GameObject pressAPrompt;
-    public RegionText regionText;
+    public Animator pauseDisabledPrompt;
+    public ZoneText zoneText;
 
     [Header("Fading Settings")]
     public Image fader;
@@ -106,7 +107,15 @@ public class UIManager : Singleton<UIManager>
 
     public void PauseGame(bool toPause)
     {
-        if (!CanPause) return;
+        if (!CanPause)
+        {
+            if (toPause)
+            {
+                // If someone tries to pause but we cannot, always display this prompt
+                pauseDisabledPrompt.SetTrigger(Constants.ANIMATION_PAUSE_DISABLED_DISPLAY);
+            }
+            return;
+        }
 
         if (toPause)
         {

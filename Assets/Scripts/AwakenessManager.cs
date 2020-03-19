@@ -164,6 +164,6 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private void UpdateCameraDistance(float fillAmount)
     {
-        CameraManager.Instance.AddToCurrentCameraDistance(zoomInAmount * GetInterpolatedFillAmount(fillAmount));
+        CameraManager.Instance.UpdateCameraDistances(zoomInAmount * GetInterpolatedFillAmount(fillAmount));
     }
 }

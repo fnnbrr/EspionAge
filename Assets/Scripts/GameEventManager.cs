@@ -12,13 +12,15 @@ public class GameEventManager : Singleton<GameEventManager>
     {
         TutorialActive,
         TutorialComplete,
-        KitchenMissionComplete
+        KitchenMissionComplete,
+        HasThrownSomething
     }
     private readonly Dictionary<GameEvent, bool> defaultValues = new Dictionary<GameEvent, bool>()
     {
         {GameEvent.TutorialActive, false },
         {GameEvent.TutorialComplete, false },
-        {GameEvent.KitchenMissionComplete, false }
+        {GameEvent.KitchenMissionComplete, false },
+        {GameEvent.HasThrownSomething, false }
     };
 
     private Dictionary<GameEvent, bool> eventStatus; 
