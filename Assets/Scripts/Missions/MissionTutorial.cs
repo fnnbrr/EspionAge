@@ -227,6 +227,7 @@ public class MissionTutorial : AMission
 
             tutorialNurseAI.StartFollowingPlayer();
             tutorialNurseAI.SetFoundBirdie();
+            WorldObjectivePointer.Instance.PointTo(playerStartPosition, RegionManager.Instance.nurseRoomBirdiesBedArea);
 
             RegionManager.Instance.OnPlayerEnterRegion += WaitForBirdieToGoBackToBed;
         }
