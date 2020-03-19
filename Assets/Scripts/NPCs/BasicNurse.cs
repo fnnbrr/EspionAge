@@ -32,7 +32,7 @@ namespace NPCs
         private Animator animator;
         private int curNumSearches = 0;
 
-        public override void Awake()
+        protected override void Awake()
         {
             base.Awake();
 

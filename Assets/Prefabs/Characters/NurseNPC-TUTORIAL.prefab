@@ -561,6 +561,9 @@ GameObject:
   - component: {fileID: 3978388355136548009}
   - component: {fileID: 1500591663884376599}
   - component: {fileID: 6735644313341812414}
+  - component: {fileID: 9060879551363378094}
+  - component: {fileID: 8312642629450498341}
+  - component: {fileID: 4665764952901339458}
   m_Layer: 0
   m_Name: NurseNPC-TUTORIAL
   m_TagString: Untagged
@@ -654,7 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewRadius: 30
-  viewAngle: 90
+  viewAngle: 160
   targetMask:
     serializedVersion: 2
     m_Bits: 256
@@ -684,7 +687,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c3c5abb892441438b8343b27665ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 1
+  agent: {fileID: 0}
+  currentState: 2
+  defaultState: 2
+  nextState: 2
+  chaser: {fileID: 0}
+  patroller: {fileID: 0}
+  waiter: {fileID: 0}
+  originWaypoint:
+    position: {x: -135, y: 0, z: 226}
+    rotation: {x: 0, y: 335, z: 0}
+    stayTime: 5
+  checkBirdieWaypoint:
+    position: {x: -163.5, y: 0, z: 236}
+    rotation: {x: 0, y: 180, z: 0}
+    stayTime: 3
+--- !u!114 &9060879551363378094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7903426102794624195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 10
+  reacquireInterval: 0.1
+  isChasing: 0
+--- !u!114 &8312642629450498341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7903426102794624195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488879eb17e80e3499a7f06bed5ef670, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 6
+  rotationSpeed: 180
+  curPatrolWaypoint:
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+    stayTime: 0
+--- !u!114 &4665764952901339458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7903426102794624195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d0a3cb99b1483143827d0aca833b072, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8297073854535068810
 GameObject:
   m_ObjectHideFlags: 0
@@ -1442,15 +1504,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 030b1fe3beb488b4c98eda2c40c5cc37, type: 3}
---- !u!4 &2143468090463649129 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 030b1fe3beb488b4c98eda2c40c5cc37,
-    type: 3}
-  m_PrefabInstance: {fileID: 6396681649284830835}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3162785912663740282 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 030b1fe3beb488b4c98eda2c40c5cc37,
+    type: 3}
+  m_PrefabInstance: {fileID: 6396681649284830835}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2143468090463649129 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 030b1fe3beb488b4c98eda2c40c5cc37,
     type: 3}
   m_PrefabInstance: {fileID: 6396681649284830835}
   m_PrefabAsset: {fileID: 0}
