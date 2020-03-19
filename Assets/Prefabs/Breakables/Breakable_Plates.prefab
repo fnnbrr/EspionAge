@@ -97,7 +97,7 @@ MonoBehaviour:
   pingRadius: 70
   pingGrowthScale: 100
   pingFloorOffset: 0.5
-  breakable: 
+  breakable: event:/SFX/vaseBreak
 --- !u!114 &906590706157901623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf03f57578a27345be3f6441652e25b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brokenVersion: {fileID: 0}
+  brokenVersion: {fileID: 1563932873246332542}
   explosionForce: 1
   destroyInSeconds: 5
 --- !u!1001 &7392053781726760823
@@ -291,6 +291,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf453256d3c14bd4488a3ef49576b88e, type: 3}
+--- !u!1 &1563932873246332542 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: cf453256d3c14bd4488a3ef49576b88e,
+    type: 3}
+  m_PrefabInstance: {fileID: 7392053781726760823}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2589408644704609389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: cf453256d3c14bd4488a3ef49576b88e,
