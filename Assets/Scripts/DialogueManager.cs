@@ -8,6 +8,8 @@ public class SpeakerContainer
 {
     public string id;
     public GameObject speakerObject;
+    [HideInInspector]
+    public SpeakerUI speakerUI;
     [FMODUnity.EventRef]
     public string npcVoicePath;
 
@@ -16,6 +18,11 @@ public class SpeakerContainer
         id = _id;
         speakerObject = _speakerObject;
         npcVoicePath = _npcVoicePath;
+    }
+
+    public void SetSpeakerUI()
+    {
+        speakerUI = Utils.GetRequiredComponent<SpeakerUI>(speakerObject);
     }
 }
 
@@ -93,7 +100,7 @@ public class DialogueManager : Singleton<DialogueManager>
         //Load all speakers into dictionary
         foreach(SpeakerContainer speaker in allSpeakers)
         {
-            speakers.Add(speaker.id, speaker);
+            AddSpeaker(speaker);
         }
     }
 
@@ -127,7 +134,7 @@ public class DialogueManager : Singleton<DialogueManager>
             Debug.LogError("Trying to add a speaker that already exists");
             return;
         }
-
+        speaker.SetSpeakerUI();
         speakers.Add(speaker.id, speaker);
     }
 
@@ -228,9 +235,8 @@ public class DialogueManager : Singleton<DialogueManager>
         // Hide all speakers from that conversation
         HideAllSpeakers(conversation);
 
-        SpeakerUI speakerUI = Utils.GetRequiredComponent<SpeakerUI>(currentSpeaker.speakerObject);
-        TextMeshProUGUI textMesh = speakerUI.conversationText;
-        speakerUI.Show();
+        TextMeshProUGUI textMesh = currentSpeaker.speakerUI.conversationText;
+        currentSpeaker.speakerUI.Show();
 
         PlayVoice(currentSpeaker.npcVoicePath, currentSpeaker);
 
@@ -305,8 +311,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
         foreach(string speaker in convoSpeakers)
         {
-            SpeakerUI speakerUI = Utils.GetRequiredComponent<SpeakerUI>(speakers[speaker].speakerObject);
-            speakerUI.Hide();
+            speakers[speaker].speakerUI.Hide();
         }
     }
 
