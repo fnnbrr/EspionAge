@@ -57,8 +57,7 @@ namespace NPCs
             patroller.OnRotationComplete += () => SetState(TutorialNurseStates.Waiting);
             waiter.OnWaitComplete += () => SetState(nextState);
 
-            // note, specifically this order since we want him to go to birdie immediately on spawn
-            patroller.SetPoints(new List<PatrolWaypoint>() { checkBirdieWaypoint, originWaypoint });
+            patroller.SetPoints(new List<PatrolWaypoint>() { originWaypoint, checkBirdieWaypoint });
             SetState(TutorialNurseStates.Patrolling);
         }
 
