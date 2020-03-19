@@ -26,7 +26,9 @@ public class MissionTutorial : AMission
     [BoxGroup("Nurse Room Sequence")] public List<NPCs.Components.PatrolWaypoint> lostBirdieWaypoints;
     [ReorderableList]
     [BoxGroup("Nurse Room Sequence")] public List<Conversation> lostBirdieConversations;
-    [BoxGroup("Nurse Room Sequence")] public Conversation lostBirdieLeaveRoomSelfPrompt;
+    [BoxGroup("Nurse Room Sequence")] public MissionObject otherBedNPC;
+    [BoxGroup("Nurse Room Sequence")] public string otherBedNPCSpeakerId;
+    [BoxGroup("Nurse Room Sequence")] public List<Conversation> otherBedNPCConversations;
 
     // private nurse room variables
     private bool nurseIsFollowingPlayer = false;
@@ -37,6 +39,7 @@ public class MissionTutorial : AMission
     private int currentCaughtConversationIndex = 0;
     private Conversation currentNurseConversation;
     private Conversation currentLostBirdieConversation;
+    private Conversation currentOtherNPCConversation;
 
     [Header("Cutscenes")]
     public List<string> startCutsceneTexts;
@@ -168,7 +171,6 @@ public class MissionTutorial : AMission
 
         tutorialNurseAI.SetLostBirdieWaypoints(lostBirdieWaypoints);
         PlaySequentialConversationsSequential();
-        DialogueManager.Instance.StartConversation(lostBirdieLeaveRoomSelfPrompt);
     }
 
     private void PlaySequentialConversationsSequential()
@@ -194,6 +196,13 @@ public class MissionTutorial : AMission
     {
         // If they are returning, we want them to fully return before starting a conversation again
         if (nurseIsFollowingPlayer || tutorialNurseAI.currentState == TutorialNurseStates.Returning) return;
+
+        if (DialogueManager.Instance.IsConversationActive(currentOtherNPCConversation))
+        {
+            tutorialNurseAI.SetFoundBirdie();  // so he doesnt freak out
+            tutorialNurseAI.ReturnToOrigin();  // go back to origin
+            return;
+        }
 
         if (RegionManager.Instance.PlayerIsInRegion(RegionManager.Instance.nurseRoomBirdiesBedArea))
         {
@@ -324,6 +333,25 @@ public class MissionTutorial : AMission
         tutorialNurseFOV = Utils.GetRequiredComponent<FieldOfVision>(tutorialNurse.spawnedInstance);
         tutorialNurseFOV.OnTargetSpotted += HandleTutorialNurseSpottingPlayer;  // we can handle convos that occur when nurse spots birdie
 
+        // Spawn the other bed NPC by the window
+        otherBedNPC.spawnedInstance = MissionManager.Instance.SpawnMissionObject(otherBedNPC);
+        DialogueManager.Instance.AddSpeaker(
+            new SpeakerContainer(
+                otherBedNPCSpeakerId,
+                otherBedNPC.spawnedInstance,
+                string.Empty));
+        if (otherBedNPCConversations.Count == 0)
+        {
+            Debug.LogError("Need at least one conversation set for otherBedNPCConversations!");
+        }
+        else
+        {
+            currentOtherNPCConversation = otherBedNPCConversations.First();
+            otherBedNPC.spawnedInstance.GetComponent<NPCInteractable>().defaultConvos = new List<Conversation>() { currentOtherNPCConversation };
+            otherBedNPCConversations.RemoveAt(0);
+            DialogueManager.Instance.OnFinishConversation += LoadNextOtherNPCConversation;
+        }
+
         // Fade in and allow to pause, and lock the door to start
         UIManager.Instance.FadeIn();
         UIManager.Instance.CanPause = true;
@@ -346,6 +374,23 @@ public class MissionTutorial : AMission
 
         // Cutscene for once they enter the hallway
         RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
+    }
+
+    private void LoadNextOtherNPCConversation(Conversation conversation)
+    {
+        if (conversation == currentOtherNPCConversation)
+        {
+            if (otherBedNPCConversations.Count == 0)
+            {
+                DialogueManager.Instance.OnFinishConversation -= LoadNextOtherNPCConversation;
+            }
+            else
+            {
+                currentOtherNPCConversation = otherBedNPCConversations.First();
+                otherBedNPC.spawnedInstance.GetComponent<NPCInteractable>().defaultConvos = new List<Conversation>() { currentOtherNPCConversation };
+                otherBedNPCConversations.RemoveAt(0);
+            }
+        }
     }
 
     private void OnPlayerCollideWithNurseRoomDoor()
@@ -536,12 +581,10 @@ public class MissionTutorial : AMission
             GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, false);
         }
 
-        // Destroying the note
         if (MissionManager.Instance)
         {
-            // Delete the note if it still exists
-            //MissionManager.Instance.DestroyMissionObject(note);
             MissionManager.Instance.DestroyMissionObject(tutorialNurse);
+            MissionManager.Instance.DestroyMissionObject(otherBedNPC);
         }
 
         if (RegionManager.Instance)
