@@ -9,6 +9,8 @@ public class SpeakerContainer
 {
     public string id;
     public GameObject speakerObject;
+    [HideInInspector]
+    public SpeakerUI speakerUI;
     [FMODUnity.EventRef]
     public string npcVoicePath;
 
@@ -17,6 +19,11 @@ public class SpeakerContainer
         id = _id;
         speakerObject = _speakerObject;
         npcVoicePath = _npcVoicePath;
+    }
+
+    public void SetSpeakerUI()
+    {
+        speakerUI = Utils.GetRequiredComponent<SpeakerUI>(speakerObject);
     }
 }
 
@@ -64,8 +71,6 @@ public class ActiveConversation
 
 public class DialogueManager : Singleton<DialogueManager>
 {
-    public float charTypeSpeed = 0.05f;
-    public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
     private int startFrame;
 
     private bool isAdvancing;
@@ -94,7 +99,7 @@ public class DialogueManager : Singleton<DialogueManager>
         //Load all speakers into dictionary
         foreach (SpeakerContainer speaker in allSpeakers)
         {
-            speakers.Add(speaker.id, speaker);
+            AddSpeaker(speaker);
         }
     }
 
@@ -128,7 +133,7 @@ public class DialogueManager : Singleton<DialogueManager>
             Debug.LogError("Trying to add a speaker that already exists");
             return;
         }
-
+        speaker.SetSpeakerUI();
         speakers.Add(speaker.id, speaker);
     }
 
@@ -212,7 +217,11 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         while (ContinueConversation(conversation))
         {
-            yield return new WaitForSeconds(waitLineTime);
+            while(!activeConversations[conversation].waitingForNext)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            yield return new WaitForSeconds(Constants.WAIT_TIME_CONVO_LINE);
         }
 
         ResolveConversation(conversation);
@@ -240,9 +249,9 @@ public class DialogueManager : Singleton<DialogueManager>
         // Hide all speakers from that conversation
         HideAllSpeakers(conversation);
 
-        SpeakerUI speakerUI = Utils.GetRequiredComponent<SpeakerUI>(currentSpeaker.speakerObject);
-        TextMeshProUGUI textMesh = speakerUI.conversationText;
-        speakerUI.Show();
+        TextMeshProUGUI textMesh = currentSpeaker.speakerUI.conversationText;
+        currentSpeaker.speakerUI.SetActiveAButton(!activeConversations[conversation].isAutoPlaying);
+        currentSpeaker.speakerUI.Show();
 
         PlayVoice(currentSpeaker.npcVoicePath, currentSpeaker);
 
@@ -256,6 +265,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private IEnumerator StartTypeText(Conversation conversation, TextMeshProUGUI textMesh, string text)
     {
         activeConversations[conversation].isTyping = true;
+        activeConversations[conversation].waitingForNext = false;
 
         int currentCharIndex = 0;
         while (currentCharIndex < text.Length)
@@ -270,7 +280,7 @@ public class DialogueManager : Singleton<DialogueManager>
                 currentCharIndex += 1;
             }
             textMesh.text = text.Substring(0, currentCharIndex);
-            yield return new WaitForSeconds(charTypeSpeed);
+            yield return new WaitForSeconds(Constants.CHAR_TYPE_SPEED);
         }
         activeConversations[conversation].waitingForNext = true;
         while (activeConversations[conversation].waitingForNext)
@@ -317,8 +327,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
         foreach(string speaker in convoSpeakers)
         {
-            SpeakerUI speakerUI = Utils.GetRequiredComponent<SpeakerUI>(speakers[speaker].speakerObject);
-            speakerUI.Hide();
+            speakers[speaker].speakerUI.Hide();
         }
     }
 

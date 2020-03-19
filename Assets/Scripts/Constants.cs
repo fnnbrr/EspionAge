@@ -57,7 +57,11 @@ public static class Constants
 
     public const float INTERACT_BOUNDARY_RADIUS = 20.0f;
     public const float INTERACT_POPUP_RADIUS = 10.0f;
-    public const float WAIT_TIME_CONVO_LINE = 2.0f;
+    public const float CHAR_TYPE_SPEED = 0.05f;
+    public const float WAIT_TIME_CONVO_LINE = 1.0f;
+
+    public const int RIGHT_PADDING_WITH_ABUTTON = 70;
+    public const int RIGHT_PADDING_WITHOUT_ABUTTON = 40;
 
     public const string SHADER_NAME_SHAKE = "PlateShake";
 }
