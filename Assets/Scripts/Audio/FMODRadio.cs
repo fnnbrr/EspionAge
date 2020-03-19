@@ -14,7 +14,7 @@ public class FMODRadio : MonoBehaviour
     {
         interactable = Utils.GetRequiredComponent<Interactable>(this);
         interactable.OnInteractEnd += ChangeStation;
-        musicEv = GetComponent<FMODUnity.StudioEventEmitter>();
+        musicEv = Utils.GetRequiredComponent<FMODUnity.StudioEventEmitter>(this);
         musicEv.Play();
     }
 
