@@ -36,6 +36,16 @@ public class ObjectiveList : Singleton<ObjectiveList>
         root.gameObject.SetActive(true);
     }
 
+    public void SlideOutObjectTextForSeconds(float seconds)
+    {
+        if (!root.GetBool("slideOut"))
+        {
+            root.SetBool("slideOut", true);
+        }
+
+        StartCoroutine(WaitToSlideObjectiveListIn(seconds));
+    }
+
     public void DisplayObjectiveText(string textToSet)
     {
         DisplayObjectiveList();
@@ -55,7 +65,7 @@ public class ObjectiveList : Singleton<ObjectiveList>
         }
         objectiveText.text = "<s>" + objectiveText.text + "</s>";
 
-        StartCoroutine(WaitToSlideObjectiveListIn(5));
+        StartCoroutine(WaitToSlideObjectiveListIn(5f));
     }
 
     IEnumerator WaitToSlideObjectiveListIn(float time)

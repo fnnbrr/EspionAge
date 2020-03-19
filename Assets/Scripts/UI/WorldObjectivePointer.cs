@@ -13,8 +13,7 @@ public class WorldObjectivePointer : Singleton<WorldObjectivePointer>
 
     private void Awake()
     {
-        //pointer.SetActive(false);
-        PointTo(Vector3.zero);
+        Deactivate();
     }
 
     private void FixedUpdate()
