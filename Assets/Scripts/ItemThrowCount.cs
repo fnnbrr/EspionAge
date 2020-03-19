@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class ItemThrowCount : MonoBehaviour
 {
+    public GameObject imageRoot;
+
     private int numItemsHeld = 0;
-    ThrowController throwController;
-    TextMeshProUGUI text;
+    private ThrowController throwController;
+    private TextMeshProUGUI text;
 
     void Start()
     {
@@ -23,6 +25,30 @@ public class ItemThrowCount : MonoBehaviour
 
         text = Utils.GetRequiredComponentInChildren<TextMeshProUGUI>(this, "Throwable Object text is null!");
         DisplayUpdate();
+
+        if (!GameEventManager.Instance.CheckEventStatus(GameEventManager.GameEvent.HasThrownSomething))
+        {
+            HideImage();
+            throwController.OnPickup += WaitForFirstPickup;
+        }
+    }
+
+    private void ShowImage()
+    {
+        imageRoot.SetActive(true);
+    }
+
+    private void HideImage()
+    {
+        imageRoot.SetActive(false);
+    }
+
+    private void WaitForFirstPickup(GameObject source)
+    {
+        throwController.OnPickup -= WaitForFirstPickup;
+
+        ShowImage();
+        GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.HasThrownSomething, true);
     }
 
     private void HandleResetThrowableCount()

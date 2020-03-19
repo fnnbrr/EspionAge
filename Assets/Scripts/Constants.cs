@@ -24,6 +24,8 @@ public static class Constants
     
     public const string ANIMATION_MAINMENU_LIGHTBULB_FLICKER = "Flicker";
     public const string ANIMATION_MAINMENU_LIGHTBULB_RED = "Red";
+    
+    public const string ANIMATION_PAUSE_DISABLED_DISPLAY= "Display";
 
     public const string INPUT_INTERACTABLE_GETDOWN = "Interact";
     public const string INPUT_CANCEL_GETDOWN = "Cancel";
