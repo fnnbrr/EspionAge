@@ -9,6 +9,7 @@ public class ObjectiveList : Singleton<ObjectiveList>
     private Image background;
     private TMP_Text objectiveText;
     private Animator root;
+    private bool slideOut;
 
     // Start is called before the first frame update
     void Start()
@@ -16,8 +17,18 @@ public class ObjectiveList : Singleton<ObjectiveList>
         background = GetComponentInChildren<Image>();
         objectiveText = GetComponentInChildren<TMP_Text>();
         root =  GetComponentInChildren<Animator>();
-        
         HideObjectiveList();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && !root.GetBool("slideOut"))
+        {
+            root.SetBool("slideOut", true); 
+        } else if (Input.GetKeyDown(KeyCode.Space) && root.GetBool("slideOut"))
+        {
+            root.SetBool("slideOut", false); 
+        }
     }
 
     public void DisplayObjectiveList()
@@ -38,6 +49,10 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     public void CrossOutObjectiveText()
     {
+        if (!root.GetBool("slideOut"))
+        {
+            root.SetBool("slideOut", true); 
+        }
         objectiveText.text = "<s>" + objectiveText.text + "</s>";
     }
 
@@ -45,4 +60,6 @@ public class ObjectiveList : Singleton<ObjectiveList>
     {
         root.gameObject.SetActive(false);
     }
+
+    
 }
