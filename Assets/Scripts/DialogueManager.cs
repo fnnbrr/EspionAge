@@ -202,6 +202,11 @@ public class DialogueManager : Singleton<DialogueManager>
         }
     }
 
+    public bool IsConversationActive(Conversation conversation)
+    {
+        return activeConversations.ContainsKey(conversation);
+    }
+
     void AdvanceConversation(Conversation conversation)
     {
         if (!ContinueConversation(conversation))

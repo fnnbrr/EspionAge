@@ -96,7 +96,7 @@ MonoBehaviour:
   pingRadius: 70
   pingGrowthScale: 100
   pingFloorOffset: 0.5
-  breakable: 
+  breakable: event:/SFX/vaseBreak
 --- !u!114 &906590706157901623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,6 +113,7 @@ MonoBehaviour:
   shakeRadius: 20
   dropRadius: 5
   despawnSec: 3
+  awakenessIncreasePercentage: 0.2
   fadeAndDestroyAfterThrow: 1
   destroyAfterSeconds: 3
   minShake: 0.1
