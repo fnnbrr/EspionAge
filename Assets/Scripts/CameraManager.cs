@@ -80,18 +80,20 @@ public class CameraManager : Singleton<CameraManager>
         return GetActiveCamera().VirtualCameraGameObject.transform;
     }
 
-    public void AddToCurrentCameraDistance(float cameraDistanceDelta)
+    public void UpdateCameraDistances(float cameraDistanceDelta)
     {
         // GetActiveCamera() == null only happens in the beginning of the game
         if (!canZoom || GetActiveCamera() == null) return;
 
-        CinemachineVirtualCamera currentVirtualCamera = GetActiveVirtualCamera();
-        if (defaultCameraDistanceMapping.TryGetValue(currentVirtualCamera, out float defaultCameraDistance))
+        foreach (KeyValuePair<CinemachineVirtualCamera, float> mappedCameraPair in defaultCameraDistanceMapping)
         {
-            CinemachineFramingTransposer framingTransposer = GetCameraFramingTransposer(currentVirtualCamera);
-            if (framingTransposer)
+            if (mappedCameraPair.Key)
             {
-                framingTransposer.m_CameraDistance = defaultCameraDistance + cameraDistanceDelta;
+                CinemachineFramingTransposer framingTransposer = GetCameraFramingTransposer(mappedCameraPair.Key);
+                if (framingTransposer)
+                {
+                    framingTransposer.m_CameraDistance = mappedCameraPair.Value + cameraDistanceDelta;
+                }
             }
         }
     }

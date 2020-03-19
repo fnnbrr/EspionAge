@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class FMODRadio : MonoBehaviour
 {
-    [FMODUnity.EventRef]
-    public string Music;
-    FMOD.Studio.EventInstance musicEv;
+    public FMODUnity.StudioEventEmitter musicEv;
     public bool isPlaying;
 
     private Interactable interactable;
@@ -16,17 +14,16 @@ public class FMODRadio : MonoBehaviour
     {
         interactable = Utils.GetRequiredComponent<Interactable>(this);
         interactable.OnInteractEnd += ChangeStation;
-        musicEv = FMODUnity.RuntimeManager.CreateInstance(Music);
-        musicEv.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform.position)); 
-        musicEv.start();
+        musicEv = Utils.GetRequiredComponent<FMODUnity.StudioEventEmitter>(this);
+        musicEv.Play();
     }
 
     public void ChangeStation(Interactable source)
     {
         if (isPlaying)
         {
-            musicEv.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            musicEv.start();
+            musicEv.Stop();
+            musicEv.Play();
         }
     }
 }

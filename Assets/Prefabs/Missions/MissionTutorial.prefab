@@ -48,6 +48,49 @@ MonoBehaviour:
   playerStartRotation: {x: 0, y: 86.035, z: 0}
   playerRespawnPosition: {x: -128, y: 3, z: 235}
   playerRespawnRotation: {x: 0, y: 90, z: 0}
+  tutorialNurse:
+    prefab: {fileID: 7903426102794624195, guid: 1fa45bfd1f5a308439052b5ea656f726,
+      type: 3}
+    position: {x: -135, y: 0, z: 226}
+    rotation: {x: 0, y: 335, z: 0}
+    spawnedInstance: {fileID: 0}
+  tutorialNurseSpeakerId: NurseNPC-TUTORIAL
+  tutorialNurseVoicePath: event:/Characters/OldManNPC
+  nurseConversations:
+  - {fileID: 11400000, guid: 868f1662f216ea0488e2e4dcc3ed4450, type: 2}
+  - {fileID: 11400000, guid: 0fc85623a4c89c14283b7e0cb96d064e, type: 2}
+  - {fileID: 11400000, guid: cef52c6d7f27aa34db6cc5379c1d71df, type: 2}
+  - {fileID: 11400000, guid: 733fca5998923d44ab045aa763695c84, type: 2}
+  - {fileID: 11400000, guid: 9157b4d74ee54d34abf7a32ccae0b460, type: 2}
+  birdieCaughtConversations:
+  - {fileID: 11400000, guid: 9a9894dc3d281244985003aa96c518d2, type: 2}
+  - {fileID: 11400000, guid: 4ee7281034fbc114f837068f3a916856, type: 2}
+  - {fileID: 11400000, guid: 3fdcb8427a83e9b4f8d863f4a035ed64, type: 2}
+  - {fileID: 11400000, guid: 08828293146351c41afd3f4401df0fdc, type: 2}
+  cantEscapeYetConversation: {fileID: 11400000, guid: f11c30173e3a0c54388f905ba82c4837,
+    type: 2}
+  lostBirdieWaypoints:
+  - position: {x: -162, y: 0, z: 234}
+    rotation: {x: 0, y: 170, z: 0}
+    stayTime: 2
+  - position: {x: -167, y: 0, z: 241}
+    rotation: {x: 0, y: 300, z: 0}
+    stayTime: 5
+  lostBirdieConversations:
+  - {fileID: 11400000, guid: c1911cb90aee5c04290d398f47ea47e8, type: 2}
+  - {fileID: 11400000, guid: 4ecd796a5edf1e04884a6b04b47d175f, type: 2}
+  lostBirdieLeaveRoomSelfPrompt: {fileID: 11400000, guid: 69d4076fb3acfcb4792d45427d1e7076,
+    type: 2}
+  otherBedNPC:
+    prefab: {fileID: 1032919803082876777, guid: 76721a628a2e5bd46a954b0ae5f4fea5,
+      type: 3}
+    position: {x: -163.85, y: 0, z: 246.15}
+    rotation: {x: 0, y: -109.2, z: 0}
+    spawnedInstance: {fileID: 0}
+  otherBedNPCSpeakerId: Gertrude
+  otherBedNPCConversations:
+  - {fileID: 11400000, guid: f337398cffdab324b8dded40acc1e22a, type: 2}
+  - {fileID: 11400000, guid: 38af480189cf4764c9767feb50bff9c3, type: 2}
   startCutsceneTexts:
   - ...I don't belong here...
   - I still have some steam in me!
@@ -132,7 +175,7 @@ MonoBehaviour:
   CollisionTag: 
   Event: event:/Music/Tutorial Music
   PlayEvent: 0
-  StopEvent: 0
+  StopEvent: 2
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0

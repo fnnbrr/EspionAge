@@ -13,6 +13,34 @@ public class MissionTutorial : AMission
     public Vector3 playerRespawnPosition;
     public Vector3 playerRespawnRotation;
 
+    [BoxGroup("Nurse Room Sequence")] public MissionObject tutorialNurse;
+    [BoxGroup("Nurse Room Sequence")] public string tutorialNurseSpeakerId;
+    [FMODUnity.EventRef]
+    [BoxGroup("Nurse Room Sequence")] public string tutorialNurseVoicePath;
+    [ReorderableList]
+    [BoxGroup("Nurse Room Sequence")]  public List<Conversation> nurseConversations;
+    [ReorderableList]
+    [BoxGroup("Nurse Room Sequence")] public List<Conversation> birdieCaughtConversations;
+    [BoxGroup("Nurse Room Sequence")] public Conversation cantEscapeYetConversation;
+    [ReorderableList]
+    [BoxGroup("Nurse Room Sequence")] public List<NPCs.Components.PatrolWaypoint> lostBirdieWaypoints;
+    [ReorderableList]
+    [BoxGroup("Nurse Room Sequence")] public List<Conversation> lostBirdieConversations;
+    [BoxGroup("Nurse Room Sequence")] public MissionObject otherBedNPC;
+    [BoxGroup("Nurse Room Sequence")] public string otherBedNPCSpeakerId;
+    [BoxGroup("Nurse Room Sequence")] public List<Conversation> otherBedNPCConversations;
+
+    // private nurse room variables
+    private bool nurseIsFollowingPlayer = false;
+    private bool canEscape = false;
+    private bool isInCantEscapeConversation = false;
+    private TutorialNurse tutorialNurseAI;
+    private FieldOfVision tutorialNurseFOV;
+    private int currentCaughtConversationIndex = 0;
+    private Conversation currentNurseConversation;
+    private Conversation currentLostBirdieConversation;
+    private Conversation currentOtherNPCConversation;
+
     [Header("Cutscenes")]
     public List<string> startCutsceneTexts;
     public GameObject awakenessPointerUIAnimation;
@@ -42,9 +70,6 @@ public class MissionTutorial : AMission
     public GameObject chaserPrefab;
     public float enemyCutsceneAnimationSpeed = 0.2f;
     public List<TutorialChaserGroup> chaserGroups;
-
-    //[Header("Note")]
-    //public MissionObject note;
 
     [Header("Misc. Objects")]
     public List<MissionObject> extraObjects;
@@ -96,23 +121,7 @@ public class MissionTutorial : AMission
             chaserGroup = g;
         }
     }
-
-    // General Logic Overview:
-    // * start out faded out
-    // * move player to the spawn point (in her room)
-    // * spawn all the vases
-    // * mission giver at the end of the hallway
-    //   * somehow make the mission giver have a certain conversation
-    //   * somehow wait for the player to talk to the the mission giver to end the mission
-    // * fade in
-    // - start animation of note going under the door
-    //   - this note should be an interactable which will have some text of birdie speaking to herself (reading outloud i guess)
-    // * for for birdie to exit to hallway before starting cutscene
-    //   * vase drops, birdie gets excited
-    //   * enemies come to yell at her
-    //   * birdie runs away
-    // * finish mission once we finishing interacting with the mission giver (which will also give us the next mission)
-
+    
     private void Awake()
     {
         spawnedVases = new List<SpawnedVase>();
@@ -133,7 +142,7 @@ public class MissionTutorial : AMission
 
         // Move player to a set position
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-        GameManager.Instance.GetPlayerRigidbody().isKinematic = true;
+        GameManager.Instance.GetPlayerRigidbody().isKinematic = true;  // to stop collisions with the bed for the wake up animation
         GameManager.Instance.GetPlayerTransform().position = playerStartPosition;
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(playerStartRotation);
 
@@ -148,10 +157,136 @@ public class MissionTutorial : AMission
         SpawnRegularVases();
         SpawnExtraObjects();
 
-        // Listen for the player to pass through the final door
+        // Listen for the player to pass through the final door to finish the mission
         RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
 
         StartCoroutine(StartMissionLogic());
+    }
+
+    private void HandleCouldNotFindBirdie()
+    {
+        tutorialNurseAI.OnCouldNotFindBirdie -= HandleCouldNotFindBirdie;
+
+        UnlockDoorAndDisableNurseComponents();
+
+        tutorialNurseAI.SetLostBirdieWaypoints(lostBirdieWaypoints);
+        PlaySequentialConversationsSequential();
+    }
+
+    private void PlaySequentialConversationsSequential()
+    {
+        if (lostBirdieConversations.Count > 0)
+        {
+            currentLostBirdieConversation = lostBirdieConversations[0];
+            lostBirdieConversations.RemoveAt(0);
+
+            DialogueManager.Instance.StartConversation(currentLostBirdieConversation);
+            DialogueManager.Instance.OnFinishConversation += OnFinishLostBirdieConversation;
+        }
+    }
+
+    private void OnFinishLostBirdieConversation(Conversation conversation)
+    {
+        if (conversation != currentLostBirdieConversation) return;
+        DialogueManager.Instance.OnFinishConversation -= OnFinishLostBirdieConversation;
+        PlaySequentialConversationsSequential();
+    }
+
+    private void HandleTutorialNurseSpottingPlayer()
+    {
+        // If they are returning, we want them to fully return before starting a conversation again
+        if (nurseIsFollowingPlayer || tutorialNurseAI.currentState == TutorialNurseStates.Returning) return;
+
+        if (DialogueManager.Instance.IsConversationActive(currentOtherNPCConversation))
+        {
+            tutorialNurseAI.SetFoundBirdie();  // so he doesnt freak out
+            tutorialNurseAI.ReturnToOrigin();  // go back to origin
+            return;
+        }
+
+        if (RegionManager.Instance.PlayerIsInRegion(RegionManager.Instance.nurseRoomBirdiesBedArea))
+        {
+            if (nurseConversations.Count == 0) return;
+
+            currentNurseConversation = nurseConversations.First();
+            DialogueManager.Instance.StartConversation(currentNurseConversation);
+            tutorialNurseAI.SetFoundBirdie();
+
+            nurseConversations.RemoveAt(0);
+            if (nurseConversations.Count == 0)
+            {
+                UnlockDoorAndDisableNurseComponents();
+                return;
+            }
+
+            DialogueManager.Instance.OnFinishConversation += StopFollowingAfterConversationEnds;
+            tutorialNurseAI.StopMovement();
+        }
+        else if (RegionManager.Instance.PlayerIsInRegion(RegionManager.Instance.nurseRoomDoorArea) || 
+            RegionManager.Instance.PlayerIsInRegion(RegionManager.Instance.nurseRoomOtherBedArea))
+        {
+            if (birdieCaughtConversations.Count == 0)
+            {
+                Debug.LogError("Need at least one element in birdieCaughtConversations!");
+                return;
+            }
+            currentNurseConversation = birdieCaughtConversations[currentCaughtConversationIndex++ % birdieCaughtConversations.Count];
+            DialogueManager.Instance.StartConversation(currentNurseConversation);
+            nurseIsFollowingPlayer = true;
+
+            tutorialNurseAI.StartFollowingPlayer();
+            tutorialNurseAI.SetFoundBirdie();
+            WorldObjectivePointer.Instance.PointTo(playerStartPosition, RegionManager.Instance.nurseRoomBirdiesBedArea);
+
+            RegionManager.Instance.OnPlayerEnterRegion += WaitForBirdieToGoBackToBed;
+        }
+        else
+        {
+            Debug.LogError("Player is not in any of the expected nurse room regions when tutorial nurse spotted her!");
+        }
+    }
+
+    private void StopFollowingAfterConversationEnds(Conversation conversation)
+    {
+        if (conversation != currentNurseConversation) return;
+        DialogueManager.Instance.OnFinishConversation -= StopFollowingAfterConversationEnds;
+
+        tutorialNurseAI.ReturnToOrigin();
+        nurseIsFollowingPlayer = false;
+    }
+
+    private void WaitForBirdieToGoBackToBed(RegionTrigger region)
+    {
+        if (region != RegionManager.Instance.nurseRoomBirdiesBedArea) return;
+        RegionManager.Instance.OnPlayerEnterRegion -= WaitForBirdieToGoBackToBed;
+
+        tutorialNurseAI.ReturnToOrigin();
+        nurseIsFollowingPlayer = false;
+    }
+
+    private void UnlockDoorAndDisableNurseComponents()
+    {
+        canEscape = true;
+
+        // Disable events were we previously listening for
+        tutorialNurseAI.OnCouldNotFindBirdie -= HandleCouldNotFindBirdie;
+        tutorialNurseFOV.OnTargetSpotted -= HandleTutorialNurseSpottingPlayer;
+        RegionManager.Instance.nurseRoomDoor.OnPlayerCollideWithDoor -= OnPlayerCollideWithNurseRoomDoor;
+
+        // Hide the FOV now (if we disable the component it'll go wonky and freeze the fov mesh weirdly)
+        tutorialNurseFOV.viewRadius = 0f;
+
+        // Make the nurse go back to his chair + make him stay there (it's his originWaypoint)
+        tutorialNurseAI.ReturnThenIdle();
+
+        // Tell the user they found the right way out!
+        ObjectiveList.Instance.CrossOutObjectiveText();
+
+        // Unlock the door (conversations will be clear to the player that they can leave now)
+        RegionManager.Instance.nurseRoomDoor.SetLocked(false);
+
+        // Others...
+        // TODO: door unlock sound
     }
 
     private void CommenceCompleteMission()
@@ -179,34 +314,112 @@ public class MissionTutorial : AMission
 
     private IEnumerator StartMissionLogic()
     {
+        // The starting rolling text... maybe one day we'll remove this
         foreach (string text in startCutsceneTexts)
         {
             yield return UIManager.Instance.textOverlay.SetText(text);
         }
-        UIManager.Instance.CanPause = true;
-        UIManager.Instance.regionText.ClearText();
+        UIManager.Instance.zoneText.ClearText(); // instant clear it to type it out when we fade in later
 
-        // Fade in, and start typing the correct region name from this point
+        // Tutorial Nurse Section Init: add as speaker, init with ai components to respond to certain events
+        tutorialNurse.spawnedInstance = MissionManager.Instance.SpawnMissionObject(tutorialNurse);
+        DialogueManager.Instance.AddSpeaker(
+            new SpeakerContainer(
+                tutorialNurseSpeakerId,
+                tutorialNurse.spawnedInstance,
+                tutorialNurseVoicePath));
+        tutorialNurseAI = Utils.GetRequiredComponent<TutorialNurse>(tutorialNurse.spawnedInstance);
+        tutorialNurseAI.OnCouldNotFindBirdie += HandleCouldNotFindBirdie;  // make the ai freak out when they cant find birdie
+        tutorialNurseFOV = Utils.GetRequiredComponent<FieldOfVision>(tutorialNurse.spawnedInstance);
+        tutorialNurseFOV.OnTargetSpotted += HandleTutorialNurseSpottingPlayer;  // we can handle convos that occur when nurse spots birdie
+
+        // Spawn the other bed NPC by the window
+        otherBedNPC.spawnedInstance = MissionManager.Instance.SpawnMissionObject(otherBedNPC);
+        DialogueManager.Instance.AddSpeaker(
+            new SpeakerContainer(
+                otherBedNPCSpeakerId,
+                otherBedNPC.spawnedInstance,
+                string.Empty));
+        if (otherBedNPCConversations.Count == 0)
+        {
+            Debug.LogError("Need at least one conversation set for otherBedNPCConversations!");
+        }
+        else
+        {
+            currentOtherNPCConversation = otherBedNPCConversations.First();
+            otherBedNPC.spawnedInstance.GetComponent<NPCInteractable>().defaultConvos = new List<Conversation>() { currentOtherNPCConversation };
+            otherBedNPCConversations.RemoveAt(0);
+            DialogueManager.Instance.OnFinishConversation += LoadNextOtherNPCConversation;
+        }
+
+        // Fade in and allow to pause, and lock the door to start
         UIManager.Instance.FadeIn();
-        GameManager.Instance.GetPlayerAnimator().SetTrigger(Constants.ANIMATION_BIRDIE_WAKEUP);
-        float animationLength = GameManager.Instance.GetPlayerAnimator().GetCurrentAnimatorClipInfo(0)[0].clip.length; // should always be there
-        yield return new WaitForSeconds(animationLength * 0.8f);  // fine-tuned for best visuals
+        UIManager.Instance.CanPause = true;
+        RegionManager.Instance.nurseRoomDoor.SetLocked(true);
+        RegionManager.Instance.nurseRoomDoor.OnPlayerCollideWithDoor += OnPlayerCollideWithNurseRoomDoor;
+
+        // Wake up cutscene + enabling movement afterwards
+        if (!GameManager.Instance.skipSettings.allRealtimeCutscenes)
+        {
+            GameManager.Instance.GetPlayerAnimator().SetTrigger(Constants.ANIMATION_BIRDIE_WAKEUP);
+            float animationLength = GameManager.Instance.GetPlayerAnimator().GetCurrentAnimatorClipInfo(0)[0].clip.length; // should always be there
+            yield return new WaitForSeconds(animationLength * 0.8f);  // fine-tuned for best visuals
+        }
         GameManager.Instance.GetPlayerRigidbody().isKinematic = false;
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
-        UIManager.Instance.regionText.DisplayText(RegionManager.Instance.GetCurrentZone().regionName, RegionManager.Instance.GetCurrentZone().isRestricted);
+        // we type it here because the user finally gains control, so it looks cool to then type the location they're in
+        UIManager.Instance.zoneText.DisplayText(RegionManager.Instance.GetCurrentZone().regionName, RegionManager.Instance.GetCurrentZone().isRestricted);
+        ObjectiveList.Instance.SlideOutObjectTextForSeconds(5f);
 
         // Cutscene for once they enter the hallway
         RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
     }
 
+    private void LoadNextOtherNPCConversation(Conversation conversation)
+    {
+        if (conversation == currentOtherNPCConversation)
+        {
+            if (otherBedNPCConversations.Count == 0)
+            {
+                DialogueManager.Instance.OnFinishConversation -= LoadNextOtherNPCConversation;
+            }
+            else
+            {
+                currentOtherNPCConversation = otherBedNPCConversations.First();
+                otherBedNPC.spawnedInstance.GetComponent<NPCInteractable>().defaultConvos = new List<Conversation>() { currentOtherNPCConversation };
+                otherBedNPCConversations.RemoveAt(0);
+            }
+        }
+    }
+
+    private void OnPlayerCollideWithNurseRoomDoor()
+    {
+        if (canEscape || isInCantEscapeConversation) return;
+
+        isInCantEscapeConversation = true;
+        DialogueManager.Instance.StartConversation(cantEscapeYetConversation);
+        DialogueManager.Instance.OnFinishConversation += WaitForCantFinishConversationToFinish;
+    }
+
+    private void WaitForCantFinishConversationToFinish(Conversation conversation)
+    {
+        if (conversation == cantEscapeYetConversation)
+        {
+            DialogueManager.Instance.OnFinishConversation -= WaitForCantFinishConversationToFinish;
+            isInCantEscapeConversation = false;
+        }
+    }
+
     private void OnNurseRoomDoorClose()
     {
+        // we only care if the door closes and the player is completely out of the nurse room
         if (!RegionManager.Instance.PlayerIsInZone(RegionManager.Instance.nursesRoom))
         {
             RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
 
             musicEv.Play();
+            tutorialNurse.spawnedInstance.GetComponent<SpeakerUI>().Hide();  // if he's still talking, no more seeing the talking
 
             startCutscenePlayed = true;
             firstVase.loudObject.Drop();
@@ -368,11 +581,15 @@ public class MissionTutorial : AMission
             GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, false);
         }
 
-        // Destroying the note
         if (MissionManager.Instance)
         {
-            // Delete the note if it still exists
-            //MissionManager.Instance.DestroyMissionObject(note);
+            MissionManager.Instance.DestroyMissionObject(tutorialNurse);
+            MissionManager.Instance.DestroyMissionObject(otherBedNPC);
+        }
+
+        if (RegionManager.Instance)
+        {
+            RegionManager.Instance.nurseRoomDoor.SetLocked(false);
         }
 
         // Handle the cutscene event handlers
