@@ -36,7 +36,6 @@ namespace NPCs.Components
                 if (_numChasersActive == 1)
                 {
                     // This means that the current chaser is the 1st to begin chasing Birdie
-                    Debug.Log("1f");
                     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 1f);
                 }
                 
@@ -50,7 +49,6 @@ namespace NPCs.Components
                 if (_numChasersActive == 0)
                 {
                     // This means that the current chaser is the last to stop chasing Birdie
-                    Debug.Log("0f");
                     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
                 }
                 
