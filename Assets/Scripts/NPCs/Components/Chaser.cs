@@ -10,14 +10,21 @@ namespace NPCs.Components
         public float reacquireInterval = 0.1f;
         public bool isChasing = false;
 
+        private static int _numChasersActive = 0;
+        
         public event Action OnSeePlayer;
         public event Action OnLosePlayer;
         public event Action OnReacquireTarget;
         public event Action OnCollideWithPlayer;
 
+        [FMODUnity.ParamRef]
+        public string playerChased;
+
         private void Start()
         {
             InvokeRepeating(nameof(ReacquireTarget), 0f, reacquireInterval);
+            Debug.Log("0f");
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
         }
 
         public void HandleTargetsInRange(int numTargetsInRange)
@@ -25,12 +32,28 @@ namespace NPCs.Components
             if (numTargetsInRange > 0 && !isChasing)
             {
                 isChasing = true;
+                _numChasersActive += 1;
+                if (_numChasersActive == 1)
+                {
+                    // This means that the current chaser is the 1st to begin chasing Birdie
+                    Debug.Log("1f");
+                    FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 1f);
+                }
+                
                 OnSeePlayer?.Invoke();
             }
 
             else if (numTargetsInRange == 0 && isChasing)
             {
                 isChasing = false;
+                _numChasersActive -= 1;
+                if (_numChasersActive == 0)
+                {
+                    // This means that the current chaser is the last to stop chasing Birdie
+                    Debug.Log("0f");
+                    FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
+                }
+                
                 OnLosePlayer?.Invoke();
             }
         }
@@ -48,6 +71,7 @@ namespace NPCs.Components
             if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
             {
                 OnCollideWithPlayer?.Invoke();
+                _numChasersActive = 0;
             }
         }
     }

@@ -31,12 +31,6 @@ public class FieldOfVision : MonoBehaviour
 	private MeshFilter viewMeshFilter;
 	private MeshRenderer viewMeshRenderer;
 
-    [Header("FMOD Audio")]
-    [FMODUnity.ParamRef]
-    public string parameter;
-    public float notCaught = 0f;
-    public float isCaught = 1f;
-
 	private Chaser chaser;
 	private bool targetsVisible = false;
 
@@ -106,7 +100,6 @@ public class FieldOfVision : MonoBehaviour
 		if (visibleTargets.Count == 0)
 		{
 			viewMeshRenderer.material = defaultMaterial;
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, notCaught);
 			if (targetsVisible)
 			{
 				OnTargetLost?.Invoke();
@@ -115,7 +108,6 @@ public class FieldOfVision : MonoBehaviour
 		}
         else
 		{
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(parameter, isCaught);
             viewMeshRenderer.material = spottedMaterial;
 
 			viewMeshRenderer.material.SetColor("_BaseColor", Color.Lerp(
