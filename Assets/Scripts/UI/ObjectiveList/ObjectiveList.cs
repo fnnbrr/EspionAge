@@ -11,12 +11,12 @@ public class ObjectiveList : Singleton<ObjectiveList>
     private Animator root;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         background = GetComponentInChildren<Image>();
         objectiveText = GetComponentInChildren<TMP_Text>();
         root =  GetComponentInChildren<Animator>();
-        
+
         HideObjectiveList();
     }
 

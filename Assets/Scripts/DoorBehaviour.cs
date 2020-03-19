@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
@@ -16,10 +17,9 @@ public class DoorBehaviour : MonoBehaviour
     private JointLimits lockedHingeLimits;
     private CinemachineImpulseSource impulseSource;
 
-    public delegate void OpenDoorAction();
-    public delegate void CloseDoorAction();
-    public event OpenDoorAction OnDoorOpen;
-    public event CloseDoorAction OnDoorClose;
+    public event Action OnDoorOpen;
+    public event Action OnDoorClose;
+    public event Action OnPlayerCollideWithDoor;
 
     [Header("FMOD Audio")]
     [FMODUnity.EventRef]
@@ -45,7 +45,7 @@ public class DoorBehaviour : MonoBehaviour
 
     public void SetLocked(bool locked)
     {
-        hinge.limits = locked? lockedHingeLimits : startHingeLimits;
+        hinge.limits = locked ? lockedHingeLimits : startHingeLimits;
     }
 
     private void Update()
@@ -72,6 +72,14 @@ public class DoorBehaviour : MonoBehaviour
                 FMODUnity.RuntimeManager.PlayOneShot(DoorSqueak, transform.position);
                 isClosed = false;
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
+        {
+            OnPlayerCollideWithDoor?.Invoke();
         }
     }
 }

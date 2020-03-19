@@ -21,15 +21,17 @@ public class MissionTutorial : AMission
     [BoxGroup("Nurse Room Sequence")]  public List<Conversation> nurseConversations;
     [ReorderableList]
     [BoxGroup("Nurse Room Sequence")] public List<Conversation> birdieCaughtConversations;
+    [BoxGroup("Nurse Room Sequence")] public Conversation cantEscapeYetConversation;
     [ReorderableList]
     [BoxGroup("Nurse Room Sequence")] public List<NPCs.Components.PatrolWaypoint> lostBirdieWaypoints;
     [ReorderableList]
     [BoxGroup("Nurse Room Sequence")] public List<Conversation> lostBirdieConversations;
     [BoxGroup("Nurse Room Sequence")] public Conversation lostBirdieLeaveRoomSelfPrompt;
 
-
     // private nurse room variables
     private bool nurseIsFollowingPlayer = false;
+    private bool canEscape = false;
+    private bool isInCantEscapeConversation = false;
     private TutorialNurse tutorialNurseAI;
     private FieldOfVision tutorialNurseFOV;
     private int currentCaughtConversationIndex = 0;
@@ -240,6 +242,7 @@ public class MissionTutorial : AMission
         DialogueManager.Instance.OnFinishConversation -= StopFollowingAfterConversationEnds;
 
         tutorialNurseAI.ReturnToOrigin();
+        nurseIsFollowingPlayer = false;
     }
 
     private void WaitForBirdieToGoBackToBed(RegionTrigger region)
@@ -253,9 +256,12 @@ public class MissionTutorial : AMission
 
     private void UnlockDoorAndDisableNurseComponents()
     {
+        canEscape = true;
+
         // Disable events were we previously listening for
         tutorialNurseAI.OnCouldNotFindBirdie -= HandleCouldNotFindBirdie;
         tutorialNurseFOV.OnTargetSpotted -= HandleTutorialNurseSpottingPlayer;
+        RegionManager.Instance.nurseRoomDoor.OnPlayerCollideWithDoor -= OnPlayerCollideWithNurseRoomDoor;
 
         // Hide the FOV now (if we disable the component it'll go wonky and freeze the fov mesh weirdly)
         tutorialNurseFOV.viewRadius = 0f;
@@ -263,8 +269,14 @@ public class MissionTutorial : AMission
         // Make the nurse go back to his chair + make him stay there (it's his originWaypoint)
         tutorialNurseAI.ReturnThenIdle();
 
+        // Tell the user they found the right way out!
+        ObjectiveList.Instance.CrossOutObjectiveText();
+
         // Unlock the door (conversations will be clear to the player that they can leave now)
         RegionManager.Instance.nurseRoomDoor.SetLocked(false);
+
+        // Others...
+        // TODO: door unlock sound
     }
 
     private void CommenceCompleteMission()
@@ -315,6 +327,7 @@ public class MissionTutorial : AMission
         UIManager.Instance.FadeIn();
         UIManager.Instance.CanPause = true;
         RegionManager.Instance.nurseRoomDoor.SetLocked(true);
+        RegionManager.Instance.nurseRoomDoor.OnPlayerCollideWithDoor += OnPlayerCollideWithNurseRoomDoor;
 
         // Wake up cutscene + enabling movement afterwards
         if (!GameManager.Instance.skipSettings.allRealtimeCutscenes)
@@ -331,6 +344,24 @@ public class MissionTutorial : AMission
 
         // Cutscene for once they enter the hallway
         RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
+    }
+
+    private void OnPlayerCollideWithNurseRoomDoor()
+    {
+        if (canEscape || isInCantEscapeConversation) return;
+
+        isInCantEscapeConversation = true;
+        DialogueManager.Instance.StartConversation(cantEscapeYetConversation);
+        DialogueManager.Instance.OnFinishConversation += WaitForCantFinishConversationToFinish;
+    }
+
+    private void WaitForCantFinishConversationToFinish(Conversation conversation)
+    {
+        if (conversation == cantEscapeYetConversation)
+        {
+            DialogueManager.Instance.OnFinishConversation -= WaitForCantFinishConversationToFinish;
+            isInCantEscapeConversation = false;
+        }
     }
 
     private void OnNurseRoomDoorClose()
