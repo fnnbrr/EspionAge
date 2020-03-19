@@ -20,6 +20,8 @@ public static class Constants
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
 
+    public const string ANIMATION_OBJECTIVELIST_SLIDE = "slideOut";
+    
     public const string ANIMATION_MAINMENU_LIGHTBULB_FLICKER = "Flicker";
     public const string ANIMATION_MAINMENU_LIGHTBULB_RED = "Red";
 
@@ -32,6 +34,7 @@ public static class Constants
     public const string INPUT_AXIS_VERTICAL = "Vertical";
     public const string INPUT_AXIS_HORIZONTAL_RIGHT_STICK = "Horizontal Right Stick";
     public const string INPUT_AXIS_VERTICAL_RIGHT_STICK = "Vertical Right Stick";
+    public const string INPUT_AXIS_HORIZONTAL_DPAD = "DPAD_Horizontal";
 
     public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
     public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";

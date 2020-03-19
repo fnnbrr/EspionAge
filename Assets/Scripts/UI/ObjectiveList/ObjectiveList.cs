@@ -16,8 +16,19 @@ public class ObjectiveList : Singleton<ObjectiveList>
         background = GetComponentInChildren<Image>();
         objectiveText = GetComponentInChildren<TMP_Text>();
         root =  GetComponentInChildren<Animator>();
-
         HideObjectiveList();
+    }
+
+    void Update()
+    {
+        if (((Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD) < -0.75f) || Input.GetKeyDown("j")) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        {
+            root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, true); 
+        } 
+        else if (((Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD) < -0.75f) || Input.GetKeyDown("j")) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        {
+            root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, false); 
+        }
     }
 
     public void DisplayObjectiveList()
@@ -38,7 +49,19 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     public void CrossOutObjectiveText()
     {
+        if (!root.GetBool("slideOut"))
+        {
+            root.SetBool("slideOut", true); 
+        }
         objectiveText.text = "<s>" + objectiveText.text + "</s>";
+
+        StartCoroutine(WaitToSlideObjectiveListIn(5));
+    }
+
+    IEnumerator WaitToSlideObjectiveListIn(float time)
+    {
+        yield return new WaitForSeconds(time);
+        root.SetBool("slideOut", false); 
     }
 
     public void HideObjectiveList()
