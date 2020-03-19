@@ -71,6 +71,7 @@ namespace NPCs.Components
             if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
             {
                 OnCollideWithPlayer?.Invoke();
+                _numChasersActive = 0;
             }
         }
     }
