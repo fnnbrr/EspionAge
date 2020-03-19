@@ -101,35 +101,43 @@ MonoBehaviour:
     - enemyType: 0
       prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
         type: 3}
-      spawnPosition: {x: -85, y: 0, z: -36}
-      spawnRotation: {x: 0, y: 0, z: 0}
-      isInitiallyResponding: 0
-      waypoints:
-      - position: {x: -11, y: 0, z: -28}
-        rotation: {x: 0, y: 0, z: 0}
-        stayTime: 2
-      - position: {x: -31, y: 0, z: -28}
-        rotation: {x: 0, y: 0, z: 0}
-        stayTime: 2
-      startResponsePoint: {x: 24, y: 0, z: -2}
-      wanderBounds:
-        position: {x: 19, y: 0, z: 7}
-        radius: 20
-    - enemyType: 0
-      prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
-        type: 3}
       spawnPosition: {x: -61, y: 0, z: 50}
       spawnRotation: {x: 0, y: 0, z: 0}
       isInitiallyResponding: 0
       waypoints:
       - position: {x: -38, y: 0, z: 26}
         rotation: {x: 0, y: 100, z: 0}
-        stayTime: 3
+        stayTime: 2
       - position: {x: -40, y: 0, z: 22}
         rotation: {x: 0, y: 180, z: 0}
-        stayTime: 3
-      startResponsePoint: {x: -42, y: 0, z: 24}
+        stayTime: 2
+      startResponsePoint: {x: 24, y: 0, z: -2}
       wanderBounds:
-        position: {x: 14, y: 0, z: -14}
+        position: {x: 19, y: 0, z: 7}
         radius: 20
-  missionObjects: []
+  missionObjects:
+  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
+      type: 3}
+    position: {x: -32, y: 2.67, z: 6}
+    rotation: {x: 0, y: 0, z: 0}
+    spawnedInstance: {fileID: 0}
+  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
+      type: 3}
+    position: {x: -31, y: 2.67, z: 18}
+    rotation: {x: 0, y: 0, z: 0}
+    spawnedInstance: {fileID: 0}
+  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
+      type: 3}
+    position: {x: -17, y: 2.67, z: -5}
+    rotation: {x: 0, y: 0, z: 0}
+    spawnedInstance: {fileID: 0}
+  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
+      type: 3}
+    position: {x: -9, y: 2.67, z: -20}
+    rotation: {x: 0, y: 0, z: 0}
+    spawnedInstance: {fileID: 0}
+  - prefab: {fileID: 7392053781473060668, guid: c83eeb00d31ecc444a5cf3460446596d,
+      type: 3}
+    position: {x: -31, y: 2.67, z: -20}
+    rotation: {x: 0, y: 0, z: 0}
+    spawnedInstance: {fileID: 0}
