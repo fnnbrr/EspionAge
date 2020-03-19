@@ -2,21 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using NaughtyAttributes;
 
 public class RegionManager : Singleton<RegionManager>
 {
-    [Header("Camera Zones")]
-    public CameraZone diningArea;
-    public CameraZone kitchen;
-    public CameraZone hallway;
-    public CameraZone nursesRoom;
+    [HorizontalLine(height: 1)] 
+    [BoxGroup("Camera Zones")] public CameraZone diningArea;
+    [BoxGroup("Camera Zones")] public CameraZone kitchen;
+    [BoxGroup("Camera Zones")] public CameraZone hallway;
+    [BoxGroup("Camera Zones")] public CameraZone nursesRoom;
 
-    [Header("Region Triggers")]
-    public RegionTrigger finalHallwayDoor;
+    [HorizontalLine(height: 1)]
+    [BoxGroup("Region Triggers")]                                       public RegionTrigger finalHallwayDoor;
+    [Header("Nurse Room")]
+    [BoxGroup("Region Triggers")] [Label("Birdies Bed / Window Area")]  public RegionTrigger nurseRoomBirdiesBedArea;
+    [BoxGroup("Region Triggers")] [Label("Other Bed Area")]             public RegionTrigger nurseRoomOtherBedArea;
+    [BoxGroup("Region Triggers")] [Label("Door Area")]                  public RegionTrigger nurseRoomDoorArea;
 
-    [Header("Doors")]
-    public DoorBehaviour nurseRoomDoor;
+    [HorizontalLine(height: 1)]
+    [BoxGroup("Doors")] public DoorBehaviour nurseRoomDoor;
 
+    // Zones
     // Treating this list as a stack where the last element is considered "current" zone
     private List<CameraZone> currentPlayerZones;
 
@@ -25,9 +31,20 @@ public class RegionManager : Singleton<RegionManager>
     public event EnterZoneAction OnPlayerEnterZone;
     public event ExitZoneAction OnPlayerExitZone;
 
+    // Regions
+    private List<RegionTrigger> currentPlayerRegions;
+    private Dictionary<GameObject, List<RegionTrigger>> trackedObjectRegions;
+
+    public delegate void EnterRegionAction(RegionTrigger region);
+    public delegate void ExitRegionAction(RegionTrigger region);
+    public event EnterRegionAction OnPlayerEnterRegion;
+    public event ExitRegionAction OnPlayerExitRegion;
+
     private void Awake()
     {
         currentPlayerZones = new List<CameraZone>();
+        currentPlayerRegions = new List<RegionTrigger>();
+        trackedObjectRegions = new Dictionary<GameObject, List<RegionTrigger>>();
     }
 
     public bool PlayerIsInZone(CameraZone zone)
@@ -72,7 +89,7 @@ public class RegionManager : Singleton<RegionManager>
 
         HandleRestrictedZone(currentZone.isRestricted);
         HandleCameraChange(currentZone.mainCamera);
-        HandleRegionText(currentZone.regionName, currentZone.isRestricted);
+        HandleZoneText(currentZone.regionName, currentZone.isRestricted);
     }
 
     private void HandleRestrictedZone(bool isRestricted)
@@ -93,8 +110,50 @@ public class RegionManager : Singleton<RegionManager>
         OnPlayerEnterZone?.Invoke(GetCurrentZone());
     }
 
-    private void HandleRegionText(string regionName, bool isRestricted)
+    private void HandleZoneText(string zoneName, bool isRestricted)
     {
-        UIManager.Instance.regionText.DisplayText(regionName, isRestricted);
+        UIManager.Instance.zoneText.DisplayText(zoneName, isRestricted);
+    }
+
+    public bool PlayerIsInRegion(RegionTrigger region)
+    {
+        return currentPlayerRegions.Contains(region);
+    }
+
+    public void ReportPlayerEnterRegion(RegionTrigger region)
+    {
+        Debug.Log($"Entered region {region.name}");
+        currentPlayerRegions.Add(region);
+        OnPlayerEnterRegion?.Invoke(region);
+    }
+
+    public void ReportPlayerExitRegion(RegionTrigger region)
+    {
+        Debug.Log($"Exited region {region.name}");
+        currentPlayerRegions.Remove(region);
+        OnPlayerExitRegion?.Invoke(region);
+    }
+
+    public bool IsInRegion(GameObject trackedObject, RegionTrigger region)
+    {
+        return trackedObjectRegions.ContainsKey(trackedObject) && trackedObjectRegions[trackedObject].Contains(region);
+    }
+
+    public void ReportTrackedObjectEnterRegion(GameObject trackedObject, RegionTrigger region)
+    {
+        if (trackedObjectRegions.ContainsKey(trackedObject))
+        {
+            Debug.Log($"Tracked object {trackedObject.name} entered region {region.name}");
+            trackedObjectRegions[trackedObject].Add(region);
+        }
+    }
+
+    public void ReportTrackedObjectExitRegion(GameObject trackedObject, RegionTrigger region)
+    {
+        if (trackedObjectRegions.ContainsKey(trackedObject))
+        {
+            Debug.Log($"Tracked object {trackedObject.name} exited region {region.name}");
+            trackedObjectRegions[trackedObject].Remove(region);
+        }
     }
 }

@@ -77,6 +77,11 @@ public static class Utils
         return comp;
     }
 
+    public static bool HasComponent<T>(this GameObject obj)
+    {
+        return obj.GetComponent(typeof(T)) != null;
+    }
+
     public static int PingPong(int t, int length)
     {
         int q = t / length;

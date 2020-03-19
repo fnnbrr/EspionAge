@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
+using NaughtyAttributes;
 
 [System.Serializable]
 public class SpeakerContainer
@@ -77,6 +78,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
     private Conversation advancingConversation;
 
+    [ReorderableList]
     public List<SpeakerContainer> allSpeakers;
     private Dictionary<string, SpeakerContainer> speakers;
 
@@ -89,14 +91,13 @@ public class DialogueManager : Singleton<DialogueManager>
     public delegate void FinishConversationEvent (Conversation conversation);
     public event FinishConversationEvent OnFinishConversation;
 
-
-    void Awake()
+    private void Awake()
     {
         activeConversations = new Dictionary<Conversation, ActiveConversation>();
         speakers = new Dictionary<string, SpeakerContainer>();
 
         //Load all speakers into dictionary
-        foreach(SpeakerContainer speaker in allSpeakers)
+        foreach (SpeakerContainer speaker in allSpeakers)
         {
             AddSpeaker(speaker);
         }
@@ -134,6 +135,17 @@ public class DialogueManager : Singleton<DialogueManager>
         }
         speaker.SetSpeakerUI();
         speakers.Add(speaker.id, speaker);
+    }
+
+    public void RemoveSpeaker(string speakerId)
+    {
+        if (!speakers.ContainsKey(speakerId))
+        {
+            Debug.LogError("Trying to remove a speaker that doesn't exist");
+            return;
+        }
+
+        speakers.Remove(speakerId);
     }
 
 
