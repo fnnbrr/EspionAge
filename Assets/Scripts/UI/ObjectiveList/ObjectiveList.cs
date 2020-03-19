@@ -9,7 +9,6 @@ public class ObjectiveList : Singleton<ObjectiveList>
     private Image background;
     private TMP_Text objectiveText;
     private Animator root;
-    private bool slideOut;
 
     // Start is called before the first frame update
     void Start()
@@ -22,12 +21,16 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !root.GetBool("slideOut"))
+        print(Input.GetAxis(Constants.INPUT_AXIS_LEFT_DPAD));
+        if (((Input.GetAxis(Constants.INPUT_AXIS_LEFT_DPAD) != 0) || Input.GetKeyDown("j")) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
-            root.SetBool("slideOut", true); 
-        } else if (Input.GetKeyDown(KeyCode.Space) && root.GetBool("slideOut"))
+            print("wah");
+            root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, true); 
+        } 
+        else if (((Input.GetAxis(Constants.INPUT_AXIS_LEFT_DPAD) != 0) || Input.GetKeyDown("j")) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
-            root.SetBool("slideOut", false); 
+            print("wih");
+            root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, false); 
         }
     }
 
@@ -54,12 +57,18 @@ public class ObjectiveList : Singleton<ObjectiveList>
             root.SetBool("slideOut", true); 
         }
         objectiveText.text = "<s>" + objectiveText.text + "</s>";
+
+        StartCoroutine(WaitToSlideObjectiveListIn(5));
+    }
+
+    IEnumerator WaitToSlideObjectiveListIn(float time)
+    {
+        yield return new WaitForSeconds(time);
+        root.SetBool("slideOut", false); 
     }
 
     public void HideObjectiveList()
     {
         root.gameObject.SetActive(false);
     }
-
-    
 }
