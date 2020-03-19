@@ -23,7 +23,6 @@ namespace NPCs.Components
         private void Start()
         {
             InvokeRepeating(nameof(ReacquireTarget), 0f, reacquireInterval);
-            Debug.Log("0f");
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
         }
 

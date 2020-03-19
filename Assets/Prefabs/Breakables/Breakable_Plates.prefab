@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 906590706157901621}
   - component: {fileID: 906590706157901623}
   - component: {fileID: 2054394437}
-  - component: {fileID: 3755051448849860129}
   m_Layer: 10
   m_Name: Breakable_Plates
   m_TagString: Untagged
@@ -132,21 +131,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fadeSpeed: 3
---- !u!114 &3755051448849860129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7392053781473060668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf03f57578a27345be3f6441652e25b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brokenVersion: {fileID: 1563932873246332542}
-  explosionForce: 1
-  destroyInSeconds: 5
 --- !u!1001 &7392053781726760823
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -291,12 +275,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf453256d3c14bd4488a3ef49576b88e, type: 3}
---- !u!1 &1563932873246332542 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: cf453256d3c14bd4488a3ef49576b88e,
-    type: 3}
-  m_PrefabInstance: {fileID: 7392053781726760823}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2589408644704609389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: cf453256d3c14bd4488a3ef49576b88e,
