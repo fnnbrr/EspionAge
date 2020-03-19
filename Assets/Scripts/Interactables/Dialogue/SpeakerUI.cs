@@ -56,11 +56,11 @@ public class SpeakerUI : MonoBehaviour
 
         if (setActive)
         {
-            verticalLayoutGroup.padding.right = 70;
+            verticalLayoutGroup.padding.right = Constants.RIGHT_PADDING_WITH_ABUTTON;
         }
         else
         {
-            verticalLayoutGroup.padding.right = 40;
+            verticalLayoutGroup.padding.right = Constants.RIGHT_PADDING_WITHOUT_ABUTTON;
         }
     }
 
