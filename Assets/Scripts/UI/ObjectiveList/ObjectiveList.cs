@@ -21,15 +21,12 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     void Update()
     {
-        print(Input.GetAxis(Constants.INPUT_AXIS_LEFT_DPAD));
-        if (((Input.GetAxis(Constants.INPUT_AXIS_LEFT_DPAD) != 0) || Input.GetKeyDown("j")) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        if (((Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD) < -0.75f) || Input.GetKeyDown("j")) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
-            print("wah");
             root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, true); 
         } 
-        else if (((Input.GetAxis(Constants.INPUT_AXIS_LEFT_DPAD) != 0) || Input.GetKeyDown("j")) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        else if (((Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD) < -0.75f) || Input.GetKeyDown("j")) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
-            print("wih");
             root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, false); 
         }
     }
