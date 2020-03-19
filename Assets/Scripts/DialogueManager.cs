@@ -31,7 +31,7 @@ public class ActiveConversation
     public bool skipRequest;
     public bool waitingForNext;
 
-    public ActiveConversation(Conversation _conversation)
+    public ActiveConversation()
     {
         activeLineIndex = 0;
         isTyping = false;
@@ -80,6 +80,9 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
+
+    public delegate void FinishConversationEvent (Conversation conversation);
+    public event FinishConversationEvent OnFinishConversation;
 
 
     void Awake()
@@ -134,7 +137,7 @@ public class DialogueManager : Singleton<DialogueManager>
         startFrame = Time.frameCount;
 
         StopAllConversations(conversation.GetAllSpeakers());
-        activeConversations.Add(conversation, new ActiveConversation(conversation));
+        activeConversations.Add(conversation, new ActiveConversation());
 
         if (conversation.autoplayConversation)
         {
@@ -148,7 +151,7 @@ public class DialogueManager : Singleton<DialogueManager>
             // Stop currently advancing conversation
             if(advancingConversation != null)
             {
-                FinishConversation(advancingConversation);
+                ResolveConversation(advancingConversation);
             }
 
             StartAdvancing();
@@ -178,7 +181,7 @@ public class DialogueManager : Singleton<DialogueManager>
 
         foreach (Conversation convo in conversationsToStop)
         {
-            FinishConversation(convo);
+            ResolveConversation(convo);
         }
     }
 
@@ -186,7 +189,7 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (!ContinueConversation(conversation))
         {
-            FinishConversation(conversation);
+            ResolveConversation(conversation);
 
             // Unfreeze player when done
             AllowPlayerInput(true);
@@ -200,7 +203,7 @@ public class DialogueManager : Singleton<DialogueManager>
             yield return new WaitForSeconds(waitLineTime);
         }
 
-        FinishConversation(conversation);
+        ResolveConversation(conversation);
     }
 
     private bool ContinueConversation(Conversation conversation)
@@ -271,7 +274,7 @@ public class DialogueManager : Singleton<DialogueManager>
         AdvanceConversation(conversation);
     }
 
-    private void FinishConversation(Conversation conversation)
+    private void ResolveConversation(Conversation conversation)
     {
         HideAllSpeakers(conversation);
 
@@ -292,6 +295,8 @@ public class DialogueManager : Singleton<DialogueManager>
         {
             EndAdvancing();
         }
+
+        OnFinishConversation?.Invoke(conversation);
     }
 
     void HideAllSpeakers(Conversation conversation)
