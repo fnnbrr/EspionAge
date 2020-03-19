@@ -238,6 +238,7 @@ public class DialogueManager : Singleton<DialogueManager>
         HideAllSpeakers(conversation);
 
         TextMeshProUGUI textMesh = currentSpeaker.speakerUI.conversationText;
+        currentSpeaker.speakerUI.SetActiveAButton(!activeConversations[conversation].isAutoPlaying);
         currentSpeaker.speakerUI.Show();
 
         PlayVoice(currentSpeaker.npcVoicePath, currentSpeaker);

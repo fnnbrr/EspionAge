@@ -6,6 +6,7 @@ using TMPro;
 
 public class SpeakerUI : MonoBehaviour
 {
+    public GameObject aButton;
     public GameObject speechBubbleOutline;
     public GameObject textBoxContainer;
     public GameObject canvas;
@@ -15,6 +16,7 @@ public class SpeakerUI : MonoBehaviour
     private RectTransform textBoxRect;
     private RectTransform bubbleOutlineRect;
     private Vector2 tbAnchor;
+    private VerticalLayoutGroup verticalLayoutGroup;
     
     private Vector3 textPosition;
 
@@ -27,6 +29,7 @@ public class SpeakerUI : MonoBehaviour
         // the resizable speech bubble because textBoxRect is the maxWidth
         textBoxRect = Utils.GetRequiredComponent<RectTransform>(textBoxContainer);
         bubbleOutlineRect = Utils.GetRequiredComponent<RectTransform>(speechBubbleOutline);
+        verticalLayoutGroup = Utils.GetRequiredComponent<VerticalLayoutGroup>(speechBubbleOutline);
     }
 
     void Start()
@@ -45,6 +48,20 @@ public class SpeakerUI : MonoBehaviour
         tbAnchor.y = Mathf.Clamp(tbAnchor.y, Mathf.Min(-Screen.height + textBoxRect.sizeDelta.y, 0), 0);
 
         textBoxRect.anchoredPosition = tbAnchor;
+    }
+
+    public void SetActiveAButton(bool setActive)
+    {
+        aButton.SetActive(setActive);
+
+        if (setActive)
+        {
+            verticalLayoutGroup.padding.right = 70;
+        }
+        else
+        {
+            verticalLayoutGroup.padding.right = 40;
+        }
     }
 
     public void Show()
