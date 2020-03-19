@@ -70,8 +70,6 @@ public class ActiveConversation
 
 public class DialogueManager : Singleton<DialogueManager>
 {
-    public float charTypeSpeed = 0.05f;
-    public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
     private int startFrame;
 
     private bool isAdvancing;
@@ -207,7 +205,11 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         while (ContinueConversation(conversation))
         {
-            yield return new WaitForSeconds(waitLineTime);
+            while(!activeConversations[conversation].waitingForNext)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            yield return new WaitForSeconds(Constants.WAIT_TIME_CONVO_LINE);
         }
 
         ResolveConversation(conversation);
@@ -250,6 +252,7 @@ public class DialogueManager : Singleton<DialogueManager>
     private IEnumerator StartTypeText(Conversation conversation, TextMeshProUGUI textMesh, string text)
     {
         activeConversations[conversation].isTyping = true;
+        activeConversations[conversation].waitingForNext = false;
 
         int currentCharIndex = 0;
         while (currentCharIndex < text.Length)
@@ -264,7 +267,7 @@ public class DialogueManager : Singleton<DialogueManager>
                 currentCharIndex += 1;
             }
             textMesh.text = text.Substring(0, currentCharIndex);
-            yield return new WaitForSeconds(charTypeSpeed);
+            yield return new WaitForSeconds(Constants.CHAR_TYPE_SPEED);
         }
         activeConversations[conversation].waitingForNext = true;
         while (activeConversations[conversation].waitingForNext)
