@@ -20,6 +20,8 @@ public static class Constants
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
 
+    public const string ANIMATION_OBJECTIVELIST_SLIDE = "slideOut";
+    
     public const string ANIMATION_MAINMENU_LIGHTBULB_FLICKER = "Flicker";
     public const string ANIMATION_MAINMENU_LIGHTBULB_RED = "Red";
     
@@ -34,6 +36,7 @@ public static class Constants
     public const string INPUT_AXIS_VERTICAL = "Vertical";
     public const string INPUT_AXIS_HORIZONTAL_RIGHT_STICK = "Horizontal Right Stick";
     public const string INPUT_AXIS_VERTICAL_RIGHT_STICK = "Vertical Right Stick";
+    public const string INPUT_AXIS_HORIZONTAL_DPAD = "DPAD_Horizontal";
 
     public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
     public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
@@ -59,7 +62,11 @@ public static class Constants
 
     public const float INTERACT_BOUNDARY_RADIUS = 20.0f;
     public const float INTERACT_POPUP_RADIUS = 10.0f;
-    public const float WAIT_TIME_CONVO_LINE = 2.0f;
+    public const float CHAR_TYPE_SPEED = 0.05f;
+    public const float WAIT_TIME_CONVO_LINE = 1.0f;
+
+    public const int RIGHT_PADDING_WITH_ABUTTON = 70;
+    public const int RIGHT_PADDING_WITHOUT_ABUTTON = 40;
 
     public const string SHADER_NAME_SHAKE = "PlateShake";
 }

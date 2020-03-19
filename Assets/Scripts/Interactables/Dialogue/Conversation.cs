@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
+using System.Linq;
 
 [System.Serializable]
 public struct Line
@@ -18,6 +19,11 @@ public class Conversation : ScriptableObject
     [Header("Note: Autoplay Conversation takes precedence over Auto Initiate")]
     public bool autoplayConversation = false;
     public bool autoInitiate = false;
-    public bool shouldFollow = false;
+    [ReorderableList]
     public Line[] lines;
+
+    public List<string> GetAllSpeakers()
+    {
+        return lines.Select(line => line.id).Distinct().ToList();
+    }
 }

@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using TMPro;
+using NaughtyAttributes;
 
 [System.Serializable]
 public class SpeakerContainer
 {
     public string id;
     public GameObject speakerObject;
+    [HideInInspector]
+    public SpeakerUI speakerUI;
     [FMODUnity.EventRef]
     public string npcVoicePath;
 
@@ -17,46 +20,86 @@ public class SpeakerContainer
         speakerObject = _speakerObject;
         npcVoicePath = _npcVoicePath;
     }
+
+    public void SetSpeakerUI()
+    {
+        speakerUI = Utils.GetRequiredComponent<SpeakerUI>(speakerObject);
+    }
+}
+
+[System.Serializable]
+public class ActiveConversation
+{
+    public Conversation conversation;
+    public Coroutine mainCoroutine;
+    public Coroutine typingCoroutine;
+    public int activeLineIndex;
+    public bool isTyping;
+    public bool isAutoPlaying;
+    public bool skipRequest;
+    public bool waitingForNext;
+
+    public ActiveConversation()
+    {
+        activeLineIndex = 0;
+        isTyping = false;
+        isAutoPlaying = false;
+        skipRequest = false;
+        waitingForNext = true;
+}
+
+    public void SetCoroutine(Coroutine _coroutine)
+    {
+        mainCoroutine = _coroutine;
+    }
+
+    public void SetTypingCoroutine(Coroutine _coroutine)
+    {
+        typingCoroutine = _coroutine;
+    }
+
+    public void ResetActiveLineIndex()
+    {
+        activeLineIndex = 0;
+    }
+
+    public void IncrementActiveLineIndex()
+    {
+        activeLineIndex++;
+    }
 }
 
 public class DialogueManager : Singleton<DialogueManager>
 {
-    public float charTypeSpeed = 0.05f;
-    public float waitLineTime = Constants.WAIT_TIME_CONVO_LINE;
-    private int activeLineIndex = 0;
     private int startFrame;
 
-    private bool isConversing;
-    private bool autoPlaying = false;
-    private bool isTyping = false;
-    private bool skipRequest = false;
-    private bool waitingForNext = false;
-    private bool convoAllowMovement = true;
+    private bool isAdvancing;
+    private bool convoAllowInput = true;
 
-    public TextMeshProUGUI textMesh;
-    private Conversation currentConvo;
-    private SpeakerUI speakerUI;
-    private SpeakerContainer currentSpeaker;
+    private Conversation advancingConversation;
 
-    private Coroutine coroutine;
-    private Coroutine currentTypingCoroutine;
-
+    [ReorderableList]
     public List<SpeakerContainer> allSpeakers;
     private Dictionary<string, SpeakerContainer> speakers;
+
+    // Keep track of current characters that have convos based on their ids (string)
+    private Dictionary<Conversation, ActiveConversation> activeConversations;
 
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
 
+    public delegate void FinishConversationEvent (Conversation conversation);
+    public event FinishConversationEvent OnFinishConversation;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        activeConversations = new Dictionary<Conversation, ActiveConversation>();
         speakers = new Dictionary<string, SpeakerContainer>();
 
         //Load all speakers into dictionary
-        foreach(SpeakerContainer speaker in allSpeakers)
+        foreach (SpeakerContainer speaker in allSpeakers)
         {
-            speakers.Add(speaker.id, speaker);
+            AddSpeaker(speaker);
         }
     }
 
@@ -72,10 +115,14 @@ public class DialogueManager : Singleton<DialogueManager>
 
         // Using Time.frameCount != startFrame because of an issue of skipping the first convo when beginning interaction
         // This happened because it the getdown of interacting and skipping happened in the same frame
-        if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN) && Time.frameCount != startFrame)
+        // Should be only able to advance the advancing conversation
+        if (CheckIsAdvancing())
         {
-            skipRequest = true;
-            waitingForNext = false;
+            if (activeConversations[advancingConversation].isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN) && Time.frameCount != startFrame)
+            {
+                activeConversations[advancingConversation].skipRequest = true;
+                activeConversations[advancingConversation].waitingForNext = false;
+            }
         }
     }
 
@@ -86,130 +133,146 @@ public class DialogueManager : Singleton<DialogueManager>
             Debug.LogError("Trying to add a speaker that already exists");
             return;
         }
-
+        speaker.SetSpeakerUI();
         speakers.Add(speaker.id, speaker);
     }
 
-
-    public void StartConversation(Conversation convo)
+    public void RemoveSpeaker(string speakerId)
     {
-        // Stop any autoplay conversation
-        if (coroutine != null)
+        if (!speakers.ContainsKey(speakerId))
         {
-            StopCoroutine(coroutine);
-            coroutine = null;
+            Debug.LogError("Trying to remove a speaker that doesn't exist");
+            return;
         }
 
-        currentConvo = convo;
+        speakers.Remove(speakerId);
+    }
+
+
+    public void StartConversation(Conversation conversation)
+    {
         startFrame = Time.frameCount;
 
-        if (convo.autoplayConversation)
+        StopAllConversations(conversation.GetAllSpeakers());
+        activeConversations.Add(conversation, new ActiveConversation());
+
+        if (conversation.autoplayConversation)
         {
-            TriggerAutoplay();
+            activeConversations[conversation].isAutoPlaying = true;
+            activeConversations[conversation].SetCoroutine(StartCoroutine(AutoplayConversation(conversation)));
         }
+        // Conversation must be manually forwarded
+        // There should only be one conversation being forwarded
         else
         {
-            StartConversing();
-            GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-            convoAllowMovement = false;
-            AdvanceConversation();
+            // Stop currently advancing conversation
+            if(advancingConversation != null)
+            {
+                ResolveConversation(advancingConversation);
+            }
+
+            StartAdvancing();
+            advancingConversation = conversation;
+
+            AllowPlayerInput(false);
+
+            AdvanceConversation(conversation);
         }
     }
 
-    void SetDialogue(string text)
+    void StopAllConversations(List<string> convoSpeakers)
     {
-        // Hide previous speaker if there was one
-        if (speakerUI != null)
+        List<Conversation> conversationsToStop = new List<Conversation>();
+
+        // Stop any conversations that are currently happening (check current advancing convo and all autoplaying convos)
+        foreach (string speaker in convoSpeakers)
         {
-            speakerUI.Hide();
+            foreach (KeyValuePair<Conversation, ActiveConversation> convo in activeConversations)
+            {
+                if (convo.Key.GetAllSpeakers().Contains(speaker) && !conversationsToStop.Contains(convo.Key))
+                {
+                    conversationsToStop.Add(convo.Key);
+                }
+            }
         }
 
-        speakerUI = Utils.GetRequiredComponent<SpeakerUI>(currentSpeaker.speakerObject);
-
-        speakerUI.Show();
-        textMesh = speakerUI.conversationText;
-        PlayVoice(currentSpeaker.npcVoicePath);
-        currentTypingCoroutine = SetText(text);
+        foreach (Conversation convo in conversationsToStop)
+        {
+            ResolveConversation(convo);
+        }
     }
 
-    void DisplayLine()
+    void AdvanceConversation(Conversation conversation)
     {
-        Line line = currentConvo.lines[activeLineIndex];
-        currentSpeaker = speakers[line.id];
+        if (!ContinueConversation(conversation))
+        {
+            ResolveConversation(conversation);
 
-        SetDialogue(line.text);
+            // Unfreeze player when done
+            AllowPlayerInput(true);
+        }
     }
 
-    private bool ContinueConversation()
+    IEnumerator AutoplayConversation(Conversation conversation)
     {
-        bool shouldShowLine = activeLineIndex < currentConvo.lines.Length;
+        while (ContinueConversation(conversation))
+        {
+            while(!activeConversations[conversation].waitingForNext)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            yield return new WaitForSeconds(Constants.WAIT_TIME_CONVO_LINE);
+        }
+
+        ResolveConversation(conversation);
+    }
+
+    private bool ContinueConversation(Conversation conversation)
+    {
+        bool shouldShowLine = activeConversations[conversation].activeLineIndex < conversation.lines.Length;
 
         if (shouldShowLine)
         {
-            DisplayLine();
-            activeLineIndex += 1;
+            SetDialogueLine(conversation);
+            activeConversations[conversation].IncrementActiveLineIndex();
         }
 
         return shouldShowLine;
     }
 
-    void AdvanceConversation()
+    void SetDialogueLine(Conversation conversation)
     {
-        if (!ContinueConversation())
+        //Display Line
+        Line line = conversation.lines[activeConversations[conversation].activeLineIndex];
+        SpeakerContainer currentSpeaker = speakers[line.id];
+
+        // Hide all speakers from that conversation
+        HideAllSpeakers(conversation);
+
+        TextMeshProUGUI textMesh = currentSpeaker.speakerUI.conversationText;
+        currentSpeaker.speakerUI.SetActiveAButton(!activeConversations[conversation].isAutoPlaying);
+        currentSpeaker.speakerUI.Show();
+
+        PlayVoice(currentSpeaker.npcVoicePath, currentSpeaker);
+
+        if (activeConversations[conversation].isTyping && activeConversations[conversation].typingCoroutine != null)
         {
-            FinishConversation();
-
-            // Unfreeze player when done
-            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
-            convoAllowMovement = true;
+            StopCoroutine(activeConversations[conversation].typingCoroutine);
         }
+        activeConversations[conversation].SetTypingCoroutine(StartCoroutine(StartTypeText(conversation, textMesh, line.text)));
     }
 
-    protected virtual void FinishConversation()
+    private IEnumerator StartTypeText(Conversation conversation, TextMeshProUGUI textMesh, string text)
     {
-        speakerUI.Hide();
-        activeLineIndex = 0;
-        isTyping = false;
-        EndConversing();
-    }
-
-    IEnumerator AutoplayConversation()
-    {
-        while (ContinueConversation())
-        {
-            yield return new WaitForSeconds(waitLineTime);
-        }
-
-        FinishConversation();
-        OnAutoplayComplete();
-    }
-
-    private void OnAutoplayComplete()
-    {
-        autoPlaying = false;
-    }
-
-    public Coroutine SetText(string text)
-    {
-        if (isTyping && currentTypingCoroutine != null)
-        {
-            StopCoroutine(currentTypingCoroutine);
-        }
-        currentTypingCoroutine = StartCoroutine(StartTypeText(text));
-
-        return currentTypingCoroutine;
-    }
-
-    private IEnumerator StartTypeText(string text)
-    {
-        isTyping = true;
+        activeConversations[conversation].isTyping = true;
+        activeConversations[conversation].waitingForNext = false;
 
         int currentCharIndex = 0;
         while (currentCharIndex < text.Length)
         {
-            if (skipRequest)
+            if (activeConversations[conversation].skipRequest)
             {
-                skipRequest = false;
+                activeConversations[conversation].skipRequest = false;
                 currentCharIndex = text.Length;
             }
             else
@@ -217,24 +280,58 @@ public class DialogueManager : Singleton<DialogueManager>
                 currentCharIndex += 1;
             }
             textMesh.text = text.Substring(0, currentCharIndex);
-            yield return new WaitForSeconds(charTypeSpeed);
+            yield return new WaitForSeconds(Constants.CHAR_TYPE_SPEED);
         }
-
-        waitingForNext = true;
-        while (waitingForNext)
+        activeConversations[conversation].waitingForNext = true;
+        while (activeConversations[conversation].waitingForNext)
         {
             yield return new WaitForFixedUpdate();
         }
 
         textMesh.text = string.Empty;
 
-        skipRequest = false;
-        isTyping = false;
+        activeConversations[conversation].skipRequest = false;
+        activeConversations[conversation].isTyping = false;
 
-        AdvanceConversation();
+        AdvanceConversation(conversation);
     }
 
-    private void PlayVoice(string fmodPath)
+    private void ResolveConversation(Conversation conversation)
+    {
+        HideAllSpeakers(conversation);
+
+        // Stop any coroutines that are part of the conversation
+        // Null checks are done to be super safe just incase coroutines have not been set
+        if (activeConversations[conversation].mainCoroutine != null)
+        {
+            StopCoroutine(activeConversations[conversation].mainCoroutine);
+        }
+        if (activeConversations[conversation].typingCoroutine != null)
+        {
+            StopCoroutine(activeConversations[conversation].typingCoroutine);
+        }
+
+        activeConversations.Remove(conversation);
+
+        if (advancingConversation == conversation)
+        {
+            EndAdvancing();
+        }
+
+        OnFinishConversation?.Invoke(conversation);
+    }
+
+    void HideAllSpeakers(Conversation conversation)
+    {
+        List<string> convoSpeakers = conversation.GetAllSpeakers();
+
+        foreach(string speaker in convoSpeakers)
+        {
+            speakers[speaker].speakerUI.Hide();
+        }
+    }
+
+    private void PlayVoice(string fmodPath, SpeakerContainer currentSpeaker)
     {
         if (!string.IsNullOrEmpty(fmodPath.Trim()))
         {
@@ -242,49 +339,35 @@ public class DialogueManager : Singleton<DialogueManager>
         }
     }
 
-    private void TriggerAutoplay()
+    public bool IsActiveConversation(Conversation conversation)
     {
-        autoPlaying = true;
-        coroutine = StartCoroutine(AutoplayConversation());
+        return conversation != null && activeConversations.ContainsKey(conversation);
+    }
+
+    private void AllowPlayerInput(bool allowInput)
+    {
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = allowInput;
+        convoAllowInput = allowInput;
     }
 
     public bool RestrictMoveWhenConversing()
     {
-        return !convoAllowMovement && CheckIsConversing();
+        return !convoAllowInput && CheckIsAdvancing();
     }
 
-    public bool CheckIsConversing()
+    public bool CheckIsAdvancing()
     {
-        return isConversing;
+        return isAdvancing;
     }
 
-    public void StartConversing()
+    public void StartAdvancing()
     {
-        isConversing = true;
+        isAdvancing = true;
     }
 
-    public void EndConversing()
+    public void EndAdvancing()
     {
-        isConversing = false;
-    }
-
-    public bool CheckIsTyping()
-    {
-        return isTyping;
-    }
-
-    public void StartTyping()
-    {
-        isTyping = true;
-    }
-
-    public void EndTyping()
-    {
-        isTyping = false;
-    }
-
-    public bool CheckIsAutoPlaying()
-    {
-        return autoPlaying;
+        isAdvancing = false;
+        advancingConversation = null;
     }
 }

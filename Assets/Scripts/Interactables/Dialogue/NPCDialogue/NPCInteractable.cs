@@ -47,6 +47,7 @@ public class NPCInteractable : Interactable
 {
     public Conversation conversation;
 
+    [ValidateInput("IsGreaterEqualThanInteractRadius", "boundaryRadius must be greater than or equal to interactRadius")]
     public float boundaryRadius = Constants.INTERACT_BOUNDARY_RADIUS;
 
     public List<Conversation> defaultConvos;
@@ -76,58 +77,37 @@ public class NPCInteractable : Interactable
 
     protected override void Update()
     {
-        if(IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
+        if (conversation == null) return;
+
+        if (IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
         {
             // Prevent loading during a conversation
-            if (!DialogueManager.Instance.CheckIsConversing() && !DialogueManager.Instance.CheckIsAutoPlaying())
+            if (!DialogueManager.Instance.IsActiveConversation(conversation))
             {
                 LoadConversation();
-            }
 
-            if (conversation.shouldFollow)
-            {
-                TriggerFollow(player);
-            }
-
-
-            // Autoplay
-            if (conversation.autoplayConversation)
-            {
-                if(!DialogueManager.Instance.CheckIsAutoPlaying())
+                // Autoplay
+                if (conversation.autoplayConversation)
                 {
                     OnInteract();
                 }
-            }
-            // Enter collider to interact
-            else
-            {
-                if(conversation.autoInitiate && !DialogueManager.Instance.CheckIsConversing())
-				{
-                    interactableOn = true;
-                    OnInteract();
-				}
-            }
-        }
-        else
-        {
-            if (isFollowing)
-            {
-                StopFollow();
+                else
+                {
+                    //Prevent from auto-initiating in the middle of advancing a conversation
+                    if (conversation.autoInitiate && !DialogueManager.Instance.CheckIsAdvancing())
+                    {
+                        OnInteract();
+                    }
+                }
             }
         }
 
-        if (!DialogueManager.Instance.CheckIsConversing() && !DialogueManager.Instance.CheckIsAutoPlaying())
+        // TODO: Boundary Radius should always be >= Interact Radius Possible issues will arise otherwise
+        // This is so the animations for InteractBox work
+        // Ensure player cannot interact with another character if already advancing a conversation
+        if (!DialogueManager.Instance.CheckIsAdvancing() && !conversation.autoplayConversation && !conversation.autoInitiate)
         {
             base.Update();
-        }
-
-        if (isFollowing)
-        {
-            FollowTarget();
-            if (!DialogueManager.Instance.CheckIsConversing())
-            {
-                StopFollow();
-            }
         }
     }
 
@@ -137,7 +117,7 @@ public class NPCInteractable : Interactable
         if (missionsOffered.Count == 0)
         {
             // Random default convo (Temporary until better system is set for default convos)
-            conversation = defaultConvos[Random.Range(0, defaultConvos.Count)];
+            conversation = defaultConvos.Count > 0 ? defaultConvos[Random.Range(0, defaultConvos.Count)] : null;
         }
         else
         {
@@ -160,7 +140,7 @@ public class NPCInteractable : Interactable
 
     public override void OnInteract()
     {
-        if (!DialogueManager.Instance.CheckIsConversing())
+        if (!DialogueManager.Instance.CheckIsAdvancing())
         {
             // If input already disabled, then we won't continue from here and start a conversation
             if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
@@ -208,7 +188,7 @@ public class NPCInteractable : Interactable
                 }
             }
 
-            if (!conversation.shouldFollow && !conversation.autoplayConversation)
+            if (!conversation.autoplayConversation)
             {
                 NPCFacePlayer();
             }
@@ -344,6 +324,11 @@ public class NPCInteractable : Interactable
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
         StartCoroutine(RotateAnimation(gameObject, rotation, GameManager.Instance.GetMovementController().turnSpeed));
+    }
+
+    private bool IsGreaterEqualThanInteractRadius(float value)
+    {
+        return value >= interactRadius;
     }
 
 
