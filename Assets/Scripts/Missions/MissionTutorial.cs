@@ -550,7 +550,7 @@ public class MissionTutorial : AMission
     private SpawnedVase SpawnVase(Vector3 position)
     {
         GameObject vaseInstance = Instantiate(vasePrefab, position, Quaternion.identity);
-        GameObject vaseStandInstance = Instantiate(vaseStandPrefab, new Vector3(position.x - 1f, 1.5f, position.z - 1f), Quaternion.identity);
+        GameObject vaseStandInstance = Instantiate(vaseStandPrefab, new Vector3(position.x - 0.8f, 0f, position.z - 1f), Quaternion.identity);
 
         BreakableObject breakableVase = Utils.GetRequiredComponentInChildren<BreakableObject>(vaseInstance);
         breakableVase.OnBreak += OnVaseBreak;
