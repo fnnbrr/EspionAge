@@ -160,6 +160,10 @@ public class MissionTutorial : AMission
         // Listen for the player to pass through the final door to finish the mission
         RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
 
+        // Audio parameters setting
+        FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 0f);
+        FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseStarts", 0f);
+
         StartCoroutine(StartMissionLogic());
     }
 
