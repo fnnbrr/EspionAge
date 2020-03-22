@@ -13,7 +13,6 @@ public class UITextOverlay : MonoBehaviour
     private bool isTyping = false;
     private bool skipRequest = false;
     private bool waitingForNext = false;
-    private Coroutine currentTypingCoroutine;
 
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
@@ -52,15 +51,19 @@ public class UITextOverlay : MonoBehaviour
         usedForTextCutscenes = true;
     }
 
+    public void ClearText()
+    {
+        StopAllCoroutines();
+        textMesh.text = string.Empty;
+    }
+
     public Coroutine SetText(string text)
     {
-        if (isTyping && currentTypingCoroutine != null)
+        if (isTyping)
         {
-            StopCoroutine(currentTypingCoroutine);
+            StopAllCoroutines();
         }
-        currentTypingCoroutine = StartCoroutine(StartTypeText(text));
-
-        return currentTypingCoroutine;
+        return StartCoroutine(StartTypeText(text));
     }
 
     private IEnumerator StartTypeText(string text)
@@ -69,19 +72,22 @@ public class UITextOverlay : MonoBehaviour
 
         isTyping = true;
 
-        int currentCharIndex = 0;
-        while (currentCharIndex < text.Length)
+        textMesh.maxVisibleCharacters = 0;
+        textMesh.text = text;
+
+        int currentDisplayingCharacters = 0;
+        while (currentDisplayingCharacters < text.Length)
         {
             if (skipRequest)
             {
                 skipRequest = false;
-                currentCharIndex = text.Length;
+                currentDisplayingCharacters = text.Length;
             }
             else
             {
-                currentCharIndex += 1;
+                currentDisplayingCharacters += 1;
             }
-            textMesh.text = text.Substring(0, currentCharIndex);
+            textMesh.maxVisibleCharacters = currentDisplayingCharacters;
             yield return new WaitForSeconds(charTypeSpeed);
         }
 

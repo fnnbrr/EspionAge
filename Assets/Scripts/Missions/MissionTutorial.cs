@@ -603,6 +603,12 @@ public class MissionTutorial : AMission
         }
         startCutscenePlayed = false;
 
+        if (UIManager.Instance)
+        {
+            UIManager.Instance.textOverlay.SetText(string.Empty);
+            UIManager.Instance.FadeIn();
+        }
+
         // Destroy all spawned objects
         DestroyAllObjects();
     }
