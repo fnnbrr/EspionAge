@@ -15,6 +15,9 @@ public static class Constants
     public const string ANIMATION_BIRDIE_DASH= "Dash";
     public const string ANIMATION_BIRDIE_WAKEUP = "WakeUp";
 
+    public const string ANIMATION_BASICNURSE_WALKING = "IsWalking";
+    public const string ANIMATION_BASICNURSE_RUNNING = "IsRunning";
+
     public const string ANIMATION_STEVE_MOVING = "IsMoving";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
