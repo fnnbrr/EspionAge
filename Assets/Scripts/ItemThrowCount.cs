@@ -29,7 +29,7 @@ public class ItemThrowCount : MonoBehaviour
         if (!GameEventManager.Instance.CheckEventStatus(GameEventManager.GameEvent.HasThrownSomething))
         {
             HideImage();
-            throwController.OnPickup += WaitForFirstPickup;
+            GameEventManager.Instance.SubscribeToEvent(GameEventManager.GameEvent.HasThrownSomething, OnFirstPickUp);
         }
     }
 
@@ -43,12 +43,17 @@ public class ItemThrowCount : MonoBehaviour
         imageRoot.SetActive(false);
     }
 
-    private void WaitForFirstPickup(GameObject source)
+    private void OnFirstPickUp(bool status)
     {
-        throwController.OnPickup -= WaitForFirstPickup;
+        if (status)
+        {
+            ShowImage();
+        }
+        else
+        {
+            HideImage();
+        }
 
-        ShowImage();
-        GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.HasThrownSomething, true);
     }
 
     private void HandleResetThrowableCount()
