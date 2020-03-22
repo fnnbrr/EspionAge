@@ -6,14 +6,15 @@ using UnityEngine;
 
 public class ItemThrowCount : MonoBehaviour
 {
-    public GameObject imageRoot;
-
     private int numItemsHeld = 0;
+    private Animator rootAnim;
     private ThrowController throwController;
     private TextMeshProUGUI text;
 
     void Start()
     {
+        rootAnim = Utils.GetRequiredComponent<Animator>(this);
+
         throwController = GameManager.Instance.GetThrowController();
         if(throwController == null)
         {
@@ -35,12 +36,12 @@ public class ItemThrowCount : MonoBehaviour
 
     private void ShowImage()
     {
-        imageRoot.SetActive(true);
+        rootAnim.SetBool(Constants.ANIMATION_PILLBOTTLE_DISPLAYING, true);
     }
 
     private void HideImage()
     {
-        imageRoot.SetActive(false);
+        rootAnim.SetBool(Constants.ANIMATION_PILLBOTTLE_DISPLAYING, false);
     }
 
     private void OnFirstPickUp(bool status)
