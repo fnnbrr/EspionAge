@@ -22,7 +22,7 @@ public class WorldObjectivePointer : Singleton<WorldObjectivePointer>
         {
             Quaternion targetRotation = Quaternion.RotateTowards(
                 pointer.transform.rotation,
-                Quaternion.LookRotation(currentPointPosition - pointer.transform.position),
+                LookRotation(currentPointPosition),
                 rotationSmoothness);
 
             Vector3 onlyYRotation = new Vector3(0f, targetRotation.eulerAngles.y, 0f);
@@ -31,9 +31,16 @@ public class WorldObjectivePointer : Singleton<WorldObjectivePointer>
         }
     }
 
+    private Quaternion LookRotation(Vector3 worldPosition)
+    {
+        return Quaternion.LookRotation(worldPosition - pointer.transform.position);
+    }
+
     public void PointTo(Vector3 worldPosition, RegionTrigger stopOnEnterRegion = null)
     {
         currentPointPosition = worldPosition;
+        // Set the current rotation to be directly opposite from our desired rotation, this gives a nice rotation effect on display
+        pointer.transform.rotation = LookRotation(currentPointPosition) * Quaternion.Euler(0, 180f, 0);
         Activate();
 
         if (stopOnEnterRegion)
