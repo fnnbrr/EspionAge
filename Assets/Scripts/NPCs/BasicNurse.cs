@@ -197,7 +197,24 @@ namespace NPCs
             // I was thinking that toggle=false just turns off all animations (disable the animator?)
             // and toggle=true can do specific behaivor based on currentState
             
-            animator.SetBool(Constants.ANIMATION_STEVE_MOVING, toggle);
+            if (toggle)
+            {
+                if (currentState == BasicNurseStates.Chasing)
+                {
+                    animator.SetBool(Constants.ANIMATION_BASICNURSE_RUNNING, true);
+                    animator.SetBool(Constants.ANIMATION_BASICNURSE_WALKING, false);
+                }
+                else
+                {
+                    animator.SetBool(Constants.ANIMATION_BASICNURSE_RUNNING, false);
+                    animator.SetBool(Constants.ANIMATION_BASICNURSE_WALKING, true);
+                }
+            }
+            else
+            {
+                animator.SetBool(Constants.ANIMATION_BASICNURSE_RUNNING, false);
+                animator.SetBool(Constants.ANIMATION_BASICNURSE_WALKING, false);
+            }
         }
     }
 }
