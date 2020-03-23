@@ -59,6 +59,9 @@ namespace NPCs
 
         protected override void SetState(BasicNurseStates newState)
         {
+            prevState = currentState;
+            currentState = newState;
+            
             switch (newState)
             {
                 case BasicNurseStates.Chasing:
@@ -83,8 +86,6 @@ namespace NPCs
                     questionMark.SetActive(false);
                     throw new UnityException("Invalid state name passed to " + GetType().Name);
             }
-            
-            currentState = newState;
         }
 
         private void SetChasing()
@@ -136,7 +137,7 @@ namespace NPCs
         private void SetWaiting()
         {
             ToggleAnimations(false);
-            if (currentState == BasicNurseStates.Patrolling)
+            if (prevState == BasicNurseStates.Patrolling)
             {
                 StartCoroutine(waiter.StartWaiting(patroller.curPatrolWaypoint.stayTime));
             }
@@ -193,10 +194,6 @@ namespace NPCs
 
         private void ToggleAnimations(bool toggle)
         {
-            // TODO: for whoever adds in walking or other animations here:
-            // I was thinking that toggle=false just turns off all animations (disable the animator?)
-            // and toggle=true can do specific behaivor based on currentState
-            
             if (toggle)
             {
                 if (currentState == BasicNurseStates.Chasing)
