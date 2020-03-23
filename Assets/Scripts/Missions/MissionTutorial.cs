@@ -67,7 +67,9 @@ public class MissionTutorial : AMission
     // stand position must then be, (x - 0.5, 1.5, z - 1) (empirically)
 
     [Header("Chaser Enemies")]
-    public GameObject chaserPrefab;
+    public List<GameObject> chaserPrefabs;
+    [MinMaxSlider(0.5f, 2f)] public Vector2 randomWidthRange;
+    [MinMaxSlider(0.5f, 2f)] public Vector2 randomHeightRange;
     public float enemyCutsceneAnimationSpeed = 0.2f;
     public List<TutorialChaserGroup> chaserGroups;
 
@@ -314,6 +316,7 @@ public class MissionTutorial : AMission
     {
         AlertMissionComplete();
         MissionManager.Instance.EndMission(MissionsEnum.MissionTutorial);
+        missionCompleting = false;
     }
 
     private IEnumerator StartMissionLogic()
@@ -488,7 +491,11 @@ public class MissionTutorial : AMission
         {
             group.enemyStartPositions.ForEach(position =>
             {
-                GameObject enemyInstance = Instantiate(chaserPrefab, position, Quaternion.identity);
+                GameObject enemyInstance = Instantiate(chaserPrefabs[Random.Range(0, chaserPrefabs.Count)], position, Quaternion.identity);
+                enemyInstance.transform.localScale = new Vector3(
+                    enemyInstance.transform.localScale.x * Random.Range(randomWidthRange.x, randomWidthRange.y),
+                    enemyInstance.transform.localScale.y * Random.Range(randomHeightRange.x, randomHeightRange.y),
+                    enemyInstance.transform.localScale.z * Random.Range(randomWidthRange.x, randomWidthRange.y));
 
                 PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemyInstance);
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
@@ -545,6 +552,12 @@ public class MissionTutorial : AMission
         SpawnEnemies();
         SpawnExtraObjects();
 
+        if (missionCompleting)  // if we die while mission completing, then re-wait for this
+        {
+            RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
+        }
+        missionCompleting = false;
+
         UIManager.Instance.FadeIn();
         yield return new WaitForSeconds(UIManager.Instance.fadeSpeed);
 
@@ -585,6 +598,11 @@ public class MissionTutorial : AMission
             GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, false);
         }
 
+        if (DialogueManager.Instance)
+        {
+            DialogueManager.Instance.RemoveSpeaker(otherBedNPCSpeakerId);
+        }
+
         if (MissionManager.Instance)
         {
             MissionManager.Instance.DestroyMissionObject(tutorialNurse);
@@ -602,6 +620,7 @@ public class MissionTutorial : AMission
             RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
         }
         startCutscenePlayed = false;
+        missionCompleting = false;
 
         if (UIManager.Instance)
         {
