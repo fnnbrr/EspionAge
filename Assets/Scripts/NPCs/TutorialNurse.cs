@@ -247,11 +247,7 @@ namespace NPCs
 
         private void ToggleAnimations(bool toggle)
         {
-            // TODO: for whoever adds in walking or other animations here:
-            // I was thinking that toggle=false just turns off all animations (disable the animator?)
-            // and toggle=true can do specific behaivor based on currentState
-
-            anim.SetBool(Constants.ANIMATION_STEVE_MOVING, toggle);
+            anim.SetBool(Constants.ANIMATION_BASICNURSE_WALKING, toggle);
         }
     }
 }
