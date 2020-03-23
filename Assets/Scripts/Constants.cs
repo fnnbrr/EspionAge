@@ -18,8 +18,6 @@ public static class Constants
     public const string ANIMATION_BASICNURSE_WALKING = "IsWalking";
     public const string ANIMATION_BASICNURSE_RUNNING = "IsRunning";
 
-    public const string ANIMATION_STEVE_MOVING = "IsMoving";
-
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
 
