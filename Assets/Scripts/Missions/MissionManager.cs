@@ -15,28 +15,14 @@ public class MissionObject
     public GameObject spawnedInstance;
 }
 
-public class InProgressMissionContainer
-{
-    public AMission mission;
-    public GameObject gameObject;
-
-    public InProgressMissionContainer(AMission _mission, GameObject _gameObject)
-    {
-        mission = _mission;
-        gameObject = _gameObject;
-    }
-}
-
 [System.Serializable]
 public class MissionMapping
 {
     [Header("Make sure this mission is unique among the list!")]
-    public MissionsEnum mission;
-    public GameObject prefab;
+    public MissionsEnum missionType;
+    public AMission mission;
     public Objective objective;
     public StampCollectible collectible;
-    [HideInInspector]
-    public AMission instantiatedMission;
 }
 
 public class MissionManager : Singleton<MissionManager>
@@ -45,14 +31,14 @@ public class MissionManager : Singleton<MissionManager>
     public List<MissionMapping> missionMappingList;
     private Dictionary<MissionsEnum, MissionMapping> missionMapping;
 
-    private List<InProgressMissionContainer> activeMissions;
+    private HashSet<MissionsEnum> activeMissions;
     private List<GameObject> camerasToCleanUp;
 
     private void Awake()
     {
         InitializeMissionMapping();
 
-        activeMissions = new List<InProgressMissionContainer>();
+        activeMissions = new HashSet<MissionsEnum>();
         camerasToCleanUp = new List<GameObject>();
     }
 
@@ -61,7 +47,7 @@ public class MissionManager : Singleton<MissionManager>
         missionMapping = new Dictionary<MissionsEnum, MissionMapping>();
         missionMappingList.ForEach(m =>
         {
-            missionMapping.Add(m.mission, m);
+            missionMapping.Add(m.missionType, m);
         });
         if (missionMapping.Count != System.Enum.GetNames(typeof(MissionsEnum)).Length)
         {
@@ -69,36 +55,30 @@ public class MissionManager : Singleton<MissionManager>
         }
     }
 
-    public GameObject GetMissionPrefabFromEnum(MissionsEnum missionEnumValue)
+    public AMission GetMissionLogic(MissionsEnum missionEnumValue)
     {
-        if (missionMapping.TryGetValue(missionEnumValue, out MissionMapping mission))
+        if (missionMapping.TryGetValue(missionEnumValue, out MissionMapping mapping))
         {
-            return mission.prefab;
+            return mapping.mission;
+        }
+        else
+        {
+            Debug.LogWarning($"Unmapped MissionsEnum value: {missionEnumValue} passed into GetMissionLogic!");
+            return null;
+        }
+    }
+
+    public GameObject GetMissionFromEnum(MissionsEnum missionEnumValue)
+    {
+        if (missionMapping.TryGetValue(missionEnumValue, out MissionMapping mapping))
+        {
+            return mapping.mission.gameObject;
         }
         else
         {
             Debug.LogWarning($"Unmapped MissionsEnum value: {missionEnumValue} passed into GetMissionFromEnum!");
             return null;
         }
-    }
-
-
-    public AMission GetInstantiatedMissionFromEnum(MissionsEnum missionEnumValue)
-    {
-        if (missionMapping.TryGetValue(missionEnumValue, out MissionMapping mission))
-        {
-            return mission.instantiatedMission;
-        }
-        else
-        {
-            Debug.LogWarning($"Unmapped MissionsEnum value: {missionEnumValue} passed into GetMissionFromEnum!");
-            return null;
-        }
-    }
-
-    public void SetInstantiatedMissionForEnum(MissionsEnum missionEnumValue, AMission mission)
-    {
-        missionMapping[missionEnumValue].instantiatedMission = mission;
     }
 
     public void SetObjectiveTextForList(MissionsEnum missionEnumValue)
@@ -125,55 +105,46 @@ public class MissionManager : Singleton<MissionManager>
 
     public AMission StartMission(MissionsEnum missionEnumValue)
     {
-        GameObject missionPrefab = GetMissionPrefabFromEnum(missionEnumValue);
-        GameObject createdMission = Instantiate(missionPrefab, Vector3.zero, Quaternion.identity, transform);
-        Component missionComponent = createdMission.GetComponent(typeof(AMission));
+        AMission missionLogic = GetMissionLogic(missionEnumValue);
+        missionLogic.gameObject.SetActive(true);
 
-        if (missionComponent is AMission)
-        {
-            AMission mission = missionComponent as AMission;
-            SetObjectiveTextForList(missionEnumValue);
+        ProgressManager.Instance.AddMission(missionLogic);
+        activeMissions.Add(missionEnumValue);
 
-            SetInstantiatedMissionForEnum(missionEnumValue, mission);
-            ProgressManager.Instance.AddMission(mission);
-            activeMissions.Add(new InProgressMissionContainer(mission, createdMission));
-            return mission;
-        } 
-        else
-        {
-            Utils.LogErrorAndStopPlayMode($"Expected to find an AMission component on {missionPrefab.name}!");
-            return null;
-        }
+        SetObjectiveTextForList(missionEnumValue);
+        
+        return missionLogic;
     }
 
-    public InProgressMissionContainer GetActiveMission<T>()
+    public bool IsMissionActive(MissionsEnum missionEnumValue)
     {
-        return activeMissions.Find(m => m.mission is T);
+        return activeMissions.Contains(missionEnumValue);
     }
 
     public void RestartMission(MissionsEnum missionEnumValue)
     {
-        ProgressManager.Instance.UpdateMissionStatus(GetInstantiatedMissionFromEnum(missionEnumValue), MissionStatusCode.Started);
+        ProgressManager.Instance.UpdateMissionStatus(GetMissionLogic(missionEnumValue), MissionStatusCode.Started);
     }
 
     public void CompleteMissionObjective(MissionsEnum missionEnumValue)
     {
-        ProgressManager.Instance.UpdateMissionStatus(GetInstantiatedMissionFromEnum(missionEnumValue), MissionStatusCode.Completed);
+        ProgressManager.Instance.UpdateMissionStatus(GetMissionLogic(missionEnumValue), MissionStatusCode.Completed);
         ObjectiveList.Instance.CrossOutObjectiveText();
         Debug.Log("Objective Complete");
     }
 
     public void EndMission(MissionsEnum missionEnumValue)
     {
-        AMission mission = GetInstantiatedMissionFromEnum(missionEnumValue);
-        InProgressMissionContainer container = activeMissions.Find(m => m.mission == mission);
+        AMission missionLogic = GetMissionLogic(missionEnumValue);
+
         ObjectiveList.Instance.HideObjectiveList();
 
-        if (container != null)
+        if (activeMissions.Contains(missionEnumValue))
         {
-            Destroy(container.gameObject);
-            activeMissions.Remove(container);
-            ProgressManager.Instance.UpdateMissionStatus(mission, MissionStatusCode.Closed);
+            activeMissions.Remove(missionEnumValue);
+
+            missionLogic.gameObject.SetActive(false);
+            ProgressManager.Instance.UpdateMissionStatus(missionLogic, MissionStatusCode.Closed);
 
             StampCollectible collectible = GetStampCollectibleFromEnum(missionEnumValue);
             if (collectible != null)
@@ -183,7 +154,7 @@ public class MissionManager : Singleton<MissionManager>
         }
         else
         {
-            Debug.LogError("Tried to end an invalid mission!");
+            Debug.LogError($"Tried to end an invalid mission: {missionEnumValue}");
         }
     }
 
