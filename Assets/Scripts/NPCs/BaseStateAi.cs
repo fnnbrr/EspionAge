@@ -21,8 +21,8 @@ namespace NPCs
     public abstract class BaseStateAi<T> : BaseNavAi where T : Enum
     {
         [Header("State Management")]
+        [SerializeField] public T prevState;
         [SerializeField] public T currentState;
-        [SerializeField] public T defaultState;
         [SerializeField] public T nextState;
 
         protected abstract void SetState(T newState);
