@@ -10,7 +10,7 @@ public class UITextOverlay : MonoBehaviour
     public TextMeshProUGUI textMesh;
     public GameObject optionalPrompt;
 
-    private bool isTyping = false;
+    private bool isTextScrolling = false;
     private bool skipRequest = false;
     private bool waitingForNext = false;
 
@@ -23,7 +23,7 @@ public class UITextOverlay : MonoBehaviour
     {
         if (optionalPrompt)
         {
-            optionalPrompt.SetActive(isTyping);
+            optionalPrompt.SetActive(isTextScrolling);
         }
 
         HandleInput();
@@ -33,7 +33,7 @@ public class UITextOverlay : MonoBehaviour
     {
         if (UIManager.Instance.IsGamePaused()) return;
 
-        if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
+        if (isTextScrolling && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
         {
             if (!skipRequest)
             {
@@ -59,7 +59,7 @@ public class UITextOverlay : MonoBehaviour
 
     public Coroutine SetText(string text)
     {
-        if (isTyping)
+        if (isTextScrolling)
         {
             StopAllCoroutines();
         }
@@ -70,7 +70,7 @@ public class UITextOverlay : MonoBehaviour
     {
         if (usedForTextCutscenes && GameManager.Instance.skipSettings.allTextCutscenes) yield break;
 
-        isTyping = true;
+        isTextScrolling = true;
 
         textMesh.maxVisibleCharacters = 0;
         textMesh.text = text;
@@ -100,7 +100,7 @@ public class UITextOverlay : MonoBehaviour
         textMesh.text = string.Empty;
 
         skipRequest = false;
-        isTyping = false;
+        isTextScrolling = false;
 
         OnFinishTyping?.Invoke(text);
     }

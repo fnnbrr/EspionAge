@@ -68,8 +68,8 @@ public class MissionTutorial : AMission
 
     [Header("Chaser Enemies")]
     public List<GameObject> chaserPrefabs;
-    [MinMaxSlider(0.5f, 2f)] public Vector2 randomWidthRange;
-    [MinMaxSlider(0.5f, 2f)] public Vector2 randomHeightRange;
+    [MinMaxSlider(0.5f, 2f)] public Vector2 randomWidthMultiplierRange;
+    [MinMaxSlider(0.5f, 2f)] public Vector2 randomHeightMultiplierRange;
     public float enemyCutsceneAnimationSpeed = 0.2f;
     public List<TutorialChaserGroup> chaserGroups;
 
@@ -492,10 +492,11 @@ public class MissionTutorial : AMission
             group.enemyStartPositions.ForEach(position =>
             {
                 GameObject enemyInstance = Instantiate(chaserPrefabs[Random.Range(0, chaserPrefabs.Count)], position, Quaternion.identity);
+                Vector3 originalScale = enemyInstance.transform.localScale;
                 enemyInstance.transform.localScale = new Vector3(
-                    enemyInstance.transform.localScale.x * Random.Range(randomWidthRange.x, randomWidthRange.y),
-                    enemyInstance.transform.localScale.y * Random.Range(randomHeightRange.x, randomHeightRange.y),
-                    enemyInstance.transform.localScale.z * Random.Range(randomWidthRange.x, randomWidthRange.y));
+                    originalScale.x * Random.Range(randomWidthMultiplierRange.x, randomWidthMultiplierRange.y),
+                    originalScale.y * Random.Range(randomHeightMultiplierRange.x, randomHeightMultiplierRange.y),
+                    originalScale.z * Random.Range(randomWidthMultiplierRange.x, randomWidthMultiplierRange.y));
 
                 PureChaser chaser = Utils.GetRequiredComponent<PureChaser>(enemyInstance);
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
