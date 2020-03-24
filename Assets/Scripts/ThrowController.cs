@@ -155,6 +155,7 @@ public class ThrowController : MonoBehaviour
         currentThrowables.Add(throwableObject);
 
         OnPickup?.Invoke(throwableObject);
+        GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.HasThrownSomething, true);
     }
 
     // This is an unsafe function! Must check length of currentThrowables before calling it (like in HandleThrowInput() above)!

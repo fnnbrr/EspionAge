@@ -28,6 +28,8 @@ public static class Constants
     
     public const string ANIMATION_PAUSE_DISABLED_DISPLAY= "Display";
 
+    public const string ANIMATION_PILLBOTTLE_DISPLAYING = "Displaying";
+
     public const string INPUT_INTERACTABLE_GETDOWN = "Interact";
     public const string INPUT_CANCEL_GETDOWN = "Cancel";
     public const string INPUT_THROW_GETDOWN = "Fire1";

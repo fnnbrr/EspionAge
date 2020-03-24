@@ -6,14 +6,15 @@ using UnityEngine;
 
 public class ItemThrowCount : MonoBehaviour
 {
-    public GameObject imageRoot;
-
     private int numItemsHeld = 0;
+    private Animator rootAnim;
     private ThrowController throwController;
     private TextMeshProUGUI text;
 
     void Start()
     {
+        rootAnim = Utils.GetRequiredComponent<Animator>(this);
+
         throwController = GameManager.Instance.GetThrowController();
         if(throwController == null)
         {
@@ -29,26 +30,31 @@ public class ItemThrowCount : MonoBehaviour
         if (!GameEventManager.Instance.CheckEventStatus(GameEventManager.GameEvent.HasThrownSomething))
         {
             HideImage();
-            throwController.OnPickup += WaitForFirstPickup;
+            GameEventManager.Instance.SubscribeToEvent(GameEventManager.GameEvent.HasThrownSomething, OnFirstPickUp);
         }
     }
 
     private void ShowImage()
     {
-        imageRoot.SetActive(true);
+        rootAnim.SetBool(Constants.ANIMATION_PILLBOTTLE_DISPLAYING, true);
     }
 
     private void HideImage()
     {
-        imageRoot.SetActive(false);
+        rootAnim.SetBool(Constants.ANIMATION_PILLBOTTLE_DISPLAYING, false);
     }
 
-    private void WaitForFirstPickup(GameObject source)
+    private void OnFirstPickUp(bool status)
     {
-        throwController.OnPickup -= WaitForFirstPickup;
+        if (status)
+        {
+            ShowImage();
+        }
+        else
+        {
+            HideImage();
+        }
 
-        ShowImage();
-        GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.HasThrownSomething, true);
     }
 
     private void HandleResetThrowableCount()
