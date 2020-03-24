@@ -137,6 +137,11 @@ public class DialogueManager : Singleton<DialogueManager>
         speakers.Add(speaker.id, speaker);
     }
 
+    public bool HasSpeaker(string id)
+    {
+        return speakers.ContainsKey(id);
+    }
+
     public void RemoveSpeaker(string speakerId)
     {
         if (!speakers.ContainsKey(speakerId))
@@ -178,6 +183,29 @@ public class DialogueManager : Singleton<DialogueManager>
 
             AdvanceConversation(conversation);
         }
+    }
+
+    public Conversation StartBark(string speakerId, Bark bark)
+    {
+        Conversation barkConversation = ScriptableObject.CreateInstance<Conversation>();
+        barkConversation.lines = new Line[] { new Line(speakerId, bark.line) };
+        barkConversation.autoplayConversation = true;
+        StartConversation(barkConversation);
+
+        return barkConversation;
+    }
+
+    public string GetSpeakerId(GameObject speakerObject)
+    {
+        foreach (KeyValuePair<string, SpeakerContainer> pair in speakers)
+        {
+            if (pair.Value.speakerObject == speakerObject)
+            {
+                return pair.Value.id;
+            }
+        }
+
+        return string.Empty;
     }
 
     void StopAllConversations(List<string> convoSpeakers)
