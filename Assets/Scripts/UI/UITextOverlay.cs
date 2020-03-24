@@ -10,10 +10,9 @@ public class UITextOverlay : MonoBehaviour
     public TextMeshProUGUI textMesh;
     public GameObject optionalPrompt;
 
-    private bool isTyping = false;
+    private bool isTextScrolling = false;
     private bool skipRequest = false;
     private bool waitingForNext = false;
-    private Coroutine currentTypingCoroutine;
 
     public delegate void FinishTypingEvent(string typedText);
     public event FinishTypingEvent OnFinishTyping;
@@ -24,7 +23,7 @@ public class UITextOverlay : MonoBehaviour
     {
         if (optionalPrompt)
         {
-            optionalPrompt.SetActive(isTyping);
+            optionalPrompt.SetActive(isTextScrolling);
         }
 
         HandleInput();
@@ -34,7 +33,7 @@ public class UITextOverlay : MonoBehaviour
     {
         if (UIManager.Instance.IsGamePaused()) return;
 
-        if (isTyping && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
+        if (isTextScrolling && Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
         {
             if (!skipRequest)
             {
@@ -52,36 +51,43 @@ public class UITextOverlay : MonoBehaviour
         usedForTextCutscenes = true;
     }
 
+    public void ClearText()
+    {
+        StopAllCoroutines();
+        textMesh.text = string.Empty;
+    }
+
     public Coroutine SetText(string text)
     {
-        if (isTyping && currentTypingCoroutine != null)
+        if (isTextScrolling)
         {
-            StopCoroutine(currentTypingCoroutine);
+            StopAllCoroutines();
         }
-        currentTypingCoroutine = StartCoroutine(StartTypeText(text));
-
-        return currentTypingCoroutine;
+        return StartCoroutine(StartTypeText(text));
     }
 
     private IEnumerator StartTypeText(string text)
     {
         if (usedForTextCutscenes && GameManager.Instance.skipSettings.allTextCutscenes) yield break;
 
-        isTyping = true;
+        isTextScrolling = true;
 
-        int currentCharIndex = 0;
-        while (currentCharIndex < text.Length)
+        textMesh.maxVisibleCharacters = 0;
+        textMesh.text = text;
+
+        int currentDisplayingCharacters = 0;
+        while (currentDisplayingCharacters < text.Length)
         {
             if (skipRequest)
             {
                 skipRequest = false;
-                currentCharIndex = text.Length;
+                currentDisplayingCharacters = text.Length;
             }
             else
             {
-                currentCharIndex += 1;
+                currentDisplayingCharacters += 1;
             }
-            textMesh.text = text.Substring(0, currentCharIndex);
+            textMesh.maxVisibleCharacters = currentDisplayingCharacters;
             yield return new WaitForSeconds(charTypeSpeed);
         }
 
@@ -94,7 +100,7 @@ public class UITextOverlay : MonoBehaviour
         textMesh.text = string.Empty;
 
         skipRequest = false;
-        isTyping = false;
+        isTextScrolling = false;
 
         OnFinishTyping?.Invoke(text);
     }

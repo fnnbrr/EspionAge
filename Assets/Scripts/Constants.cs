@@ -15,7 +15,8 @@ public static class Constants
     public const string ANIMATION_BIRDIE_DASH= "Dash";
     public const string ANIMATION_BIRDIE_WAKEUP = "WakeUp";
 
-    public const string ANIMATION_STEVE_MOVING = "IsMoving";
+    public const string ANIMATION_BASICNURSE_WALKING = "IsWalking";
+    public const string ANIMATION_BASICNURSE_RUNNING = "IsRunning";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
@@ -62,7 +63,7 @@ public static class Constants
 
     public const float INTERACT_BOUNDARY_RADIUS = 20.0f;
     public const float INTERACT_POPUP_RADIUS = 10.0f;
-    public const float CHAR_TYPE_SPEED = 0.05f;
+    public const float CHAR_TYPE_SPEED = 0.025f;
     public const float WAIT_TIME_CONVO_LINE = 1.0f;
 
     public const int RIGHT_PADDING_WITH_ABUTTON = 70;

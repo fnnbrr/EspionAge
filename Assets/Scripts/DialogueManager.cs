@@ -272,19 +272,22 @@ public class DialogueManager : Singleton<DialogueManager>
         activeConversations[conversation].isTyping = true;
         activeConversations[conversation].waitingForNext = false;
 
-        int currentCharIndex = 0;
-        while (currentCharIndex < text.Length)
+        textMesh.maxVisibleCharacters = 0;
+        textMesh.text = text;
+
+        int currentDisplayingCharacters = 0;
+        while (currentDisplayingCharacters < text.Length)
         {
             if (activeConversations[conversation].skipRequest)
             {
                 activeConversations[conversation].skipRequest = false;
-                currentCharIndex = text.Length;
+                currentDisplayingCharacters = text.Length;
             }
             else
             {
-                currentCharIndex += 1;
+                currentDisplayingCharacters += 1;
             }
-            textMesh.text = text.Substring(0, currentCharIndex);
+            textMesh.maxVisibleCharacters = currentDisplayingCharacters;
             yield return new WaitForSeconds(Constants.CHAR_TYPE_SPEED);
         }
         activeConversations[conversation].waitingForNext = true;

@@ -11,7 +11,7 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_STARTMISSIONTUTORIAL, true)]
     public static bool ValidateStartMissionTutorial()
     {
-        return Application.isPlaying && MissionManager.Instance && MissionManager.Instance.GetActiveMission<MissionTutorial>() == null;
+        return Application.isPlaying && MissionManager.Instance && !MissionManager.Instance.IsMissionActive(MissionsEnum.MissionTutorial);
     }
 
     [MenuItem(Constants.CHEATS_STARTMISSIONTUTORIAL)]
@@ -23,7 +23,7 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_ENDMISSIONTUTORIAL, true)]
     public static bool ValidateStopMissionTutorial()
     {
-        return Application.isPlaying && MissionManager.Instance && MissionManager.Instance.GetActiveMission<MissionTutorial>() != null;
+        return Application.isPlaying && MissionManager.Instance && MissionManager.Instance.IsMissionActive(MissionsEnum.MissionTutorial);
     }
 
     [MenuItem(Constants.CHEATS_ENDMISSIONTUTORIAL)]
@@ -38,7 +38,7 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_STARTMISSIONKITCHEN1, true)]
     public static bool ValidateStartMissionCafeteria1()
     {
-        return Application.isPlaying && MissionManager.Instance && MissionManager.Instance.GetActiveMission<MissionKitchen1>() == null;
+        return Application.isPlaying && MissionManager.Instance && !MissionManager.Instance.IsMissionActive(MissionsEnum.KitchenMission);
     }
 
     [MenuItem(Constants.CHEATS_STARTMISSIONKITCHEN1)]
@@ -50,13 +50,12 @@ public class MissionCheats: MonoBehaviour
     [MenuItem(Constants.CHEATS_ENDMISSIONKITCHEN1, true)]
     public static bool ValidateStopMissionCafeteria1()
     {
-        return Application.isPlaying && MissionManager.Instance && MissionManager.Instance.GetActiveMission<MissionKitchen1>() != null;
+        return Application.isPlaying && MissionManager.Instance && MissionManager.Instance.IsMissionActive(MissionsEnum.KitchenMission);
     }
 
     [MenuItem(Constants.CHEATS_ENDMISSIONKITCHEN1)]
     public static void EndMissionCafeteria1()
     {
-        AMission mission = MissionManager.Instance.GetActiveMission<MissionKitchen1>().mission;
         MissionManager.Instance.EndMission(MissionsEnum.KitchenMission);
     }
 }

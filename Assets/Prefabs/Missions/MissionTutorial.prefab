@@ -121,8 +121,12 @@ MonoBehaviour:
   - {x: -64, y: 3, z: 116}
   - {x: -64, y: 3, z: 101}
   - {x: -64, y: 3, z: 86}
-  chaserPrefab: {fileID: 3862208129692031431, guid: e9c98b9dbdfbaf3468d9f310c9ed292e,
-    type: 3}
+  chaserPrefabs:
+  - {fileID: 3862208129692031431, guid: e9c98b9dbdfbaf3468d9f310c9ed292e, type: 3}
+  - {fileID: 5159778001033372263, guid: 1c460041d337b2e42bd2aa044fee18ca, type: 3}
+  - {fileID: 3104466235535061125, guid: 08b60760da71e194183329655d47f103, type: 3}
+  randomWidthMultiplierRange: {x: 0.9, y: 1.1}
+  randomHeightMultiplierRange: {x: 0.9, y: 1.3}
   enemyCutsceneAnimationSpeed: 0.2
   chaserGroups:
   - startChaseRadius: 70
