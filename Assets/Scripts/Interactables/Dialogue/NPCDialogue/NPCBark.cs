@@ -10,7 +10,7 @@ public class NPCBark : MonoBehaviour
     [EnumFlags] public BarkBehaviour behaviour;
     public BarkSelectionBehaviour selectionBehaviour;
 
-    public float enabledRadius = 50f;  // barks will only have a chance to be played when within this range
+    public float enabledRadius = 30f;  // barks will only have a chance to be played when within this range
 
     [ShowIf(EConditionOperator.Or, "IsOnRangeEnter", "IsOnRangeExit")]
     public float triggerRadius = 5f;

@@ -510,7 +510,6 @@ public class MissionTutorial : AMission
                 chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
 
                 NPCBark npcBark = Utils.GetRequiredComponent<NPCBark>(enemyInstance);
-                npcBark.enabledRadius = group.startChaseRadius;
 
                 spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group, npcBark));
             });
