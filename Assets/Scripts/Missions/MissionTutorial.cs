@@ -589,7 +589,11 @@ public class MissionTutorial : AMission
 
         if (GameManager.Instance)
         {
-            GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+            // Resolves bug where this is called mid conversation with NPC whcihc makes player move again
+            if(!DialogueManager.Instance.CheckIsAdvancing())
+            {
+                GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+            }
             GameManager.Instance.GetPlayerRigidbody().isKinematic = false;
         }
 
