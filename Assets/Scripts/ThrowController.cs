@@ -65,10 +65,13 @@ public class ThrowController : MonoBehaviour
                 (Utils.InputAxisInUse(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK) || 
                  Utils.InputAxisInUse(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK)))
             {
-                float horizontal = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK);
-                float vertical = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK);
+                float horizontal = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK);
+                float vertical = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK);
+
+                Quaternion rotatorToCamera = Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0);
+                Vector3 rotatedDirection = rotatorToCamera * new Vector3(horizontal, 0, vertical);
                 
-                return new Vector3(position.x + horizontal, position.y, position.z + vertical);
+                return new Vector3(position.x + rotatedDirection.x, position.y, position.z + rotatedDirection.z);
             }
             
             // Handle mouse + keyboard input
