@@ -27,11 +27,11 @@ public class ObjectiveList : Singleton<ObjectiveList>
     {
         previousAxis = currentAxis; 
         currentAxis = Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD);
-        if ((currentAxis < - LEFT_DPAD) && (previousAxis >= LEFT_DPAD) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        if ((currentAxis < - DPAD_PRESS_THRESHOLD) && (previousAxis >= - DPAD_PRESS_THRESHOLD) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
             root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, true); 
         } 
-        else if ((currentAxis < - LEFT_DPAD) && (previousAxis >= LEFT_DPAD) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        else if ((currentAxis < - DPAD_PRESS_THRESHOLD) && (previousAxis >= - DPAD_PRESS_THRESHOLD) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
             root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, false); 
         }
