@@ -12,7 +12,7 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     private float previousAxis;
     private float currentAxis;
-    private const float LEFT_DPAD = 0.75;
+    private const float DPAD_PRESS_THRESHOLD = 0.75f;
 
     // Start is called before the first frame update
     void Awake()
