@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ThrowController : MonoBehaviour
 {
-    [Header("Throwing")]
+    public LaunchArcRenderer launchArcRenderer;
     [Range(1.0f, 10.0f)] public float sensitivityMouse = 2.0f;
     [Range(1.0f, 10.0f)] public float sensitivityController = 2.0f;
     public Transform throwPosition;
@@ -13,8 +13,7 @@ public class ThrowController : MonoBehaviour
     public float throwMultiplier = 0.08f;
     public float minThrowVelocity = 10f;
     public float maxThrowVelocity = 20f;
-
-    private LaunchArcRenderer launchArcRenderer;
+    
     private List<GameObject> currentThrowables;
     private Plane mouseHitPlane;
     private bool isThrowReset = true;
@@ -27,8 +26,6 @@ public class ThrowController : MonoBehaviour
 
     private void Start()
     {
-        launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
-        launchArcRenderer.gameObject.SetActive(false);  // initially hide arc
         currentThrowables = new List<GameObject>();
         
         mouseHitPlane = new Plane(Vector3.up, Vector3.zero);

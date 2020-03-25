@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
             throw new UnityException("No main Camera found");
         }
         
-        mainCamera = Camera.main;
+        mainCamera = CameraManager.Instance.brain.gameObject.GetComponent<Camera>();
     }
 
     private void SetControllerConnected()
