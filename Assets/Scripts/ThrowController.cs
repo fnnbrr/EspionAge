@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,17 +21,9 @@ public class ThrowController : MonoBehaviour
 
     private PlayerController playerController;
 
-    public delegate void OnThrowEventHandler(Interactable source);
-    public event OnThrowEventHandler OnThrow;
-
-    public delegate void OnPickupEventHandler(GameObject source);
-    public event OnPickupEventHandler OnPickup;
-    
-    public delegate void OnThrowableResetEventHandler();
-    public event OnThrowableResetEventHandler OnThrowableReset;
-
-    public delegate void OnInteractEventHandler(Interactable source);
-    public event OnInteractEventHandler OnInteractBegin;
+    public event Action<Interactable> OnThrow;
+    public event Action<GameObject> OnPickup;
+    public event Action OnThrowableReset;
 
     private void Start()
     {
@@ -204,10 +197,5 @@ public class ThrowController : MonoBehaviour
             objectFader.OnFadeToTransparentComplete += () => Destroy(o);
             objectFader.FadeToTransparent();
         }
-    }
-    
-    public void InteractPlayer(Interactable source)
-    {
-        OnInteractBegin?.Invoke(source);
     }
 }
