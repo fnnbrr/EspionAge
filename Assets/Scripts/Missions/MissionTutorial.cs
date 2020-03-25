@@ -28,6 +28,8 @@ public class MissionTutorial : AMission
     [BoxGroup("Nurse Room Sequence")] public List<Conversation> lostBirdieConversations;
     [BoxGroup("Nurse Room Sequence")] public MissionObject otherBedNPC;
     [BoxGroup("Nurse Room Sequence")] public string otherBedNPCSpeakerId;
+    [FMODUnity.EventRef]
+    [BoxGroup("Nurse Room Sequence")] public string otherBedNPCVoicePath;
     [BoxGroup("Nurse Room Sequence")] public List<Conversation> otherBedNPCConversations;
 
     // private nurse room variables
@@ -346,7 +348,7 @@ public class MissionTutorial : AMission
             new SpeakerContainer(
                 otherBedNPCSpeakerId,
                 otherBedNPC.spawnedInstance,
-                string.Empty));
+                otherBedNPCVoicePath));
         if (otherBedNPCConversations.Count == 0)
         {
             Debug.LogError("Need at least one conversation set for otherBedNPCConversations!");
