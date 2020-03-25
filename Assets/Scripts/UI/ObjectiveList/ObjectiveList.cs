@@ -10,6 +10,10 @@ public class ObjectiveList : Singleton<ObjectiveList>
     private TMP_Text objectiveText;
     private Animator root;
 
+    private float previousAxis;
+    private float currentAxis;
+    private const float DPAD_PRESS_THRESHOLD = 0.75f;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -21,11 +25,13 @@ public class ObjectiveList : Singleton<ObjectiveList>
 
     void Update()
     {
-        if (((Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD) < -0.75f) || Input.GetKeyDown("j")) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        previousAxis = currentAxis; 
+        currentAxis = Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD);
+        if ((currentAxis < - DPAD_PRESS_THRESHOLD) && (previousAxis >= - DPAD_PRESS_THRESHOLD) && !root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
             root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, true); 
         } 
-        else if (((Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_DPAD) < -0.75f) || Input.GetKeyDown("j")) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
+        else if ((currentAxis < - DPAD_PRESS_THRESHOLD) && (previousAxis >= - DPAD_PRESS_THRESHOLD) && root.GetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE))
         {
             root.SetBool(Constants.ANIMATION_OBJECTIVELIST_SLIDE, false); 
         }
