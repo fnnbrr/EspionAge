@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ThrowController : MonoBehaviour
 {
-    [Header("Throwing")]
+    public LaunchArcRenderer launchArcRenderer;
     [Range(1.0f, 10.0f)] public float sensitivityMouse = 2.0f;
     [Range(1.0f, 10.0f)] public float sensitivityController = 2.0f;
     public Transform throwPosition;
@@ -12,34 +13,24 @@ public class ThrowController : MonoBehaviour
     public float throwMultiplier = 0.08f;
     public float minThrowVelocity = 10f;
     public float maxThrowVelocity = 20f;
-
-    private LaunchArcRenderer launchArcRenderer;
+    
     private List<GameObject> currentThrowables;
     private Plane mouseHitPlane;
-    private Camera mainCamera;
-    private bool mainCameraActive = false;
     private bool isThrowReset = true;
 
-    public delegate void OnThrowEventHandler(Interactable source);
-    public event OnThrowEventHandler OnThrow;
+    private PlayerController playerController;
 
-    public delegate void OnPickupEventHandler(GameObject source);
-    public event OnPickupEventHandler OnPickup;
-    
-    public delegate void OnThrowableResetEventHandler();
-    public event OnThrowableResetEventHandler OnThrowableReset;
-
-    public delegate void OnInteractEventHandler(Interactable source);
-    public event OnInteractEventHandler OnInteractBegin;
+    public event Action<Interactable> OnThrow;
+    public event Action<GameObject> OnPickup;
+    public event Action OnThrowableReset;
 
     private void Start()
     {
-        launchArcRenderer = GetComponentInChildren<LaunchArcRenderer>();
-        launchArcRenderer.gameObject.SetActive(false);  // initially hide arc
         currentThrowables = new List<GameObject>();
         
         mouseHitPlane = new Plane(Vector3.up, Vector3.zero);
-        mainCamera = Camera.main;
+
+        playerController = GameManager.Instance.GetPlayerController();
 
         UIManager.Instance.staminaBar.OnChange += UpdateThrowVelocity;
     }
@@ -56,45 +47,43 @@ public class ThrowController : MonoBehaviour
 
     public Vector3 GetMousePosition()
     {
-        if (mainCameraActive)
+        Vector3 position = transform.position;
+            
+        // Handle controller input
+        if (playerController.controllerConnected && 
+            (Utils.InputAxisInUse(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK) || 
+             Utils.InputAxisInUse(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK)))
         {
-            Vector3 position = transform.position;
+            float horizontal = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK);
+            float vertical = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK);
+
+            Vector3 rotatedDirection = playerController.AlignDirectionWithCamera(new Vector3(horizontal, 0, vertical));
             
-            // Handle controller input
-            if (GameManager.Instance.GetPlayerController().controllerConnected && 
-                (Utils.InputAxisInUse(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK) || 
-                 Utils.InputAxisInUse(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK)))
-            {
-                float horizontal = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK);
-                float vertical = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK);
+            return new Vector3(position.x + rotatedDirection.x, position.y, position.z + rotatedDirection.z);
+        }
+        
+        // Handle mouse + keyboard input
+        Ray ray = CameraManager.Instance.brain.gameObject.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
                 
-                return new Vector3(position.x + horizontal, position.y, position.z + vertical);
-            }
+        if (mouseHitPlane.Raycast(ray, out float enter))
+        {
+            Vector3 hitPoint = ray.GetPoint(enter);
             
-            // Handle mouse + keyboard input
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                    
-            if(mouseHitPlane.Raycast(ray, out float enter))
-            {
-                Vector3 hitPoint = ray.GetPoint(enter);
-                
-                float horizontal = sensitivityMouse * (hitPoint.x - position.x);
-                float vertical = sensitivityMouse * (hitPoint.z - position.z);
-            
-                return new Vector3(position.x + horizontal, position.y, position.z + vertical);
-            }
+            float horizontal = sensitivityMouse * (hitPoint.x - position.x);
+            float vertical = sensitivityMouse * (hitPoint.z - position.z);
+        
+            return new Vector3(position.x + horizontal, position.y, position.z + vertical);
         }
 
-        if (mainCamera != null) mainCameraActive = true;
         return transform.position;
     }
 
     private void HandleThrowInput()
     {
-        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput || currentThrowables.Count <= 0) return;
+        if (!playerController.EnablePlayerInput || currentThrowables.Count <= 0) return;
 
         // Handle controller input
-        if (GameManager.Instance.GetPlayerController().controllerConnected)
+        if (playerController.controllerConnected)
         {
             bool isTriggerDown = Utils.InputAxisInUse(Constants.INPUT_THROW_GETDOWN);
 
@@ -205,10 +194,5 @@ public class ThrowController : MonoBehaviour
             objectFader.OnFadeToTransparentComplete += () => Destroy(o);
             objectFader.FadeToTransparent();
         }
-    }
-    
-    public void InteractPlayer(Interactable source)
-    {
-        OnInteractBegin?.Invoke(source);
     }
 }

@@ -7,7 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(NoisePinger))]
 public class Throwable : Interactable
 {
-    private bool hasBeenAcquired = false;
     private bool hasHit = false;
     private NoisePinger noisePing;
 
@@ -26,14 +25,13 @@ public class Throwable : Interactable
     {
         if (!GameManager.Instance.GetPlayerController().EnablePlayerInput) return;
 
-        if (!hasBeenAcquired)
+        if (enableInteract)
         {
             base.OnInteract();
-
-            ThrowController throwController = Utils.GetRequiredComponent<ThrowController>(player);
-            throwController.AddThrowable(gameObject);
-            hasBeenAcquired = true;
-            enableInteract = false;  // the player should not be able to interact with this object anymore
+            
+            enableInteract = false;
+            GameManager.Instance.GetThrowController().AddThrowable(gameObject);
+            
             FMODUnity.RuntimeManager.PlayOneShot(pickUpSFX, transform.position);
         }
     }
@@ -41,7 +39,7 @@ public class Throwable : Interactable
     private void OnCollisionEnter(Collision other)
     {
         FMODUnity.RuntimeManager.PlayOneShot(throwableSFX, transform.position);
-        if (!hasBeenAcquired || hasHit) return;
+        if (enableInteract || hasHit) return;
 
         noisePing.SpawnNoisePing(other);
         hasHit = true;
