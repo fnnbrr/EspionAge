@@ -59,6 +59,8 @@ public static class Constants
     public const string CHEATS_AWAKENESS_DEFAULT = "Cheats/Awakeness/Default";
     public const string CHEATS_AWAKENESS_ALWAYSMIN = "Cheats/Awakeness/Always Min";
     public const string CHEATS_AWAKENESS_ALWAYSMAX = "Cheats/Awakeness/Always Max";
+    
+    public const string CHEATS_ADD_MEDICINE_BOTTLES = "Cheats/Throwables/License to Pill";
 
     public const string SCENE_MAINMENU = "main_menu";
     public const string SCENE_MAIN = "MAIN";
