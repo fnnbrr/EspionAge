@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaunchArcRenderer : MonoBehaviour
@@ -16,6 +15,7 @@ public class LaunchArcRenderer : MonoBehaviour
 
     private LineRenderer lr;
     private Vector3 mousePosition;
+    private bool hasBeenDisabled = false;
 
     private void Awake()
     {
@@ -65,7 +65,12 @@ public class LaunchArcRenderer : MonoBehaviour
     private void OnEnable()
     {
         // Allows arc to be rendered in correct position when re-enabled
-        Update();
+        if (hasBeenDisabled) Update();
+    }
+
+    private void OnDisable()
+    {
+        hasBeenDisabled = true;
     }
 
     private void Update()

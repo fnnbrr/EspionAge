@@ -1,15 +1,23 @@
 ﻿using System.Linq;
 using UnityEngine;
-using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
     public bool EnablePlayerInput { get; set; } = true;
     public bool controllerConnected = false;
 
-    void Start()
+    [HideInInspector] public Camera mainCamera;
+
+    private void Start()
     {
         SetControllerConnected();
+
+        if (Camera.main == null)
+        {
+            throw new UnityException("No main Camera found");
+        }
+        
+        mainCamera = Camera.main;
     }
 
     private void SetControllerConnected()
@@ -27,13 +35,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleCameraOnBlendingStart(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
+    public Vector3 AlignDirectionWithCamera(Vector3 initialDirection)
     {
-        EnablePlayerInput = false;
-    }
-
-    private void HandleCameraOnBlendingComplete(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
-    {
-        EnablePlayerInput = true;
+        return Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0) * initialDirection;
     }
 }

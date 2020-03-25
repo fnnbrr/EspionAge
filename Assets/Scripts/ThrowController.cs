@@ -16,9 +16,9 @@ public class ThrowController : MonoBehaviour
     private LaunchArcRenderer launchArcRenderer;
     private List<GameObject> currentThrowables;
     private Plane mouseHitPlane;
-    private Camera mainCamera;
-    private bool mainCameraActive = false;
     private bool isThrowReset = true;
+
+    private PlayerController playerController;
 
     public delegate void OnThrowEventHandler(Interactable source);
     public event OnThrowEventHandler OnThrow;
@@ -39,7 +39,8 @@ public class ThrowController : MonoBehaviour
         currentThrowables = new List<GameObject>();
         
         mouseHitPlane = new Plane(Vector3.up, Vector3.zero);
-        mainCamera = Camera.main;
+
+        playerController = GameManager.Instance.GetPlayerController();
 
         UIManager.Instance.staminaBar.OnChange += UpdateThrowVelocity;
     }
@@ -56,48 +57,43 @@ public class ThrowController : MonoBehaviour
 
     public Vector3 GetMousePosition()
     {
-        if (mainCameraActive)
+        Vector3 position = transform.position;
+            
+        // Handle controller input
+        if (playerController.controllerConnected && 
+            (Utils.InputAxisInUse(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK) || 
+             Utils.InputAxisInUse(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK)))
         {
-            Vector3 position = transform.position;
-            
-            // Handle controller input
-            if (GameManager.Instance.GetPlayerController().controllerConnected && 
-                (Utils.InputAxisInUse(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK) || 
-                 Utils.InputAxisInUse(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK)))
-            {
-                float horizontal = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK);
-                float vertical = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK);
+            float horizontal = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_HORIZONTAL_RIGHT_STICK);
+            float vertical = 10 * sensitivityController * Input.GetAxis(Constants.INPUT_AXIS_VERTICAL_RIGHT_STICK);
 
-                Quaternion rotatorToCamera = Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0);
-                Vector3 rotatedDirection = rotatorToCamera * new Vector3(horizontal, 0, vertical);
-                
-                return new Vector3(position.x + rotatedDirection.x, position.y, position.z + rotatedDirection.z);
-            }
+            Vector3 rotatedDirection = playerController.AlignDirectionWithCamera(new Vector3(horizontal, 0, vertical));
             
-            // Handle mouse + keyboard input
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-                    
-            if(mouseHitPlane.Raycast(ray, out float enter))
-            {
-                Vector3 hitPoint = ray.GetPoint(enter);
+            return new Vector3(position.x + rotatedDirection.x, position.y, position.z + rotatedDirection.z);
+        }
+        
+        // Handle mouse + keyboard input
+        Ray ray = playerController.mainCamera.ScreenPointToRay(Input.mousePosition);
                 
-                float horizontal = sensitivityMouse * (hitPoint.x - position.x);
-                float vertical = sensitivityMouse * (hitPoint.z - position.z);
+        if (mouseHitPlane.Raycast(ray, out float enter))
+        {
+            Vector3 hitPoint = ray.GetPoint(enter);
             
-                return new Vector3(position.x + horizontal, position.y, position.z + vertical);
-            }
+            float horizontal = sensitivityMouse * (hitPoint.x - position.x);
+            float vertical = sensitivityMouse * (hitPoint.z - position.z);
+        
+            return new Vector3(position.x + horizontal, position.y, position.z + vertical);
         }
 
-        if (mainCamera != null) mainCameraActive = true;
         return transform.position;
     }
 
     private void HandleThrowInput()
     {
-        if (!GameManager.Instance.GetPlayerController().EnablePlayerInput || currentThrowables.Count <= 0) return;
+        if (!playerController.EnablePlayerInput || currentThrowables.Count <= 0) return;
 
         // Handle controller input
-        if (GameManager.Instance.GetPlayerController().controllerConnected)
+        if (playerController.controllerConnected)
         {
             bool isTriggerDown = Utils.InputAxisInUse(Constants.INPUT_THROW_GETDOWN);
 
