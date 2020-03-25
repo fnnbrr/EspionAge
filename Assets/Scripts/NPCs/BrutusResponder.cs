@@ -147,8 +147,24 @@ namespace NPCs
             }
         }
 
+        private void CheckNursesAlertBrutus()
+        {
+            // Handle Brutus-specific behavior of responding to player once seen by any nurse
+            if (currentState == BrutusResponderStates.Chasing || !GameManager.Instance.isPlayerSpotted) return;
+            
+            responder.responsePoint = GameManager.Instance.GetPlayerTransform().position;
+            agent.SetDestination(responder.responsePoint);
+                
+            if (currentState != BrutusResponderStates.Responding)
+            {
+                SetState(BrutusResponderStates.Responding);
+            }
+        }
+
         protected void Update()
         {
+            CheckNursesAlertBrutus();
+            
             if (agent.hasPath || !agent.isOnNavMesh || agent.pathPending) return;
 
             // Choose the next state/behavior when the agent reaches current destination.

@@ -11,6 +11,7 @@ public class SkipSettings
 public class GameManager : Singleton<GameManager>
 {
     public GameObject player;
+    [HideInInspector] public bool isPlayerSpotted = false;
 
     [Header("Game Settings")]
     public bool enableGameStart = false;
