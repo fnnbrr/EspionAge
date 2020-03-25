@@ -63,7 +63,7 @@ public class ThrowController : MonoBehaviour
         }
         
         // Handle mouse + keyboard input
-        Ray ray = playerController.mainCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = CameraManager.Instance.brain.gameObject.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
                 
         if (mouseHitPlane.Raycast(ray, out float enter))
         {

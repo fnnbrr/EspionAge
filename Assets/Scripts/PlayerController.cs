@@ -6,18 +6,9 @@ public class PlayerController : MonoBehaviour
     public bool EnablePlayerInput { get; set; } = true;
     public bool controllerConnected = false;
 
-    [HideInInspector] public Camera mainCamera;
-
     private void Start()
     {
         SetControllerConnected();
-
-        if (Camera.main == null)
-        {
-            throw new UnityException("No main Camera found");
-        }
-        
-        mainCamera = CameraManager.Instance.brain.gameObject.GetComponent<Camera>();
     }
 
     private void SetControllerConnected()
@@ -37,6 +28,6 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 AlignDirectionWithCamera(Vector3 initialDirection)
     {
-        return Quaternion.Euler(0, mainCamera.transform.eulerAngles.y, 0) * initialDirection;
+        return Quaternion.Euler(0, CameraManager.Instance.brain.transform.eulerAngles.y, 0) * initialDirection;
     }
 }
