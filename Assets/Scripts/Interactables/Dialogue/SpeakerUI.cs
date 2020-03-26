@@ -101,7 +101,8 @@ public class SpeakerUI : MonoBehaviour
 
     private void RescaleSpeechBubble()
     {
-        float scale = Mathf.Lerp(0.7f, 1.0f, 10.0f/GetDistanceFromPlayer());
+        float scale = Mathf.Lerp(Constants.MIN_SCALE_SPEECHBUBBLE, Constants.MAX_SCALE_SPEECHBUBBLE,
+            Constants.DISTANCE_FOR_SPEECHBUBBLE_SCALING / GetDistanceFromPlayer());
         textBoxRect.localScale = new Vector3(scale, scale, scale);
     }
 
