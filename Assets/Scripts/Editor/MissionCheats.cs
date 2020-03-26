@@ -58,4 +58,31 @@ public class MissionCheats: MonoBehaviour
     {
         MissionManager.Instance.EndMission(MissionsEnum.KitchenMission);
     }
+
+    ////////////////////
+    // BRUTUS OFFICE SNEAK LEVEL
+    ////////////////////
+    [MenuItem(Constants.CHEATS_STARTMISSIONBRUTUSOFFICESNEAK, true)]
+    public static bool ValidateStartMissionBrutusOfficeSneak()
+    {
+        return Application.isPlaying && MissionManager.Instance && !MissionManager.Instance.IsMissionActive(MissionsEnum.BrutusOfficeSneak);
+    }
+
+    [MenuItem(Constants.CHEATS_STARTMISSIONBRUTUSOFFICESNEAK)]
+    public static void StartMissionBrutusOfficeSneak()
+    {
+        MissionManager.Instance.StartMission(MissionsEnum.BrutusOfficeSneak);
+    }
+
+    [MenuItem(Constants.CHEATS_ENDMISSIONBRUTUSOFFICESNEAK, true)]
+    public static bool ValidateStopMissionBrutusOfficeSneak()
+    {
+        return Application.isPlaying && MissionManager.Instance && MissionManager.Instance.IsMissionActive(MissionsEnum.BrutusOfficeSneak);
+    }
+
+    [MenuItem(Constants.CHEATS_ENDMISSIONBRUTUSOFFICESNEAK)]
+    public static void StopMissionBrutusOfficeSneak()
+    {
+        MissionManager.Instance.EndMission(MissionsEnum.BrutusOfficeSneak);
+    }
 }

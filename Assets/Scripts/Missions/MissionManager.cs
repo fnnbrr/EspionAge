@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Cinemachine;
+using NaughtyAttributes;
 
 [System.Serializable]
 public class MissionObject
@@ -27,7 +28,7 @@ public class MissionMapping
 
 public class MissionManager : Singleton<MissionManager>
 {
-    [Header("This will get converted to a Dictionary at runtime.")]
+    [Header("This will get converted to a Dictionary at runtime.")] [ReorderableList]
     public List<MissionMapping> missionMappingList;
     private Dictionary<MissionsEnum, MissionMapping> missionMapping;
 
