@@ -21,7 +21,7 @@ public class SpeakerUI : MonoBehaviour
     private Vector3 textPosition;
 
     // Used for padding on right side of screen for repositioning when resizing
-    public float extraXPadding = 20f;
+    public float extraPadding = 20f;
 
     private void Awake()
     {
@@ -39,13 +39,38 @@ public class SpeakerUI : MonoBehaviour
 
     public void Update()
     {
+        RescaleSpeechBubble();
         textPosition = Camera.main.WorldToScreenPoint(transform.position);
         textBoxContainer.transform.position = textPosition;
 
         tbAnchor = textBoxRect.anchoredPosition;
 
-        tbAnchor.x = Mathf.Clamp(tbAnchor.x, 0, Mathf.Max(0, Screen.width - bubbleOutlineRect.sizeDelta.x - extraXPadding));
+        tbAnchor.x = Mathf.Clamp(tbAnchor.x, 0, Mathf.Max(0, Screen.width - bubbleOutlineRect.sizeDelta.x));
         tbAnchor.y = Mathf.Clamp(tbAnchor.y, Mathf.Min(-Screen.height + textBoxRect.sizeDelta.y, 0), 0);
+
+        if (tbAnchor.x <= 0)
+        {
+            tbAnchor.x += extraPadding;
+        }
+        else
+        {
+            if (tbAnchor.x + bubbleOutlineRect.sizeDelta.x >= Screen.width - extraPadding/2)
+            {
+                tbAnchor.x -= extraPadding;
+            }
+        }
+
+        if (tbAnchor.y >= 0)
+        {
+            tbAnchor.y -= extraPadding;
+        }
+        else
+        {
+            if (tbAnchor.y - bubbleOutlineRect.sizeDelta.y <= -Screen.height + extraPadding/2)
+            {
+                tbAnchor.y += extraPadding;
+            }
+        }
 
         textBoxRect.anchoredPosition = tbAnchor;
     }
@@ -72,5 +97,16 @@ public class SpeakerUI : MonoBehaviour
     public void Hide()
     {
         canvas.SetActive(false);
+    }
+
+    private void RescaleSpeechBubble()
+    {
+        float scale = Mathf.Lerp(0.7f, 1.0f, 10.0f/GetDistanceFromPlayer());
+        textBoxRect.localScale = new Vector3(scale, scale, scale);
+    }
+
+    private float GetDistanceFromPlayer()
+    {
+        return Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
     }
 }
