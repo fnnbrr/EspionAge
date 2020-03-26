@@ -125,6 +125,8 @@ public class MissionManager : Singleton<MissionManager>
     public void RestartMission(MissionsEnum missionEnumValue)
     {
         ProgressManager.Instance.UpdateMissionStatus(GetMissionLogic(missionEnumValue), MissionStatusCode.Started);
+
+        SetObjectiveTextForList(missionEnumValue);
     }
 
     public void CompleteMissionObjective(MissionsEnum missionEnumValue)
