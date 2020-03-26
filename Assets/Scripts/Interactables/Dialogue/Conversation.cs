@@ -11,9 +11,15 @@ public struct Line
 
     [ResizableTextArea]
     public string text;
+
+    public Line(string id, string text)
+    {
+        this.id = id;
+        this.text = text;
+    }
 }
 
-[CreateAssetMenu(fileName = "New Conversation", menuName = "Conversation")]
+[CreateAssetMenu(fileName = "New Conversation", menuName = "Dialogue/Conversation")]
 public class Conversation : ScriptableObject
 {
     [Header("Note: Autoplay Conversation takes precedence over Auto Initiate")]
