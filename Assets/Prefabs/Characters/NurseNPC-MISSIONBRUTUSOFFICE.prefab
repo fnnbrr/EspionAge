@@ -69,7 +69,8 @@ MonoBehaviour:
   interactRadius: 10
   conversation: {fileID: 0}
   boundaryRadius: 10
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: 387b1d3729342844ea0d8ba528b1e468, type: 2}
   missionsOffered:
   - missionsEnum: 2
     beforeConvo: {fileID: 11400000, guid: 240fe2623b746c34eb6dd3f88d5b0e51, type: 2}
@@ -964,7 +965,7 @@ PrefabInstance:
     - target: {fileID: 5044315525422898052, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_text
-      value: Steve
+      value: Frank
       objectReference: {fileID: 0}
     - target: {fileID: 5593216316980992150, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -1129,17 +1130,17 @@ PrefabInstance:
     - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.04705883
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.38431376
+      value: 0.5294118
       objectReference: {fileID: 0}
     - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.6039216
+      value: 0.047058824
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c819a38dde8924f49a4bf8b5448e832a, type: 3}
