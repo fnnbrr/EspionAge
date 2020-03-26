@@ -117,12 +117,14 @@ public class MissionTutorial : AMission
         public GameObject gameObject;
         public PureChaser pureChaser;
         public TutorialChaserGroup chaserGroup;
+        public NPCBark npcBark;
 
-        public SpawnedEnemy(GameObject o, PureChaser c, TutorialChaserGroup g)
+        public SpawnedEnemy(GameObject gameObject, PureChaser pureChaser, TutorialChaserGroup chaserGroup, NPCBark npcBark)
         {
-            gameObject = o;
-            pureChaser = c;
-            chaserGroup = g;
+            this.gameObject = gameObject;
+            this.pureChaser = pureChaser;
+            this.chaserGroup = chaserGroup;
+            this.npcBark = npcBark;
         }
     }
     
@@ -312,6 +314,9 @@ public class MissionTutorial : AMission
             e.pureChaser.targetTransform = null;
             e.pureChaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
             e.pureChaser.OnReachDestination += HandleEnemyReachedStartPoint;
+
+            // and disable barks
+            e.npcBark.enabled = false;
         });
     }
     private void HandleEnemyReachedStartPoint()
@@ -506,7 +511,9 @@ public class MissionTutorial : AMission
                 chaser.startChaseRadius = group.startChaseRadius;
                 chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
 
-                spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group));
+                NPCBark npcBark = Utils.GetRequiredComponent<NPCBark>(enemyInstance);
+
+                spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group, npcBark));
             });
         });
     }
@@ -628,7 +635,7 @@ public class MissionTutorial : AMission
         if (UIManager.Instance)
         {
             UIManager.Instance.textOverlay.SetText(string.Empty);
-            UIManager.Instance.FadeIn();
+            UIManager.Instance.InstantFadeIn();
         }
 
         // Destroy all spawned objects
