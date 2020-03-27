@@ -105,9 +105,9 @@ public class MissionBrutusOfficeSneak : AMission
     {
         Debug.Log("Cleaning up mission: MissionBrutusOfficeSneak");
 
-        MissionManager.Instance.DestroyMissionObject(papersInteractable);
+        if (MissionManager.Instance) MissionManager.Instance.DestroyMissionObject(papersInteractable);
 
         papersInteractableComponent.OnInteractEnd -= HandlePapersCollected;
-        RegionManager.Instance.OnPlayerEnterZone -= HandlePlayerEnterOffice;
+        if (RegionManager.Instance) RegionManager.Instance.OnPlayerEnterZone -= HandlePlayerEnterOffice;
     }
 }

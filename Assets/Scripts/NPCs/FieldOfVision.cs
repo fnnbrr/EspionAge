@@ -27,6 +27,7 @@ public class FieldOfVision : MonoBehaviour
 	public Material defaultMaterial;
 	public Material spottedMaterial;
 	public float flashingSpeed;
+	public float distanceFromViewPlaneMin = 2.5f;
 	private Mesh viewMesh;
 	private MeshFilter viewMeshFilter;
 	private MeshRenderer viewMeshRenderer;
@@ -37,6 +38,9 @@ public class FieldOfVision : MonoBehaviour
 	public delegate void TargetSpottedAction();
 	public event TargetSpottedAction OnTargetLost;
 	public event TargetSpottedAction OnTargetSpotted;
+
+	public delegate void TargetsUpdatedAction(int numberTargets);
+	public event TargetsUpdatedAction OnTargetsUpdated;
 
 	private void Awake()
 	{
@@ -65,34 +69,32 @@ public class FieldOfVision : MonoBehaviour
 	void FindVisibleTargets()
 	{
 		visibleTargets.Clear();
-		Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
-        // Check for all colliders within view radius
+		Plane viewPlane = new Plane(viewMeshObject.transform.up, viewMeshObject.transform.position);
+
+		Collider[] targetsInViewRadius = Physics.OverlapSphere(viewMeshObject.transform.position, viewRadius, targetMask);
+
+		// Check for all colliders within view radius
 		for (int i = 0; i < targetsInViewRadius.Length; i++)
 		{
 			Transform target = targetsInViewRadius[i].transform;
-			Vector3 dirToTarget = (target.position - transform.position).normalized;
+			Vector3 dirToTarget = (target.position - viewMeshObject.transform.position).normalized;
 
-            // Checks if collider is within the view angle
-			if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+			// Checks if collider is within the view angle
+			if (Vector3.Angle(viewMeshObject.transform.forward, dirToTarget) < viewAngle / 2)
 			{
-				float dstToTarget = Vector3.Distance(transform.position, target.position);
+				float dstToTarget = Vector3.Distance(viewMeshObject.transform.position, target.position);
 
-                // Checks that a raycast can hit a target
-				if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+				// Checks that a raycast can hit a target
+				if (!Physics.Raycast(viewMeshObject.transform.position, dirToTarget, dstToTarget, obstacleMask) 
+					&& Mathf.Abs(viewPlane.GetDistanceToPoint(target.position)) < distanceFromViewPlaneMin)
 				{
 					visibleTargets.Add(target);
-
-                    // Code for finding target here can go here
 				}
 			}
 		}
 
-		// Can also do stuff with visibleTargets.Count
-		if (chaser)
-		{
-			chaser.HandleTargetsInRange(visibleTargets.Count);
-		}
+		OnTargetsUpdated?.Invoke(visibleTargets.Count);
 	}
 
 	void UpdateViewColor()
