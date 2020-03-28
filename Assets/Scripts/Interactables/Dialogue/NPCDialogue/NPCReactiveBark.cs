@@ -1,25 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using NPCs;
-using NPCs.Components;
 using UnityEngine;
 
-public enum NPCDetectionStatus
+
+public enum PlayerDetectionStatus
 {
     Visible,
-    ChasingNotVisible,
+    ChasedNotVisible,
     Hidden
 }
 
 public class NPCReactiveBark : MonoBehaviour
 {
-    private Conversation currentBark;
+    private BarkEvent idleBark;
+    private BarkEvent spottedBark;
+    private BarkEvent lostBark;
+    private BarkEvent reactiveNoiseBark;
+    public MissionsEnum missionsEnum;
+
     private float timeLostVision;
+    private float timeLastHiddenBark;
+
+    private Conversation currentBark;
     private float currentTime;
+    public float randomNum; // Used to have randomized time for next idle bark
     private int numTimesSpotted;
 
     private BasicNurse basicNurseStates;
-    private NPCDetectionStatus playerStatus;
+    private PlayerDetectionStatus playerStatus;
 
     private Coroutine coroutine;
 
@@ -31,31 +40,47 @@ public class NPCReactiveBark : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        LoadBarks(missionsEnum);
+
         basicNurseStates.chaser.OnSeePlayer += TargetSpottedBark;
         basicNurseStates.chaser.OnLosePlayer += TargetLostBark;
-        playerStatus = NPCDetectionStatus.Hidden;
+        basicNurseStates.responder.OnStartResponding += ReactievBark;
+
         currentTime = 0;
+        randomNum = Random.Range(-10f, 10.0f);
+        SetPlayerStatusHidden();
     }
 
     private void Update()
     {
         currentTime += Time.deltaTime;
+
+        // NPC barks when idle every 5-9s
+        if (playerStatus == PlayerDetectionStatus.Hidden)
+        {
+            if (currentTime - timeLastHiddenBark >= (15f + randomNum))
+            {
+                timeLastHiddenBark = currentTime;
+                randomNum = Random.Range(-5f, 15.0f);
+                StartBark(idleBark);
+            }
+        }
     }
 
     private void TargetSpottedBark()
     {
-        if (playerStatus != NPCDetectionStatus.Visible)
+        if (playerStatus != PlayerDetectionStatus.Visible)
         {
-            if (playerStatus == NPCDetectionStatus.Hidden)
+            if (playerStatus == PlayerDetectionStatus.Hidden)
             {
-                StartBark(BarkEvent.KitchenSpottedNurseReaction);
+                StartBark(spottedBark);
                 numTimesSpotted = 0;
             }
             else
             {
                 if(numTimesSpotted >= 3)
                 {
-                    StartBark(BarkEvent.KitchenSpottedNurseReaction);
+                    StartBark(spottedBark);
                     numTimesSpotted = 0;
                 }
                 else
@@ -64,22 +89,25 @@ public class NPCReactiveBark : MonoBehaviour
                 }
             }
         }
-        playerStatus = NPCDetectionStatus.Visible;
+        playerStatus = PlayerDetectionStatus.Visible;
     }
 
     private void TargetLostBark()
     {
         timeLostVision = currentTime;
-        playerStatus = NPCDetectionStatus.ChasingNotVisible;
+        playerStatus = PlayerDetectionStatus.ChasedNotVisible;
 
         if(coroutine != null)
         {
             StopCoroutine(coroutine);
         }
 
-        coroutine = StartCoroutine(TryLostBark(BarkEvent.KitchenLostNurseReaction));
+        coroutine = StartCoroutine(TryLostBark(lostBark));
+    }
 
-        //StartBark(BarkEvent.KitchenLostNurseReaction);
+    private void ReactievBark()
+    {
+        StartBark(reactiveNoiseBark);
     }
 
     private void StartBark(BarkEvent barkEvent)
@@ -111,10 +139,32 @@ public class NPCReactiveBark : MonoBehaviour
     {
         yield return new WaitForSeconds(3.0f);
 
-        if (currentTime - timeLostVision >= 3.0f && playerStatus != NPCDetectionStatus.Visible)
+        if (currentTime - timeLostVision >= 3.0f && playerStatus != PlayerDetectionStatus.Visible)
         {
-            playerStatus = NPCDetectionStatus.Hidden;
             StartBark(barkEvent);
+            SetPlayerStatusHidden();
+        }
+    }
+
+    private void SetPlayerStatusHidden()
+    {
+        playerStatus = PlayerDetectionStatus.Hidden;
+        timeLastHiddenBark = currentTime;
+    }
+
+
+    private void LoadBarks(MissionsEnum missionEnum)
+    {
+        switch (missionEnum)
+        {
+            case MissionsEnum.MissionTutorial:
+                break;
+            case MissionsEnum.KitchenMission:
+                idleBark = BarkEvent.KitchenIdleBark;
+                spottedBark = BarkEvent.KitchenSpottedNurseReaction;
+                lostBark = BarkEvent.KitchenLostNurseReaction;
+                reactiveNoiseBark = BarkEvent.KitchenPlateDroppedNurseReaction;
+                break;
         }
     }
 }

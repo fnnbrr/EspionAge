@@ -47,7 +47,7 @@ public class SpeakerUI : MonoBehaviour
 
         tbAnchor.x = Mathf.Clamp(tbAnchor.x, 0, Mathf.Max(0, Screen.width - bubbleOutlineRect.sizeDelta.x));
         tbAnchor.y = Mathf.Clamp(tbAnchor.y, Mathf.Min(-Screen.height + textBoxRect.sizeDelta.y, 0), 0);
-
+        
         if (tbAnchor.x <= 0)
         {
             tbAnchor.x += extraPadding;
@@ -102,7 +102,7 @@ public class SpeakerUI : MonoBehaviour
     private void RescaleSpeechBubble()
     {
         float scale = Mathf.Lerp(Constants.MIN_SCALE_SPEECHBUBBLE, Constants.MAX_SCALE_SPEECHBUBBLE,
-            Constants.DISTANCE_FOR_SPEECHBUBBLE_SCALING / GetDistanceFromPlayer());
+            Constants.DISTANCE_FOR_SPEECHBUBBLE_SCALING/GetDistanceFromPlayer());
         textBoxRect.localScale = new Vector3(scale, scale, scale);
     }
 

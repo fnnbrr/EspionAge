@@ -240,7 +240,7 @@ PrefabInstance:
     - target: {fileID: 2350284104591543176, guid: ce83325987c51dc46861c12cc3c2d6b9,
         type: 3}
       propertyPath: enableGameStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2350284104591543177, guid: ce83325987c51dc46861c12cc3c2d6b9,
         type: 3}
@@ -317,6 +317,38 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3534874787961472397}
     m_Modifications:
+    - target: {fileID: 3110732901295067881, guid: 61433c4965ee94581b042fcc5a96e913,
+        type: 3}
+      propertyPath: barkLines.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3110732901295067881, guid: 61433c4965ee94581b042fcc5a96e913,
+        type: 3}
+      propertyPath: barkLines.Array.data[2].barks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3110732901295067881, guid: 61433c4965ee94581b042fcc5a96e913,
+        type: 3}
+      propertyPath: barkLines.Array.data[3].barks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3110732901295067881, guid: 61433c4965ee94581b042fcc5a96e913,
+        type: 3}
+      propertyPath: barkLines.Array.data[2].barks.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3f76be2aba8e74aa4b6239639b5eeac3,
+        type: 2}
+    - target: {fileID: 3110732901295067881, guid: 61433c4965ee94581b042fcc5a96e913,
+        type: 3}
+      propertyPath: barkLines.Array.data[3].barkEvent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3110732901295067881, guid: 61433c4965ee94581b042fcc5a96e913,
+        type: 3}
+      propertyPath: barkLines.Array.data[3].barks.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: c99da6c7bda5f41bf8abe92a6b9e7888,
+        type: 2}
     - target: {fileID: 3110732901295067882, guid: 61433c4965ee94581b042fcc5a96e913,
         type: 3}
       propertyPath: m_LocalPosition.x
