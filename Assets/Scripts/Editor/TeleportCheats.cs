@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 public class TeleportCheats : MonoBehaviour
@@ -8,6 +6,18 @@ public class TeleportCheats : MonoBehaviour
     private static bool ValidateTeleport()
     {
         return Application.isPlaying && GameManager.Instance.GetPlayerTransform();
+    }
+    
+    [MenuItem(Constants.CHEATS_ENABLE_3D_TELEPORT, true)]
+    public static bool ValidateEnable3DTeleport()
+    {
+        return ValidateTeleport() && !GameManager.Instance.gameObject.GetComponent<CheatManager>().enabled;
+    }
+
+    [MenuItem(Constants.CHEATS_ENABLE_3D_TELEPORT)]
+    public static void Enable3DTeleport()
+    {
+        GameManager.Instance.gameObject.GetComponent<CheatManager>().enabled = true;
     }
 
     [MenuItem(Constants.CHEATS_TELEPORT_NURSESROOM, true)]

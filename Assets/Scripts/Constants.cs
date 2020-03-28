@@ -48,6 +48,7 @@ public static class Constants
 
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
+    public const string CHEATS_ENABLE_3D_TELEPORT = "Cheats/Teleport/Enable 3D Teleport (MMB)";
     public const string CHEATS_TELEPORT_NURSESROOM = "Cheats/Teleport/Nurse's Room";
     public const string CHEATS_TELEPORT_DININGHALL = "Cheats/Teleport/Dining Hall";
     public const string CHEATS_TELEPORT_DENTURES = "Cheats/Teleport/Dentures";
