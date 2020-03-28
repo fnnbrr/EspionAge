@@ -15,6 +15,13 @@ public class CheatManager : MonoBehaviour
         terrainMask = LayerMask.GetMask("Terrain");
     }
 
+    private void OnEnable()
+    {
+        #if !UNITY_EDITOR
+            enabled = false;  // Standalone builds will never allow this class to update
+        #endif
+    }
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(2))
