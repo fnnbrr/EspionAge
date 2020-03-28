@@ -7,6 +7,7 @@ public static class Constants
     public const string TAG_NONE = "Untagged";
     public const string TAG_PLAYER = "Player";
     public const string TAG_ENEMY = "Enemy";
+    public const string TAG_NOISE = "Noise";
 
     public const string LAYER_PLAYER = "PLAYER";
     
@@ -17,6 +18,10 @@ public static class Constants
 
     public const string ANIMATION_BASICNURSE_WALKING = "IsWalking";
     public const string ANIMATION_BASICNURSE_RUNNING = "IsRunning";
+
+    public const string ANIMATION_BRUTUSOFFICE_LOOKAROUND = "LookAround";
+    public const string ANIMATION_BRUTUSOFFICE_STANDING = "IsStanding";
+    public const string ANIMATION_BRUTUSOFFICE_MOVING = "IsMoving";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
