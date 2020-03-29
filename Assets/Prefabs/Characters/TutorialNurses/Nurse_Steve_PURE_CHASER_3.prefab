@@ -92,10 +92,10 @@ GameObject:
   - component: {fileID: 4363587367770072785}
   - component: {fileID: 2636195885491111074}
   - component: {fileID: 2201158795309468373}
-  - component: {fileID: 8650456666922055489}
   - component: {fileID: -4882029334582135938}
   - component: {fileID: 2458927334620125714}
   - component: {fileID: 2386577061880961566}
+  - component: {fileID: 4641775804067478772}
   m_Layer: 0
   m_Name: Nurse_Steve_PURE_CHASER_3
   m_TagString: Enemy
@@ -223,23 +223,7 @@ MonoBehaviour:
   nextState: 0
   startChaseRadius: 100
   targetTransform: {fileID: 0}
-  chaser: {fileID: 0}
---- !u!114 &8650456666922055489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3104466235535061125}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 10
-  reacquireInterval: 0.1
-  isChasing: 0
-  playerChased: 
+  enemy: {fileID: 0}
 --- !u!114 &-4882029334582135938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,6 +300,18 @@ MonoBehaviour:
   - bark: {fileID: 11400000, guid: 15815f758101489408011f2faaba5b0a, type: 2}
     weight: 1
     weighted: 0
+--- !u!114 &4641775804067478772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3104466235535061125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6758706179300944438
 GameObject:
   m_ObjectHideFlags: 0

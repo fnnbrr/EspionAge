@@ -164,10 +164,10 @@ GameObject:
   - component: {fileID: 5764856844802323507}
   - component: {fileID: 5195983428527429184}
   - component: {fileID: 8215242013887371319}
-  - component: {fileID: 1478000739203065251}
   - component: {fileID: 5673269306575693182}
   - component: {fileID: 2081922969479606489}
   - component: {fileID: 8454638869312472331}
+  - component: {fileID: 1361182842596619458}
   m_Layer: 0
   m_Name: Nurse_Steve_PURE_CHASER_2
   m_TagString: Enemy
@@ -295,23 +295,7 @@ MonoBehaviour:
   nextState: 0
   startChaseRadius: 100
   targetTransform: {fileID: 0}
-  chaser: {fileID: 0}
---- !u!114 &1478000739203065251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5159778001033372263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 10
-  reacquireInterval: 0.1
-  isChasing: 0
-  playerChased: 
+  enemy: {fileID: 0}
 --- !u!114 &5673269306575693182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,6 +372,18 @@ MonoBehaviour:
   - bark: {fileID: 11400000, guid: 15815f758101489408011f2faaba5b0a, type: 2}
     weight: 1
     weighted: 0
+--- !u!114 &1361182842596619458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5159778001033372263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8215242013830709773
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,15 +935,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fb75fd6e5d33d341aab3ded0a486d71, type: 3}
---- !u!4 &3459126744076679291 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 0fb75fd6e5d33d341aab3ded0a486d71,
-    type: 3}
-  m_PrefabInstance: {fileID: 8465638911893820257}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &457696637182577256 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 0fb75fd6e5d33d341aab3ded0a486d71,
+    type: 3}
+  m_PrefabInstance: {fileID: 8465638911893820257}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3459126744076679291 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 0fb75fd6e5d33d341aab3ded0a486d71,
     type: 3}
   m_PrefabInstance: {fileID: 8465638911893820257}
   m_PrefabAsset: {fileID: 0}
