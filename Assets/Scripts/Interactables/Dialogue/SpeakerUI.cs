@@ -12,6 +12,7 @@ public class SpeakerUI : MonoBehaviour
     public GameObject canvas;
     public TextMeshProUGUI characterName;
     public TextMeshProUGUI conversationText;
+    public bool isRescalable = true;
 
     private RectTransform textBoxRect;
     private RectTransform bubbleOutlineRect;
@@ -39,7 +40,11 @@ public class SpeakerUI : MonoBehaviour
 
     public void Update()
     {
-        RescaleSpeechBubble();
+        if (isRescalable)
+        {
+            RescaleSpeechBubble();
+        }
+
         textPosition = Camera.main.WorldToScreenPoint(transform.position);
         textBoxContainer.transform.position = textPosition;
 
