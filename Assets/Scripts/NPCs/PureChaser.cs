@@ -94,6 +94,14 @@ namespace NPCs
             rootMotionController.SetBool(Constants.ANIMATION_TUTORIALCHASER_MOVING, isMoving);
         }
 
+        public void StartCleaning()
+        {
+            shouldChase = false;
+            SetMoving(false);
+            rootMotionController.SetTrigger(Constants.ANIMATION_TUTORIALCHASER_CLEAN);
+            rootMotionController.SetFloat(Constants.ANIMATION_TUTORIALCHASER_CYCLEOFFSET, Random.Range(0f, 1f));
+        }
+
         private void CheckRemainingDistance()
         {
             if (Vector3.Distance(transform.position, agent.destination) <= REPORT_REACHED_DISTANCE)

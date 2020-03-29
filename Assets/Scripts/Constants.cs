@@ -20,6 +20,7 @@ public static class Constants
 
     public const string ANIMATION_TUTORIALCHASER_MOVING = "IsMoving";
     public const string ANIMATION_TUTORIALCHASER_CLEAN = "Clean";
+    public const string ANIMATION_TUTORIALCHASER_CYCLEOFFSET = "RandomCycleOffset";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";

@@ -314,12 +314,22 @@ public class MissionTutorial : AMission
 
         spawnedEnemies.ForEach(e =>
         {
-            // Send back all enemies to around the area of their start (mostly to get them off camera)
-            e.pureChaser.targetTransform = null;
-            e.pureChaser.SetDestination(e.chaserGroup.enemyStartPositions[0]);
-            e.pureChaser.OnReachDestination += HandleEnemyReachedStartPoint;
+            e.pureChaser.StartCleaning();
+            e.pureChaser.enabled = false;
+            e.pureChaser.agent.enabled = false;
 
-            // and disable barks
+            e.npcBark.StopCurrentBark();
+        });
+
+        // Trigger the final bark set for only the first enemy
+        if (spawnedEnemies.Count > 0)
+        {
+            spawnedEnemies[0].npcBark.TriggerBark(NPCBarkTriggerType.TutorialChaserOver);
+        }
+
+        // finally stop all barks completely after the final one being triggered
+        spawnedEnemies.ForEach(e =>
+        {
             e.npcBark.enabled = false;
         });
     }
