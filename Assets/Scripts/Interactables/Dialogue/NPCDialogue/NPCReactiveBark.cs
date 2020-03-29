@@ -101,6 +101,7 @@ public class NPCReactiveBark : MonoBehaviour
 
     private void ReactiveBark()
     {
+        timeLastHiddenBark = Time.time; // prevent of barks happening too often
         StartBark(reactiveNoiseBark);
     }
 
