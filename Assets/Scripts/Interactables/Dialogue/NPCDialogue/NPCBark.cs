@@ -127,6 +127,18 @@ public class NPCBark : MonoBehaviour
         return index;
     }
 
+    public void StopCurrentBark()
+    {
+        if (currentBark != null)
+        {
+            DialogueManager.Instance.ResolveConversation(currentBark);
+        }
+        if (currentlyBarking)
+        {
+            DialogueManager.Instance.OnFinishConversation -= HandleBarkFinish;
+        }
+    }
+
     private void Update()
     {
         float distanceFromPlayer = Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);

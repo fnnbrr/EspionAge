@@ -91,7 +91,7 @@ namespace NPCs
 
         private void SetMoving(bool isMoving)
         {
-            rootMotionController.SetBool(Constants.ANIMATION_BASICNURSE_RUNNING, isMoving);
+            rootMotionController.SetBool(Constants.ANIMATION_TUTORIALCHASER_MOVING, isMoving);
         }
 
         private void CheckRemainingDistance()

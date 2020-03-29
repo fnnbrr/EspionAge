@@ -156,7 +156,7 @@ public class MissionTutorial : AMission
         GameEventManager.Instance.SetEventStatus(GameEventManager.GameEvent.TutorialActive, true);
 
         // spawn the specific first vase we will drop, and the remaining ones
-        firstVase = SpawnVase(firstVasePosition);
+        firstVase = SpawnVase(firstVasePosition, trackBrokenVase: false);
         firstVase.loudObject.dropRadius = 0f;
 
         // Spawn all the other vases
@@ -192,6 +192,10 @@ public class MissionTutorial : AMission
 
             DialogueManager.Instance.StartConversation(currentLostBirdieConversation);
             DialogueManager.Instance.OnFinishConversation += OnFinishLostBirdieConversation;
+        }
+        else
+        {
+            currentLostBirdieConversation = null;
         }
     }
 
@@ -432,8 +436,12 @@ public class MissionTutorial : AMission
         {
             RegionManager.Instance.nurseRoomDoor.OnDoorClose -= OnNurseRoomDoorClose;
 
+            if (currentLostBirdieConversation != null)
+            {
+                DialogueManager.Instance.OnFinishConversation -= OnFinishLostBirdieConversation;
+                DialogueManager.Instance.ResolveConversation(currentLostBirdieConversation);
+            }
             musicEv.Play();
-            tutorialNurse.spawnedInstance.GetComponent<SpeakerUI>().Hide();  // if he's still talking, no more seeing the talking
 
             startCutscenePlayed = true;
             firstVase.loudObject.Drop();
@@ -555,8 +563,13 @@ public class MissionTutorial : AMission
         GameManager.Instance.GetMovementController().ResetVelocity();
         UIManager.Instance.staminaBar.ResetAwakeness();
 
+        spawnedEnemies.ForEach(e =>
+        {
+            e.npcBark.StopCurrentBark();
+        });
+
         // would be weird if it disappeared, but the first vase should still be destroyed at this point
-        DestroyAllObjects(exceptFirstVaseStand: true);
+        DestroyAllObjects(exceptFirstVase: true);
 
         SpawnRegularVases();
         SpawnEnemies();
@@ -574,13 +587,16 @@ public class MissionTutorial : AMission
         respawning = false;
     }
 
-    private SpawnedVase SpawnVase(Vector3 position)
+    private SpawnedVase SpawnVase(Vector3 position, bool trackBrokenVase = true)
     {
         GameObject vaseInstance = Instantiate(vasePrefab, position, Quaternion.identity);
         GameObject vaseStandInstance = Instantiate(vaseStandPrefab, new Vector3(position.x - 0.8f, 0f, position.z - 1f), Quaternion.identity);
 
-        BreakableObject breakableVase = Utils.GetRequiredComponentInChildren<BreakableObject>(vaseInstance);
-        breakableVase.OnBreak += OnVaseBreak;
+        if (trackBrokenVase)
+        {
+            BreakableObject breakableVase = Utils.GetRequiredComponentInChildren<BreakableObject>(vaseInstance);
+            breakableVase.OnBreak += OnVaseBreak;
+        }
 
         return new SpawnedVase(vaseInstance, vaseStandInstance);
     }
@@ -639,7 +655,7 @@ public class MissionTutorial : AMission
         }
 
         // Destroy all spawned objects
-        DestroyAllObjects();
+        DestroyAllObjects(exceptPersistentVases: true);
     }
 
     private void SpawnRegularVases()
@@ -658,22 +674,25 @@ public class MissionTutorial : AMission
         });
     }
 
-    private void DestroyAllObjects(bool exceptFirstVaseStand = false)
+    private void DestroyAllObjects(bool exceptFirstVase = false, bool exceptPersistentVases = false)
     {
-        if (firstVase != null)
+        if (!exceptFirstVase && firstVase != null)
         {
             if (firstVase.vaseObject)
             {
                 Destroy(firstVase.vaseObject);
             }
-            if (!exceptFirstVaseStand && firstVase.vaseStand)
+            if (firstVase.vaseStand)
             {
                 Destroy(firstVase.vaseStand);
             }
         }
-        DestroyFromList(spawnedBrokenVases);
+        if (!exceptPersistentVases)
+        {
+            DestroyFromList(spawnedBrokenVases); // we want to keep these on the floor!
+            DestroyFromList(spawnedVases.Select(v => v.vaseStand).ToList()); // keep these toppled over!
+        }
         DestroyFromList(spawnedVases.Select(v => v.vaseObject).ToList());
-        DestroyFromList(spawnedVases.Select(v => v.vaseStand).ToList());
         spawnedVases.Clear();
         DestroyFromList(spawnedEnemies.Select(e => e.gameObject).ToList());
         spawnedEnemies.Clear();
