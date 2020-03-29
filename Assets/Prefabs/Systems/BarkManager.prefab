@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3110732901295067883
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3110732901295067882}
+  - component: {fileID: 3110732901295067881}
+  m_Layer: 0
+  m_Name: BarkManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3110732901295067882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3110732901295067883}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3110732901295067881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3110732901295067883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be64a49776592494b8d9b97c7a6502be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barkLines:
+  - barkEvent: 3
+    barks:
+    - {fileID: 11400000, guid: fc2d7926854a14cec9b8fe0115f47dd8, type: 2}
+    - {fileID: 11400000, guid: 7164005b9808244b899dd92cd3d30dd7, type: 2}
+    - {fileID: 11400000, guid: 440fa9c0aaf1140b3808e0d964334265, type: 2}
+  - barkEvent: 2
+    barks:
+    - {fileID: 11400000, guid: c9f798414b9364cf3892d86c2c2eeac0, type: 2}
+    - {fileID: 11400000, guid: 037abe73f9cbd4f11b2aca27de2d40a5, type: 2}
+    - {fileID: 11400000, guid: 3be0d28292e6c48a6bf4776940a54d26, type: 2}
+  - barkEvent: 0
+    barks:
+    - {fileID: 11400000, guid: 3f76be2aba8e74aa4b6239639b5eeac3, type: 2}
+    - {fileID: 11400000, guid: 32c7ee6adb3e040299dbe0e771b6b9e0, type: 2}
+    - {fileID: 11400000, guid: 46cb50e341f5349bfbd7b86fad798d23, type: 2}
+  - barkEvent: 1
+    barks:
+    - {fileID: 11400000, guid: c99da6c7bda5f41bf8abe92a6b9e7888, type: 2}
+    - {fileID: 11400000, guid: 364db527492674cbcac50c003b175c7d, type: 2}
+    - {fileID: 11400000, guid: 7b16f9659a7e24ac09f8ca43acd60862, type: 2}
