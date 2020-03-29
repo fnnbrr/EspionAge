@@ -1,4 +1,5 @@
-﻿using NPCs.Components;
+﻿using System.Collections;
+using NPCs.Components;
 using UnityEngine;
 
 namespace NPCs
@@ -12,6 +13,7 @@ namespace NPCs
     public class PureChaser : BaseStateAi<PureChaserStates>
     {
         public float startChaseRadius = 100f;
+        public float rotateSpeed = 10f;
         [HideInInspector] public Transform targetTransform;
         
         [HideInInspector] public Chaser chaser;
@@ -100,6 +102,17 @@ namespace NPCs
             SetMoving(false);
             rootMotionController.SetTrigger(Constants.ANIMATION_TUTORIALCHASER_CLEAN);
             rootMotionController.SetFloat(Constants.ANIMATION_TUTORIALCHASER_CYCLEOFFSET, Random.Range(0f, 1f));
+
+            StartCoroutine(RotateSmoothly(Quaternion.Euler(0f, Random.Range(0f, 360f), 0f)));
+        }
+
+        private IEnumerator RotateSmoothly(Quaternion goalRotation)
+        {
+            while (!transform.rotation.Equals(goalRotation))
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, goalRotation, Time.deltaTime * rotateSpeed);
+                yield return new WaitForEndOfFrame();
+            }
         }
 
         private void CheckRemainingDistance()

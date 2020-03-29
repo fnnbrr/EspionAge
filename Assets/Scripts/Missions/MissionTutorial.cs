@@ -164,7 +164,7 @@ public class MissionTutorial : AMission
         SpawnExtraObjects();
 
         // Listen for the player to pass through the final door to finish the mission
-        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
+        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CompleteMission;
 
         // Audio parameters setting
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 0f);
@@ -303,9 +303,9 @@ public class MissionTutorial : AMission
         // TODO: door unlock sound
     }
 
-    private void CommenceCompleteMission()
+    private void CompleteMission()
     {
-        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough -= CommenceCompleteMission;
+        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough -= CompleteMission;
 
         if (missionCompleting) return;
         missionCompleting = true;
@@ -332,12 +332,9 @@ public class MissionTutorial : AMission
         {
             e.npcBark.enabled = false;
         });
-    }
-    private void HandleEnemyReachedStartPoint()
-    {
+
         AlertMissionComplete();
         MissionManager.Instance.EndMission(MissionsEnum.MissionTutorial);
-        missionCompleting = false;
     }
 
     private IEnumerator StartMissionLogic()
@@ -587,7 +584,7 @@ public class MissionTutorial : AMission
 
         if (missionCompleting)  // if we die while mission completing, then re-wait for this
         {
-            RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CommenceCompleteMission;
+            RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough += CompleteMission;
         }
         missionCompleting = false;
 
@@ -669,7 +666,7 @@ public class MissionTutorial : AMission
         }
 
         // Destroy all spawned objects
-        DestroyAllObjects(exceptPersistentVases: true);
+        DestroyAllObjects(exceptPersistentObjects: true);
     }
 
     private void SpawnRegularVases()
@@ -688,7 +685,7 @@ public class MissionTutorial : AMission
         });
     }
 
-    private void DestroyAllObjects(bool exceptFirstVase = false, bool exceptPersistentVases = false)
+    private void DestroyAllObjects(bool exceptFirstVase = false, bool exceptPersistentObjects = false)
     {
         if (!exceptFirstVase && firstVase != null)
         {
@@ -701,14 +698,14 @@ public class MissionTutorial : AMission
                 Destroy(firstVase.vaseStand);
             }
         }
-        if (!exceptPersistentVases)
+        if (!exceptPersistentObjects)
         {
             DestroyFromList(spawnedBrokenVases); // we want to keep these on the floor!
             DestroyFromList(spawnedVases.Select(v => v.vaseStand).ToList()); // keep these toppled over!
+            DestroyFromList(spawnedEnemies.Select(e => e.gameObject).ToList());
         }
         DestroyFromList(spawnedVases.Select(v => v.vaseObject).ToList());
         spawnedVases.Clear();
-        DestroyFromList(spawnedEnemies.Select(e => e.gameObject).ToList());
         spawnedEnemies.Clear();
         if (MissionManager.Instance)
         {
