@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NPCs;
 using UnityEngine;
+using NaughtyAttributes;
 
 
 public enum PlayerDetectionStatus
@@ -22,15 +23,17 @@ public class NPCReactiveBark : MonoBehaviour
     private float timeLostVision;
     private float timeLastHiddenBark;
 
+    public float waitTimeBeforeLost = 3f;
+    [MinMaxSlider(0, 100f)]
+    public Vector2 randomBarkTimeRange;
+
     private Conversation currentBark;
-    private float currentTime;
-    public float randomNum; // Used to have randomized time for next idle bark
+    private float randomBarkTime; // Used to have randomized time for next idle bark
     private int numTimesSpotted;
 
     private BasicNurse basicNurseStates;
     private PlayerDetectionStatus playerStatus;
 
-    private Coroutine coroutine;
 
     private void Awake()
     {
@@ -44,24 +47,21 @@ public class NPCReactiveBark : MonoBehaviour
 
         basicNurseStates.chaser.OnSeePlayer += TargetSpottedBark;
         basicNurseStates.chaser.OnLosePlayer += TargetLostBark;
-        basicNurseStates.responder.OnStartResponding += ReactievBark;
+        basicNurseStates.responder.OnStartResponding += ReactiveBark;
 
-        currentTime = 0;
-        randomNum = Random.Range(-10f, 10.0f);
+        randomBarkTime = Random.Range(randomBarkTimeRange.x, randomBarkTimeRange.y);
         SetPlayerStatusHidden();
     }
 
     private void Update()
     {
-        currentTime += Time.deltaTime;
-
-        // NPC barks when idle every 5-9s
+        // NPC barks at random times when idle 
         if (playerStatus == PlayerDetectionStatus.Hidden)
         {
-            if (currentTime - timeLastHiddenBark >= (15f + randomNum))
+            if (Time.time - timeLastHiddenBark >= randomBarkTime)
             {
-                timeLastHiddenBark = currentTime;
-                randomNum = Random.Range(-5f, 15.0f);
+                timeLastHiddenBark = Time.time;
+                randomBarkTime = Random.Range(randomBarkTimeRange.x, randomBarkTimeRange.y);
                 StartBark(idleBark);
             }
         }
@@ -69,24 +69,21 @@ public class NPCReactiveBark : MonoBehaviour
 
     private void TargetSpottedBark()
     {
-        if (playerStatus != PlayerDetectionStatus.Visible)
+        if (playerStatus == PlayerDetectionStatus.Hidden)
         {
-            if (playerStatus == PlayerDetectionStatus.Hidden)
+            StartBark(spottedBark);
+            numTimesSpotted = 0;
+        }
+        else if (playerStatus == PlayerDetectionStatus.ChasedNotVisible)
+        {
+            if(numTimesSpotted >= 3)
             {
                 StartBark(spottedBark);
                 numTimesSpotted = 0;
             }
             else
             {
-                if(numTimesSpotted >= 3)
-                {
-                    StartBark(spottedBark);
-                    numTimesSpotted = 0;
-                }
-                else
-                {
-                    numTimesSpotted++;
-                }
+                numTimesSpotted++;
             }
         }
         playerStatus = PlayerDetectionStatus.Visible;
@@ -94,18 +91,15 @@ public class NPCReactiveBark : MonoBehaviour
 
     private void TargetLostBark()
     {
-        timeLostVision = currentTime;
+        timeLostVision = Time.time;
         playerStatus = PlayerDetectionStatus.ChasedNotVisible;
 
-        if(coroutine != null)
-        {
-            StopCoroutine(coroutine);
-        }
+        StopAllCoroutines();
 
-        coroutine = StartCoroutine(TryLostBark(lostBark));
+        StartCoroutine(TryLostBark(lostBark));
     }
 
-    private void ReactievBark()
+    private void ReactiveBark()
     {
         StartBark(reactiveNoiseBark);
     }
@@ -137,9 +131,9 @@ public class NPCReactiveBark : MonoBehaviour
 
     private IEnumerator TryLostBark(BarkEvent barkEvent)
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(waitTimeBeforeLost);
 
-        if (currentTime - timeLostVision >= 3.0f && playerStatus != PlayerDetectionStatus.Visible)
+        if (Time.time - timeLostVision >= waitTimeBeforeLost && playerStatus != PlayerDetectionStatus.Visible)
         {
             StartBark(barkEvent);
             SetPlayerStatusHidden();
@@ -149,7 +143,7 @@ public class NPCReactiveBark : MonoBehaviour
     private void SetPlayerStatusHidden()
     {
         playerStatus = PlayerDetectionStatus.Hidden;
-        timeLastHiddenBark = currentTime;
+        timeLastHiddenBark = Time.time;
     }
 
 
