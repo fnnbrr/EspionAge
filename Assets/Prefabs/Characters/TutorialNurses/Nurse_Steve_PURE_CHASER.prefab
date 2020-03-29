@@ -295,7 +295,8 @@ MonoBehaviour:
   canvas: {fileID: 9098998164479609156}
   characterName: {fileID: 7716563275491233818}
   conversationText: {fileID: 2608056673904470494}
-  extraXPadding: 20
+  isRescalable: 0
+  extraPadding: 20
 --- !u!114 &-8990579514456890747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -644,10 +645,30 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 250
       objectReference: {fileID: 0}
+    - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.35
+      objectReference: {fileID: 0}
     - target: {fileID: 5623332669697047643, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: minSize.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5623332669697047643, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: minSize.x
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 6003753276932402012, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -713,6 +734,11 @@ PrefabInstance:
         type: 3}
       propertyPath: minSize.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6511048954287325845, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: minSize.x
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 6553968053306471519, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
