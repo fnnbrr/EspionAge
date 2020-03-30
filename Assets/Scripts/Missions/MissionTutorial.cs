@@ -509,7 +509,7 @@ public class MissionTutorial : AMission
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 chaser.SetSpeed(group.chaseSpeed);
                 chaser.startChaseRadius = group.startChaseRadius;
-                chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
+                chaser.enemy.OnCollideWithPlayer += RestartAfterCutscene;
 
                 NPCBark npcBark = Utils.GetRequiredComponent<NPCBark>(enemyInstance);
 

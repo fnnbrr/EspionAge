@@ -115,11 +115,11 @@ GameObject:
   - component: {fileID: 3862208129692031430}
   - component: {fileID: 2450668294617206675}
   - component: {fileID: 135029655}
-  - component: {fileID: 7386060355856096771}
   - component: {fileID: -1372939911128350560}
   - component: {fileID: 4186571339833994720}
   - component: {fileID: 1239309180095271564}
   - component: {fileID: -8990579514456890747}
+  - component: {fileID: 5427063522302568853}
   m_Layer: 0
   m_Name: Nurse_Steve_PURE_CHASER
   m_TagString: Enemy
@@ -199,23 +199,7 @@ MonoBehaviour:
   nextState: 0
   startChaseRadius: 100
   targetTransform: {fileID: 0}
-  chaser: {fileID: 0}
---- !u!114 &7386060355856096771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3862208129692031431}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 10
-  reacquireInterval: 0.1
-  isChasing: 0
-  playerChased: 
+  enemy: {fileID: 0}
 --- !u!114 &-1372939911128350560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,6 +324,18 @@ MonoBehaviour:
   - bark: {fileID: 11400000, guid: 15815f758101489408011f2faaba5b0a, type: 2}
     weight: 1
     weighted: 0
+--- !u!114 &5427063522302568853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,7 +664,7 @@ PrefabInstance:
     - target: {fileID: 5623332669697047643, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: minSize.x
-      value: 250
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 6003753276932402012, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -738,7 +734,7 @@ PrefabInstance:
     - target: {fileID: 6511048954287325845, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: minSize.x
-      value: 250
+      value: 350
       objectReference: {fileID: 0}
     - target: {fileID: 6553968053306471519, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
