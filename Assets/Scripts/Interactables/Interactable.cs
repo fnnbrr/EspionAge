@@ -27,33 +27,36 @@ public class Interactable : MonoBehaviour, IInteractable
 
     protected virtual void Update()
     {
-        withinInteractRadius = IsWithinRadius(transform.position, player.transform, interactRadius);
-
-        if (!interactableOn && withinInteractRadius)
+        if (enableInteract)
         {
-            interactableOn = true;
-            ShowInteractUI();
-        }
-        else if(interactableOn && !withinInteractRadius)
-        {
-            interactableOn = false;
-            HideInteractUI();
-        }
+            withinInteractRadius = IsWithinRadius(transform.position, player.transform, interactRadius);
 
-        //Ensures text is always facing the camera
-        if ((enableInteract && interactableOn))
-        {
-            // Interact Text always faces towards camera
-            interactTransform.LookAt(CameraManager.Instance.GetActiveCameraTransform());
-
-            // User chooses to interact with the item
-            if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
+            if (!interactableOn && withinInteractRadius)
             {
-                //TODO: Get FaceInteractable to work and not freeze player rotation
-                //FaceInteractable();
-                HideInteractUI();
-                OnInteract();
+                interactableOn = true;
+                ShowInteractUI();
+            }
+            else if(interactableOn && !withinInteractRadius)
+            {
                 interactableOn = false;
+                HideInteractUI();
+            }
+
+            //Ensures text is always facing the camera
+            if (interactableOn)
+            {
+                // Interact Text always faces towards camera
+                interactTransform.LookAt(CameraManager.Instance.GetActiveCameraTransform());
+
+                // User chooses to interact with the item
+                if (Input.GetButtonDown(Constants.INPUT_INTERACTABLE_GETDOWN))
+                {
+                    //TODO: Get FaceInteractable to work and not freeze player rotation
+                    //FaceInteractable();
+                    HideInteractUI();
+                    OnInteract();
+                    interactableOn = false;
+                }
             }
         }
     }

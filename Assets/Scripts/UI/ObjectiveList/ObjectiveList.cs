@@ -6,7 +6,6 @@ using TMPro;
 
 public class ObjectiveList : Singleton<ObjectiveList>
 {
-    private Image background;
     private TMP_Text objectiveText;
     private Animator root;
 
@@ -14,12 +13,10 @@ public class ObjectiveList : Singleton<ObjectiveList>
     private float currentAxis;
     private const float DPAD_PRESS_THRESHOLD = 0.75f;
 
-    // Start is called before the first frame update
     void Awake()
     {
-        background = GetComponentInChildren<Image>();
-        objectiveText = GetComponentInChildren<TMP_Text>();
-        root =  GetComponentInChildren<Animator>();
+        objectiveText = Utils.GetRequiredComponentInChildren<TMP_Text>(this);
+        root = Utils.GetRequiredComponentInChildren<Animator>(this);
         HideObjectiveList();
     }
 
@@ -59,7 +56,6 @@ public class ObjectiveList : Singleton<ObjectiveList>
         if (objectiveText != null) 
         {   
             objectiveText.text = textToSet;
-            
         }
     }
 

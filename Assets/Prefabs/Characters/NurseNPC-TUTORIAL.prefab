@@ -578,8 +578,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7903426102794624195}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -165.39, y: 0, z: 234.49}
+  m_LocalRotation: {x: 0, y: 0.21643986, z: -0, w: -0.97629595}
+  m_LocalPosition: {x: -135, y: 0, z: 226}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
   - {fileID: 2143468090463649129}
@@ -590,7 +590,7 @@ Transform:
   - {fileID: 8322262766255297071}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 335, z: 0}
 --- !u!65 &7903426102794624196
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -673,9 +673,6 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
   spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
   flashingSpeed: 1
-  parameter: 
-  notCaught: 0
-  isCaught: 1
 --- !u!114 &6735644313341812414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -689,9 +686,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  currentState: 2
-  defaultState: 2
-  nextState: 2
+  prevState: 0
+  currentState: 0
+  nextState: 0
   chaser: {fileID: 0}
   patroller: {fileID: 0}
   waiter: {fileID: 0}
@@ -718,6 +715,7 @@ MonoBehaviour:
   movementSpeed: 10
   reacquireInterval: 0.1
   isChasing: 0
+  playerChased: 
 --- !u!114 &8312642629450498341
 MonoBehaviour:
   m_ObjectHideFlags: 0

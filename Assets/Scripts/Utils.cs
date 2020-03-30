@@ -77,6 +77,21 @@ public static class Utils
         return comp;
     }
 
+    public static T GetRequiredComponentInParent<T>(MonoBehaviour o) where T : Component
+    {
+        return GetRequiredComponentInParent<T>(o, $"Expected component '{typeof(T).Name}' in parent of object {o.name}");
+    }
+
+    public static T GetRequiredComponentInParent<T>(MonoBehaviour o, string customError) where T : Component
+    {
+        T comp = o.GetComponentInParent<T>();
+        if (!comp)
+        {
+            LogErrorAndStopPlayMode(customError);
+        }
+        return comp;
+    }
+
     public static bool HasComponent<T>(this GameObject obj)
     {
         return obj.GetComponent(typeof(T)) != null;

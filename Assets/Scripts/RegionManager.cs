@@ -11,6 +11,7 @@ public class RegionManager : Singleton<RegionManager>
     [BoxGroup("Camera Zones")] public CameraZone kitchen;
     [BoxGroup("Camera Zones")] public CameraZone hallway;
     [BoxGroup("Camera Zones")] public CameraZone nursesRoom;
+    [BoxGroup("Camera Zones")] public CameraZone brutusOffice;
 
     [HorizontalLine(height: 1)]
     [BoxGroup("Region Triggers")]                                       public RegionTrigger finalHallwayDoor;

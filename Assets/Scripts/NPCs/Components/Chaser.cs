@@ -20,10 +20,18 @@ namespace NPCs.Components
         [FMODUnity.ParamRef]
         public string playerChased;
 
+        private FieldOfVision fieldOfVision;
+
         private void Start()
         {
             InvokeRepeating(nameof(ReacquireTarget), 0f, reacquireInterval);
             FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
+
+            fieldOfVision = GetComponent<FieldOfVision>();
+            if (fieldOfVision)
+            {
+                fieldOfVision.OnTargetsUpdated += HandleTargetsInRange;
+            }
         }
 
         public void HandleTargetsInRange(int numTargetsInRange)
