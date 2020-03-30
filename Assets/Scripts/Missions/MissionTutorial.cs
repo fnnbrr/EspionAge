@@ -383,7 +383,7 @@ public class MissionTutorial : AMission
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
 
         // we type it here because the user finally gains control, so it looks cool to then type the location they're in
-        UIManager.Instance.zoneText.DisplayText(RegionManager.Instance.GetCurrentZone().regionName, RegionManager.Instance.GetCurrentZone().isRestricted);
+        UIManager.Instance.zoneText.DisplayText(RegionManager.Instance.GetPlayerCurrentZone().regionName, RegionManager.Instance.GetPlayerCurrentZone().isRestricted);
         ObjectiveList.Instance.SlideOutObjectTextForSeconds(5f);
 
         // Cutscene for once they enter the hallway

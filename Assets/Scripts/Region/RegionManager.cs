@@ -60,7 +60,7 @@ public class RegionManager : Singleton<RegionManager>
         return currentPlayerZones.Count > 0;
     }
 
-    public CameraZone GetCurrentZone()
+    public CameraZone GetPlayerCurrentZone()
     {
         if (!PlayerIsInAnyZone())
         {
@@ -134,7 +134,7 @@ public class RegionManager : Singleton<RegionManager>
 
     private void HandleCurrentZone()
     {
-        CameraZone currentZone = GetCurrentZone();
+        CameraZone currentZone = GetPlayerCurrentZone();
         if (!currentZone) return;
 
         HandleRestrictedZone(currentZone.isRestricted);
@@ -157,7 +157,7 @@ public class RegionManager : Singleton<RegionManager>
     private void HandleCameraChange(CinemachineVirtualCamera camera)
     {
         CameraManager.Instance.BlendTo(camera);
-        OnPlayerEnterZone?.Invoke(GetCurrentZone());
+        OnPlayerEnterZone?.Invoke(GetPlayerCurrentZone());
     }
 
     private void HandleZoneText(string zoneName, bool isRestricted)
