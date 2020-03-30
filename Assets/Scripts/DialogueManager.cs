@@ -332,8 +332,10 @@ public class DialogueManager : Singleton<DialogueManager>
         AdvanceConversation(conversation);
     }
 
-    private void ResolveConversation(Conversation conversation)
+    public void ResolveConversation(Conversation conversation)
     {
+        if (!activeConversations.ContainsKey(conversation)) return;
+
         HideAllSpeakers(conversation);
 
         // Stop any coroutines that are part of the conversation

@@ -13,12 +13,16 @@ public static class Constants
     
     public const string ANIMATION_BIRDIE_ISWALKING = "IsWalking";
     public const string ANIMATION_BIRDIE_AWAKENESS = "Awakeness";
-    public const string ANIMATION_BIRDIE_DASH= "Dash";
+    public const string ANIMATION_BIRDIE_DASH = "Dash";
     public const string ANIMATION_BIRDIE_WAKEUP = "WakeUp";
 
     public const string ANIMATION_BASICNURSE_WALKING = "IsWalking";
     public const string ANIMATION_BASICNURSE_RUNNING = "IsRunning";
 
+    public const string ANIMATION_TUTORIALCHASER_MOVING = "IsMoving";
+    public const string ANIMATION_TUTORIALCHASER_CLEAN = "Clean";
+    public const string ANIMATION_TUTORIALCHASER_CYCLEOFFSET = "RandomCycleOffset";
+    
     public const string ANIMATION_BRUTUSOFFICE_LOOKAROUND = "LookAround";
     public const string ANIMATION_BRUTUSOFFICE_STANDING = "IsStanding";
     public const string ANIMATION_BRUTUSOFFICE_MOVING = "IsMoving";

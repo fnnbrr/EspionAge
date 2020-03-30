@@ -28,6 +28,15 @@ public class Conversation : ScriptableObject
     [ReorderableList]
     public Line[] lines;
 
+    public static Conversation CreateCopy(Conversation other)
+    {
+        Conversation copy = CreateInstance<Conversation>();
+        copy.autoplayConversation = other.autoplayConversation;
+        copy.autoInitiate = other.autoInitiate;
+        copy.lines = new List<Line>(other.lines).ToArray();
+        return copy;
+    }
+
     public List<string> GetAllSpeakers()
     {
         return lines.Select(line => line.id).Distinct().ToList();
