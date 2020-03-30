@@ -14,6 +14,7 @@ public class GameManager : Singleton<GameManager>
 
     [Header("Game Settings")]
     public bool enableGameStart = false;
+    public bool maxAwakenessOnStart = false;
     public SkipSettings skipSettings;
 
     private ThrowController throwController;
@@ -41,6 +42,12 @@ public class GameManager : Singleton<GameManager>
         if (enableGameStart)
         {
             GameStart();
+        }
+
+        if (maxAwakenessOnStart)
+        {
+            UIManager.Instance.staminaBar.overrideValue = true;
+            UIManager.Instance.staminaBar.overrideTo = StaminaBar.FILL_MAX;
         }
     }
 

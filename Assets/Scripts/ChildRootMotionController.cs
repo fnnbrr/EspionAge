@@ -19,8 +19,18 @@ public class ChildRootMotionController : MonoBehaviour
     public void SetBool(string name, bool value)
     {
         anim.SetBool(name, value);
-    }
+    } 
     
+    public void SetTrigger(string name)
+    {
+        anim.SetTrigger(name);
+    }
+
+    public void SetFloat(string name, float value)
+    {
+        anim.SetFloat(name, value);
+    }
+
     public void SetAnimationSpeed(float value)
     {
         anim.speed = value;
