@@ -78,6 +78,9 @@ public class MissionTutorial : AMission
     [Header("Misc. Objects")]
     public List<MissionObject> extraObjects;
 
+    [Header("Post-Tutorial Cleaning")] [ReorderableList]
+    public List<Conversation> cleaningConversations;
+
     [Header("FMOD Audio")]
     private FMODUnity.StudioEventEmitter musicEv;
 
@@ -118,13 +121,15 @@ public class MissionTutorial : AMission
         public PureChaser pureChaser;
         public TutorialChaserGroup chaserGroup;
         public NPCBark npcBark;
+        public NPCInteractable npcInteractable;
 
-        public SpawnedEnemy(GameObject gameObject, PureChaser pureChaser, TutorialChaserGroup chaserGroup, NPCBark npcBark)
+        public SpawnedEnemy(GameObject gameObject, PureChaser pureChaser, TutorialChaserGroup chaserGroup, NPCBark npcBark, NPCInteractable npcInteractable)
         {
             this.gameObject = gameObject;
             this.pureChaser = pureChaser;
             this.chaserGroup = chaserGroup;
             this.npcBark = npcBark;
+            this.npcInteractable = npcInteractable;
         }
     }
     
@@ -314,6 +319,11 @@ public class MissionTutorial : AMission
 
         spawnedEnemies.ForEach(e =>
         {
+            e.gameObject.tag = Constants.TAG_NONE;
+
+            e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
+
+            e.pureChaser.chaser.OnCollideWithPlayer -= RestartAfterCutscene;
             e.pureChaser.StartCleaning();
             e.pureChaser.enabled = false;
             e.pureChaser.agent.enabled = false;
@@ -324,14 +334,33 @@ public class MissionTutorial : AMission
         // Trigger the final bark set for only the first enemy
         if (spawnedEnemies.Count > 0)
         {
-            spawnedEnemies[0].npcBark.TriggerBark(NPCBarkTriggerType.TutorialChaserOver);
+            spawnedEnemies[0].npcBark.TriggerBark(NPCBarkTriggerType.TutorialChaseOver);
         }
 
-        // finally stop all barks completely after the final one being triggered
+        // finally stop all barks completely after the final one being triggered, and start setting up cleaning conversations
         spawnedEnemies.ForEach(e =>
         {
             e.npcBark.enabled = false;
+            e.npcInteractable.enabled = true;
         });
+
+        // Assign all conversations
+        int currentEnemyIndex = 0;
+        foreach (Conversation conversation in cleaningConversations)
+        {
+            Conversation conversationCopy = Conversation.CreateCopy(conversation);
+
+            SpawnedEnemy currentEnemy = spawnedEnemies[currentEnemyIndex % spawnedEnemies.Count];
+            for (int i = 0; i < conversationCopy.lines.Length; i++)
+            {
+                if (string.IsNullOrEmpty(conversationCopy.lines[i].id.Trim()))
+                {
+                    conversationCopy.lines[i].id = DialogueManager.Instance.GetSpeakerId(currentEnemy.gameObject);
+                }
+            }
+            currentEnemy.npcInteractable.defaultConvos.Add(conversationCopy);
+            currentEnemyIndex++;
+        }
 
         AlertMissionComplete();
         MissionManager.Instance.EndMission(MissionsEnum.MissionTutorial);
@@ -527,8 +556,10 @@ public class MissionTutorial : AMission
                 chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
 
                 NPCBark npcBark = Utils.GetRequiredComponent<NPCBark>(enemyInstance);
+                NPCInteractable npcInteractable = Utils.GetRequiredComponent<NPCInteractable>(enemyInstance);
+                npcInteractable.enabled = false;
 
-                spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group, npcBark));
+                spawnedEnemies.Add(new SpawnedEnemy(enemyInstance, chaser, group, npcBark, npcInteractable));
             });
         });
     }
