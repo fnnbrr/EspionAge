@@ -82,6 +82,16 @@ public static class Utils
         return obj.GetComponent(typeof(T)) != null;
     }
 
+    public static bool HasComponentInParent<T>(this GameObject obj)
+    {
+        return obj.GetComponentInParent(typeof(T)) != null;
+    }
+
+    public static bool HasComponentInChildren<T>(this GameObject obj)
+    {
+        return obj.GetComponentInChildren(typeof(T)) != null;
+    }
+
     public static int PingPong(int t, int length)
     {
         int q = t / length;
