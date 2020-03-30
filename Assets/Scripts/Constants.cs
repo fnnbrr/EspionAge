@@ -7,6 +7,7 @@ public static class Constants
     public const string TAG_NONE = "Untagged";
     public const string TAG_PLAYER = "Player";
     public const string TAG_ENEMY = "Enemy";
+    public const string TAG_NOISE = "Noise";
 
     public const string LAYER_PLAYER = "PLAYER";
     
@@ -17,6 +18,10 @@ public static class Constants
 
     public const string ANIMATION_BASICNURSE_WALKING = "IsWalking";
     public const string ANIMATION_BASICNURSE_RUNNING = "IsRunning";
+
+    public const string ANIMATION_BRUTUSOFFICE_LOOKAROUND = "LookAround";
+    public const string ANIMATION_BRUTUSOFFICE_STANDING = "IsStanding";
+    public const string ANIMATION_BRUTUSOFFICE_MOVING = "IsMoving";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
@@ -41,10 +46,12 @@ public static class Constants
     public const string INPUT_AXIS_VERTICAL_RIGHT_STICK = "Vertical Right Stick";
     public const string INPUT_AXIS_HORIZONTAL_DPAD = "DPAD_Horizontal";
 
-    public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
-    public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
-    public const string CHEATS_STARTMISSIONKITCHEN1 = "Cheats/01-MissionKitchen1/Start";
-    public const string CHEATS_ENDMISSIONKITCHEN1 = "Cheats/01-MissionKitchen1/End";
+    public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/Missions/00-Tutorial/Start";
+    public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/Missions/00-Tutorial/End";
+    public const string CHEATS_STARTMISSIONKITCHEN1 = "Cheats/Missions/01-Kitchen1/Start";
+    public const string CHEATS_ENDMISSIONKITCHEN1 = "Cheats/Missions/01-Kitchen1/End";
+    public const string CHEATS_STARTMISSIONBRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/Start";
+    public const string CHEATS_ENDMISSIONBRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/End";
 
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
