@@ -244,7 +244,7 @@ public class MissionKitchen1 : AMission
             SpawnFinalEnemyWave(0);  // just spawn the enemies for the first enemy wave (which we use every time anyways)
 
             // If we are in a different zone with a different camera...
-            if (!RegionManager.Instance.GetCurrentZone() != RegionManager.Instance.kitchen && 
+            if (!RegionManager.Instance.GetPlayerCurrentZone() != RegionManager.Instance.kitchen && 
                 CameraManager.Instance.GetActiveVirtualCamera() != RegionManager.Instance.kitchen.mainCamera)
             {
                 // Need to FIRST wait for the player to be back in the zone...
