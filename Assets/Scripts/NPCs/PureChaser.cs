@@ -9,14 +9,14 @@ namespace NPCs
         // Can add to & actually use this if we refactor PureChaser
     }
     
-    [RequireComponent(typeof(Chaser))]
+    [RequireComponent(typeof(Enemy))]
     public class PureChaser : BaseStateAi<PureChaserStates>
     {
         public float startChaseRadius = 100f;
         public float rotateSpeed = 10f;
         [HideInInspector] public Transform targetTransform;
         
-        [HideInInspector] public Chaser chaser;
+        [HideInInspector] public Enemy enemy;
         private ChildRootMotionController rootMotionController;
         private bool shouldChase = false;
 
@@ -30,7 +30,7 @@ namespace NPCs
         {
             base.Awake();
             rootMotionController = Utils.GetRequiredComponentInChildren<ChildRootMotionController>(this);
-            chaser = Utils.GetRequiredComponent<Chaser>(this);
+            enemy = Utils.GetRequiredComponent<Enemy>(this);
         }
 
         public void SetSpeed(float speed)

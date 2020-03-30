@@ -323,7 +323,7 @@ public class MissionTutorial : AMission
 
             e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
 
-            e.pureChaser.chaser.OnCollideWithPlayer -= RestartAfterCutscene;
+            e.pureChaser.enemy.OnCollideWithPlayer -= RestartAfterCutscene;
             e.pureChaser.StartCleaning();
             e.pureChaser.enabled = false;
             e.pureChaser.agent.enabled = false;
@@ -553,7 +553,7 @@ public class MissionTutorial : AMission
                 chaser.targetTransform = GameManager.Instance.GetPlayerTransform();
                 chaser.SetSpeed(group.chaseSpeed);
                 chaser.startChaseRadius = group.startChaseRadius;
-                chaser.chaser.OnCollideWithPlayer += RestartAfterCutscene;
+                chaser.enemy.OnCollideWithPlayer += RestartAfterCutscene;
 
                 NPCBark npcBark = Utils.GetRequiredComponent<NPCBark>(enemyInstance);
                 NPCInteractable npcInteractable = Utils.GetRequiredComponent<NPCInteractable>(enemyInstance);

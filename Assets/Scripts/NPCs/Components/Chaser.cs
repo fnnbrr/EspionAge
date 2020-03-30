@@ -10,12 +10,11 @@ namespace NPCs.Components
         public float reacquireInterval = 0.1f;
         public bool isChasing = false;
 
-        private static int _numChasersActive = 0;
+        public static int numChasersActive = 0;
         
         public event Action OnSeePlayer;
         public event Action OnLosePlayer;
         public event Action OnReacquireTarget;
-        public event Action OnCollideWithPlayer;
 
         [FMODUnity.ParamRef]
         public string playerChased;
@@ -39,8 +38,8 @@ namespace NPCs.Components
             if (numTargetsInRange > 0 && !isChasing)
             {
                 isChasing = true;
-                _numChasersActive += 1;
-                if (_numChasersActive == 1)
+                numChasersActive += 1;
+                if (numChasersActive == 1)
                 {
                     // This means that the current chaser is the 1st to begin chasing Birdie
                     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 1f);
@@ -52,8 +51,8 @@ namespace NPCs.Components
             else if (numTargetsInRange == 0 && isChasing)
             {
                 isChasing = false;
-                _numChasersActive -= 1;
-                if (_numChasersActive == 0)
+                numChasersActive -= 1;
+                if (numChasersActive == 0)
                 {
                     // This means that the current chaser is the last to stop chasing Birdie
                     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
@@ -68,15 +67,6 @@ namespace NPCs.Components
             if (isChasing)
             {
                 OnReacquireTarget?.Invoke();
-            }
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
-            {
-                OnCollideWithPlayer?.Invoke();
-                _numChasersActive = 0;
             }
         }
     }
