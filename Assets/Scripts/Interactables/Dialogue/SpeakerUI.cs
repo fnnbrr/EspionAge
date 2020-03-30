@@ -13,6 +13,8 @@ public class SpeakerUI : MonoBehaviour
     public TextMeshProUGUI characterName;
     public TextMeshProUGUI conversationText;
     public bool isRescalable = true;
+    public bool isClampToScreen = true;
+
 
     private RectTransform textBoxRect;
     private RectTransform bubbleOutlineRect;
@@ -48,36 +50,39 @@ public class SpeakerUI : MonoBehaviour
         textPosition = Camera.main.WorldToScreenPoint(transform.position);
         textBoxContainer.transform.position = textPosition;
 
-        tbAnchor = textBoxRect.anchoredPosition;
+        if (isClampToScreen)
+        {
+            tbAnchor = textBoxRect.anchoredPosition;
 
-        tbAnchor.x = Mathf.Clamp(tbAnchor.x, 0, Mathf.Max(0, Screen.width - bubbleOutlineRect.sizeDelta.x));
-        tbAnchor.y = Mathf.Clamp(tbAnchor.y, Mathf.Min(-Screen.height + textBoxRect.sizeDelta.y, 0), 0);
-        
-        if (tbAnchor.x <= 0)
-        {
-            tbAnchor.x += extraPadding;
-        }
-        else
-        {
-            if (tbAnchor.x + bubbleOutlineRect.sizeDelta.x >= Screen.width - extraPadding/2)
+            tbAnchor.x = Mathf.Clamp(tbAnchor.x, 0, Mathf.Max(0, Screen.width - bubbleOutlineRect.sizeDelta.x));
+            tbAnchor.y = Mathf.Clamp(tbAnchor.y, Mathf.Min(-Screen.height + textBoxRect.sizeDelta.y, 0), 0);
+
+            if (tbAnchor.x <= 0)
             {
-                tbAnchor.x -= extraPadding;
+                tbAnchor.x += extraPadding;
             }
-        }
-
-        if (tbAnchor.y >= 0)
-        {
-            tbAnchor.y -= extraPadding;
-        }
-        else
-        {
-            if (tbAnchor.y - bubbleOutlineRect.sizeDelta.y <= -Screen.height + extraPadding/2)
+            else
             {
-                tbAnchor.y += extraPadding;
+                if (tbAnchor.x + bubbleOutlineRect.sizeDelta.x >= Screen.width - extraPadding / 2)
+                {
+                    tbAnchor.x -= extraPadding;
+                }
             }
-        }
 
-        textBoxRect.anchoredPosition = tbAnchor;
+            if (tbAnchor.y >= 0)
+            {
+                tbAnchor.y -= extraPadding;
+            }
+            else
+            {
+                if (tbAnchor.y - bubbleOutlineRect.sizeDelta.y <= -Screen.height + extraPadding / 2)
+                {
+                    tbAnchor.y += extraPadding;
+                }
+            }
+
+            textBoxRect.anchoredPosition = tbAnchor;
+        }
     }
 
     public void SetActiveAButton(bool setActive)
