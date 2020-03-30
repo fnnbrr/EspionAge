@@ -53,8 +53,9 @@ public class Interactable : MonoBehaviour, IInteractable
                 {
                     //TODO: Get FaceInteractable to work and not freeze player rotation
                     //FaceInteractable();
-
+                    HideInteractUI();
                     OnInteract();
+                    interactableOn = false;
                 }
             }
         }

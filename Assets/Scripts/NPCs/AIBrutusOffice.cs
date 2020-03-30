@@ -50,7 +50,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
         originRotation = transform.rotation;
 
         chaser.OnSeePlayer += () => SetState(BrutusOfficeStates.Chasing);
-        chaser.OnLosePlayer += () => nextState = BrutusOfficeStates.StandingWaiting;
+        //chaser.OnLosePlayer += () => nextState = BrutusOfficeStates.StandingWaiting;
         chaser.OnReacquireTarget += () => SetState(BrutusOfficeStates.Chasing);
         responder.OnStartResponding += () => SetState(BrutusOfficeStates.Responding);
         patroller.OnRotationComplete += () => SetState(nextState);
@@ -99,7 +99,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private void SetSittingIdle()
     {
-        agent.enabled = false;
+        agent.isStopped = true;
         nextState = BrutusOfficeStates.SittingLookingAround;
         StartCoroutine(waiter.StartWaiting(sittingAnimationLoopInterval));
         AnimationSetStanding(false);
@@ -108,7 +108,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private void SetSittingLookingAround()
     {
-        agent.enabled = false;
+        agent.isStopped = true;
         nextState = BrutusOfficeStates.SittingIdle;
         StartCoroutine(waiter.StartWaiting(sittingAnimationLoopInterval));
         AnimationSetStanding(false);
@@ -118,7 +118,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private void SetResponding()
     {
-        agent.enabled = true;
+        agent.isStopped = false;
         nextState = BrutusOfficeStates.StandingWaiting;
         agent.speed = responder.movementSpeed;
         agent.SetDestination(responder.responsePoint);
@@ -128,7 +128,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private void SetChasing()
     {
-        agent.enabled = true;
+        agent.isStopped = false;
         nextState = BrutusOfficeStates.StandingWaiting;
         agent.speed = chaser.movementSpeed;
         agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
@@ -138,7 +138,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private void SetStandingWaiting()
     {
-        agent.enabled = false;
+        agent.isStopped = true;
         StartCoroutine(waiter.StartWaiting(standingWaitInterval));
         AnimationSetStanding(true);
         AnimationSetMoving(false);
@@ -146,7 +146,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private void SetReturningToDesk()
     {
-        agent.enabled = true;
+        agent.isStopped = false;
         agent.speed = patroller.movementSpeed;
         agent.SetDestination(patroller.GetNextPatrolWaypoint().position);
         AnimationSetStanding(true);
@@ -155,7 +155,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private void SetRotateToDesk()
     {
-        agent.enabled = false;
+        agent.isStopped = true;
         StartCoroutine(patroller.StartRotating());
         AnimationSetStanding(true);
         AnimationSetMoving(false);

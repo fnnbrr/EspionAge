@@ -55,6 +55,7 @@ public static class Constants
 
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
+    public const string CHEATS_ENABLE_3D_TELEPORT = "Cheats/Teleport/Enable 3D Teleport (MMB)";
     public const string CHEATS_TELEPORT_NURSESROOM = "Cheats/Teleport/Nurse's Room";
     public const string CHEATS_TELEPORT_DININGHALL = "Cheats/Teleport/Dining Hall";
     public const string CHEATS_TELEPORT_DENTURES = "Cheats/Teleport/Dentures";
@@ -79,6 +80,10 @@ public static class Constants
 
     public const int RIGHT_PADDING_WITH_ABUTTON = 70;
     public const int RIGHT_PADDING_WITHOUT_ABUTTON = 40;
+
+    public const float DISTANCE_FOR_SPEECHBUBBLE_SCALING = 10.0f;
+    public const float MAX_SCALE_SPEECHBUBBLE = 0.65f;
+    public const float MIN_SCALE_SPEECHBUBBLE = 0.45f;
 
     public const string SHADER_NAME_SHAKE = "PlateShake";
 }

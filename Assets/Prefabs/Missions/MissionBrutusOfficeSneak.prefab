@@ -50,9 +50,9 @@ MonoBehaviour:
     width: 0.2
   m_Looped: 0
   m_Waypoints:
-  - position: {x: 1.9654999, y: -5.8098145, z: -0.9208298}
+  - position: {x: -2.648491, y: -5.534708, z: -0.29720974}
     roll: 0
-  - position: {x: 7.298561, y: -13.0685005, z: 14.328853}
+  - position: {x: 0.59358215, y: -10.8749, z: 7.0612707}
     roll: 0
 --- !u!1 &590787103686787875
 GameObject:
@@ -109,11 +109,15 @@ PlayableDirector:
   - key: {fileID: -6941151730043157749, guid: d476189a212d3b146a040beb8ff66a4c, type: 2}
     value: {fileID: 0}
   - key: {fileID: 5699036388255669443, guid: d476189a212d3b146a040beb8ff66a4c, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 6601765769267434986}
   - key: {fileID: -1327681740354350856, guid: d476189a212d3b146a040beb8ff66a4c, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 710369288029964069}
   - key: {fileID: 5071820341624043372, guid: d476189a212d3b146a040beb8ff66a4c, type: 2}
     value: {fileID: 0}
+  - key: {fileID: -8070785847415782209, guid: d476189a212d3b146a040beb8ff66a4c, type: 2}
+    value: {fileID: 2382966953980606920}
+  - key: {fileID: -1761069077328600507, guid: d476189a212d3b146a040beb8ff66a4c, type: 2}
+    value: {fileID: 21039666122318416}
   m_ExposedReferences:
     m_References: []
 --- !u!95 &1482250721483340284
@@ -382,7 +386,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1433327816021915170
 Transform:
   m_ObjectHideFlags: 0
@@ -502,7 +506,7 @@ MonoBehaviour:
   papersInteractable:
     prefab: {fileID: 3184437919880876860, guid: 2f01c7f70f81ca247965ab165eb7ce03,
       type: 3}
-    position: {x: -141.5, y: 0, z: 35}
+    position: {x: -139.5, y: 0.75, z: 33}
     rotation: {x: 0, y: 0, z: 0}
     spawnedInstance: {fileID: 0}
   restart: 0
