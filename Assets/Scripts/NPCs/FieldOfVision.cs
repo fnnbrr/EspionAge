@@ -218,7 +218,6 @@ public class FieldOfVision : MonoBehaviour
     ViewCastInfo ViewCast(float globalAngle)
 	{
         Vector3 direction = DirFromAngle(globalAngle, true);
-		print(direction);
 		RaycastHit hit;
 
         if (Physics.Raycast(viewMeshObject.transform.position, direction, out hit, viewRadius, obstacleMask))
