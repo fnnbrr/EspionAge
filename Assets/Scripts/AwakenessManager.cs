@@ -67,7 +67,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
 
     private void FixedUpdate()
     {
-        float minDistance = DistToClosestEnemy();
+        float minDistance = Enemy.DistToClosestEnemy(transform.position);
 
         if (minDistance < dangerRadius)
         {
@@ -75,17 +75,7 @@ public class AwakenessManager : Singleton<AwakenessManager>
             HandleIncreaseAwakeness(awakenessGain);
         }
     }
-    
-    private float DistToClosestEnemy()
-    {
-        if (Enemy.Enemies.Count == 0) return Mathf.Infinity;
 
-        Vector3 playerPosition = transform.position;
-        Vector3 closestEnemyPosition = Enemy.ClosestEnemy(playerPosition).transform.position;
-        
-        return Vector3.Distance(playerPosition, closestEnemyPosition);
-    }
-    
     void HandleIncreaseAwakeness(float multiplier)
     {
         StartCoroutine(UIManager.Instance.staminaBar.IncreaseFillBy(multiplier * awakenessIncrease));

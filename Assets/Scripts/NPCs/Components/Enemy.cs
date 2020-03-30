@@ -29,10 +29,9 @@ namespace NPCs.Components
             }
         }
 
-        public static Enemy ClosestEnemy(Vector3 queryPosition)
+        public static float DistToClosestEnemy(Vector3 queryPosition)
         {
             float minDistance = Mathf.Infinity;
-            Enemy closestEnemy = null;
             
             foreach (Enemy curEnemy in Enemies)
             {
@@ -40,10 +39,9 @@ namespace NPCs.Components
                 if (curDistance < minDistance)
                 {
                     minDistance = curDistance;
-                    closestEnemy = curEnemy;
                 }
             }
-            return closestEnemy;
+            return Mathf.Sqrt(minDistance);
         }
     }
 }
