@@ -77,8 +77,6 @@ public class NPCInteractable : Interactable
 
     protected override void Update()
     {
-        if (conversation == null) return;
-
         if (IsWithinRadius(originPosition, GameManager.Instance.GetPlayerTransform(), boundaryRadius))
         {
             // Prevent loading during a conversation
@@ -86,18 +84,10 @@ public class NPCInteractable : Interactable
             {
                 LoadConversation();
 
-                // Autoplay
-                if (conversation.autoplayConversation)
+                if (conversation != null && (conversation.autoplayConversation || // Autoplay
+                    (conversation.autoInitiate && !DialogueManager.Instance.CheckIsAdvancing()))) // Prevent from auto-initiating in the middle of advancing a conversation
                 {
                     OnInteract();
-                }
-                else
-                {
-                    //Prevent from auto-initiating in the middle of advancing a conversation
-                    if (conversation.autoInitiate && !DialogueManager.Instance.CheckIsAdvancing())
-                    {
-                        OnInteract();
-                    }
                 }
             }
         }
@@ -105,7 +95,7 @@ public class NPCInteractable : Interactable
         // TODO: Boundary Radius should always be >= Interact Radius Possible issues will arise otherwise
         // This is so the animations for InteractBox work
         // Ensure player cannot interact with another character if already advancing a conversation
-        if (!DialogueManager.Instance.CheckIsAdvancing() && !conversation.autoplayConversation && !conversation.autoInitiate)
+        if (conversation != null && !DialogueManager.Instance.CheckIsAdvancing() && !conversation.autoplayConversation && !conversation.autoInitiate)
         {
             base.Update();
         }
