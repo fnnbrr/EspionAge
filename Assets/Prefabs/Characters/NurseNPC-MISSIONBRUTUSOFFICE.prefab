@@ -66,7 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactableAnim: {fileID: 147299913062244660}
   interactTransform: {fileID: 147299913062244680}
-  interactRadius: 10
+  interactRadius: 6
   conversation: {fileID: 0}
   boundaryRadius: 10
   defaultConvos:
@@ -117,7 +117,8 @@ MonoBehaviour:
   canvas: {fileID: 1886493075790992389}
   characterName: {fileID: 1116528220703089885}
   conversationText: {fileID: 4636917956484767001}
-  extraXPadding: 20
+  isRescalable: 1
+  extraPadding: 20
 --- !u!1 &1333495196939624696
 GameObject:
   m_ObjectHideFlags: 0
