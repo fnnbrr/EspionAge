@@ -28,5 +28,22 @@ namespace NPCs.Components
                 Chaser.numChasersActive = 0;
             }
         }
+
+        public static Enemy ClosestEnemy(Vector3 queryPosition)
+        {
+            float minDistance = Mathf.Infinity;
+            Enemy closestEnemy = null;
+            
+            foreach (Enemy curEnemy in Enemies)
+            {
+                float curDistance = (curEnemy.transform.position - queryPosition).sqrMagnitude;
+                if (curDistance < minDistance)
+                {
+                    minDistance = curDistance;
+                    closestEnemy = curEnemy;
+                }
+            }
+            return closestEnemy;
+        }
     }
 }

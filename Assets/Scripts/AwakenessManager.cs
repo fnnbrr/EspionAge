@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using NPCs.Components;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -78,18 +78,12 @@ public class AwakenessManager : Singleton<AwakenessManager>
     
     private float DistToClosestEnemy()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        float minDistance = Mathf.Infinity;
-        Vector3 position = transform.position;
-        foreach (GameObject enemy in enemies)
-        {
-            float curDistance = Vector3.Distance(enemy.transform.position, position);
-            if (curDistance < minDistance)
-            {
-                minDistance = curDistance;
-            }
-        }
-        return minDistance;
+        if (Enemy.Enemies.Count == 0) return Mathf.Infinity;
+
+        Vector3 playerPosition = transform.position;
+        Vector3 closestEnemyPosition = Enemy.ClosestEnemy(playerPosition).transform.position;
+        
+        return Vector3.Distance(playerPosition, closestEnemyPosition);
     }
     
     void HandleIncreaseAwakeness(float multiplier)
