@@ -77,9 +77,34 @@ public static class Utils
         return comp;
     }
 
+    public static T GetRequiredComponentInParent<T>(MonoBehaviour o) where T : Component
+    {
+        return GetRequiredComponentInParent<T>(o, $"Expected component '{typeof(T).Name}' in parent of object {o.name}");
+    }
+
+    public static T GetRequiredComponentInParent<T>(MonoBehaviour o, string customError) where T : Component
+    {
+        T comp = o.GetComponentInParent<T>();
+        if (!comp)
+        {
+            LogErrorAndStopPlayMode(customError);
+        }
+        return comp;
+    }
+
     public static bool HasComponent<T>(this GameObject obj)
     {
         return obj.GetComponent(typeof(T)) != null;
+    }
+
+    public static bool HasComponentInParent<T>(this GameObject obj)
+    {
+        return obj.GetComponentInParent(typeof(T)) != null;
+    }
+
+    public static bool HasComponentInChildren<T>(this GameObject obj)
+    {
+        return obj.GetComponentInChildren(typeof(T)) != null;
     }
 
     public static int PingPong(int t, int length)

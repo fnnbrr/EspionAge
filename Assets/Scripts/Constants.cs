@@ -7,16 +7,25 @@ public static class Constants
     public const string TAG_NONE = "Untagged";
     public const string TAG_PLAYER = "Player";
     public const string TAG_ENEMY = "Enemy";
+    public const string TAG_NOISE = "Noise";
 
     public const string LAYER_PLAYER = "PLAYER";
     
     public const string ANIMATION_BIRDIE_ISWALKING = "IsWalking";
     public const string ANIMATION_BIRDIE_AWAKENESS = "Awakeness";
-    public const string ANIMATION_BIRDIE_DASH= "Dash";
+    public const string ANIMATION_BIRDIE_DASH = "Dash";
     public const string ANIMATION_BIRDIE_WAKEUP = "WakeUp";
 
     public const string ANIMATION_BASICNURSE_WALKING = "IsWalking";
     public const string ANIMATION_BASICNURSE_RUNNING = "IsRunning";
+
+    public const string ANIMATION_TUTORIALCHASER_MOVING = "IsMoving";
+    public const string ANIMATION_TUTORIALCHASER_CLEAN = "Clean";
+    public const string ANIMATION_TUTORIALCHASER_CYCLEOFFSET = "RandomCycleOffset";
+    
+    public const string ANIMATION_BRUTUSOFFICE_LOOKAROUND = "LookAround";
+    public const string ANIMATION_BRUTUSOFFICE_STANDING = "IsStanding";
+    public const string ANIMATION_BRUTUSOFFICE_MOVING = "IsMoving";
 
     public const string ANIMATION_INTERACTABLE_POPIN = "PopIn";
     public const string ANIMATION_INTERACTABLE_POPDOWN = "PopDown";
@@ -41,13 +50,16 @@ public static class Constants
     public const string INPUT_AXIS_VERTICAL_RIGHT_STICK = "Vertical Right Stick";
     public const string INPUT_AXIS_HORIZONTAL_DPAD = "DPAD_Horizontal";
 
-    public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/00-MissionTutorial/Start";
-    public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/00-MissionTutorial/End";
-    public const string CHEATS_STARTMISSIONKITCHEN1 = "Cheats/01-MissionKitchen1/Start";
-    public const string CHEATS_ENDMISSIONKITCHEN1 = "Cheats/01-MissionKitchen1/End";
+    public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/Missions/00-Tutorial/Start";
+    public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/Missions/00-Tutorial/End";
+    public const string CHEATS_STARTMISSIONKITCHEN1 = "Cheats/Missions/01-Kitchen1/Start";
+    public const string CHEATS_ENDMISSIONKITCHEN1 = "Cheats/Missions/01-Kitchen1/End";
+    public const string CHEATS_STARTMISSIONBRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/Start";
+    public const string CHEATS_ENDMISSIONBRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/End";
 
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 
+    public const string CHEATS_ENABLE_3D_TELEPORT = "Cheats/Teleport/Enable 3D Teleport (MMB)";
     public const string CHEATS_TELEPORT_NURSESROOM = "Cheats/Teleport/Nurse's Room";
     public const string CHEATS_TELEPORT_DININGHALL = "Cheats/Teleport/Dining Hall";
     public const string CHEATS_TELEPORT_DENTURES = "Cheats/Teleport/Dentures";
@@ -72,6 +84,10 @@ public static class Constants
 
     public const int RIGHT_PADDING_WITH_ABUTTON = 70;
     public const int RIGHT_PADDING_WITHOUT_ABUTTON = 40;
+
+    public const float DISTANCE_FOR_SPEECHBUBBLE_SCALING = 10.0f;
+    public const float MAX_SCALE_SPEECHBUBBLE = 0.65f;
+    public const float MIN_SCALE_SPEECHBUBBLE = 0.45f;
 
     public const string SHADER_NAME_SHAKE = "PlateShake";
 }

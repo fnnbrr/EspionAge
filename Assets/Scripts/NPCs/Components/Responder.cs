@@ -18,7 +18,7 @@ namespace NPCs.Components
         
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.gameObject.CompareTag("Noise")) return;
+            if (!other.gameObject.CompareTag(Constants.TAG_NOISE)) return;
             
             responsePoint = other.gameObject.transform.position;
             OnStartResponding?.Invoke();
