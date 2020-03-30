@@ -135,7 +135,7 @@ public class FieldOfVision : MonoBehaviour
 
         for (int i = 0; i <= stepCount; i++)
 		{
-			float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
+			float angle = viewMeshObject.transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
 			ViewCastInfo newViewCast = ViewCast(angle);
 
 			if (i > 0)
@@ -168,7 +168,7 @@ public class FieldOfVision : MonoBehaviour
 		vertices[0] = Vector3.zero;
         for (int i=0; i< vertexCount-1; i++)
 		{
-			vertices[i + 1] = transform.InverseTransformPoint(viewPoints[i]);
+			vertices[i + 1] = viewMeshObject.transform.InverseTransformPoint(viewPoints[i]);
 
             if(i < vertexCount - 2)
 			{
@@ -218,15 +218,16 @@ public class FieldOfVision : MonoBehaviour
     ViewCastInfo ViewCast(float globalAngle)
 	{
         Vector3 direction = DirFromAngle(globalAngle, true);
+		print(direction);
 		RaycastHit hit;
 
-        if (Physics.Raycast(transform.position, direction, out hit, viewRadius, obstacleMask))
+        if (Physics.Raycast(viewMeshObject.transform.position, direction, out hit, viewRadius, obstacleMask))
 		{
             return new ViewCastInfo(true, hit.point, hit.distance, globalAngle);
 		}
         else
 		{
-			return new ViewCastInfo(false, transform.position + direction * viewRadius, viewRadius, globalAngle);
+			return new ViewCastInfo(false, viewMeshObject.transform.position + direction * viewRadius, viewRadius, globalAngle);
 		}
 	}
 
@@ -234,9 +235,9 @@ public class FieldOfVision : MonoBehaviour
 	{
 		if (!angleIsGlobal)
 		{
-			angleInDegrees += transform.eulerAngles.y;
+			angleInDegrees += viewMeshObject.transform.eulerAngles.y;
 		}
-		return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
+		return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), -viewMeshObject.transform.eulerAngles.x * Mathf.Deg2Rad, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
 	}
 
     public struct ViewCastInfo
