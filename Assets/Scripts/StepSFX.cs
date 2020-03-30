@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class stepScript : MonoBehaviour
+public class StepSFX : MonoBehaviour
 {
-
-    // Update is called once per frame
     void Step(string path)
     {
         FMODUnity.RuntimeManager.PlayOneShot(path);

@@ -50,7 +50,7 @@ namespace NPCs
         public void Start()
         {
             chaser.OnSeePlayer += () => SetState(BasicNurseStates.Chasing);
-            chaser.OnLosePlayer += () => nextState = BasicNurseStates.Searching; SetState(BasicNurseStates.Waiting);
+            chaser.OnLosePlayer += () => nextState = BasicNurseStates.Searching;
             chaser.OnReacquireTarget += () => agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
             responder.OnStartResponding += () => SetState(BasicNurseStates.Responding);
             patroller.OnRotationComplete += () => SetState(BasicNurseStates.Waiting);

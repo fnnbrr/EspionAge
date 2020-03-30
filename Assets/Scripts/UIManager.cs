@@ -63,16 +63,16 @@ public class UIManager : Singleton<UIManager>
         return new Color(fader.color.r, fader.color.g, fader.color.b, alpha);
     }
 
-    public void FadeIn()
+    public Coroutine FadeIn()
     {
         // full black --> invisible
-        StartCoroutine(FadeCoroutine(1f, 0f));
+        return StartCoroutine(FadeCoroutine(1f, 0f));
     }
 
-    public void FadeOut()
+    public Coroutine FadeOut()
     {
         // invisible --> full black
-        StartCoroutine(FadeCoroutine(0f, 1f));
+        return StartCoroutine(FadeCoroutine(0f, 1f));
     }
 
     private IEnumerator FadeCoroutine(float startAlpha, float endAlpha)

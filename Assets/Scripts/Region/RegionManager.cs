@@ -11,6 +11,7 @@ public class RegionManager : Singleton<RegionManager>
     [BoxGroup("Camera Zones")] public CameraZone kitchen;
     [BoxGroup("Camera Zones")] public CameraZone hallway;
     [BoxGroup("Camera Zones")] public CameraZone nursesRoom;
+    [BoxGroup("Camera Zones")] public CameraZone brutusOffice;
 
     [HorizontalLine(height: 1)]
     [BoxGroup("Region Triggers")]                                       public RegionTrigger finalHallwayDoor;
@@ -25,6 +26,7 @@ public class RegionManager : Singleton<RegionManager>
     // Zones
     // Treating this list as a stack where the last element is considered "current" zone
     private List<CameraZone> currentPlayerZones;
+    private Dictionary<GameObject, List<CameraZone>> trackedObjectZones;
 
     public delegate void EnterZoneAction(CameraZone zone);
     public delegate void ExitZoneAction(CameraZone zone);
@@ -43,6 +45,8 @@ public class RegionManager : Singleton<RegionManager>
     private void Awake()
     {
         currentPlayerZones = new List<CameraZone>();
+        trackedObjectZones = new Dictionary<GameObject, List<CameraZone>>();
+
         currentPlayerRegions = new List<RegionTrigger>();
         trackedObjectRegions = new Dictionary<GameObject, List<RegionTrigger>>();
     }
@@ -57,7 +61,7 @@ public class RegionManager : Singleton<RegionManager>
         return currentPlayerZones.Count > 0;
     }
 
-    public CameraZone GetCurrentZone()
+    public CameraZone GetPlayerCurrentZone()
     {
         if (!PlayerIsInAnyZone())
         {
@@ -82,9 +86,56 @@ public class RegionManager : Singleton<RegionManager>
         HandleCurrentZone();
     }
 
+    public void RegisterTrackedObject(GameObject trackedObject)
+    {
+        if (!trackedObjectZones.ContainsKey(trackedObject))
+        {
+            trackedObjectZones.Add(trackedObject, new List<CameraZone>());
+        }
+        if (!trackedObjectRegions.ContainsKey(trackedObject))
+        {
+            trackedObjectRegions.Add(trackedObject, new List<RegionTrigger>());
+        }
+    }
+
+    public void UnregisterTrackedObject(GameObject trackedObject)
+    {
+        if (trackedObjectZones.ContainsKey(trackedObject))
+        {
+            trackedObjectZones.Remove(trackedObject);
+        }
+        if (trackedObjectRegions.ContainsKey(trackedObject))
+        {
+            trackedObjectRegions.Remove(trackedObject);
+        }
+    }
+
+    public bool IsInZone(GameObject trackedObject, CameraZone zone)
+    {
+        return trackedObjectZones.ContainsKey(trackedObject) && trackedObjectZones[trackedObject].Contains(zone);
+    }
+
+    public void ReportTrackedObjectEnterZone(GameObject trackedObject, CameraZone zone)
+    {
+        if (trackedObjectZones.ContainsKey(trackedObject))
+        {
+            Debug.Log($"Tracked object {trackedObject.name} entered zone {zone.name}");
+            trackedObjectZones[trackedObject].Add(zone);
+        }
+    }
+
+    public void ReportTrackedObjectExitZone(GameObject trackedObject, CameraZone zone)
+    {
+        if (trackedObjectZones.ContainsKey(trackedObject))
+        {
+            Debug.Log($"Tracked object {trackedObject.name} exited zone {zone.name}");
+            trackedObjectZones[trackedObject].Remove(zone);
+        }
+    }
+
     private void HandleCurrentZone()
     {
-        CameraZone currentZone = GetCurrentZone();
+        CameraZone currentZone = GetPlayerCurrentZone();
         if (!currentZone) return;
 
         HandleRestrictedZone(currentZone.isRestricted);
@@ -107,7 +158,7 @@ public class RegionManager : Singleton<RegionManager>
     private void HandleCameraChange(CinemachineVirtualCamera camera)
     {
         CameraManager.Instance.BlendTo(camera);
-        OnPlayerEnterZone?.Invoke(GetCurrentZone());
+        OnPlayerEnterZone?.Invoke(GetPlayerCurrentZone());
     }
 
     private void HandleZoneText(string zoneName, bool isRestricted)
