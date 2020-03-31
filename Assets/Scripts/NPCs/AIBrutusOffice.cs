@@ -14,6 +14,7 @@ public enum BrutusOfficeStates
     Chasing
 }
 
+[RequireComponent(typeof(Enemy))]
 [RequireComponent(typeof(Chaser))]
 [RequireComponent(typeof(Responder))]
 [RequireComponent(typeof(Waiter))]
@@ -25,7 +26,9 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 
     private Vector3 originPosition;
     private Quaternion originRotation;
+    private bool isResetting = false;
 
+    [HideInInspector] public Enemy enemy;
     private Chaser chaser;
     private Responder responder;
     private Waiter waiter;
@@ -36,30 +39,48 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
     {
         base.Awake();
 
+        enemy = Utils.GetRequiredComponent<Enemy>(this);
         chaser = Utils.GetRequiredComponent<Chaser>(this);
         responder = Utils.GetRequiredComponent<Responder>(this);
         waiter = Utils.GetRequiredComponent<Waiter>(this);
         patroller = Utils.GetRequiredComponent<Patroller>(this);
 
         animator = Utils.GetRequiredComponentInChildren<Animator>(this);
+
+        originPosition = transform.position;
+        originRotation = transform.rotation;
     }
 
     public void Start()
     {
-        originPosition = transform.position;
-        originRotation = transform.rotation;
-
-        chaser.OnSeePlayer += () => SetState(BrutusOfficeStates.Chasing);
-        //chaser.OnLosePlayer += () => nextState = BrutusOfficeStates.StandingWaiting;
-        chaser.OnReacquireTarget += () => SetState(BrutusOfficeStates.Chasing);
-        responder.OnStartResponding += () => SetState(BrutusOfficeStates.Responding);
-        patroller.OnRotationComplete += () => SetState(nextState);
-        waiter.OnWaitComplete += () => SetState(nextState);
+        chaser.OnSeePlayer += () => SetStateIfNotResetting(BrutusOfficeStates.Chasing);
+        chaser.OnReacquireTarget += () => SetStateIfNotResetting(BrutusOfficeStates.Chasing);
+        responder.OnStartResponding += () => SetStateIfNotResetting(BrutusOfficeStates.Responding);
+        patroller.OnRotationComplete += () => SetStateIfNotResetting(nextState);
+        waiter.OnWaitComplete += () => SetStateIfNotResetting(nextState);
 
         patroller.SetPoints(new List<PatrolWaypoint>() { new PatrolWaypoint() { position = originPosition, rotation = originRotation.eulerAngles } });
 
-        SetState(currentState);
-        agent.enabled = true;
+        SetState(BrutusOfficeStates.SittingIdle);
+    }
+
+    private void SetStateIfNotResetting(BrutusOfficeStates newState)
+    {
+        if (!isResetting)
+        {
+            SetState(newState);
+        }
+    }
+
+    public void HardResetToIdle()
+    {
+        isResetting = true;
+        prevState = BrutusOfficeStates.SittingIdle;
+        nextState = BrutusOfficeStates.SittingIdle;
+        SetState(BrutusOfficeStates.SittingIdle);
+        agent.Warp(originPosition);
+        transform.rotation = originRotation;
+        isResetting = false;
     }
 
     protected override void SetState(BrutusOfficeStates newState)

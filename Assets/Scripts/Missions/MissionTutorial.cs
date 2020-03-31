@@ -319,8 +319,7 @@ public class MissionTutorial : AMission
 
         spawnedEnemies.ForEach(e =>
         {
-            e.gameObject.tag = Constants.TAG_NONE;
-
+            e.pureChaser.enemy.enabled = false;
             e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
 
             e.pureChaser.enemy.OnCollideWithPlayer -= RestartAfterCutscene;

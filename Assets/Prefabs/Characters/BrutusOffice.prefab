@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!54 &3765842707502234011
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7990575830780334216}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &1892795214
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11,8 +27,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.3512416, y: 7.7472916, z: 1.4511615}
-  m_Center: {x: 4.7880866e-12, y: 0.3039055, z: 0.5}
+  m_Size: {x: 4.3512416, y: 7.5138845, z: 1.4511615}
+  m_Center: {x: -1.2514413e-11, y: 2.6138463, z: 0.49999994}
 --- !u!195 &1892795217
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -190,6 +206,19 @@ MonoBehaviour:
   nextState: 0
   standingWaitInterval: 3
   sittingAnimationLoopInterval: 5
+  enemy: {fileID: 0}
+--- !u!114 &8429649269096221241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7990575830780334216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &468650244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,6 +446,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: f161836e2a571a245b9b9948a82f6787, type: 2}
+    - target: {fileID: -6057140222963153312, guid: 9ef10e04f9b721d468e2e1e700318fcf,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -5420008163957686366, guid: 9ef10e04f9b721d468e2e1e700318fcf,
         type: 3}
       propertyPath: m_LocalRotation.x
