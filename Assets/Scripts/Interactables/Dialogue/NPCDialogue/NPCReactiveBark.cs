@@ -19,7 +19,6 @@ public class NPCReactiveBark : MonoBehaviour
     private BarkEvent lostBark;
     private BarkEvent reactiveNoiseBark;
     public MissionsEnum missionsEnum;
-    private CameraZone npcCameraZone;
     private float timeLostVision;
     private float timeLastHiddenBark;
 
@@ -107,7 +106,8 @@ public class NPCReactiveBark : MonoBehaviour
 
     private void StartBark(BarkEvent barkEvent)
     {
-        if (!RegionManager.Instance.PlayerIsInZone(npcCameraZone)) return;
+        // Barks only play when character is in the same zone as the player
+        if (!RegionManager.Instance.IsInZone(gameObject, RegionManager.Instance.GetPlayerCurrentZone())) return;
 
         // Dont start new bark if a current bark is in place
         if (currentBark != null) return;
@@ -157,7 +157,6 @@ public class NPCReactiveBark : MonoBehaviour
             case MissionsEnum.MissionTutorial:
                 break;
             case MissionsEnum.KitchenMission:
-                npcCameraZone = RegionManager.Instance.kitchen;
                 idleBark = BarkEvent.KitchenIdleBark;
                 spottedBark = BarkEvent.KitchenSpottedNurseReaction;
                 lostBark = BarkEvent.KitchenLostNurseReaction;
