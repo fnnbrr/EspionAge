@@ -43,7 +43,7 @@ namespace NPCs
             searcher = Utils.GetRequiredComponent<Searcher>(this);
             patroller = Utils.GetRequiredComponent<Patroller>(this);
             waiter = Utils.GetRequiredComponent<Waiter>(this);
-            animator = Utils.GetRequiredComponentInChildren<Animator>(this);
+            // animator = Utils.GetRequiredComponentInChildren<Animator>(this);
             enemy = Utils.GetRequiredComponent<Enemy>(this);
         }
 
@@ -140,7 +140,7 @@ namespace NPCs
         private void SetWaiting()
         {
             ToggleAnimations(false);
-            if (prevState == BrutusResponderStates.Patrolling)
+            if (nextState == BrutusResponderStates.Patrolling)
             {
                 StartCoroutine(waiter.StartWaiting(patroller.curPatrolWaypoint.stayTime));
             }
@@ -168,7 +168,7 @@ namespace NPCs
         {
             CheckNursesAlertBrutus();
             
-            if (agent.hasPath || !agent.isOnNavMesh || agent.pathPending) return;
+            if (!agent.enabled || !agent.isOnNavMesh || agent.pathPending || agent.remainingDistance > agent.stoppingDistance) return;
 
             // Choose the next state/behavior when the agent reaches current destination.
             switch (currentState)
