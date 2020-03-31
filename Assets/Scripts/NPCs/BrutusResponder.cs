@@ -50,7 +50,11 @@ namespace NPCs
         public void Start()
         {
             chaser.OnSeePlayer += () => SetState(BrutusResponderStates.Chasing);
-            chaser.OnLosePlayer += () => nextState = BrutusResponderStates.Searching; SetState(BrutusResponderStates.Waiting);
+            chaser.OnLosePlayer += () =>
+            {
+                nextState = BrutusResponderStates.Searching;
+                SetState(BrutusResponderStates.Waiting);
+            };
             chaser.OnReacquireTarget += () => agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
             responder.OnStartResponding += () => SetState(BrutusResponderStates.Responding);
             patroller.OnRotationComplete += () => SetState(BrutusResponderStates.Waiting);
