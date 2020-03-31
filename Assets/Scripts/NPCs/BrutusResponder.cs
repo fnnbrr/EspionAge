@@ -19,6 +19,7 @@ namespace NPCs
     [RequireComponent(typeof(Searcher))]
     [RequireComponent(typeof(Patroller))]
     [RequireComponent(typeof(Waiter))]
+    [RequireComponent(typeof(Enemy))]
     public class BrutusResponder : BaseStateAi<BrutusResponderStates>
     {
         [HideInInspector] public Chaser chaser;
@@ -26,6 +27,7 @@ namespace NPCs
         [HideInInspector] public Searcher searcher;
         [HideInInspector] public Patroller patroller;
         [HideInInspector] public Waiter waiter;
+        [HideInInspector] public Enemy enemy;
 
         public int numSearches = 3;
         public GameObject questionMark;
@@ -41,7 +43,8 @@ namespace NPCs
             searcher = Utils.GetRequiredComponent<Searcher>(this);
             patroller = Utils.GetRequiredComponent<Patroller>(this);
             waiter = Utils.GetRequiredComponent<Waiter>(this);
-            // TODO animator = Utils.GetRequiredComponentInChildren<Animator>(this);
+            animator = Utils.GetRequiredComponentInChildren<Animator>(this);
+            enemy = Utils.GetRequiredComponent<Enemy>(this);
         }
 
         public void Start()
@@ -52,7 +55,7 @@ namespace NPCs
             responder.OnStartResponding += () => SetState(BrutusResponderStates.Responding);
             patroller.OnRotationComplete += () => SetState(BrutusResponderStates.Waiting);
             waiter.OnWaitComplete += () => SetState(nextState);
-            chaser.OnCollideWithPlayer += () => questionMark.SetActive(false);
+            enemy.OnCollideWithPlayer += () => questionMark.SetActive(false);
             
             SetState(currentState);
         }

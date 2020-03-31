@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 9162191208885286343}
   - component: {fileID: 6188935483717721383}
   - component: {fileID: 749086842681247075}
+  - component: {fileID: 7137930795607073068}
   m_Layer: 0
   m_Name: Brutus_RESPONDER
   m_TagString: Enemy
@@ -244,6 +245,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
   spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
   flashingSpeed: 2
+  distanceFromViewPlaneMin: 2.5
 --- !u!195 &5323075464532980671
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -335,6 +337,7 @@ MonoBehaviour:
   searcher: {fileID: 0}
   patroller: {fileID: 0}
   waiter: {fileID: 0}
+  enemy: {fileID: 0}
   numSearches: 3
   questionMark: {fileID: 4194426124406318601}
 --- !u!114 &2257055640521122606
@@ -412,6 +415,18 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     stayTime: 0
+--- !u!114 &7137930795607073068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6792704693899765227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7772607378352014721
 GameObject:
   m_ObjectHideFlags: 0
