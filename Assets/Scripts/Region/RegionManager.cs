@@ -26,7 +26,7 @@ public class RegionManager : Singleton<RegionManager>
     // Zones
     // Treating this list as a stack where the last element is considered "current" zone
     private List<CameraZone> currentPlayerZones;
-    private Dictionary<GameObject, List<CameraZone>> trackedObjectZones;
+    public Dictionary<GameObject, List<CameraZone>> trackedObjectZones;
 
     public delegate void EnterZoneAction(CameraZone zone);
     public delegate void ExitZoneAction(CameraZone zone);
@@ -112,6 +112,11 @@ public class RegionManager : Singleton<RegionManager>
 
     public bool IsInZone(GameObject trackedObject, CameraZone zone)
     {
+        foreach(CameraZone c in trackedObjectZones[trackedObject])
+        {
+            Debug.Log(c);
+        }
+        Debug.Log(trackedObjectZones.ContainsKey(trackedObject));
         return trackedObjectZones.ContainsKey(trackedObject) && trackedObjectZones[trackedObject].Contains(zone);
     }
 

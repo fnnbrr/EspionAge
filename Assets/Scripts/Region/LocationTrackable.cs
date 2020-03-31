@@ -4,7 +4,13 @@ public class LocationTrackable : MonoBehaviour
 {
     private void OnEnable()
     {
-        if (RegionManager.Instance) RegionManager.Instance.RegisterTrackedObject(gameObject);
+        Debug.Log(gameObject.name);
+        if (RegionManager.Instance)
+        {
+            RegionManager.Instance.RegisterTrackedObject(gameObject);
+            Debug.Log("added");
+            Debug.Log(RegionManager.Instance.trackedObjectZones[gameObject][0]);
+        }
     }
 
     private void OnDisable()

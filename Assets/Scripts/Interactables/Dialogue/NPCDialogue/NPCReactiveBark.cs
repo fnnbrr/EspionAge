@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using NPCs;
 using UnityEngine;
 using NaughtyAttributes;
-
+using NPCs.Components;
 
 public enum PlayerDetectionStatus
 {
@@ -19,6 +19,7 @@ public class NPCReactiveBark : MonoBehaviour
     private BarkEvent lostBark;
     private BarkEvent reactiveNoiseBark;
     public MissionsEnum missionsEnum;
+    public bool isBrutus = false;
     private float timeLostVision;
     private float timeLastHiddenBark;
 
@@ -31,22 +32,15 @@ public class NPCReactiveBark : MonoBehaviour
     private int numTimesSpotted;
 
     private BasicNurse basicNurseStates;
+    private AIBrutusOffice brutusStates;
     private PlayerDetectionStatus playerStatus;
 
-
-    private void Awake()
-    {
-        basicNurseStates = Utils.GetRequiredComponent<BasicNurse>(this);
-    }
 
     // Start is called before the first frame update
     void Start()
     {
+        LoadAIState(isBrutus);
         LoadBarks(missionsEnum);
-
-        basicNurseStates.chaser.OnSeePlayer += TargetSpottedBark;
-        basicNurseStates.chaser.OnLosePlayer += TargetLostBark;
-        basicNurseStates.responder.OnStartResponding += ReactiveBark;
 
         randomBarkTime = Random.Range(randomBarkTimeRange.x, randomBarkTimeRange.y);
         SetPlayerStatusHidden();
@@ -108,7 +102,7 @@ public class NPCReactiveBark : MonoBehaviour
     {
         // Barks only play when character is in the same zone as the player
         if (!RegionManager.Instance.IsInZone(gameObject, RegionManager.Instance.GetPlayerCurrentZone())) return;
-
+        Debug.Log("starting bark");
         // Dont start new bark if a current bark is in place
         if (currentBark != null) return;
 
@@ -149,6 +143,24 @@ public class NPCReactiveBark : MonoBehaviour
         timeLastHiddenBark = Time.time;
     }
 
+    private void LoadAIState(bool isBrutus)
+    {
+        if (isBrutus)
+        {
+            brutusStates = Utils.GetRequiredComponent<AIBrutusOffice>(this);
+            brutusStates.chaser.OnSeePlayer += TargetSpottedBark;
+            brutusStates.chaser.OnLosePlayer += TargetLostBark;
+            brutusStates.responder.OnStartResponding += ReactiveBark;
+        }
+        else
+        {
+            basicNurseStates = Utils.GetRequiredComponent<BasicNurse>(this);
+            basicNurseStates.chaser.OnSeePlayer += TargetSpottedBark;
+            basicNurseStates.chaser.OnLosePlayer += TargetLostBark;
+            basicNurseStates.responder.OnStartResponding += ReactiveBark;
+        }
+        
+    }
 
     private void LoadBarks(MissionsEnum missionEnum)
     {
@@ -161,6 +173,12 @@ public class NPCReactiveBark : MonoBehaviour
                 spottedBark = BarkEvent.KitchenSpottedNurseReaction;
                 lostBark = BarkEvent.KitchenLostNurseReaction;
                 reactiveNoiseBark = BarkEvent.KitchenPlateDroppedNurseReaction;
+                break;
+            case MissionsEnum.BrutusOfficeSneak:
+                idleBark = BarkEvent.BrutusOfficeIdleReaction;
+                spottedBark = BarkEvent.BrutusOfficeSpottedReaction;
+                lostBark = BarkEvent.BrutusOfficeLostReation;
+                reactiveNoiseBark = BarkEvent.BrutusOfficeNoiseReaction;
                 break;
         }
     }
