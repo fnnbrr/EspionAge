@@ -329,6 +329,8 @@ public class MissionTutorial : AMission
             e.pureChaser.agent.enabled = false;
 
             e.npcBark.StopCurrentBark();
+
+            e.gameObject.GetComponent<SpeakerUI>().SetIsClamp(true);
         });
 
         // Trigger the final bark set for only the first enemy

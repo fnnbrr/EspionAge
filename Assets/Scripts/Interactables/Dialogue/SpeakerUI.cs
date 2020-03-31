@@ -120,4 +120,9 @@ public class SpeakerUI : MonoBehaviour
     {
         return Vector3.Distance(transform.position, GameManager.Instance.GetPlayerTransform().position);
     }
+
+    public void SetIsClamp(bool isClamp)
+    {
+        isClampToScreen = isClamp;
+    }
 }
