@@ -319,13 +319,14 @@ public class MissionTutorial : AMission
 
         spawnedEnemies.ForEach(e =>
         {
-            e.pureChaser.enemy.enabled = false;
-            e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
-
             e.pureChaser.enemy.OnCollideWithPlayer -= RestartAfterCutscene;
+            e.pureChaser.enemy.enabled = false;
             e.pureChaser.StartCleaning();
             e.pureChaser.enabled = false;
             e.pureChaser.agent.enabled = false;
+
+            e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
+            e.gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
             e.npcBark.StopCurrentBark();
         });
