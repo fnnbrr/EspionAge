@@ -33,6 +33,15 @@ public class Interactable : MonoBehaviour, IInteractable
 
             if (!interactableOn && withinInteractRadius)
             {
+                // Do a raycast to see if there is anything that is obstructing the object from the player
+                // Solves issue of being able to talk through a wall
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position, GameManager.Instance.GetPlayerTransform().position -  transform.position,
+                    out hit, Constants.INTERACT_BOUNDARY_RADIUS))
+                {
+                    if (!hit.collider.gameObject.CompareTag(Constants.TAG_PLAYER)) return;
+                }
+
                 interactableOn = true;
                 ShowInteractUI();
             }
