@@ -19,6 +19,7 @@ namespace NPCs
     [RequireComponent(typeof(Searcher))]
     [RequireComponent(typeof(Patroller))]
     [RequireComponent(typeof(Waiter))]
+    [RequireComponent(typeof(Enemy))]
     public class BasicNurse : BaseStateAi<BasicNurseStates>
     {
         [HideInInspector] public Chaser chaser;
@@ -26,6 +27,7 @@ namespace NPCs
         [HideInInspector] public Searcher searcher;
         [HideInInspector] public Patroller patroller;
         [HideInInspector] public Waiter waiter;
+        [HideInInspector] public Enemy enemy;
 
         public int numSearches = 3;
         public GameObject questionMark;
@@ -42,17 +44,18 @@ namespace NPCs
             patroller = Utils.GetRequiredComponent<Patroller>(this);
             waiter = Utils.GetRequiredComponent<Waiter>(this);
             animator = Utils.GetRequiredComponentInChildren<Animator>(this);
+            enemy = Utils.GetRequiredComponent<Enemy>(this);
         }
 
         public void Start()
         {
             chaser.OnSeePlayer += () => SetState(BasicNurseStates.Chasing);
-            chaser.OnLosePlayer += () => nextState = BasicNurseStates.Searching; SetState(BasicNurseStates.Waiting);
+            chaser.OnLosePlayer += () => nextState = BasicNurseStates.Searching;
             chaser.OnReacquireTarget += () => agent.SetDestination(GameManager.Instance.GetPlayerTransform().position);
             responder.OnStartResponding += () => SetState(BasicNurseStates.Responding);
             patroller.OnRotationComplete += () => SetState(BasicNurseStates.Waiting);
             waiter.OnWaitComplete += () => SetState(nextState);
-            chaser.OnCollideWithPlayer += () => questionMark.SetActive(false);
+            enemy.OnCollideWithPlayer += () => questionMark.SetActive(false);
             
             SetState(currentState);
         }

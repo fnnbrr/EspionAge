@@ -4,6 +4,11 @@ using System.Linq;
 using UnityEngine;
 using NaughtyAttributes;
 
+public enum NPCBarkTriggerType
+{
+    TutorialChaseOver
+}
+
 public class NPCBark : MonoBehaviour
 {
     [Header("Settings")]
@@ -24,6 +29,10 @@ public class NPCBark : MonoBehaviour
 
     [OnValueChanged("OnBarkContainersChanged")] [ReorderableList]
     public List<NPCBarkContainer> barkContainers;
+
+    [ReorderableList]
+    public List<NPCTriggerableBarkContainer> triggerableBarks;
+    private Dictionary<NPCBarkTriggerType, Bark> triggerableBarksMap;
 
     private const float WEIGHT_DEFAULT = 1f;
 
@@ -65,25 +74,47 @@ public class NPCBark : MonoBehaviour
     public bool IsSelectionSequential => selectionBehaviour == BarkSelectionBehaviour.Sequential;
     public bool IsSelectionRandom => selectionBehaviour == BarkSelectionBehaviour.Random;
 
+    [System.Serializable]
+    public class NPCTriggerableBarkContainer
+    {
+        public NPCBarkTriggerType triggerType;
+        public Bark bark;
+    }
+
+    private void Awake()
+    {
+        triggerableBarksMap = new Dictionary<NPCBarkTriggerType, Bark>();
+        triggerableBarks.ForEach(t =>
+        {
+            triggerableBarksMap.Add(t.triggerType, t.bark);
+        });
+    }
+
     private void Bark()
     {
         if (currentlyBarking || barkContainers.Count == 0) return;
 
-        string speakerId = DialogueManager.Instance.GetSpeakerId(gameObject);
-
+        Bark bark = null;
         switch (selectionBehaviour)
         {
             case BarkSelectionBehaviour.Sequential:
-                currentBark = DialogueManager.Instance.StartBark(
-                    speakerId,
-                    barkContainers[currentSequentialBarkIndex++ % barkContainers.Count].bark);
+                bark = barkContainers[currentSequentialBarkIndex++ % barkContainers.Count].bark;
                 break;
             case BarkSelectionBehaviour.Random:
-                currentBark = DialogueManager.Instance.StartBark(
-                    speakerId,
-                    barkContainers[GetRandomWeightedIndex(barkContainers.Select(c => c.weight).ToArray())].bark);
+                bark = barkContainers[GetRandomWeightedIndex(barkContainers.Select(c => c.weight).ToArray())].bark;
+                break;
+            default:
+                Utils.LogErrorAndStopPlayMode($"Unexpected bark selection behaviour: {selectionBehaviour}!");
                 break;
         }
+
+        StartBark(bark);
+    }
+
+    private void StartBark(Bark bark)
+    {
+        string speakerId = DialogueManager.Instance.GetSpeakerId(gameObject);
+        currentBark = DialogueManager.Instance.StartBark(speakerId, bark);
 
         DialogueManager.Instance.OnFinishConversation += HandleBarkFinish;
         currentlyBarking = true;
@@ -125,6 +156,30 @@ public class NPCBark : MonoBehaviour
 
         // No other item was selected, so return very last index.
         return index;
+    }
+
+    public void TriggerBark(NPCBarkTriggerType type)
+    {
+        if (triggerableBarksMap.ContainsKey(type))
+        {
+            StartBark(triggerableBarksMap[type]);
+        }
+        else
+        {
+            Debug.LogWarning($"NPCBarkTriggerType={type} is not set for object {name}! Cannot trigger bark.");
+        }
+    }
+
+    public void StopCurrentBark()
+    {
+        if (currentBark != null)
+        {
+            DialogueManager.Instance.ResolveConversation(currentBark);
+        }
+        if (currentlyBarking)
+        {
+            DialogueManager.Instance.OnFinishConversation -= HandleBarkFinish;
+        }
     }
 
     private void Update()

@@ -1,4 +1,5 @@
-﻿using NPCs.Components;
+﻿using System.Collections;
+using NPCs.Components;
 using UnityEngine;
 
 namespace NPCs
@@ -8,13 +9,14 @@ namespace NPCs
         // Can add to & actually use this if we refactor PureChaser
     }
     
-    [RequireComponent(typeof(Chaser))]
+    [RequireComponent(typeof(Enemy))]
     public class PureChaser : BaseStateAi<PureChaserStates>
     {
         public float startChaseRadius = 100f;
+        public float rotateSpeed = 10f;
         [HideInInspector] public Transform targetTransform;
         
-        [HideInInspector] public Chaser chaser;
+        [HideInInspector] public Enemy enemy;
         private ChildRootMotionController rootMotionController;
         private bool shouldChase = false;
 
@@ -28,7 +30,7 @@ namespace NPCs
         {
             base.Awake();
             rootMotionController = Utils.GetRequiredComponentInChildren<ChildRootMotionController>(this);
-            chaser = Utils.GetRequiredComponent<Chaser>(this);
+            enemy = Utils.GetRequiredComponent<Enemy>(this);
         }
 
         public void SetSpeed(float speed)
@@ -91,7 +93,26 @@ namespace NPCs
 
         private void SetMoving(bool isMoving)
         {
-            rootMotionController.SetBool(Constants.ANIMATION_BASICNURSE_RUNNING, isMoving);
+            rootMotionController.SetBool(Constants.ANIMATION_TUTORIALCHASER_MOVING, isMoving);
+        }
+
+        public void StartCleaning()
+        {
+            shouldChase = false;
+            SetMoving(false);
+            rootMotionController.SetTrigger(Constants.ANIMATION_TUTORIALCHASER_CLEAN);
+            rootMotionController.SetFloat(Constants.ANIMATION_TUTORIALCHASER_CYCLEOFFSET, Random.Range(0f, 1f));
+
+            StartCoroutine(RotateSmoothly(Quaternion.Euler(0f, Random.Range(0f, 360f), 0f)));
+        }
+
+        private IEnumerator RotateSmoothly(Quaternion goalRotation)
+        {
+            while (!transform.rotation.Equals(goalRotation))
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, goalRotation, Time.deltaTime * rotateSpeed);
+                yield return new WaitForEndOfFrame();
+            }
         }
 
         private void CheckRemainingDistance()
