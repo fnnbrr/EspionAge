@@ -25,6 +25,15 @@ namespace NPCs.Components
         
         public event Action OnRotationComplete;
 
+        public void Start()
+        {
+            // Allows a Patroller given no PatrolWaypoints to simply stay in place
+            curPatrolWaypoint = new PatrolWaypoint();
+            curPatrolWaypoint.position = transform.position;
+            curPatrolWaypoint.rotation = transform.rotation.eulerAngles;
+            curPatrolWaypoint.stayTime = 10.0f;
+        }
+
         public void SetPoints(List<PatrolWaypoint> newWaypoints)
         {
             if (newWaypoints.Count < 1)
@@ -51,6 +60,11 @@ namespace NPCs.Components
 
         public PatrolWaypoint GetNextPatrolWaypoint(bool loop=true)
         {
+            if (patrolWaypoints == null)
+            {
+                return curPatrolWaypoint;
+            }
+            
             int newIndex;
             if (loop)
             {

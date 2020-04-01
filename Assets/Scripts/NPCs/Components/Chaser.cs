@@ -43,6 +43,7 @@ namespace NPCs.Components
                 {
                     // This means that the current chaser is the 1st to begin chasing Birdie
                     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 1f);
+                    GameManager.Instance.isPlayerSpotted = true;
                 }
                 
                 OnSeePlayer?.Invoke();
@@ -56,6 +57,7 @@ namespace NPCs.Components
                 {
                     // This means that the current chaser is the last to stop chasing Birdie
                     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
+                    GameManager.Instance.isPlayerSpotted = false;
                 }
                 
                 OnLosePlayer?.Invoke();

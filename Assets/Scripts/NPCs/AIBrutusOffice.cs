@@ -19,6 +19,7 @@ public enum BrutusOfficeStates
 [RequireComponent(typeof(Responder))]
 [RequireComponent(typeof(Waiter))]
 [RequireComponent(typeof(Patroller))]
+[RequireComponent(typeof(Enemy))]
 public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 {
     public float standingWaitInterval = 3f;
