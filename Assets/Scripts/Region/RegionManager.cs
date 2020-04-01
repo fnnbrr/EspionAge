@@ -22,6 +22,7 @@ public class RegionManager : Singleton<RegionManager>
 
     [HorizontalLine(height: 1)]
     [BoxGroup("Doors")] public DoorBehaviour nurseRoomDoor;
+    [BoxGroup("Doors")] public DoorBehaviour brutusOfficeDoor;
 
     // Zones
     // Treating this list as a stack where the last element is considered "current" zone
@@ -113,6 +114,12 @@ public class RegionManager : Singleton<RegionManager>
     public bool IsInZone(GameObject trackedObject, CameraZone zone)
     {
         return trackedObjectZones.ContainsKey(trackedObject) && trackedObjectZones[trackedObject].Contains(zone);
+    }
+
+    public List<CameraZone> GetCharacterCurrentZones(GameObject gameObject)
+    {
+        if (!trackedObjectZones.ContainsKey(gameObject)) return null;
+        return trackedObjectZones[gameObject];
     }
 
     public void ReportTrackedObjectEnterZone(GameObject trackedObject, CameraZone zone)

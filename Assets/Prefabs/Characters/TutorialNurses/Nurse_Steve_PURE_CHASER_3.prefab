@@ -260,6 +260,7 @@ MonoBehaviour:
   characterName: {fileID: 2101949943299825236}
   conversationText: {fileID: 5912294500710655888}
   isRescalable: 0
+  isClampToScreen: 0
   extraPadding: 20
 --- !u!114 &2386577061880961566
 MonoBehaviour:
@@ -331,7 +332,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -594,15 +595,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c962bbced79920c41982a56f242b0f8c, type: 3}
---- !u!1 &7697885399001043893 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: c962bbced79920c41982a56f242b0f8c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1870556158353263292}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6669611304028299686 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: c962bbced79920c41982a56f242b0f8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1870556158353263292}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7697885399001043893 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: c962bbced79920c41982a56f242b0f8c,
     type: 3}
   m_PrefabInstance: {fileID: 1870556158353263292}
   m_PrefabAsset: {fileID: 0}
@@ -912,22 +913,22 @@ PrefabInstance:
     - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 350
+      value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.35
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.35
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.35
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 5623332669697047643, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
