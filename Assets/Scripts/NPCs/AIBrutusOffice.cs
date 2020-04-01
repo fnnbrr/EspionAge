@@ -18,6 +18,7 @@ public enum BrutusOfficeStates
 [RequireComponent(typeof(Responder))]
 [RequireComponent(typeof(Waiter))]
 [RequireComponent(typeof(Patroller))]
+[RequireComponent(typeof(Enemy))]
 public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
 {
     public float standingWaitInterval = 3f;
@@ -31,6 +32,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
     [HideInInspector]public Waiter waiter;
     [HideInInspector]public Patroller patroller;
     private Animator animator;
+    private Enemy enemy;
 
     protected override void Awake()
     {
@@ -40,6 +42,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
         responder = Utils.GetRequiredComponent<Responder>(this);
         waiter = Utils.GetRequiredComponent<Waiter>(this);
         patroller = Utils.GetRequiredComponent<Patroller>(this);
+        enemy = Utils.GetRequiredComponent<Enemy>(this);
 
         animator = Utils.GetRequiredComponentInChildren<Animator>(this);
     }
