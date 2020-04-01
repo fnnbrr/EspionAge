@@ -102,7 +102,7 @@ public class NPCReactiveBark : MonoBehaviour
     {
         // Barks only play when character is in the same zone as the player
         if (!RegionManager.Instance.IsInZone(gameObject, RegionManager.Instance.GetPlayerCurrentZone())) return;
-        Debug.Log("starting bark");
+    
         // Dont start new bark if a current bark is in place
         if (currentBark != null) return;
 

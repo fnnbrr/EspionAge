@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4913433058026642081}
   - component: {fileID: 650894909365207221}
   - component: {fileID: 2803744010596724399}
+  - component: {fileID: 909800825508558801}
   m_Layer: 11
   m_Name: Howard
   m_TagString: Untagged
@@ -54,7 +55,9 @@ MonoBehaviour:
   canvas: {fileID: 8507227952328172799}
   characterName: {fileID: 7160478537979051425}
   conversationText: {fileID: 3204365676502303845}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
 --- !u!114 &650894909365207221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +99,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &909800825508558801
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3323042133981845332}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.7
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.65, z: 0}
 --- !u!1001 &413457387709061416
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -112,11 +112,6 @@ public class RegionManager : Singleton<RegionManager>
 
     public bool IsInZone(GameObject trackedObject, CameraZone zone)
     {
-        foreach(CameraZone c in trackedObjectZones[trackedObject])
-        {
-            Debug.Log(c);
-        }
-        Debug.Log(trackedObjectZones.ContainsKey(trackedObject));
         return trackedObjectZones.ContainsKey(trackedObject) && trackedObjectZones[trackedObject].Contains(zone);
     }
 
