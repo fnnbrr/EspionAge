@@ -242,6 +242,7 @@ public class MissionKitchen1 : AMission
         {
             DestroyGameObjects(instantiatedMissionInteractables);
             SpawnFinalEnemyWave(0);  // just spawn the enemies for the first enemy wave (which we use every time anyways)
+            LoadNewBarks(ReactiveBarkType.IdleBark, BarkEvent.KitchenLunchTimeRushIdleBark);
 
             // If we are in a different zone with a different camera...
             if (!RegionManager.Instance.GetPlayerCurrentZone() != RegionManager.Instance.kitchen && 
@@ -303,6 +304,8 @@ public class MissionKitchen1 : AMission
             // Logic based on the interactable object for spawning
             SpawnFinalEnemyWave(instantiatedMissionInteractables.IndexOf(interactable.gameObject));
 
+            LoadNewBarks(ReactiveBarkType.IdleBark, BarkEvent.KitchenLunchTimeRushIdleBark);
+
             StartCoroutine(HandleDenturesCollectedCutscene());
 
             AlertMissionComplete();
@@ -329,5 +332,14 @@ public class MissionKitchen1 : AMission
             collectedDenturesCutsceneWait,
             doHardBlend: doHardBlend);
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+    }
+
+    private void LoadNewBarks(ReactiveBarkType reactiveBarkType, BarkEvent barkEvent)
+    {
+        foreach(BaseNavAi enemy in instantiatedEnemies)
+        {
+            NPCReactiveBark reactiveBark = Utils.GetRequiredComponent<NPCReactiveBark>(enemy.gameObject);
+            reactiveBark.LoadNewBark(reactiveBarkType, barkEvent);
+        }
     }
 }

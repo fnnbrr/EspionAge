@@ -9,6 +9,7 @@ public enum BarkEvent
     KitchenPlateDroppedNurseReaction,
     KitchenSpottedNurseReaction,
     KitchenLostNurseReaction,
+    KitchenLunchTimeRushIdleBark,
     BrutusOfficeSpottedReaction,
     BrutusOfficeNoiseReaction,
     BrutusOfficeIdleReaction,

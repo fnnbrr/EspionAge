@@ -12,6 +12,14 @@ public enum PlayerDetectionStatus
     Hidden
 }
 
+public enum ReactiveBarkType
+{
+    IdleBark = 1,
+    SpottedBark = 2,
+    LostBark = 3,
+    NoiseBark = 4
+}
+
 public class NPCReactiveBark : MonoBehaviour
 {
     private BarkEvent idleBark;
@@ -164,6 +172,25 @@ public class NPCReactiveBark : MonoBehaviour
             basicNurseStates.responder.OnStartResponding += ReactiveBark;
         }
         
+    }
+
+    public void LoadNewBark(ReactiveBarkType reactiveBarkType, BarkEvent barkEvent)
+    {
+        switch (reactiveBarkType)
+        {
+            case ReactiveBarkType.IdleBark:
+                idleBark = barkEvent;
+                break;
+            case ReactiveBarkType.SpottedBark:
+                spottedBark = barkEvent;
+                break;
+            case ReactiveBarkType.LostBark:
+                lostBark = barkEvent;
+                break;
+            case ReactiveBarkType.NoiseBark:
+                reactiveNoiseBark = barkEvent;
+                break;
+        }
     }
 
     private void LoadBarks(MissionsEnum missionEnum)
