@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3920020062495473770}
   - component: {fileID: 6633371800761907168}
   - component: {fileID: 8380918596198710844}
+  - component: {fileID: 6053370738981904454}
   m_Layer: 11
   m_Name: PigTails
   m_TagString: Untagged
@@ -73,7 +74,23 @@ MonoBehaviour:
   canvas: {fileID: 4380649529456294494}
   characterName: {fileID: 2998181827086033664}
   conversationText: {fileID: 7403001536641358532}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
+--- !u!136 &6053370738981904454
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5686762501570879488}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.65, z: 0}
 --- !u!1001 &2935315935846544404
 PrefabInstance:
   m_ObjectHideFlags: 0

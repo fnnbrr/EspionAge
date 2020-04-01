@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5476904390508680876}
   - component: {fileID: 6779448501544525029}
   - component: {fileID: 8975385835897940721}
+  - component: {fileID: 3485039306344278695}
   m_Layer: 11
   m_Name: Casanova
   m_TagString: Untagged
@@ -54,7 +55,9 @@ MonoBehaviour:
   canvas: {fileID: 2538445926157520128}
   characterName: {fileID: 3921158544785658974}
   conversationText: {fileID: 8740871407673322906}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
 --- !u!114 &6779448501544525029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +99,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &3485039306344278695
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802057469522162482}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.65, z: 0}
 --- !u!1001 &4058104334362274488
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -333,6 +350,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.44187075
+      objectReference: {fileID: 0}
+    - target: {fileID: 6985287465494735213, guid: 15617a7a47645fc4abe466e4d626b856,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6985287465494735213, guid: 15617a7a47645fc4abe466e4d626b856,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.04
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15617a7a47645fc4abe466e4d626b856, type: 3}

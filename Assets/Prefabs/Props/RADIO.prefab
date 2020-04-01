@@ -170,6 +170,7 @@ GameObject:
   - component: {fileID: 3022036499327756940}
   - component: {fileID: 5839469292536682928}
   - component: {fileID: 4426360400411775512}
+  - component: {fileID: 654845562484021542}
   m_Layer: 0
   m_Name: RADIO
   m_TagString: Untagged
@@ -252,6 +253,19 @@ MonoBehaviour:
   OverrideAttenuation: 1
   OverrideMinDistance: 10.387512
   OverrideMaxDistance: 36.310974
+--- !u!65 &654845562484021542
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2347123481707079590}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.2, z: 1.2}
+  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!1 &4651426145994923729
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,15 +886,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a11db5b2b1c3c44f08008de01ba38ed9, type: 3}
---- !u!224 &7295996104379273902 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
-    type: 3}
-  m_PrefabInstance: {fileID: 3329412530292706899}
-  m_PrefabAsset: {fileID: 0}
 --- !u!95 &7295996104379273938 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5437224377466608769, guid: a11db5b2b1c3c44f08008de01ba38ed9,
+    type: 3}
+  m_PrefabInstance: {fileID: 3329412530292706899}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &7295996104379273902 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
     type: 3}
   m_PrefabInstance: {fileID: 3329412530292706899}
   m_PrefabAsset: {fileID: 0}
