@@ -16,6 +16,7 @@ public class Interactable : MonoBehaviour, IInteractable
     protected bool withinInteractRadius;
 
     public float interactRadius = Constants.INTERACT_POPUP_RADIUS;
+    public bool doRaycastCheck = true;
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
@@ -41,7 +42,7 @@ public class Interactable : MonoBehaviour, IInteractable
             {
                 // Do a raycast to see if there is anything that is obstructing the object from the player
                 // Solves issue of being able to talk through a wall
-                if (Physics.Raycast(player.transform.position, (transform.position - player.transform.position),
+                if (doRaycastCheck && Physics.Raycast(player.transform.position, (transform.position - player.transform.position),
                     out RaycastHit hit, interactRadius))
                 {
                     if (!hit.collider.gameObject.Equals(gameObject)) return;

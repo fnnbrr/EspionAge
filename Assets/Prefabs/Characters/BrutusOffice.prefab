@@ -27,8 +27,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.3512416, y: 7.7472916, z: 1.4511615}
-  m_Center: {x: 4.7880866e-12, y: 0.3039055, z: 0.5}
+  m_Size: {x: 4.3512416, y: 7.5138845, z: 1.4511615}
+  m_Center: {x: -1.2514413e-11, y: 2.6138463, z: 0.49999994}
 --- !u!195 &1892795217
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -511,6 +511,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: f161836e2a571a245b9b9948a82f6787, type: 2}
+    - target: {fileID: -6057140222963153312, guid: 9ef10e04f9b721d468e2e1e700318fcf,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -5420008163957686366, guid: 9ef10e04f9b721d468e2e1e700318fcf,
         type: 3}
       propertyPath: m_LocalRotation.x

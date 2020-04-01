@@ -8,9 +8,12 @@ public class DoorBehaviour : MonoBehaviour
 {
     public float closedDelta = 5f;
     public bool shakeCameraOnClose = true;
+    public bool startLocked = false;
+    public Conversation lockedConversation;
 
     private float closedYRotation;
     private bool isClosed = true;
+    private bool isLocked = false;
 
     private HingeJoint hinge;
     private JointLimits startHingeLimits;
@@ -41,11 +44,14 @@ public class DoorBehaviour : MonoBehaviour
     private void Start()
     {
         closedYRotation = transform.rotation.eulerAngles.y;
+
+        SetLocked(startLocked);
     }
 
     public void SetLocked(bool locked)
     {
         hinge.limits = locked ? lockedHingeLimits : startHingeLimits;
+        isLocked = locked;
     }
 
     private void Update()
@@ -79,6 +85,11 @@ public class DoorBehaviour : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
         {
+            if (isLocked && lockedConversation)
+            {
+                DialogueManager.Instance.StartConversation(lockedConversation);
+            }
+
             OnPlayerCollideWithDoor?.Invoke();
         }
     }
