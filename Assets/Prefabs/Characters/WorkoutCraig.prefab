@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1228716071736128520}
   - component: {fileID: 7861080474134736843}
   - component: {fileID: 8866720047849821963}
+  - component: {fileID: 7288098513179995579}
   m_Layer: 11
   m_Name: WorkoutCraig
   m_TagString: Untagged
@@ -54,7 +55,9 @@ MonoBehaviour:
   canvas: {fileID: 5313951078585290662}
   characterName: {fileID: 6696410285729027832}
   conversationText: {fileID: 1425808732183719740}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
 --- !u!114 &7861080474134736843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +100,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &7288098513179995579
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4989182153324835884}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.65, z: 0}
 --- !u!1001 &1940892639104028028
 PrefabInstance:
   m_ObjectHideFlags: 0

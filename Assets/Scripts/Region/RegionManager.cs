@@ -115,6 +115,12 @@ public class RegionManager : Singleton<RegionManager>
         return trackedObjectZones.ContainsKey(trackedObject) && trackedObjectZones[trackedObject].Contains(zone);
     }
 
+    public List<CameraZone> GetCharacterCurrentZones(GameObject gameObject)
+    {
+        if (!trackedObjectZones.ContainsKey(gameObject)) return null;
+        return trackedObjectZones[gameObject];
+    }
+
     public void ReportTrackedObjectEnterZone(GameObject trackedObject, CameraZone zone)
     {
         if (trackedObjectZones.ContainsKey(trackedObject))

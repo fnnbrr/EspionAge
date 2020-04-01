@@ -3,13 +3,21 @@ using System.Collections.Generic;
 using NPCs;
 using UnityEngine;
 using NaughtyAttributes;
-
+using NPCs.Components;
 
 public enum PlayerDetectionStatus
 {
     Visible,
     ChasedNotVisible,
     Hidden
+}
+
+public enum ReactiveBarkType
+{
+    IdleBark = 1,
+    SpottedBark = 2,
+    LostBark = 3,
+    NoiseBark = 4
 }
 
 public class NPCReactiveBark : MonoBehaviour
@@ -19,7 +27,7 @@ public class NPCReactiveBark : MonoBehaviour
     private BarkEvent lostBark;
     private BarkEvent reactiveNoiseBark;
     public MissionsEnum missionsEnum;
-
+    public bool isBrutus = false;
     private float timeLostVision;
     private float timeLastHiddenBark;
 
@@ -32,22 +40,18 @@ public class NPCReactiveBark : MonoBehaviour
     private int numTimesSpotted;
 
     private BasicNurse basicNurseStates;
+    private AIBrutusOffice brutusStates;
     private PlayerDetectionStatus playerStatus;
-
 
     private void Awake()
     {
-        basicNurseStates = Utils.GetRequiredComponent<BasicNurse>(this);
+        LoadBarks(missionsEnum);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        LoadBarks(missionsEnum);
-
-        basicNurseStates.chaser.OnSeePlayer += TargetSpottedBark;
-        basicNurseStates.chaser.OnLosePlayer += TargetLostBark;
-        basicNurseStates.responder.OnStartResponding += ReactiveBark;
+        LoadAIState(isBrutus);
 
         randomBarkTime = Random.Range(randomBarkTimeRange.x, randomBarkTimeRange.y);
         SetPlayerStatusHidden();
@@ -107,6 +111,13 @@ public class NPCReactiveBark : MonoBehaviour
 
     private void StartBark(BarkEvent barkEvent)
     {
+        // Barks only play when player is in all of the same zones as the character
+        List<CameraZone> characterZones = RegionManager.Instance.GetCharacterCurrentZones(gameObject);
+        foreach(CameraZone cz in characterZones)
+        {
+            if (!RegionManager.Instance.PlayerIsInZone(cz)) return;
+        }
+    
         // Dont start new bark if a current bark is in place
         if (currentBark != null) return;
 
@@ -147,6 +158,43 @@ public class NPCReactiveBark : MonoBehaviour
         timeLastHiddenBark = Time.time;
     }
 
+    private void LoadAIState(bool isBrutus)
+    {
+        if (isBrutus)
+        {
+            brutusStates = Utils.GetRequiredComponent<AIBrutusOffice>(this);
+            brutusStates.chaser.OnSeePlayer += TargetSpottedBark;
+            brutusStates.chaser.OnLosePlayer += TargetLostBark;
+            brutusStates.responder.OnStartResponding += ReactiveBark;
+        }
+        else
+        {
+            basicNurseStates = Utils.GetRequiredComponent<BasicNurse>(this);
+            basicNurseStates.chaser.OnSeePlayer += TargetSpottedBark;
+            basicNurseStates.chaser.OnLosePlayer += TargetLostBark;
+            basicNurseStates.responder.OnStartResponding += ReactiveBark;
+        }
+        
+    }
+
+    public void LoadNewBark(ReactiveBarkType reactiveBarkType, BarkEvent barkEvent)
+    {
+        switch (reactiveBarkType)
+        {
+            case ReactiveBarkType.IdleBark:
+                idleBark = barkEvent;
+                break;
+            case ReactiveBarkType.SpottedBark:
+                spottedBark = barkEvent;
+                break;
+            case ReactiveBarkType.LostBark:
+                lostBark = barkEvent;
+                break;
+            case ReactiveBarkType.NoiseBark:
+                reactiveNoiseBark = barkEvent;
+                break;
+        }
+    }
 
     private void LoadBarks(MissionsEnum missionEnum)
     {
@@ -159,6 +207,12 @@ public class NPCReactiveBark : MonoBehaviour
                 spottedBark = BarkEvent.KitchenSpottedNurseReaction;
                 lostBark = BarkEvent.KitchenLostNurseReaction;
                 reactiveNoiseBark = BarkEvent.KitchenPlateDroppedNurseReaction;
+                break;
+            case MissionsEnum.BrutusOfficeSneak:
+                idleBark = BarkEvent.BrutusOfficeIdleReaction;
+                spottedBark = BarkEvent.BrutusOfficeSpottedReaction;
+                lostBark = BarkEvent.BrutusOfficeLostReation;
+                reactiveNoiseBark = BarkEvent.BrutusOfficeNoiseReaction;
                 break;
         }
     }

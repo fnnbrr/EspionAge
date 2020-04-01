@@ -27,10 +27,10 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
     private Vector3 originPosition;
     private Quaternion originRotation;
 
-    private Chaser chaser;
-    private Responder responder;
-    private Waiter waiter;
-    private Patroller patroller;
+    [HideInInspector]public Chaser chaser;
+    [HideInInspector]public Responder responder;
+    [HideInInspector]public Waiter waiter;
+    [HideInInspector]public Patroller patroller;
     private Animator animator;
     private Enemy enemy;
 

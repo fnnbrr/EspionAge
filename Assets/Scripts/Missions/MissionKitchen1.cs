@@ -260,6 +260,8 @@ public class MissionKitchen1 : AMission
             }
 
             GameManager.Instance.GetPlayerTransform().position = denturesCheckpointRespawnPosition;
+
+            LoadNewBarks(ReactiveBarkType.IdleBark, BarkEvent.KitchenLunchTimeRushIdleBark);
         }
         else
         {
@@ -303,6 +305,8 @@ public class MissionKitchen1 : AMission
             // Logic based on the interactable object for spawning
             SpawnFinalEnemyWave(instantiatedMissionInteractables.IndexOf(interactable.gameObject));
 
+            LoadNewBarks(ReactiveBarkType.IdleBark, BarkEvent.KitchenLunchTimeRushIdleBark);
+
             StartCoroutine(HandleDenturesCollectedCutscene());
 
             AlertMissionComplete();
@@ -329,5 +333,15 @@ public class MissionKitchen1 : AMission
             collectedDenturesCutsceneWait,
             doHardBlend: doHardBlend);
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+    }
+
+    private void LoadNewBarks(ReactiveBarkType reactiveBarkType, BarkEvent barkEvent)
+    {
+        foreach(BaseNavAi enemy in instantiatedEnemies)
+        {
+            Debug.Log(enemy.gameObject.name);
+            NPCReactiveBark reactiveBark = Utils.GetRequiredComponent<NPCReactiveBark>(enemy.gameObject);
+            reactiveBark.LoadNewBark(reactiveBarkType, barkEvent);
+        }
     }
 }

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5405569687083725375}
   - component: {fileID: 5405569687083725374}
   - component: {fileID: 1950483668671515645}
+  - component: {fileID: 2015379714052911246}
   m_Layer: 11
   m_Name: Dorothy
   m_TagString: Untagged
@@ -54,7 +55,9 @@ MonoBehaviour:
   canvas: {fileID: 1753568446291851675}
   characterName: {fileID: 938282279443685573}
   conversationText: {fileID: 4765479190077872385}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
 --- !u!114 &5405569687083725374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +99,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &2015379714052911246
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5405569687083725372}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!1001 &1789888122777545003
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -184,6 +201,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 15.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3477189686116274329, guid: d51895390637c2a45a40867d2953cda8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d51895390637c2a45a40867d2953cda8, type: 3}
