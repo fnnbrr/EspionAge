@@ -86,8 +86,8 @@ public class MissionManager : Singleton<MissionManager>
     {
         if (missionMapping[missionEnumValue].objective) 
         {
-            ObjectiveList.Instance.DisplayObjectiveList();
             ObjectiveList.Instance.DisplayObjectiveText(missionMapping[missionEnumValue].objective.line);
+            ObjectiveList.Instance.SlideOutObjectTextForSeconds(5f);
         }
     }
 

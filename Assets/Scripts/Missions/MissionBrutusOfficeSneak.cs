@@ -37,8 +37,6 @@ public class MissionBrutusOfficeSneak : AMission
         papersInteractableComponent.OnInteractEnd += HandlePapersCollected;
 
         RegionManager.Instance.OnPlayerEnterZone += HandlePlayerEnterOffice;
-
-        ObjectiveList.Instance.SlideOutObjectTextForSeconds(5f);
     }
 
     private void HandlePapersCollected(Interactable source)
