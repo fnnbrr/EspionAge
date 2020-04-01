@@ -22,14 +22,16 @@ public class Interactable : MonoBehaviour, IInteractable
 
     private void Awake()
     {
-        if (gameObject.GetComponent<Collider>() == null)
-        {
-            Debug.LogError(gameObject.name + " must have a collider on it");
-        }
+
     }
 
     protected virtual void Start()
     {
+        if (gameObject.GetComponent<Collider>() == null)
+        {
+            Debug.LogError(gameObject.name + " must have a collider on it");
+        }
+
         player = GameManager.Instance.GetPlayerTransform().gameObject;
     }
 
