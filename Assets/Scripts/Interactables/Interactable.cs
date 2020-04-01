@@ -20,6 +20,14 @@ public class Interactable : MonoBehaviour, IInteractable
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
+    private void Awake()
+    {
+        if (gameObject.GetComponent<Collider>() == null)
+        {
+            Debug.LogError(gameObject.name + " must have a collider on it");
+        }
+    }
+
     protected virtual void Start()
     {
         player = GameManager.Instance.GetPlayerTransform().gameObject;

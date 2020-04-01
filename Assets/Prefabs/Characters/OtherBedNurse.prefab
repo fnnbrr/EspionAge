@@ -50,8 +50,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.5498328, y: 2.445238, z: 2.618814}
-  m_Center: {x: -0.021170616, y: 1.1453193, z: 0.014847278}
+  m_Size: {x: 1, y: 2.445238, z: 1}
+  m_Center: {x: 0, y: 1.1453193, z: 0}
 --- !u!114 &1032919803082876783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,7 +112,9 @@ MonoBehaviour:
   canvas: {fileID: 1761393635567231965}
   characterName: {fileID: 946079009470092037}
   conversationText: {fileID: 4757548367267523265}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
 --- !u!1 &5413370622085906727
 GameObject:
   m_ObjectHideFlags: 0

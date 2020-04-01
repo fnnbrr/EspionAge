@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3184437919880876851}
   - component: {fileID: 2435031230145915933}
+  - component: {fileID: 4080867758290764839}
   m_Layer: 0
   m_Name: TerminationPapers
   m_TagString: Untagged
@@ -50,6 +51,19 @@ MonoBehaviour:
   interactableAnim: {fileID: 7441498724377132474}
   interactTransform: {fileID: 7441498724377132486}
   interactRadius: 5
+--- !u!65 &4080867758290764839
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3184437919880876860}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 3, z: 0}
 --- !u!1 &3184437919898258166
 GameObject:
   m_ObjectHideFlags: 0

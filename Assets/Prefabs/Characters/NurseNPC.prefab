@@ -616,8 +616,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.5498328, y: 2.445238, z: 2.618814}
-  m_Center: {x: -0.021170616, y: 1.1453193, z: 0.014847278}
+  m_Size: {x: 2, y: 2.445238, z: 2}
+  m_Center: {x: 0, y: 1.1453193, z: 0}
 --- !u!114 &6528124939642928880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -693,7 +693,9 @@ MonoBehaviour:
   canvas: {fileID: 5529468375550278210}
   characterName: {fileID: 6479555912386955930}
   conversationText: {fileID: 1642425273217987422}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
 --- !u!1 &7218892944963903641
 GameObject:
   m_ObjectHideFlags: 0
@@ -1191,6 +1193,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6003753276932402014, guid: c819a38dde8924f49a4bf8b5448e832a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c819a38dde8924f49a4bf8b5448e832a, type: 3}
+--- !u!1 &5529468375550278210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6003753276932402012, guid: c819a38dde8924f49a4bf8b5448e832a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2300499362298106142}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5529468375550278211 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
@@ -1239,12 +1247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &5529468375550278210 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6003753276932402012, guid: c819a38dde8924f49a4bf8b5448e832a,
-    type: 3}
-  m_PrefabInstance: {fileID: 2300499362298106142}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8066940000995292230
 PrefabInstance:
   m_ObjectHideFlags: 0

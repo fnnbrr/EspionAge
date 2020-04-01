@@ -26,7 +26,7 @@ public class RegionManager : Singleton<RegionManager>
     // Zones
     // Treating this list as a stack where the last element is considered "current" zone
     private List<CameraZone> currentPlayerZones;
-    public Dictionary<GameObject, List<CameraZone>> trackedObjectZones;
+    private Dictionary<GameObject, List<CameraZone>> trackedObjectZones;
 
     public delegate void EnterZoneAction(CameraZone zone);
     public delegate void ExitZoneAction(CameraZone zone);

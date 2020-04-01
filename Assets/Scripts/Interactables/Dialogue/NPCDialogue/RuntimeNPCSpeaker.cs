@@ -21,7 +21,6 @@ public class RuntimeNPCSpeaker : MonoBehaviour
         do
         {
             uniqueId = $"{gameObject.name}-{uniqueNumber++}";
-
             if (currentIteration++ > MAX_ITERATIONS)
             {
                 Utils.LogErrorAndStopPlayMode($"Could not find unique speaker id for {gameObject.name}!");
