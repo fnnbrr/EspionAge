@@ -310,9 +310,9 @@ public class MissionTutorial : AMission
 
     private void CompleteMission()
     {
-        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough -= CompleteMission;
+        if (missionCompleting || respawning) return;
 
-        if (missionCompleting) return;
+        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough -= CompleteMission;
         missionCompleting = true;
 
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 1f);
