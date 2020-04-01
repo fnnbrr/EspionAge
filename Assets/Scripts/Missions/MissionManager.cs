@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Cinemachine;
 using NaughtyAttributes;
+using NPCs.Components;
 
 [System.Serializable]
 public class MissionObject
@@ -127,6 +128,8 @@ public class MissionManager : Singleton<MissionManager>
         ProgressManager.Instance.UpdateMissionStatus(GetMissionLogic(missionEnumValue), MissionStatusCode.Started);
 
         SetObjectiveTextForList(missionEnumValue);
+
+        Chaser.numChasersActive = 0;  // Allows Birdie to spawn with full stealth/no systems aware of her presence
     }
 
     public void CompleteMissionObjective(MissionsEnum missionEnumValue)

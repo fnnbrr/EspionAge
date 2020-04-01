@@ -167,7 +167,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3862208129692031431}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2.184714
@@ -201,6 +201,7 @@ MonoBehaviour:
   defaultMaterial: {fileID: 2100000, guid: 20b3db9aa1aca6244afefb98d0b2cb15, type: 2}
   spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
   flashingSpeed: 2
+  distanceFromViewPlaneMin: 2.5
 --- !u!195 &2450668294617206675
 NavMeshAgent:
   m_ObjectHideFlags: 0
