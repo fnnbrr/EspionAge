@@ -76,6 +76,7 @@ public class AIBrutusOffice : NPCs.BaseStateAi<BrutusOfficeStates>
     public void HardResetToIdle()
     {
         isResetting = true;
+        chaser.isChasing = false;
         prevState = BrutusOfficeStates.SittingIdle;
         nextState = BrutusOfficeStates.SittingIdle;
         SetState(BrutusOfficeStates.SittingIdle);

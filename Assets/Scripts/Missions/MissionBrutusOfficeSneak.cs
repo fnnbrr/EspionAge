@@ -67,6 +67,7 @@ public class MissionBrutusOfficeSneak : AMission
 
         Cleanup();
         Initialize();
+        RegionManager.Instance.OnPlayerEnterZone -= HandlePlayerEnterOffice;
 
         yield return UIManager.Instance.FadeIn();
 
