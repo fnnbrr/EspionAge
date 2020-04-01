@@ -76,7 +76,11 @@ MonoBehaviour:
     beforeConvo: {fileID: 11400000, guid: 240fe2623b746c34eb6dd3f88d5b0e51, type: 2}
     duringConvo: {fileID: 11400000, guid: 0cd04e6bccee76f4bb4ff9c94bcbfbc9, type: 2}
     afterConvo: {fileID: 11400000, guid: b551e4673d194154f970f7c6543c0af1, type: 2}
-    doOnComplete: []
+    doOnComplete:
+    - actionType: 3
+      actionPosition: {x: 0, y: 0, z: 0}
+      objects: []
+      missionToStart: 3
 --- !u!195 &6238247744263218515
 NavMeshAgent:
   m_ObjectHideFlags: 0
