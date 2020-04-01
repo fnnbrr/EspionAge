@@ -43,12 +43,15 @@ public class NPCReactiveBark : MonoBehaviour
     private AIBrutusOffice brutusStates;
     private PlayerDetectionStatus playerStatus;
 
+    private void Awake()
+    {
+        LoadBarks(missionsEnum);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         LoadAIState(isBrutus);
-        LoadBarks(missionsEnum);
 
         randomBarkTime = Random.Range(randomBarkTimeRange.x, randomBarkTimeRange.y);
         SetPlayerStatusHidden();
