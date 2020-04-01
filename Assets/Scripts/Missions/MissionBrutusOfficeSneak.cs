@@ -84,19 +84,9 @@ public class MissionBrutusOfficeSneak : AMission
             if (!GameManager.Instance.skipSettings.allRealtimeCutscenes)
             {
                 onEnterCutscene.Play();
-                StartCoroutine(DisablePlayerMovementDuringCutscene(onEnterCutscene));
+                StartCoroutine(MissionManager.Instance.DisablePlayerMovementDuringCutscene(onEnterCutscene));
             }
         }
-    }
-
-    private IEnumerator DisablePlayerMovementDuringCutscene(PlayableDirector cutsceneDirector)
-    {
-        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
-        while(cutsceneDirector.state == PlayState.Playing)
-        {
-            yield return null;
-        }
-        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 
     protected override void Cleanup()

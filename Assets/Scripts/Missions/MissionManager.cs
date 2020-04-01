@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Playables;
 using Cinemachine;
 using NaughtyAttributes;
 
@@ -274,5 +275,15 @@ public class MissionManager : Singleton<MissionManager>
         {
             Destroy(c);
         });
+    }
+
+    public IEnumerator DisablePlayerMovementDuringCutscene(PlayableDirector cutsceneDirector)
+    {
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        while (cutsceneDirector.state == PlayState.Playing)
+        {
+            yield return null;
+        }
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 }

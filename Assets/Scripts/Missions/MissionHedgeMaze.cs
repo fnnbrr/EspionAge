@@ -8,8 +8,13 @@ public class MissionHedgeMaze : AMission
     public Vector3 respawnPosition;
     public Vector3 respawnRotation;
 
+    public PlayableDirector codeRedCutscene;
+
     public GameObject brutusOffice;
     public MissionObject brutusResponser;
+
+    public GameObject surroundingEnemiesPrefab;
+    private GameObject spawnedSurroundingEnemies;
 
     protected override void Initialize()
     {
@@ -17,16 +22,32 @@ public class MissionHedgeMaze : AMission
 
         // Start the code-red cutscene
 
+        //brutusResponser.spawnedInstance = MissionManager.Instance.SpawnMissionObject(brutusResponser);
+
+        StartCoroutine(StartMission());
+    }
+
+    private IEnumerator StartMission()
+    {
+        codeRedCutscene.Play();
+        yield return MissionManager.Instance.DisablePlayerMovementDuringCutscene(codeRedCutscene);
         brutusOffice.SetActive(false);
-        brutusResponser.spawnedInstance = MissionManager.Instance.SpawnMissionObject(brutusResponser);
+    }
+
+    // Called by Signal Emitter in Unity Timeline
+    public void SpawnSurroundingEnemies()
+    {
+        spawnedSurroundingEnemies = Instantiate(surroundingEnemiesPrefab);
     }
 
     protected override void Cleanup()
     {
         Debug.Log("Starting mission: MissionHedgeMaze");
 
-        brutusOffice.SetActive(true);
+        if (brutusOffice) brutusOffice.SetActive(true);
 
-        if (MissionManager.Instance) MissionManager.Instance.DestroyMissionObject(brutusResponser);
+        Destroy(spawnedSurroundingEnemies);
+
+        //if (MissionManager.Instance) MissionManager.Instance.DestroyMissionObject(brutusResponser);
     }
 }
