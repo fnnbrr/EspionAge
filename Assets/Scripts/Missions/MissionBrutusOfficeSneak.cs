@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -7,25 +6,12 @@ public class MissionBrutusOfficeSneak : AMission
 {
     public Vector3 respawnPosition;
     public Vector3 respawnRotation;
+    public AIBrutusOffice brutusAI;
     public PlayableDirector onEnterCutscene;
     public MissionObject papersInteractable;
 
-    [Header("TEMP DEBUG")]
-    public bool restart = false;
-
     private Interactable papersInteractableComponent;
-
-    ///////////////////////////
-    // TEMP UPDATE
-    private void Update()
-    {
-        if (restart)
-        {
-            restart = false;
-            HandlePlayerCaught();
-        }
-    }
-    ///////////////////////////
+    private bool isRestarting = false;
 
     protected override void Initialize()
     {
@@ -36,7 +22,12 @@ public class MissionBrutusOfficeSneak : AMission
         papersInteractableComponent = Utils.GetRequiredComponent<Interactable>(papersInteractable.spawnedInstance);
         papersInteractableComponent.OnInteractEnd += HandlePapersCollected;
 
+        RegionManager.Instance.brutusOfficeDoor.SetLocked(false);
         RegionManager.Instance.OnPlayerEnterZone += HandlePlayerEnterOffice;
+
+        brutusAI.enemy.OnCollideWithPlayer += HandlePlayerCaught;
+
+        ObjectiveList.Instance.SlideOutObjectTextForSeconds(5f);
     }
 
     private void HandlePapersCollected(Interactable source)
@@ -49,9 +40,11 @@ public class MissionBrutusOfficeSneak : AMission
         AlertMissionComplete();
     }
 
-    // TODO: Hook this up with Brutus OnCaught
     private void HandlePlayerCaught()
     {
+        if (isRestarting) return;
+
+        isRestarting = true;
         AlertMissionReset();
 
         StartCoroutine(HandleMissionReset());
@@ -63,16 +56,23 @@ public class MissionBrutusOfficeSneak : AMission
 
         yield return UIManager.Instance.FadeOut();
 
-        Cleanup();
-        Initialize();
+        brutusAI.HardResetToIdle();
+
+        UIManager.Instance.staminaBar.ResetAwakeness();
+        GameManager.Instance.GetThrowController().ResetThrowables();
 
         GameManager.Instance.GetPlayerTransform().position = respawnPosition;
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(respawnRotation);
         GameManager.Instance.GetMovementController().ResetVelocity();
 
+        Cleanup();
+        Initialize();
+        RegionManager.Instance.OnPlayerEnterZone -= HandlePlayerEnterOffice;
+
         yield return UIManager.Instance.FadeIn();
 
         GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
+        isRestarting = false;
     }
 
     private void HandlePlayerEnterOffice(CameraZone zone)
@@ -97,5 +97,6 @@ public class MissionBrutusOfficeSneak : AMission
 
         papersInteractableComponent.OnInteractEnd -= HandlePapersCollected;
         if (RegionManager.Instance) RegionManager.Instance.OnPlayerEnterZone -= HandlePlayerEnterOffice;
+        brutusAI.enemy.OnCollideWithPlayer -= HandlePlayerCaught;
     }
 }

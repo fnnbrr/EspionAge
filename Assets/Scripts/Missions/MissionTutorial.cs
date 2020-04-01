@@ -310,25 +310,27 @@ public class MissionTutorial : AMission
 
     private void CompleteMission()
     {
-        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough -= CompleteMission;
+        if (missionCompleting || respawning) return;
 
-        if (missionCompleting) return;
+        RegionManager.Instance.finalHallwayDoor.OnPlayerPassThrough -= CompleteMission;
         missionCompleting = true;
 
         FMODUnity.RuntimeManager.StudioSystem.setParameterByName("ChaseEnd", 1f);
 
         spawnedEnemies.ForEach(e =>
         {
-            e.gameObject.tag = Constants.TAG_NONE;
-
-            e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
-
             e.pureChaser.enemy.OnCollideWithPlayer -= RestartAfterCutscene;
+            e.pureChaser.enemy.enabled = false;
             e.pureChaser.StartCleaning();
             e.pureChaser.enabled = false;
             e.pureChaser.agent.enabled = false;
 
+            e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
+            e.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+
             e.npcBark.StopCurrentBark();
+
+            e.gameObject.GetComponent<SpeakerUI>().SetIsClamp(true);
         });
 
         // Trigger the final bark set for only the first enemy

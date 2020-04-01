@@ -19955,6 +19955,7 @@ GameObject:
   - component: {fileID: 493917927777153315}
   - component: {fileID: 493917927777153318}
   - component: {fileID: 493917927777153319}
+  - component: {fileID: 589439633817387878}
   m_Layer: 11
   m_Name: WoodenDoor (1)
   m_TagString: Untagged
@@ -20316,6 +20317,24 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &589439633817387878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7528571577536185754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5974f3d623abc404bac93bc824062ff7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  closedDelta: 5
+  shakeCameraOnClose: 0
+  startLocked: 1
+  lockedConversation: {fileID: 11400000, guid: be0d3fa0df4228d46a78fb6e34a25a7f, type: 2}
+  DoorSqueak: event:/SFX/DoorSqueak
+  DoorSlam: 
 --- !u!1 &7812555268643928811
 GameObject:
   m_ObjectHideFlags: 0

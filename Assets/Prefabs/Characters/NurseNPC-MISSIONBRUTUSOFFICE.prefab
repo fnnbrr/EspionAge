@@ -66,7 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactableAnim: {fileID: 147299913062244660}
   interactTransform: {fileID: 147299913062244680}
-  interactRadius: 6
+  interactRadius: 10
   conversation: {fileID: 0}
   boundaryRadius: 10
   defaultConvos:
@@ -122,6 +122,7 @@ MonoBehaviour:
   characterName: {fileID: 1116528220703089885}
   conversationText: {fileID: 4636917956484767001}
   isRescalable: 1
+  isClampToScreen: 1
   extraPadding: 20
 --- !u!1 &1333495196939624696
 GameObject:
@@ -1342,15 +1343,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a11db5b2b1c3c44f08008de01ba38ed9, type: 3}
---- !u!95 &147299913062244660 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5437224377466608769, guid: a11db5b2b1c3c44f08008de01ba38ed9,
-    type: 3}
-  m_PrefabInstance: {fileID: 5296152617988701621}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &147299913062244680 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5296152617988701621}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &147299913062244660 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5437224377466608769, guid: a11db5b2b1c3c44f08008de01ba38ed9,
     type: 3}
   m_PrefabInstance: {fileID: 5296152617988701621}
   m_PrefabAsset: {fileID: 0}

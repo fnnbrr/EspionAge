@@ -16,12 +16,19 @@ public class Interactable : MonoBehaviour, IInteractable
     protected bool withinInteractRadius;
 
     public float interactRadius = Constants.INTERACT_POPUP_RADIUS;
+    public bool doRaycastCheck = true;
 
     public delegate void OnInteractEventHandler(Interactable source);
     public event OnInteractEventHandler OnInteractEnd;
 
+
     protected virtual void Start()
     {
+        if (!Utils.HasComponent<Collider>(gameObject))
+        {
+            Debug.LogError($"{gameObject.name} must have a collider on it");
+        }
+
         player = GameManager.Instance.GetPlayerTransform().gameObject;
     }
 
@@ -33,6 +40,14 @@ public class Interactable : MonoBehaviour, IInteractable
 
             if (!interactableOn && withinInteractRadius)
             {
+                // Do a raycast to see if there is anything that is obstructing the object from the player
+                // Solves issue of being able to talk through a wall
+                if (doRaycastCheck && Physics.Raycast(player.transform.position, (transform.position - player.transform.position),
+                    out RaycastHit hit, interactRadius))
+                {
+                    if (!hit.collider.gameObject.Equals(gameObject)) return;
+                }
+
                 interactableOn = true;
                 ShowInteractUI();
             }
