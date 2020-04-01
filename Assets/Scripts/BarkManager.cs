@@ -8,7 +8,12 @@ public enum BarkEvent
     KitchenIdleBark,
     KitchenPlateDroppedNurseReaction,
     KitchenSpottedNurseReaction,
-    KitchenLostNurseReaction
+    KitchenLostNurseReaction,
+    KitchenLunchTimeRushIdleBark,
+    BrutusOfficeSpottedReaction,
+    BrutusOfficeNoiseReaction,
+    BrutusOfficeIdleReaction,
+    BrutusOfficeLostReation
 }
 
 [System.Serializable]

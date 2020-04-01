@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 966714725715356930}
   - component: {fileID: 966714725715356931}
   - component: {fileID: 1067886114261206871}
+  - component: {fileID: 3147925732653737352}
   m_Layer: 11
   m_Name: Charlotte
   m_TagString: Untagged
@@ -54,7 +55,9 @@ MonoBehaviour:
   canvas: {fileID: 6790276088751105702}
   characterName: {fileID: 5434569133458030584}
   conversationText: {fileID: 309735747622143548}
-  extraXPadding: 20
+  isRescalable: 1
+  isClampToScreen: 1
+  extraPadding: 20
 --- !u!114 &966714725715356931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +99,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!136 &3147925732653737352
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966714725715356929}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.3148537
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.657427, z: 0}
 --- !u!1001 &966714725436007548
 PrefabInstance:
   m_ObjectHideFlags: 0
