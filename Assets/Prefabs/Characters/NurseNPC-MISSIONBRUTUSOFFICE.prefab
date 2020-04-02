@@ -77,7 +77,11 @@ MonoBehaviour:
     beforeConvo: {fileID: 11400000, guid: 240fe2623b746c34eb6dd3f88d5b0e51, type: 2}
     duringConvo: {fileID: 11400000, guid: 0cd04e6bccee76f4bb4ff9c94bcbfbc9, type: 2}
     afterConvo: {fileID: 11400000, guid: b551e4673d194154f970f7c6543c0af1, type: 2}
-    doOnComplete: []
+    doOnComplete:
+    - actionType: 3
+      actionPosition: {x: 0, y: 0, z: 0}
+      objects: []
+      missionToStart: 3
 --- !u!195 &6238247744263218515
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -85,7 +89,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 867569986655703217}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 5
@@ -1340,15 +1344,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a11db5b2b1c3c44f08008de01ba38ed9, type: 3}
---- !u!224 &147299913062244680 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
-    type: 3}
-  m_PrefabInstance: {fileID: 5296152617988701621}
-  m_PrefabAsset: {fileID: 0}
 --- !u!95 &147299913062244660 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5437224377466608769, guid: a11db5b2b1c3c44f08008de01ba38ed9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5296152617988701621}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &147299913062244680 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
     type: 3}
   m_PrefabInstance: {fileID: 5296152617988701621}
   m_PrefabAsset: {fileID: 0}

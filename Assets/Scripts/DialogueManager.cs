@@ -239,10 +239,10 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (!ContinueConversation(conversation))
         {
-            ResolveConversation(conversation);
-
             // Unfreeze player when done
             AllowPlayerInput(true);
+
+            ResolveConversation(conversation);
         }
     }
 

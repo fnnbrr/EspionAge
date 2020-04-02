@@ -9,7 +9,7 @@ public enum BrutusResponderStates
     Searching,
     Patrolling,
     Rotating,
-    Waiting,
+    Waiting
 }
 
 namespace NPCs
@@ -157,7 +157,7 @@ namespace NPCs
         private void CheckNursesAlertBrutus()
         {
             // Handle Brutus-specific behavior of responding to player once seen by any nurse
-            if (currentState == BrutusResponderStates.Chasing || !GameManager.Instance.isPlayerSpotted) return;
+            if (currentState == BrutusResponderStates.Chasing || Chaser.numChasersActive == 0) return;
             
             responder.responsePoint = GameManager.Instance.GetPlayerTransform().position;
             agent.SetDestination(responder.responsePoint);
@@ -166,6 +166,11 @@ namespace NPCs
             {
                 SetState(BrutusResponderStates.Responding);
             }
+        }
+
+        public void ForceChasing()
+        {
+            SetState(BrutusResponderStates.Chasing);
         }
 
         protected void Update()

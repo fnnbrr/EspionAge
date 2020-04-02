@@ -50,12 +50,14 @@ public static class Constants
     public const string INPUT_AXIS_VERTICAL_RIGHT_STICK = "Vertical Right Stick";
     public const string INPUT_AXIS_HORIZONTAL_DPAD = "DPAD_Horizontal";
 
-    public const string CHEATS_STARTMISSIONTUTORIAL= "Cheats/Missions/00-Tutorial/Start";
-    public const string CHEATS_ENDMISSIONTUTORIAL = "Cheats/Missions/00-Tutorial/End";
-    public const string CHEATS_STARTMISSIONKITCHEN1 = "Cheats/Missions/01-Kitchen1/Start";
-    public const string CHEATS_ENDMISSIONKITCHEN1 = "Cheats/Missions/01-Kitchen1/End";
-    public const string CHEATS_STARTMISSIONBRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/Start";
-    public const string CHEATS_ENDMISSIONBRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/End";
+    public const string CHEATS_STARTMISSION_TUTORIAL= "Cheats/Missions/00-Tutorial/Start";
+    public const string CHEATS_ENDMISSION_TUTORIAL = "Cheats/Missions/00-Tutorial/End";
+    public const string CHEATS_STARTMISSION_KITCHEN1 = "Cheats/Missions/01-Kitchen1/Start";
+    public const string CHEATS_ENDMISSION_KITCHEN1 = "Cheats/Missions/01-Kitchen1/End";
+    public const string CHEATS_STARTMISSION_BRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/Start";
+    public const string CHEATS_ENDMISSION_BRUTUSOFFICESNEAK = "Cheats/Missions/02-BrutusOfficeSneak/End";
+    public const string CHEATS_STARTMISSION_HEDGEMAZE = "Cheats/Missions/03-HedgeMaze/Start";
+    public const string CHEATS_ENDMISSION_HEDGEMAZDE = "Cheats/Missions/03-HedgeMaze/End";
 
     public const string CHEATS_CAMERA_BLENDTOFAR = "Cheats/Camera/BlendToFarCamera";
 

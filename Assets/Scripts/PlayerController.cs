@@ -3,7 +3,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public bool EnablePlayerInput { get; set; } = true;
+    private bool _enablePlayerInput = true;
+    public bool EnablePlayerInput
+    {
+        get
+        {
+            return _enablePlayerInput;
+        }
+        set
+        {
+            // Here we can Debug.Log to debug issues with player input enabling/disabling
+            _enablePlayerInput = value;
+        }
+    }
     public bool controllerConnected = false;
 
     private void Start()
