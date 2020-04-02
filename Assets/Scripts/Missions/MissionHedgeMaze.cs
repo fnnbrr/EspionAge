@@ -12,6 +12,9 @@ public class MissionHedgeMaze : AMission
 
     public PlayableDirector codeRedCutscene;
 
+    public GameObject frankBeforeMission;
+    public MissionObject frankNurseRoom;
+
     public GameObject brutusOffice;
     public MissionObject brutusResponser;
     private BrutusResponder brutusResponderAI;
@@ -35,11 +38,14 @@ public class MissionHedgeMaze : AMission
     private IEnumerator StartMission()
     {
         yield return MissionManager.Instance.DisablePlayerMovementDuringCutscene(codeRedCutscene);
+
         brutusOffice.SetActive(false);
 
         if (GameManager.Instance.skipSettings.allRealtimeCutscenes)
         {
-            SpawnSurroundingEnemies();  // since this is triggered via a signal in the cutscene itself
+            // since thse are triggered via a signal in the cutscene itself
+            SpawnSurroundingEnemies();
+            DespawnFrank();
         }
         SpawnBrutusResponser();
     }
@@ -62,6 +68,13 @@ public class MissionHedgeMaze : AMission
         }
 
         spawnedHedgeMazeEnemies = MissionManager.Instance.SpawnEnemyNurses(hedgeMazeEnemies, RestartMission);
+    }
+
+    // Called by Signal Emitter in Unity Timeline
+    public void DespawnFrank()
+    {
+        frankBeforeMission.SetActive(false);
+        frankNurseRoom.spawnedInstance = MissionManager.Instance.SpawnMissionObject(frankNurseRoom);
     }
 
     private void RestartMission()
@@ -105,6 +118,9 @@ public class MissionHedgeMaze : AMission
         Debug.Log("Starting mission: MissionHedgeMaze");
 
         if (brutusOffice) brutusOffice.SetActive(true);
+        if (frankBeforeMission) frankBeforeMission.SetActive(true);
+
+        if (MissionManager.Instance) MissionManager.Instance.DestroyMissionObject(frankNurseRoom);
 
         DestroyAllEnemies();
     }

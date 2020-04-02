@@ -509,6 +509,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 4534420715758387739}
+          m_MethodName: DespawnFrank
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &4030290774030554946
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,6 +741,12 @@ MonoBehaviour:
   respawnPosition: {x: -101, y: 0, z: 0}
   respawnRotation: {x: 0, y: 0, z: 0}
   codeRedCutscene: {fileID: 4028979785369722931}
+  frankBeforeMission: {fileID: 0}
+  frankNurseRoom:
+    prefab: {fileID: 867569986655703217, guid: 002ee9b1d2d969f4da66dfd0e975c36f, type: 3}
+    position: {x: -161.5, y: 0, z: 238}
+    rotation: {x: 0, y: 30, z: 0}
+    spawnedInstance: {fileID: 0}
   brutusOffice: {fileID: 0}
   brutusResponser:
     prefab: {fileID: 6792704693899765227, guid: 0517fa6de29952c4cadfd7d532548801,
