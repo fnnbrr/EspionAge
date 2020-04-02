@@ -14,14 +14,14 @@ public enum BarkEvent
     BrutusOfficeNoiseReaction,
     BrutusOfficeIdleReaction,
     BrutusOfficeLostReation,
-    GardenIdleBark,
-    GardenSpottedBark,
-    GardenLostBark,
-    GardenNoiseBark,
-    BrutusGardenIdleBark,
-    BrutusGardenSpottedBark,
-    BrutusGardenLostBark,
-    BrutusGardenNoiseBark
+    HedgeMazeIdleBark,
+    HedgeMazeSpottedBark,
+    HedgeMazeLostBark,
+    HedgeMazeNoiseBark,
+    BrutusHedgeMazeIdleBark,
+    BrutusHedgeMazeSpottedBark,
+    BrutusHedgeMazeLostBark,
+    BrutusHedgeMazeNoiseBark
 }
 
 [System.Serializable]
