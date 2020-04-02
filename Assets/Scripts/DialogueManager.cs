@@ -239,10 +239,10 @@ public class DialogueManager : Singleton<DialogueManager>
     {
         if (!ContinueConversation(conversation))
         {
-            ResolveConversation(conversation);
-
             // Unfreeze player when done
             AllowPlayerInput(true);
+
+            ResolveConversation(conversation);
         }
     }
 
@@ -284,7 +284,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
         TextMeshProUGUI textMesh = currentSpeaker.speakerUI.conversationText;
         currentSpeaker.speakerUI.SetActiveAButton(!activeConversations[conversation].isAutoPlaying);
-        currentSpeaker.speakerUI.Show();
 
         PlayVoice(currentSpeaker.npcVoicePath, currentSpeaker);
 
@@ -293,6 +292,8 @@ public class DialogueManager : Singleton<DialogueManager>
             StopCoroutine(activeConversations[conversation].typingCoroutine);
         }
         activeConversations[conversation].SetTypingCoroutine(StartCoroutine(StartTypeText(conversation, textMesh, line.text)));
+
+        currentSpeaker.speakerUI.Show();
     }
 
     private IEnumerator StartTypeText(Conversation conversation, TextMeshProUGUI textMesh, string text)

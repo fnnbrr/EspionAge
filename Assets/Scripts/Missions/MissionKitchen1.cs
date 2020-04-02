@@ -63,7 +63,7 @@ public class MissionKitchen1 : AMission
     public Interactable npcMissionGiver;
 
     private List<GameObject> instantiatedMissionInteractables;
-    private List<BaseNavAi> instantiatedEnemies;
+    private List<BasicNurse> instantiatedEnemies;
     private int interactedCount = 0;
 
     private bool isRestarting = false;
@@ -73,9 +73,7 @@ public class MissionKitchen1 : AMission
     private void Awake()
     {
         instantiatedMissionInteractables = new List<GameObject>();
-
-        // TODO: this should probably be changed to a generic enemy type at some point
-        instantiatedEnemies = new List<BaseNavAi>();
+        instantiatedEnemies = new List<BasicNurse>();
 
         if (missionCriticalInteractables.Count == 0)
         {
@@ -89,7 +87,7 @@ public class MissionKitchen1 : AMission
 
         SpawnObjects(missionObjects);
         SpawnInteractables(missionCriticalInteractables);
-        SpawnEnemies(startEnemies);
+        instantiatedEnemies.AddRange(MissionManager.Instance.SpawnEnemyNurses(startEnemies, OnCollideWithPlayer));
 
         RegionManager.Instance.OnPlayerEnterZone += HandleEnterKitchen;
     }
@@ -101,7 +99,7 @@ public class MissionKitchen1 : AMission
             MissionManager.Instance.DestroyMissionObjects(missionObjects);
         }
         DestroyGameObjects(instantiatedMissionInteractables);
-        DestroyGameObjects(instantiatedEnemies.Where(e => e).Select(e => e.gameObject).ToList());
+        MissionManager.Instance.DestroyEnemyNurses(instantiatedEnemies);
 
         instantiatedMissionInteractables.Clear();
         instantiatedEnemies.Clear();
@@ -132,36 +130,6 @@ public class MissionKitchen1 : AMission
 
             interactable.OnInteractEnd += HandleInteractedWith;
             instantiatedMissionInteractables.Add(interactableGameObject);
-        });
-    }
-
-
-    private void SpawnEnemies(List<MissionEnemy> enemies)
-    {
-        // Instantiate all enemies
-        enemies.ForEach(enemy =>
-        {
-            // We can only spawn a NavMeshAgent on a position close enough to a NavMesh, so we must sample the inputted position first just in case.
-            if (NavMesh.SamplePosition(enemy.spawnPosition, out NavMeshHit closestNavmeshHit, 10.0f, NavMesh.AllAreas))
-            {
-                GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
-             
-                // All enemies will be chasers, so we need to set the target transform for all.
-                BasicNurse enemyComponent = Utils.GetRequiredComponent<BasicNurse>(spawnedEnemy, $"Enemy in MissionCafeteria1 does not have a BasicNurse component!");
-                enemyComponent.enemy.OnCollideWithPlayer += OnCollideWithPlayer;
-                
-                enemyComponent.patroller.SetPoints(enemy.waypoints);
-                if (enemy.isInitiallyResponding)
-                {
-                    enemyComponent.responder.InitializeResponderParameters(enemy.startResponsePoint);
-                }
-                
-                instantiatedEnemies.Add(enemyComponent);
-            }
-            else
-            {
-                Debug.LogError("Could not sample position to spawn enemy for MissionCafeteria1!");
-            }
         });
     }
 
@@ -273,6 +241,7 @@ public class MissionKitchen1 : AMission
             isRestarting = false;
         }
         GameManager.Instance.GetMovementController().ResetVelocity();
+        Chaser.ResetChaserCount();
     }
 
     private void OnBackInKichenDoCollectedCutscene(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)
@@ -326,7 +295,10 @@ public class MissionKitchen1 : AMission
 
     private void SpawnFinalEnemyWave(int missionCriticalInteractableIndex)
     {
-        SpawnEnemies(missionCriticalInteractables[missionCriticalInteractableIndex].enemiesToSpawnIfLastCollected);
+        instantiatedEnemies.AddRange(
+            MissionManager.Instance.SpawnEnemyNurses(
+                missionCriticalInteractables[missionCriticalInteractableIndex].enemiesToSpawnIfLastCollected, 
+                OnCollideWithPlayer));
     }
 
     private IEnumerator HandleDenturesCollectedCutscene(bool doHardBlend = false)

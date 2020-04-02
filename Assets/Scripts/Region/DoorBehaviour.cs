@@ -55,6 +55,11 @@ public class DoorBehaviour : MonoBehaviour
         isLocked = locked;
     }
 
+    public void SetMinLimit(float min)
+    {
+        hinge.limits = new JointLimits() { min = min, max = hinge.limits.max };
+    }
+
     private void Update()
     {
         if (Mathf.Abs(closedYRotation - transform.rotation.eulerAngles.y) <= closedDelta)

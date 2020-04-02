@@ -20,13 +20,12 @@ namespace NPCs.Components
             Enemies.Remove(this);
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerEnter(Collider other)
         {
-            if (collision.gameObject.CompareTag(Constants.TAG_PLAYER))
-            {
-                OnCollideWithPlayer?.Invoke();
-                Chaser.numChasersActive = 0;
-            }
+            if (!other.gameObject.CompareTag(Constants.TAG_PLAYER)) return;
+            
+            Chaser.numChasersActive = 0;
+            OnCollideWithPlayer?.Invoke();
         }
 
         public static float DistToClosestEnemy(Vector3 queryPosition)

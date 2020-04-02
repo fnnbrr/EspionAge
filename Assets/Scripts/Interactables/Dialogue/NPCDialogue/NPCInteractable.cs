@@ -8,7 +8,8 @@ public enum ENPCReactiveAction
 {
     None,
     Teleport,
-    Destroy
+    Destroy,
+    StartMission
 }
 
 [System.Serializable]
@@ -25,8 +26,13 @@ public class NPCReactiveAction
     [AllowNesting]
     public List<GameObject> objects;
 
+    [ShowIf("ShowIfStartMission")]
+    [AllowNesting]
+    public MissionsEnum missionToStart;
+
     public bool ShowIfTeleport => actionType == ENPCReactiveAction.Teleport;
     public bool ShowIfDestroy => actionType == ENPCReactiveAction.Destroy;
+    public bool ShowIfStartMission => actionType == ENPCReactiveAction.StartMission;
 }
 
 [System.Serializable]
@@ -169,7 +175,7 @@ public class NPCInteractable : Interactable
                     startedMission = null;
                     missionsOffered.RemoveAt(0);
 
-                    currentMissionConvos = null;
+                    DialogueManager.Instance.OnFinishConversation += HandleEndMissionFinishConversation;
                 }
                 else
                 {
@@ -203,6 +209,8 @@ public class NPCInteractable : Interactable
                 case ENPCReactiveAction.Destroy:
                     a.objects.ForEach(o => o.SetActive(false));
                     break;
+                case ENPCReactiveAction.StartMission:
+                    break;
                 default:
                     break;
             }
@@ -224,6 +232,8 @@ public class NPCInteractable : Interactable
                 case ENPCReactiveAction.Destroy:
                     a.objects.ForEach(o => o.SetActive(true));
                     break;
+                case ENPCReactiveAction.StartMission:
+                    break;
                 default:
                     break;
             }
@@ -243,10 +253,43 @@ public class NPCInteractable : Interactable
                 case ENPCReactiveAction.Destroy:
                     a.objects.ForEach(Destroy);
                     break;
+                case ENPCReactiveAction.StartMission:
+                    break;
                 default:
                     break;
             }
         });
+    }
+
+    private void ReactiveActionFinishConversation()
+    {
+        currentMissionConvos.doOnComplete.ForEach(a =>
+        {
+            switch (a.actionType)
+            {
+                case ENPCReactiveAction.None:
+                    break;
+                case ENPCReactiveAction.Teleport:
+                    break;
+                case ENPCReactiveAction.Destroy:
+                    break;
+                case ENPCReactiveAction.StartMission:
+                    MissionManager.Instance.StartMission(a.missionToStart);
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    private void HandleEndMissionFinishConversation(Conversation finishedConversation)
+    {
+        if (finishedConversation != conversation) return;
+        DialogueManager.Instance.OnFinishConversation -= HandleEndMissionFinishConversation;
+
+        ReactiveActionFinishConversation();
+
+        currentMissionConvos = null;
     }
 
     void FollowTarget()
@@ -321,6 +364,13 @@ public class NPCInteractable : Interactable
         return value >= interactRadius;
     }
 
+    public void ResetAllConversations()
+    {
+        defaultConvos.Clear();
+        conversation = null;
+        missionsOffered.Clear();
+        currentMissionConvos = null;
+    }
 
     protected override void OnDrawGizmos()
     {

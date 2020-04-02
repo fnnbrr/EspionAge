@@ -73,9 +73,11 @@ MonoBehaviour:
   interactableAnim: {fileID: 5052637634917052948}
   interactTransform: {fileID: 5052637634917053032}
   interactRadius: 5
+  doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: 56b1001d2fb6541feb6c011351205e92, type: 2}
   missionsOffered: []
 --- !u!195 &1067886114261206871
 NavMeshAgent:
@@ -183,7 +185,7 @@ PrefabInstance:
     - target: {fileID: 5044315525422898052, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 6
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5044315525422898052, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -199,6 +201,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.pageCount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5044315525422898052, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_text
+      value: Charlotte
       objectReference: {fileID: 0}
     - target: {fileID: 5593216316980992150, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -330,6 +337,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7247084406399655835, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.6039216
+      objectReference: {fileID: 0}
+    - target: {fileID: 7247084406399655835, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.73333335
+      objectReference: {fileID: 0}
+    - target: {fileID: 7247084406399655835, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.1764706
+      objectReference: {fileID: 0}
     - target: {fileID: 8311072924086460681, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -359,6 +381,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.6901961
+      objectReference: {fileID: 0}
+    - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.82745105
+      objectReference: {fileID: 0}
+    - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.19607845
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c819a38dde8924f49a4bf8b5448e832a, type: 3}

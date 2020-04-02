@@ -326,6 +326,7 @@ public class MissionTutorial : AMission
             e.pureChaser.agent.enabled = false;
 
             e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
+            e.gameObject.GetComponent<Collider>().isTrigger = false;
             e.gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
             e.npcBark.StopCurrentBark();
@@ -426,7 +427,6 @@ public class MissionTutorial : AMission
 
         // we type it here because the user finally gains control, so it looks cool to then type the location they're in
         UIManager.Instance.zoneText.DisplayText(RegionManager.Instance.GetPlayerCurrentZone().regionName, RegionManager.Instance.GetPlayerCurrentZone().isRestricted);
-        ObjectiveList.Instance.SlideOutObjectTextForSeconds(5f);
 
         // Cutscene for once they enter the hallway
         RegionManager.Instance.nurseRoomDoor.OnDoorClose += OnNurseRoomDoorClose;
@@ -532,6 +532,8 @@ public class MissionTutorial : AMission
 
     private IEnumerator DisplaySpecialAbilityTutorial()
     {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
         Time.timeScale = 0f;
         UIManager.Instance.CanPause = false;
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
