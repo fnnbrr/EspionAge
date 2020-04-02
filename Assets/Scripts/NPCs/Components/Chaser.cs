@@ -21,6 +21,11 @@ namespace NPCs.Components
 
         private FieldOfVision fieldOfVision;
 
+        public static void ResetChaserCount()
+        {
+            numChasersActive = 0;  // Allows Birdie to spawn with full stealth/no systems aware of her presence
+        }
+
         private void Start()
         {
             InvokeRepeating(nameof(ReacquireTarget), 0f, reacquireInterval);

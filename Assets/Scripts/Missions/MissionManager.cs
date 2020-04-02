@@ -131,8 +131,7 @@ public class MissionManager : Singleton<MissionManager>
         ProgressManager.Instance.UpdateMissionStatus(GetMissionLogic(missionEnumValue), MissionStatusCode.Started);
 
         SetObjectiveTextForList(missionEnumValue);
-
-        Chaser.numChasersActive = 0;  // Allows Birdie to spawn with full stealth/no systems aware of her presence
+        Chaser.ResetChaserCount();
     }
 
     public void CompleteMissionObjective(MissionsEnum missionEnumValue)
@@ -147,6 +146,7 @@ public class MissionManager : Singleton<MissionManager>
         AMission missionLogic = GetMissionLogic(missionEnumValue);
 
         ObjectiveList.Instance.HideObjectiveList();
+        Chaser.ResetChaserCount();
 
         if (activeMissions.Contains(missionEnumValue))
         {

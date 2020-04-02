@@ -29,8 +29,6 @@ public class MissionHedgeMaze : AMission
     {
         Debug.Log("Starting mission: MissionHedgeMaze");
 
-        // Start the code-red cutscene
-
         StartCoroutine(StartMission());
     }
 
@@ -86,6 +84,8 @@ public class MissionHedgeMaze : AMission
 
         SpawnBrutusResponser();
         SpawnSurroundingEnemies();
+
+        MissionManager.Instance.RestartMission(MissionsEnum.HedgeMaze);
 
         yield return UIManager.Instance.FadeIn();
         isRestarting = false;

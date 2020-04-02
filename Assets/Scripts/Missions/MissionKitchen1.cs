@@ -238,6 +238,7 @@ public class MissionKitchen1 : AMission
             isRestarting = false;
         }
         GameManager.Instance.GetMovementController().ResetVelocity();
+        Chaser.ResetChaserCount();
     }
 
     private void OnBackInKichenDoCollectedCutscene(CinemachineVirtualCamera fromCamera, CinemachineVirtualCamera toCamera)

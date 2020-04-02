@@ -326,6 +326,7 @@ public class MissionTutorial : AMission
             e.pureChaser.agent.enabled = false;
 
             e.gameObject.GetComponent<CinemachineCollisionImpulseSource>().enabled = false;
+            e.gameObject.GetComponent<Collider>().isTrigger = false;
             e.gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
             e.npcBark.StopCurrentBark();
