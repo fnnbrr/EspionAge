@@ -19,11 +19,9 @@ public class SpeakerUI : MonoBehaviour
     private RectTransform textBoxRect;
     private RectTransform bubbleOutlineRect;
     private VerticalLayoutGroup verticalLayoutGroup;
-    
-    private Vector3 textPosition;
 
     // Used for padding on right side of screen for repositioning when resizing
-    public float extraPadding = 20f;
+    private float extraPadding = 40f;
 
     private void Awake()
     {
@@ -53,38 +51,38 @@ public class SpeakerUI : MonoBehaviour
             var refResolution = Utils.GetRequiredComponent<RectTransform>(canvas).sizeDelta;
             float scale = GetScale(Screen.width, Screen.height, refResolution, 0.5f);
             float padding = extraPadding / scale;
-            bool needsToBeClamped = false;
+            bool needsToBeRepositioned = false;
             Vector2 tbAnchor = textBoxRect.anchoredPosition;
 
             // Too Far Left
             if (tbAnchor.x < padding)
             {
                 tbAnchor.x = padding;
-                needsToBeClamped = true;
+                needsToBeRepositioned = true;
             }
 
             // Too Far Right
             if (tbAnchor.x + bubbleOutlineRect.sizeDelta.x > Screen.width/scale - padding)
             {
                 tbAnchor.x = Screen.width/scale - bubbleOutlineRect.sizeDelta.x - padding;
-                needsToBeClamped = true;
+                needsToBeRepositioned = true;
             }
 
             // Too Far Top
             if (tbAnchor.y > -padding)
             {
                 tbAnchor.y = -padding;
-                needsToBeClamped = true;
+                needsToBeRepositioned = true;
             }
 
             // Too Far Bottom 
             if (tbAnchor.y - bubbleOutlineRect.sizeDelta.y - padding < -Screen.height/scale)
             {
                 tbAnchor.y = -Screen.height/scale + bubbleOutlineRect.sizeDelta.y + padding;
-                needsToBeClamped = true;
+                needsToBeRepositioned = true;
             }
 
-            if (needsToBeClamped)
+            if (needsToBeRepositioned)
             {
                 textBoxRect.anchoredPosition = tbAnchor;
             }
