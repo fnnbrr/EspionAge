@@ -17683,6 +17683,44 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &6199447831300248827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2172570460185606161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  Emitters:
+  - Target: {fileID: 5408716042668380798}
+    Params:
+    - Name: MusicVolume
+      Value: 1
+  TriggerEvent: 3
+--- !u!114 &7606135390059360010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2172570460185606161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  Emitters:
+  - Target: {fileID: 5408716042668380798}
+    Params:
+    - Name: MusicVolume
+      Value: 1
+  TriggerEvent: 4
 --- !u!1 &2172570460225625063
 GameObject:
   m_ObjectHideFlags: 0
@@ -73246,6 +73284,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 926975860214907566}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2172570460185606161 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1367901250295069375, guid: 08b35d05efdeb514fb0465599c9e57a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 926975860214907566}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2172570460185606160 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1367901250295069374, guid: 08b35d05efdeb514fb0465599c9e57a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 926975860214907566}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5408716042668380798 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5175437754754683088, guid: 08b35d05efdeb514fb0465599c9e57a7,
@@ -73258,12 +73308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &2172570460185606160 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1367901250295069374, guid: 08b35d05efdeb514fb0465599c9e57a7,
-    type: 3}
-  m_PrefabInstance: {fileID: 926975860214907566}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1021504108674493273
 PrefabInstance:
   m_ObjectHideFlags: 0
