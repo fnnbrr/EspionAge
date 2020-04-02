@@ -88,8 +88,8 @@ public static class Constants
     public const int RIGHT_PADDING_WITHOUT_ABUTTON = 40;
 
     public const float DISTANCE_FOR_SPEECHBUBBLE_SCALING = 10.0f;
-    public const float MAX_SCALE_SPEECHBUBBLE = 0.65f;
-    public const float MIN_SCALE_SPEECHBUBBLE = 0.45f;
+    public const float MAX_SCALE_SPEECHBUBBLE = 1f;
+    public const float MIN_SCALE_SPEECHBUBBLE = 0.8f;
 
     public const string SHADER_NAME_SHAKE = "PlateShake";
 }
