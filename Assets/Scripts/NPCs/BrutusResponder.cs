@@ -157,7 +157,7 @@ namespace NPCs
         private void CheckNursesAlertBrutus()
         {
             // Handle Brutus-specific behavior of responding to player once seen by any nurse
-            if (currentState == BrutusResponderStates.Chasing || !GameManager.Instance.isPlayerSpotted) return;
+            if (currentState == BrutusResponderStates.Chasing || Chaser.numChasersActive == 0) return;
             
             responder.responsePoint = GameManager.Instance.GetPlayerTransform().position;
             agent.SetDestination(responder.responsePoint);

@@ -39,11 +39,11 @@ namespace NPCs.Components
             {
                 isChasing = true;
                 numChasersActive += 1;
+                
                 if (numChasersActive == 1)
                 {
                     // This means that the current chaser is the 1st to begin chasing Birdie
                     FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 1f);
-                    GameManager.Instance.isPlayerSpotted = true;
                 }
                 
                 OnSeePlayer?.Invoke();
@@ -52,12 +52,15 @@ namespace NPCs.Components
             else if (numTargetsInRange == 0 && isChasing)
             {
                 isChasing = false;
-                numChasersActive -= 1;
-                if (numChasersActive == 0)
+
+                if (numChasersActive > 0)
                 {
-                    // This means that the current chaser is the last to stop chasing Birdie
-                    FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
-                    GameManager.Instance.isPlayerSpotted = false;
+                    numChasersActive -= 1;
+                    if (numChasersActive == 0)
+                    {
+                        // This means that the current chaser is the last to stop chasing Birdie
+                        FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
+                    }
                 }
                 
                 OnLosePlayer?.Invoke();
