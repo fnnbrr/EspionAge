@@ -364,6 +364,13 @@ public class NPCInteractable : Interactable
         return value >= interactRadius;
     }
 
+    public void ResetAllConversations()
+    {
+        defaultConvos.Clear();
+        conversation = null;
+        missionsOffered.Clear();
+        currentMissionConvos = null;
+    }
 
     protected override void OnDrawGizmos()
     {

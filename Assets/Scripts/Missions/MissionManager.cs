@@ -330,8 +330,8 @@ public class MissionManager : Singleton<MissionManager>
     {
         if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
 
-        cutsceneDirector.Play();
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        cutsceneDirector.Play();
         while (cutsceneDirector.state == PlayState.Playing)
         {
             yield return null;

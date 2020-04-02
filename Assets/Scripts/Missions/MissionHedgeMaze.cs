@@ -11,8 +11,11 @@ public class MissionHedgeMaze : AMission
     public Vector3 respawnPosition;
     public Vector3 respawnRotation;
 
-    [Header("Cutscene - Code Red")]
+    [Header("Cutscenes")]
     public PlayableDirector codeRedCutscene;
+    public PlayableDirector finalSequenceCutscene;
+    public Vector3 finalSequenceBrutusPosition;
+    public Vector3 finalSequenceBrutusRotation;
 
     [Header("Frank the Nurse")]
     public GameObject frankBeforeMission;
@@ -24,6 +27,12 @@ public class MissionHedgeMaze : AMission
     public GameObject escapeWindow;
     public Vector3 windowPosition;
     public Vector3 windowRotation;
+    public GameObject escapeTable;
+    public Vector3 tablePosition;
+    public Vector3 tableRotation;
+    public GameObject tableRadio;
+    public Vector3 radioPosition;
+    public Vector3 radioRotation;
 
     [Header("Brutus")]
     public GameObject brutusOffice;
@@ -45,6 +54,12 @@ public class MissionHedgeMaze : AMission
         Debug.Log("Starting mission: MissionHedgeMaze");
 
         StartCoroutine(StartMission());
+
+        // TODO: flip this logic and make the tutorial just set it to be one-way temporarily
+        RegionManager.Instance.nurseRoomDoor.SetMinLimit(-90f);  // allow to open fully now (both ways)
+        RegionManager.Instance.nurseRoomDoor.shakeCameraOnClose = false;
+
+        DialogueManager.Instance.OnFinishConversation += WaitForFinalConversationEnd;
     }
 
     private IEnumerator StartMission()
@@ -88,11 +103,59 @@ public class MissionHedgeMaze : AMission
         frankBeforeMission.transform.position = frankPosition;
         frankBeforeMission.transform.rotation = Quaternion.Euler(frankRotation);
         NPCInteractable npcInteractable = Utils.GetRequiredComponent<NPCInteractable>(frankBeforeMission);
+        npcInteractable.ResetAllConversations();
         npcInteractable.defaultConvos = new List<Conversation>() { finalConversation };
-        npcInteractable.missionsOffered.Clear();
+        npcInteractable.conversation = finalConversation;
 
+        // Perfect positioning of all the nurse room escape objects
+        escapeTable.transform.position = tablePosition;
+        escapeTable.transform.rotation = Quaternion.Euler(tableRotation);
+        tableRadio.transform.position = radioPosition;
+        tableRadio.transform.rotation = Quaternion.Euler(radioRotation);
+    }
+
+    private void WaitForFinalConversationEnd(Conversation conversation)
+    {
+        if (conversation != finalConversation) return;
+
+        DialogueManager.Instance.OnFinishConversation -= WaitForFinalConversationEnd;
+
+        StartCoroutine(StartFinalSequence());
+    }
+
+    private IEnumerator StartFinalSequence()
+    {
+        // Hide speaker UI for Frank from the cutscene
+        Utils.GetRequiredComponent<NPCInteractable>(frankBeforeMission).enabled = false;
+        Utils.GetRequiredComponent<SpeakerUI>(frankBeforeMission).Hide();
+
+        brutusResponderAI.agent.Warp(finalSequenceBrutusPosition);
+        brutusResponderAI.transform.rotation = Quaternion.Euler(finalSequenceBrutusRotation);
+        brutusResponderAI.ForceChasing();
+
+        // Now, we open the window
         escapeWindow.transform.position = windowPosition;
         escapeWindow.transform.rotation = Quaternion.Euler(windowRotation);
+
+        yield return MissionManager.Instance.DisablePlayerMovementDuringCutscene(finalSequenceCutscene);
+
+        // Force awakeness to max!
+        UIManager.Instance.staminaBar.overrideValue = true;
+        UIManager.Instance.staminaBar.overrideTo = StaminaBar.FILL_MAX;
+
+        UIManager.Instance.CanPause = false;
+        Time.timeScale = 0.5f;
+
+        RegionManager.Instance.OnPlayerExitZone += WaitForPlayerToLeaveMap;
+    }
+
+    private void WaitForPlayerToLeaveMap(CameraZone zone)
+    {
+        if (RegionManager.Instance.GetPlayerCurrentZone() != null) return;
+        RegionManager.Instance.OnPlayerExitZone -= WaitForPlayerToLeaveMap;
+
+        // start the game over cutscene
+        print("Game Over");
     }
 
     private void RestartMission()

@@ -9,7 +9,7 @@ public enum BrutusResponderStates
     Searching,
     Patrolling,
     Rotating,
-    Waiting,
+    Waiting
 }
 
 namespace NPCs
@@ -166,6 +166,11 @@ namespace NPCs
             {
                 SetState(BrutusResponderStates.Responding);
             }
+        }
+
+        public void ForceChasing()
+        {
+            SetState(BrutusResponderStates.Chasing);
         }
 
         protected void Update()
