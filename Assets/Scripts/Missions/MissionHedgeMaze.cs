@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 using NPCs;
 using NaughtyAttributes;
 
@@ -16,6 +17,7 @@ public class MissionHedgeMaze : AMission
     public PlayableDirector finalSequenceCutscene;
     public Vector3 finalSequenceBrutusPosition;
     public Vector3 finalSequenceBrutusRotation;
+    public PlayableDirector gameOverCutscene;
 
     [Header("Frank the Nurse")]
     public GameObject frankBeforeMission;
@@ -154,8 +156,16 @@ public class MissionHedgeMaze : AMission
         if (RegionManager.Instance.GetPlayerCurrentZone() != null) return;
         RegionManager.Instance.OnPlayerExitZone -= WaitForPlayerToLeaveMap;
 
-        // start the game over cutscene
-        print("Game Over");
+        StartCoroutine(GameOver());
+    }
+
+    private IEnumerator GameOver()
+    {
+        Time.timeScale = 0f;
+        yield return MissionManager.Instance.DisablePlayerMovementDuringCutscene(gameOverCutscene);
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(Constants.SCENE_MAINMENU);
     }
 
     private void RestartMission()
