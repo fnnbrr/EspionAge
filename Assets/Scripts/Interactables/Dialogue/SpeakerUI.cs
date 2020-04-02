@@ -34,7 +34,6 @@ public class SpeakerUI : MonoBehaviour
 
     void OnEnable()
     {
-        textBoxContainer.transform.position = Camera.main.WorldToScreenPoint(transform.position);
         Hide();
     }
 
