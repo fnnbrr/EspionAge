@@ -495,6 +495,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: e5b652c9c1949e1429bb2797f2d3e584, type: 2}
+    - {fileID: 11400000, guid: e21d0d280c698364ab3aa58890212e24, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -509,8 +510,10 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
         - m_Target: {fileID: 4534420715758387739}
-          m_MethodName: DespawnFrank
+          m_MethodName: SetupNurseRoom
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -747,6 +750,11 @@ MonoBehaviour:
     position: {x: -161.5, y: 0, z: 238}
     rotation: {x: 0, y: 30, z: 0}
     spawnedInstance: {fileID: 0}
+  newFrankSpeakerId: TutorialNurse-HedgeMaze
+  newFrankVoiceId: event:/Characters/NurseManNPC1
+  escapeWindow: {fileID: 0}
+  windowPosition: {x: -170.9, y: 4, z: 239.3}
+  windowRotation: {x: 0, y: -30, z: 0}
   brutusOffice: {fileID: 0}
   brutusResponser:
     prefab: {fileID: 6792704693899765227, guid: 0517fa6de29952c4cadfd7d532548801,

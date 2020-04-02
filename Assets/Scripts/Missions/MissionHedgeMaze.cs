@@ -7,18 +7,30 @@ using NaughtyAttributes;
 
 public class MissionHedgeMaze : AMission
 {
+    [Header("Respawning")]
     public Vector3 respawnPosition;
     public Vector3 respawnRotation;
 
+    [Header("Cutscene - Code Red")]
     public PlayableDirector codeRedCutscene;
 
+    [Header("Frank the Nurse")]
     public GameObject frankBeforeMission;
     public MissionObject frankNurseRoom;
+    public string newFrankSpeakerId;
+    [FMODUnity.EventRef] public string newFrankVoiceId;
 
+    [Header("Escape Window")]
+    public GameObject escapeWindow;
+    public Vector3 windowPosition;
+    public Vector3 windowRotation;
+
+    [Header("Brutus")]
     public GameObject brutusOffice;
     public MissionObject brutusResponser;
     private BrutusResponder brutusResponderAI;
 
+    [Header("Enemies")]
     public GameObject surroundingEnemiesPrefab;
     private GameObject spawnedSurroundingEnemies;
 
@@ -45,7 +57,7 @@ public class MissionHedgeMaze : AMission
         {
             // since thse are triggered via a signal in the cutscene itself
             SpawnSurroundingEnemies();
-            DespawnFrank();
+            SetupNurseRoom();
         }
         SpawnBrutusResponser();
     }
@@ -71,10 +83,14 @@ public class MissionHedgeMaze : AMission
     }
 
     // Called by Signal Emitter in Unity Timeline
-    public void DespawnFrank()
+    public void SetupNurseRoom()
     {
         frankBeforeMission.SetActive(false);
         frankNurseRoom.spawnedInstance = MissionManager.Instance.SpawnMissionObject(frankNurseRoom);
+        DialogueManager.Instance.AddSpeaker(new SpeakerContainer(newFrankSpeakerId, frankNurseRoom.spawnedInstance, newFrankVoiceId));
+
+        escapeWindow.transform.position = windowPosition;
+        escapeWindow.transform.rotation = Quaternion.Euler(windowRotation);
     }
 
     private void RestartMission()
