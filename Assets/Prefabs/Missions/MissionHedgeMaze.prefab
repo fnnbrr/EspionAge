@@ -1375,17 +1375,54 @@ MonoBehaviour:
     type: 3}
   hedgeMazeEnemies:
   - enemyType: 0
-    prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+    prefab: {fileID: 3862208129692031431, guid: 3f266a09ee261b2449ff61fcef897f36,
       type: 3}
-    spawnPosition: {x: -100, y: 0, z: 57}
-    spawnRotation: {x: 0, y: 0, z: 0}
+    spawnPosition: {x: -120, y: 0, z: 90}
+    spawnRotation: {x: 0, y: 90, z: 0}
     isInitiallyResponding: 0
     waypoints:
-    - position: {x: -100, y: 0, z: 57}
+    - position: {x: -132, y: 0, z: 99}
+      rotation: {x: 0, y: 90, z: 0}
+      stayTime: 5
+    - position: {x: -120, y: 0, z: 90}
+      rotation: {x: 0, y: 180, z: 0}
+      stayTime: 5
+    startResponsePoint: {x: 0, y: 0, z: 0}
+    wanderBounds:
+      position: {x: 0, y: 0, z: 0}
+      radius: 0
+  - enemyType: 0
+    prefab: {fileID: 3862208129692031431, guid: 3f266a09ee261b2449ff61fcef897f36,
+      type: 3}
+    spawnPosition: {x: -104, y: 0, z: 99}
+    spawnRotation: {x: 0, y: 90, z: 0}
+    isInitiallyResponding: 0
+    waypoints:
+    - position: {x: -99, y: 0, z: 89}
+      rotation: {x: 0, y: 90, z: 0}
+      stayTime: 5
+    - position: {x: -104, y: 0, z: 99}
       rotation: {x: 0, y: 0, z: 0}
       stayTime: 5
-    - position: {x: -136, y: 0, z: 57}
+    startResponsePoint: {x: 0, y: 0, z: 0}
+    wanderBounds:
+      position: {x: 0, y: 0, z: 0}
+      radius: 0
+  - enemyType: 0
+    prefab: {fileID: 3862208129692031431, guid: 3f266a09ee261b2449ff61fcef897f36,
+      type: 3}
+    spawnPosition: {x: -90, y: 0, z: 80}
+    spawnRotation: {x: 0, y: 270, z: 0}
+    isInitiallyResponding: 0
+    waypoints:
+    - position: {x: -78, y: 0, z: 69}
+      rotation: {x: 0, y: 180, z: 0}
+      stayTime: 5
+    - position: {x: -78, y: 0, z: 90}
       rotation: {x: 0, y: 0, z: 0}
+      stayTime: 5
+    - position: {x: -90, y: 0, z: 80}
+      rotation: {x: 0, y: 270, z: 0}
       stayTime: 5
     startResponsePoint: {x: 0, y: 0, z: 0}
     wanderBounds:
