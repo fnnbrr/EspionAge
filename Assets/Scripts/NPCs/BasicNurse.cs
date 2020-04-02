@@ -124,11 +124,18 @@ namespace NPCs
 
         private void SetPatrolling()
         {
-            ToggleAnimations(true);
+            Vector3 curWaypointPosition = patroller.curPatrolWaypoint.position;
+            PatrolWaypoint nextWaypoint = patroller.GetNextPatrolWaypoint();
+
+            if (curWaypointPosition != nextWaypoint.position)
+            {
+                ToggleAnimations(true);
+            }
+            
             agent.speed = patroller.movementSpeed;
             questionMark.SetActive(false);
                     
-            agent.SetDestination(patroller.GetNextPatrolWaypoint().position);
+            agent.SetDestination(nextWaypoint.position);
         }
 
         private void SetRotating()
