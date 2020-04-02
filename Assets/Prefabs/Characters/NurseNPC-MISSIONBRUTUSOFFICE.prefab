@@ -67,6 +67,7 @@ MonoBehaviour:
   interactableAnim: {fileID: 147299913062244660}
   interactTransform: {fileID: 147299913062244680}
   interactRadius: 10
+  doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 10
   defaultConvos:
@@ -114,7 +115,7 @@ MonoBehaviour:
   aButton: {fileID: 3125424315350660154}
   speechBubbleOutline: {fileID: 6784924426578572068}
   textBoxContainer: {fileID: 351472248049751792}
-  canvas: {fileID: 1886493075790992389}
+  canvas: {fileID: 1886493076758936963}
   characterName: {fileID: 1116528220703089885}
   conversationText: {fileID: 4636917956484767001}
   isRescalable: 1
@@ -1146,15 +1147,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c819a38dde8924f49a4bf8b5448e832a, type: 3}
---- !u!1 &1886493075790992389 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6003753276932402012, guid: c819a38dde8924f49a4bf8b5448e832a,
-    type: 3}
-  m_PrefabInstance: {fileID: 5296152617651879769}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1886493075790992388 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6003753276932402013, guid: c819a38dde8924f49a4bf8b5448e832a,
+    type: 3}
+  m_PrefabInstance: {fileID: 5296152617651879769}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1886493076758936963 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6003753275949974234, guid: c819a38dde8924f49a4bf8b5448e832a,
     type: 3}
   m_PrefabInstance: {fileID: 5296152617651879769}
   m_PrefabAsset: {fileID: 0}
