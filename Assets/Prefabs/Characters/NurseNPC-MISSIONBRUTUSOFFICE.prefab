@@ -67,6 +67,7 @@ MonoBehaviour:
   interactableAnim: {fileID: 147299913062244660}
   interactTransform: {fileID: 147299913062244680}
   interactRadius: 10
+  doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 10
   defaultConvos:
@@ -88,7 +89,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 867569986655703217}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 5
@@ -1343,15 +1344,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a11db5b2b1c3c44f08008de01ba38ed9, type: 3}
---- !u!224 &147299913062244680 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
-    type: 3}
-  m_PrefabInstance: {fileID: 5296152617988701621}
-  m_PrefabAsset: {fileID: 0}
 --- !u!95 &147299913062244660 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5437224377466608769, guid: a11db5b2b1c3c44f08008de01ba38ed9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5296152617988701621}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &147299913062244680 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5437224377466608893, guid: a11db5b2b1c3c44f08008de01ba38ed9,
     type: 3}
   m_PrefabInstance: {fileID: 5296152617988701621}
   m_PrefabAsset: {fileID: 0}

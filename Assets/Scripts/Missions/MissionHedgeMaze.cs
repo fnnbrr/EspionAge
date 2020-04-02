@@ -16,9 +16,9 @@ public class MissionHedgeMaze : AMission
 
     [Header("Frank the Nurse")]
     public GameObject frankBeforeMission;
-    public MissionObject frankNurseRoom;
-    public string newFrankSpeakerId;
-    [FMODUnity.EventRef] public string newFrankVoiceId;
+    public Vector3 frankPosition;
+    public Vector3 frankRotation;
+    public Conversation finalConversation;
 
     [Header("Escape Window")]
     public GameObject escapeWindow;
@@ -85,9 +85,11 @@ public class MissionHedgeMaze : AMission
     // Called by Signal Emitter in Unity Timeline
     public void SetupNurseRoom()
     {
-        frankBeforeMission.SetActive(false);
-        frankNurseRoom.spawnedInstance = MissionManager.Instance.SpawnMissionObject(frankNurseRoom);
-        DialogueManager.Instance.AddSpeaker(new SpeakerContainer(newFrankSpeakerId, frankNurseRoom.spawnedInstance, newFrankVoiceId));
+        frankBeforeMission.transform.position = frankPosition;
+        frankBeforeMission.transform.rotation = Quaternion.Euler(frankRotation);
+        NPCInteractable npcInteractable = Utils.GetRequiredComponent<NPCInteractable>(frankBeforeMission);
+        npcInteractable.defaultConvos = new List<Conversation>() { finalConversation };
+        npcInteractable.missionsOffered.Clear();
 
         escapeWindow.transform.position = windowPosition;
         escapeWindow.transform.rotation = Quaternion.Euler(windowRotation);
@@ -134,9 +136,6 @@ public class MissionHedgeMaze : AMission
         Debug.Log("Starting mission: MissionHedgeMaze");
 
         if (brutusOffice) brutusOffice.SetActive(true);
-        if (frankBeforeMission) frankBeforeMission.SetActive(true);
-
-        if (MissionManager.Instance) MissionManager.Instance.DestroyMissionObject(frankNurseRoom);
 
         DestroyAllEnemies();
     }
