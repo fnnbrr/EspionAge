@@ -18,7 +18,6 @@ public class SpeakerUI : MonoBehaviour
 
     private RectTransform textBoxRect;
     private RectTransform bubbleOutlineRect;
-    private Vector2 tbAnchor;
     private VerticalLayoutGroup verticalLayoutGroup;
     
     private Vector3 textPosition;
@@ -47,41 +46,48 @@ public class SpeakerUI : MonoBehaviour
             RescaleSpeechBubble();
         }
 
-        textPosition = Camera.main.WorldToScreenPoint(transform.position);
-        textBoxContainer.transform.position = textPosition;
+        textBoxContainer.transform.position = Camera.main.WorldToScreenPoint(transform.position);
 
         if (isClampToScreen)
         {
-            tbAnchor = textBoxRect.anchoredPosition;
+            var refResolution = Utils.GetRequiredComponent<RectTransform>(canvas).sizeDelta;
+            float scale = GetScale(Screen.width, Screen.height, refResolution, 0.5f);
+            float padding = extraPadding / scale;
+            bool needsToBeClamped = false;
+            Vector2 tbAnchor = textBoxRect.anchoredPosition;
 
-            tbAnchor.x = Mathf.Clamp(tbAnchor.x, 0, Mathf.Max(0, Screen.width - bubbleOutlineRect.sizeDelta.x));
-            tbAnchor.y = Mathf.Clamp(tbAnchor.y, Mathf.Min(-Screen.height + textBoxRect.sizeDelta.y, 0), 0);
-
-            if (tbAnchor.x <= 0)
+            // Too Far Left
+            if (tbAnchor.x < padding)
             {
-                tbAnchor.x += extraPadding;
-            }
-            else
-            {
-                if (tbAnchor.x + bubbleOutlineRect.sizeDelta.x >= Screen.width - extraPadding / 2)
-                {
-                    tbAnchor.x -= extraPadding;
-                }
+                tbAnchor.x = padding;
+                needsToBeClamped = true;
             }
 
-            if (tbAnchor.y >= 0)
+            // Too Far Right
+            if (tbAnchor.x + bubbleOutlineRect.sizeDelta.x > Screen.width/scale - padding)
             {
-                tbAnchor.y -= extraPadding;
-            }
-            else
-            {
-                if (tbAnchor.y - bubbleOutlineRect.sizeDelta.y <= -Screen.height + extraPadding / 2)
-                {
-                    tbAnchor.y += extraPadding;
-                }
+                tbAnchor.x = Screen.width/scale - bubbleOutlineRect.sizeDelta.x - padding;
+                needsToBeClamped = true;
             }
 
-            textBoxRect.anchoredPosition = tbAnchor;
+            // Too Far Top
+            if (tbAnchor.y > -padding)
+            {
+                tbAnchor.y = -padding;
+                needsToBeClamped = true;
+            }
+
+            // Too Far Bottom 
+            if (tbAnchor.y - bubbleOutlineRect.sizeDelta.y - padding < -Screen.height/scale)
+            {
+                tbAnchor.y = -Screen.height/scale + bubbleOutlineRect.sizeDelta.y + padding;
+                needsToBeClamped = true;
+            }
+
+            if (needsToBeClamped)
+            {
+                textBoxRect.anchoredPosition = tbAnchor;
+            }
         }
     }
 
@@ -124,5 +130,11 @@ public class SpeakerUI : MonoBehaviour
     public void SetIsClamp(bool isClamp)
     {
         isClampToScreen = isClamp;
+    }
+
+    private float GetScale(int width, int height, Vector2 scalerReferenceResolution, float scalerMatchWidthOrHeight)
+    {
+        return Mathf.Pow(width / scalerReferenceResolution.x, 1f - scalerMatchWidthOrHeight) *
+               Mathf.Pow(height / scalerReferenceResolution.y, scalerMatchWidthOrHeight);
     }
 }
