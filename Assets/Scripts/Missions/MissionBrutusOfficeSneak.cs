@@ -81,11 +81,7 @@ public class MissionBrutusOfficeSneak : AMission
         {
             RegionManager.Instance.OnPlayerEnterZone -= HandlePlayerEnterOffice;
 
-            if (!GameManager.Instance.skipSettings.allRealtimeCutscenes)
-            {
-                onEnterCutscene.Play();
-                StartCoroutine(MissionManager.Instance.DisablePlayerMovementDuringCutscene(onEnterCutscene));
-            }
+            StartCoroutine(MissionManager.Instance.DisablePlayerMovementDuringCutscene(onEnterCutscene));
         }
     }
 

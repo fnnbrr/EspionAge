@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Playables;
+using NPCs;
 using Cinemachine;
 using NaughtyAttributes;
 
@@ -183,6 +185,50 @@ public class MissionManager : Singleton<MissionManager>
         });
     }
 
+    public List<BasicNurse> SpawnEnemyNurses(List<MissionEnemy> enemies, System.Action onCollideAction)
+    {
+        List<BasicNurse> instantiatedEnemies = new List<BasicNurse>();
+
+        // Instantiate all enemies
+        enemies.ForEach(enemy =>
+        {
+            // We can only spawn a NavMeshAgent on a position close enough to a NavMesh, so we must sample the inputted position first just in case.
+            if (NavMesh.SamplePosition(enemy.spawnPosition, out NavMeshHit closestNavmeshHit, 10.0f, NavMesh.AllAreas))
+            {
+                GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
+
+                // All enemies will be chasers, so we need to set the target transform for all.
+                BasicNurse enemyComponent = Utils.GetRequiredComponent<BasicNurse>(spawnedEnemy, $"Enemy does not have a BasicNurse component!");
+                enemyComponent.enemy.OnCollideWithPlayer += onCollideAction;
+
+                enemyComponent.patroller.SetPoints(enemy.waypoints);
+                if (enemy.isInitiallyResponding)
+                {
+                    enemyComponent.responder.InitializeResponderParameters(enemy.startResponsePoint);
+                }
+
+                instantiatedEnemies.Add(enemyComponent);
+            }
+            else
+            {
+                Debug.LogError("Could not sample position to spawn enemy for MissionCafeteria1!");
+            }
+        });
+
+        return instantiatedEnemies;
+    }
+
+    public void DestroyEnemyNurses(List<BasicNurse> nurses)
+    {
+        nurses.Where(e => e).Select(e => e.gameObject).ToList().ForEach(o =>
+        {
+            if (o)
+            {
+                Destroy(o);
+            }
+        });
+    }
+
     public IEnumerator PlayCutscenePart(CinemachineVirtualCamera startCamera, GameObject cameraPrefab, GameObject cutsceneTextPrefab, Transform focusTransform, bool doHardBlend = false)
     {
         if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
@@ -279,6 +325,9 @@ public class MissionManager : Singleton<MissionManager>
 
     public IEnumerator DisablePlayerMovementDuringCutscene(PlayableDirector cutsceneDirector)
     {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
+        cutsceneDirector.Play();
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
         while (cutsceneDirector.state == PlayState.Playing)
         {

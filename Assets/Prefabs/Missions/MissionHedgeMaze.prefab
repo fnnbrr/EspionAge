@@ -727,18 +727,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49429fed3277784abf4b3fef3158e05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnPosition: {x: 0, y: 0, z: 0}
+  respawnPosition: {x: -101, y: 0, z: 0}
   respawnRotation: {x: 0, y: 0, z: 0}
   codeRedCutscene: {fileID: 4028979785369722931}
   brutusOffice: {fileID: 0}
   brutusResponser:
     prefab: {fileID: 6792704693899765227, guid: 0517fa6de29952c4cadfd7d532548801,
       type: 3}
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
+    position: {x: -145, y: 0, z: 30}
+    rotation: {x: 0, y: 90, z: 0}
     spawnedInstance: {fileID: 0}
   surroundingEnemiesPrefab: {fileID: 3993120569092834077, guid: 0e22b3a0806a17e4d8f62eae718c0a24,
     type: 3}
+  hedgeMazeEnemies:
+  - enemyType: 0
+    prefab: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+      type: 3}
+    spawnPosition: {x: -100, y: 0, z: 57}
+    spawnRotation: {x: 0, y: 0, z: 0}
+    isInitiallyResponding: 0
+    waypoints:
+    - position: {x: -100, y: 0, z: 57}
+      rotation: {x: 0, y: 0, z: 0}
+      stayTime: 5
+    - position: {x: -136, y: 0, z: 57}
+      rotation: {x: 0, y: 0, z: 0}
+      stayTime: 5
+    startResponsePoint: {x: 0, y: 0, z: 0}
+    wanderBounds:
+      position: {x: 0, y: 0, z: 0}
+      radius: 0
 --- !u!1 &8561359128957530783
 GameObject:
   m_ObjectHideFlags: 0
