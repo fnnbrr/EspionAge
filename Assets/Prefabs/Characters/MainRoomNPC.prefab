@@ -55,7 +55,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: 5828e1a146c0b41c58feea1a0f432041, type: 2}
   missionsOffered: []
 --- !u!114 &2247143600746044817
 MonoBehaviour:
@@ -169,7 +170,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: df01142fdc43f43f2a4e5674cef78a47, type: 2}
   missionsOffered: []
 --- !u!114 &4494260588765568585
 MonoBehaviour:
@@ -283,7 +285,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: 68fbf62dfbd994e6faabd015483bd8a1, type: 2}
   missionsOffered: []
 --- !u!114 &5676448400648206624
 MonoBehaviour:
@@ -397,7 +400,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: 0635e7c530ad34d2fb66a6145da4a563, type: 2}
   missionsOffered: []
 --- !u!114 &6175629880135339059
 MonoBehaviour:
@@ -511,7 +515,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: c7cb2142578504605bdb109ce8f804ec, type: 2}
   missionsOffered: []
 --- !u!114 &5959152052141845553
 MonoBehaviour:
@@ -625,7 +630,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: 5d447c5c56bf34f4a9c0490f954b56d3, type: 2}
   missionsOffered: []
 --- !u!114 &8740000100934491671
 MonoBehaviour:
@@ -739,7 +745,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: a1a7dd141966740b29c01fe97024eef1, type: 2}
   missionsOffered: []
 --- !u!114 &5274583046935663948
 MonoBehaviour:
@@ -853,7 +860,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: bf37ffcd5691e4bfba25b30f3f0bfa56, type: 2}
   missionsOffered: []
 --- !u!114 &4620416569628667781
 MonoBehaviour:
@@ -967,7 +975,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: c264e6e3666664b87b11681c0554d9aa, type: 2}
   missionsOffered: []
 --- !u!114 &8302277548714476812
 MonoBehaviour:
@@ -1081,7 +1090,8 @@ MonoBehaviour:
   doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
-  defaultConvos: []
+  defaultConvos:
+  - {fileID: 11400000, guid: d6ffe292478dd4f7b8476bd6d4eca9fe, type: 2}
   missionsOffered: []
 --- !u!114 &2101224388780690894
 MonoBehaviour:
@@ -5388,6 +5398,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8283069631830239539}
     m_Modifications:
+    - target: {fileID: 783471909237150688, guid: c886c0e3ae4fb4349adb99ad2872a6ac,
+        type: 3}
+      propertyPath: defaultConvos.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: c5dee916b9759461b89875bfca34420d,
+        type: 2}
     - target: {fileID: 873528451854297457, guid: c886c0e3ae4fb4349adb99ad2872a6ac,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -6289,8 +6305,14 @@ PrefabInstance:
     - target: {fileID: 6779448501544525029, guid: 7ffb47a50086745dea4e1b3f942831e9,
         type: 3}
       propertyPath: defaultConvos.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6779448501544525029, guid: 7ffb47a50086745dea4e1b3f942831e9,
+        type: 3}
+      propertyPath: defaultConvos.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3962e5daeb151441581a59bfe7b21f06,
+        type: 2}
     - target: {fileID: 7039773093920420935, guid: 7ffb47a50086745dea4e1b3f942831e9,
         type: 3}
       propertyPath: m_AnchorMin.y
