@@ -529,6 +529,8 @@ public class MissionTutorial : AMission
 
     private IEnumerator DisplaySpecialAbilityTutorial()
     {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
         Time.timeScale = 0f;
         UIManager.Instance.CanPause = false;
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
