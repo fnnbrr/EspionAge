@@ -59,6 +59,9 @@ public class MissionKitchen1 : AMission
     public List<MissionCriticalInteractable> missionCriticalInteractables;
     public List<MissionObject> missionObjects;
 
+    [Header("NPC")]
+    public Interactable npcMissionGiver;
+
     private List<GameObject> instantiatedMissionInteractables;
     private List<BaseNavAi> instantiatedEnemies;
     private int interactedCount = 0;
@@ -306,6 +309,8 @@ public class MissionKitchen1 : AMission
             SpawnFinalEnemyWave(instantiatedMissionInteractables.IndexOf(interactable.gameObject));
 
             LoadNewBarks(ReactiveBarkType.IdleBark, BarkEvent.KitchenLunchTimeRushIdleBark);
+
+            WorldObjectivePointer.Instance.PointTo(npcMissionGiver.transform, npcMissionGiver);
 
             StartCoroutine(HandleDenturesCollectedCutscene());
 
