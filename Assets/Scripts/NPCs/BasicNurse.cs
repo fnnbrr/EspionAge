@@ -127,6 +127,7 @@ namespace NPCs
             Vector3 curWaypointPosition = patroller.curPatrolWaypoint.position;
             PatrolWaypoint nextWaypoint = patroller.GetNextPatrolWaypoint();
 
+            // Prevents animation bug where nurse briefly runs in place with only one patrol point
             if (curWaypointPosition != nextWaypoint.position)
             {
                 ToggleAnimations(true);
