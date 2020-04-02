@@ -23,6 +23,8 @@ public class RegionManager : Singleton<RegionManager>
     [HorizontalLine(height: 1)]
     [BoxGroup("Doors")] public DoorBehaviour nurseRoomDoor;
     [BoxGroup("Doors")] public DoorBehaviour brutusOfficeDoor;
+    [BoxGroup("Doors")] public DoorBehaviour hallwayToHedgeMazeDoor1;
+    [BoxGroup("Doors")] public DoorBehaviour hallwayToHedgeMazeDoor2;
 
     // Zones
     // Treating this list as a stack where the last element is considered "current" zone

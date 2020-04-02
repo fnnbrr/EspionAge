@@ -33,6 +33,7 @@ public class DoorBehaviour : MonoBehaviour
     private void Awake()
     {
         hinge = Utils.GetRequiredComponent<HingeJoint>(this);
+        hinge.useLimits = true;
         startHingeLimits = hinge.limits;
         lockedHingeLimits = startHingeLimits;
         lockedHingeLimits.min = 0f;
