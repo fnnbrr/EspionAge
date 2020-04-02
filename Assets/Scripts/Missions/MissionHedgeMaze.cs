@@ -89,7 +89,7 @@ public class MissionHedgeMaze : AMission
         // Ensure all instantiated NPCs have the hedgemaze barks loaded
         foreach (BasicNurse nurseAI in spawnedHedgeMazeEnemies)
         {
-            NPCReactiveBark reactiveBark = GetComponent<NPCReactiveBark>();
+            NPCReactiveBark reactiveBark = nurseAI.GetComponent<NPCReactiveBark>();
             reactiveBark.LoadBarks(MissionsEnum.HedgeMaze);
         }
     }
