@@ -214,6 +214,21 @@ public class NPCReactiveBark : MonoBehaviour
                 lostBark = BarkEvent.BrutusOfficeLostReation;
                 reactiveNoiseBark = BarkEvent.BrutusOfficeNoiseReaction;
                 break;
+                //case MissionsEnum.:
+                //if (isBrutus)
+                //{
+                    //idleBark = BarkEvent.BrutusGardenIdleBark;
+                    //spottedBark = BarkEvent.BrutusGardenSpottedBark;
+                    //lostBark = BarkEvent.BrutusGardenLostBark;
+                    //reactiveNoiseBark = BarkEvent.BrutusGardenNoiseBark;
+                //}
+                //else
+                //{
+                    //idleBark = BarkEvent.GardenIdleBark;
+                    //spottedBark = BarkEvent.GardenSpottedBark;
+                    //lostBark = BarkEvent.GardenLostBark;
+                    //reactiveNoiseBark = BarkEvent.GardenNoiseBark;
+                //}
         }
     }
 }
