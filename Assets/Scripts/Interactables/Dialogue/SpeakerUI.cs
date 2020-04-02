@@ -32,8 +32,9 @@ public class SpeakerUI : MonoBehaviour
         verticalLayoutGroup = Utils.GetRequiredComponent<VerticalLayoutGroup>(speechBubbleOutline);
     }
 
-    void Start()
+    void OnEnable()
     {
+        textBoxContainer.transform.position = Camera.main.WorldToScreenPoint(transform.position);
         Hide();
     }
 
@@ -105,12 +106,12 @@ public class SpeakerUI : MonoBehaviour
 
     public void Show()
     {
-        canvas.SetActive(true);
+        textBoxContainer.SetActive(true);
     }
 
     public void Hide()
     {
-        canvas.SetActive(false);
+        textBoxContainer.SetActive(false);
     }
 
     private void RescaleSpeechBubble()
