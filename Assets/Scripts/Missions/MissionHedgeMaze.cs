@@ -75,6 +75,23 @@ public class MissionHedgeMaze : AMission
             SetupNurseRoom();
         }
         SpawnBrutusResponser();
+        LoadHedgeMazeBarks();
+    }
+
+    private void LoadHedgeMazeBarks()
+    {
+        // Ensure all instantiated NPCs have the hedgemaze barks loaded
+        foreach (NPCReactiveBark nurseAI in spawnedSurroundingEnemies.GetComponentsInChildren<NPCReactiveBark>())
+        {
+            nurseAI.LoadBarks(MissionsEnum.HedgeMaze);
+        }
+
+        // Ensure all instantiated NPCs have the hedgemaze barks loaded
+        foreach (BasicNurse nurseAI in spawnedHedgeMazeEnemies)
+        {
+            NPCReactiveBark reactiveBark = GetComponent<NPCReactiveBark>();
+            reactiveBark.LoadBarks(MissionsEnum.HedgeMaze);
+        }
     }
 
     private void SpawnBrutusResponser()
