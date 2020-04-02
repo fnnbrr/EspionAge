@@ -35205,6 +35205,7 @@ GameObject:
   - component: {fileID: 3549017113294433745}
   - component: {fileID: 3549017113294433751}
   - component: {fileID: 3549017113294433744}
+  - component: {fileID: 1442357408413993109}
   m_Layer: 11
   m_Name: FreeRoamZone
   m_TagString: Untagged
@@ -35295,11 +35296,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollisionTag: Player
   Emitters:
-  - Target: {fileID: 0}
+  - Target: {fileID: 3549017113301020783}
     Params:
-    - Name: inRoom
-      Value: 0
+    - Name: MusicVolume
+      Value: 1
   TriggerEvent: 3
+--- !u!114 &1442357408413993109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3549017113294433756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  Emitters:
+  - Target: {fileID: 3549017113301020783}
+    Params:
+    - Name: MusicVolume
+      Value: 0
+  TriggerEvent: 4
 --- !u!1 &3549017113382282844
 GameObject:
   m_ObjectHideFlags: 0
