@@ -654,15 +654,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 861584e79b77b2c4e883d6f2c7c47610, type: 3}
---- !u!1 &7946989163454102112 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6865462128423233843, guid: 861584e79b77b2c4e883d6f2c7c47610,
-    type: 3}
-  m_PrefabInstance: {fileID: 3534874789038461779}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7946989163454102114 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6865462128423233841, guid: 861584e79b77b2c4e883d6f2c7c47610,
+    type: 3}
+  m_PrefabInstance: {fileID: 3534874789038461779}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7946989163454102112 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6865462128423233843, guid: 861584e79b77b2c4e883d6f2c7c47610,
     type: 3}
   m_PrefabInstance: {fileID: 3534874789038461779}
   m_PrefabAsset: {fileID: 0}
@@ -737,7 +737,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SceneBindings.Array.data[6].value
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 156596599080452822}
     - target: {fileID: 2161343517417093310, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
         type: 3}
       propertyPath: m_ExposedReferences.m_References.Array.data[0].first
@@ -933,6 +933,62 @@ PrefabInstance:
       propertyPath: m_ExposedReferences.m_References.Array.data[1].second
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].waypoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 3862208129692031431, guid: c25cc09436afc144b9aebed31127a2ac,
+        type: 3}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].spawnPosition.x
+      value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].spawnPosition.z
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].waypoints.Array.data[0].position.x
+      value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].waypoints.Array.data[0].position.z
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].waypoints.Array.data[0].stayTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].waypoints.Array.data[1].stayTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].waypoints.Array.data[1].position.x
+      value: -136
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576290458262390392, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+        type: 3}
+      propertyPath: hedgeMazeEnemies.Array.data[0].waypoints.Array.data[1].position.z
+      value: 57
+      objectReference: {fileID: 0}
     - target: {fileID: 8384848389310353521, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
         type: 3}
       propertyPath: m_Name
@@ -995,6 +1051,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c95bf75eff27d7248a4c6b959b3d6d8c, type: 3}
+--- !u!114 &273716812390437413 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5088783040352303171, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4995216337965853286}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773852831864907249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &773852831864907249 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5760057502445227927, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4995216337965853286}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4177685506295824277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8982583518385264115, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4995216337965853286}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8084689345597540819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8084689345597540819 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3846079490129437621, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4995216337965853286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3534874788616419864 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8384848389310353534, guid: c95bf75eff27d7248a4c6b959b3d6d8c,
@@ -1054,7 +1146,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
 --- !u!95 &6282456336451545044 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1332315672762781106, guid: c95bf75eff27d7248a4c6b959b3d6d8c,

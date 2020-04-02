@@ -124,19 +124,11 @@ namespace NPCs
 
         private void SetPatrolling()
         {
-            Vector3 curWaypointPosition = patroller.curPatrolWaypoint.position;
-            PatrolWaypoint nextWaypoint = patroller.GetNextPatrolWaypoint();
-
-            // Prevents animation bug where nurse briefly runs in place with only one patrol point
-            if (curWaypointPosition != nextWaypoint.position)
-            {
-                ToggleAnimations(true);
-            }
-            
+            ToggleAnimations(true);
             agent.speed = patroller.movementSpeed;
             questionMark.SetActive(false);
                     
-            agent.SetDestination(nextWaypoint.position);
+            agent.SetDestination(patroller.GetNextPatrolWaypoint().position);
         }
 
         private void SetRotating()

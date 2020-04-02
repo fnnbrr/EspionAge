@@ -31,7 +31,7 @@ namespace NPCs
 
         public int numSearches = 3;
         public GameObject questionMark;
-        private ChildRootMotionController animator;
+        private Animator animator;
         private int curNumSearches = 0;
 
         protected override void Awake()
@@ -43,7 +43,7 @@ namespace NPCs
             searcher = Utils.GetRequiredComponent<Searcher>(this);
             patroller = Utils.GetRequiredComponent<Patroller>(this);
             waiter = Utils.GetRequiredComponent<Waiter>(this);
-            animator = Utils.GetRequiredComponentInChildren<ChildRootMotionController>(this);
+            // animator = Utils.GetRequiredComponentInChildren<Animator>(this);
             enemy = Utils.GetRequiredComponent<Enemy>(this);
         }
 
@@ -223,7 +223,6 @@ namespace NPCs
         private void ToggleAnimations(bool toggle)
         {
             // TODO: implement once Brutus animations are ready
-            animator.SetBool(Constants.ANIMATION_BRUTUSOFFICE_MOVING, toggle);
         }
     }
 }

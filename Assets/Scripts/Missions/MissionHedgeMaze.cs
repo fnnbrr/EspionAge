@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.SceneManagement;
 using NPCs;
 using NaughtyAttributes;
 
@@ -17,7 +16,6 @@ public class MissionHedgeMaze : AMission
     public PlayableDirector finalSequenceCutscene;
     public Vector3 finalSequenceBrutusPosition;
     public Vector3 finalSequenceBrutusRotation;
-    public PlayableDirector gameOverCutscene;
 
     [Header("Frank the Nurse")]
     public GameObject frankBeforeMission;
@@ -134,7 +132,6 @@ public class MissionHedgeMaze : AMission
         brutusResponderAI.agent.Warp(finalSequenceBrutusPosition);
         brutusResponderAI.transform.rotation = Quaternion.Euler(finalSequenceBrutusRotation);
         brutusResponderAI.ForceChasing();
-        brutusResponderAI.agent.speed = 0.9f;
 
         // Now, we open the window
         escapeWindow.transform.position = windowPosition;
@@ -157,16 +154,8 @@ public class MissionHedgeMaze : AMission
         if (RegionManager.Instance.GetPlayerCurrentZone() != null) return;
         RegionManager.Instance.OnPlayerExitZone -= WaitForPlayerToLeaveMap;
 
-        StartCoroutine(GameOver());
-    }
-
-    private IEnumerator GameOver()
-    {
-        Time.timeScale = 0f;
-        yield return MissionManager.Instance.DisablePlayerMovementDuringCutscene(gameOverCutscene);
-        Time.timeScale = 1f;
-
-        SceneManager.LoadScene(Constants.SCENE_MAINMENU);
+        // start the game over cutscene
+        print("Game Over");
     }
 
     private void RestartMission()
