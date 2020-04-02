@@ -28,6 +28,8 @@ public class NPCReactiveBark : MonoBehaviour
     private BarkEvent reactiveNoiseBark;
     public MissionsEnum missionsEnum;
     public bool isBrutus = false;
+    [ValidateInput("isBrutusTrue", "isBrutus must also be checked is isBrutusResponder is checked")]
+    public bool isBrutusResponder = false;
     private float timeLostVision;
     private float timeLastHiddenBark;
 
@@ -41,6 +43,7 @@ public class NPCReactiveBark : MonoBehaviour
 
     private BasicNurse basicNurseStates;
     private AIBrutusOffice brutusStates;
+    private BrutusResponder brutusResponderStates;
     private PlayerDetectionStatus playerStatus;
 
     private void Awake()
@@ -162,10 +165,20 @@ public class NPCReactiveBark : MonoBehaviour
     {
         if (isBrutus)
         {
-            brutusStates = Utils.GetRequiredComponent<AIBrutusOffice>(this);
-            brutusStates.chaser.OnSeePlayer += TargetSpottedBark;
-            brutusStates.chaser.OnLosePlayer += TargetLostBark;
-            brutusStates.responder.OnStartResponding += ReactiveBark;
+            if (isBrutusResponder)
+            {
+                brutusResponderStates = Utils.GetRequiredComponent<BrutusResponder>(this);
+                brutusResponderStates.chaser.OnSeePlayer += TargetSpottedBark;
+                brutusResponderStates.chaser.OnLosePlayer += TargetLostBark;
+                brutusResponderStates.responder.OnStartResponding += ReactiveBark;
+            }
+            else
+            {
+                brutusStates = Utils.GetRequiredComponent<AIBrutusOffice>(this);
+                brutusStates.chaser.OnSeePlayer += TargetSpottedBark;
+                brutusStates.chaser.OnLosePlayer += TargetLostBark;
+                brutusStates.responder.OnStartResponding += ReactiveBark;
+            }
         }
         else
         {
@@ -196,7 +209,7 @@ public class NPCReactiveBark : MonoBehaviour
         }
     }
 
-    private void LoadBarks(MissionsEnum missionEnum)
+    public void LoadBarks(MissionsEnum missionEnum)
     {
         switch (missionEnum)
         {
@@ -214,21 +227,31 @@ public class NPCReactiveBark : MonoBehaviour
                 lostBark = BarkEvent.BrutusOfficeLostReation;
                 reactiveNoiseBark = BarkEvent.BrutusOfficeNoiseReaction;
                 break;
-                //case MissionsEnum.:
-                //if (isBrutus)
-                //{
-                    //idleBark = BarkEvent.BrutusGardenIdleBark;
-                    //spottedBark = BarkEvent.BrutusGardenSpottedBark;
-                    //lostBark = BarkEvent.BrutusGardenLostBark;
-                    //reactiveNoiseBark = BarkEvent.BrutusGardenNoiseBark;
-                //}
-                //else
-                //{
-                    //idleBark = BarkEvent.GardenIdleBark;
-                    //spottedBark = BarkEvent.GardenSpottedBark;
-                    //lostBark = BarkEvent.GardenLostBark;
-                    //reactiveNoiseBark = BarkEvent.GardenNoiseBark;
-                //}
+            case MissionsEnum.HedgeMaze:
+                if (isBrutus)
+                {
+                    idleBark = BarkEvent.BrutusHedgeMazeIdleBark;
+                    spottedBark = BarkEvent.BrutusHedgeMazeSpottedBark;
+                    lostBark = BarkEvent.BrutusHedgeMazeLostBark;
+                    reactiveNoiseBark = BarkEvent.BrutusHedgeMazeNoiseBark;
+                }
+                else
+                {
+                    idleBark = BarkEvent.HedgeMazeIdleBark;
+                    spottedBark = BarkEvent.HedgeMazeSpottedBark;
+                    lostBark = BarkEvent.HedgeMazeLostBark;
+                    reactiveNoiseBark = BarkEvent.HedgeMazeNoiseBark;
+                }
+                break;
         }
+    }
+
+    private bool isBrutusTrue(bool value)
+    {
+        if (value)
+        {
+            return isBrutus;
+        }
+        return true;
     }
 }
