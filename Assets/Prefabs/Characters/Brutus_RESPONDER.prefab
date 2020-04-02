@@ -256,7 +256,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.47
-  m_Speed: 10
+  m_Speed: 1
   m_Acceleration: 100
   avoidancePriority: 50
   m_AngularSpeed: 1000
@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80e0130efb1f09049b14a178024d1a43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  movementSpeed: 1
   searchPosition: {x: 0, y: 0, z: 0}
   searchRadius: 15
 --- !u!114 &308519404556597359
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b48c72b0ce4b090479c1b2becaea9b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 10
+  movementSpeed: 1.5
   reacquireInterval: 0.1
   isChasing: 0
   playerChased: playerCaught
@@ -383,7 +383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98e2dd5f1eba5b44da7e20f29593d3d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 7
+  movementSpeed: 1.5
   responsePoint: {x: 0, y: 0, z: 0}
 --- !u!114 &6188935483717721383
 MonoBehaviour:
@@ -409,7 +409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 488879eb17e80e3499a7f06bed5ef670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 6
+  movementSpeed: 1
   rotationSpeed: 180
   curPatrolWaypoint:
     position: {x: 0, y: 0, z: 0}
@@ -425,6 +425,49 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!95 &5701138042936489755
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6975594638717851506}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 9ef10e04f9b721d468e2e1e700318fcf, type: 3}
+  m_Controller: {fileID: 9100000, guid: 8b82e5af1cd732b4094f79e204bf17b6, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &591519723095043149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6975594638717851506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 118cf3e47fcc81d47b6e841d97db0e4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8972289700103694287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6975594638717851506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ce7c72d52b34f64e9e8e368c86a9481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &7772607378352014721
@@ -600,15 +643,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 289a2e4e3891f084f8070cb4735b886a, type: 3}
---- !u!4 &6238914322730542433 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 289a2e4e3891f084f8070cb4735b886a,
+--- !u!1 &6975594638717851506 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 289a2e4e3891f084f8070cb4735b886a,
     type: 3}
   m_PrefabInstance: {fileID: 1436550750878223995}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2976357722719662465 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4224801822505238522, guid: 289a2e4e3891f084f8070cb4735b886a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1436550750878223995}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6238914322730542433 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 289a2e4e3891f084f8070cb4735b886a,
     type: 3}
   m_PrefabInstance: {fileID: 1436550750878223995}
   m_PrefabAsset: {fileID: 0}
