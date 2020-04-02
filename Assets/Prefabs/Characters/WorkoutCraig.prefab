@@ -73,10 +73,11 @@ MonoBehaviour:
   interactableAnim: {fileID: 810276197123043968}
   interactTransform: {fileID: 810276197123044092}
   interactRadius: 5
+  doRaycastCheck: 1
   conversation: {fileID: 0}
   boundaryRadius: 5
   defaultConvos:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: a88b6d51a26e34a2cac68ff66c4eeb7e, type: 2}
   missionsOffered: []
 --- !u!195 &8866720047849821963
 NavMeshAgent:
@@ -344,12 +345,12 @@ PrefabInstance:
     - target: {fileID: 7247084406399655835, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.9058824
+      value: 0.9960785
       objectReference: {fileID: 0}
     - target: {fileID: 7247084406399655835, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.3372549
+      value: 0.5921569
       objectReference: {fileID: 0}
     - target: {fileID: 8311072924086460681, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -384,17 +385,17 @@ PrefabInstance:
     - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.68235296
+      value: 0.9960785
       objectReference: {fileID: 0}
     - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.5294118
+      value: 0.9960785
       objectReference: {fileID: 0}
     - target: {fileID: 8651108624917155156, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.18823531
+      value: 0.5568628
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c819a38dde8924f49a4bf8b5448e832a, type: 3}
