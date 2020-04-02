@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.Playables;
+using NPCs;
 using Cinemachine;
 using NaughtyAttributes;
+using NPCs.Components;
 
 [System.Serializable]
 public class MissionObject
@@ -86,8 +90,8 @@ public class MissionManager : Singleton<MissionManager>
     {
         if (missionMapping[missionEnumValue].objective) 
         {
-            ObjectiveList.Instance.DisplayObjectiveList();
             ObjectiveList.Instance.DisplayObjectiveText(missionMapping[missionEnumValue].objective.line);
+            ObjectiveList.Instance.SlideOutObjectTextForSeconds(5f);
         }
     }
 
@@ -127,6 +131,7 @@ public class MissionManager : Singleton<MissionManager>
         ProgressManager.Instance.UpdateMissionStatus(GetMissionLogic(missionEnumValue), MissionStatusCode.Started);
 
         SetObjectiveTextForList(missionEnumValue);
+        Chaser.ResetChaserCount();
     }
 
     public void CompleteMissionObjective(MissionsEnum missionEnumValue)
@@ -141,6 +146,7 @@ public class MissionManager : Singleton<MissionManager>
         AMission missionLogic = GetMissionLogic(missionEnumValue);
 
         ObjectiveList.Instance.HideObjectiveList();
+        Chaser.ResetChaserCount();
 
         if (activeMissions.Contains(missionEnumValue))
         {
@@ -179,6 +185,50 @@ public class MissionManager : Singleton<MissionManager>
         missionObjects.ForEach(o =>
         {
             DestroyMissionObject(o);
+        });
+    }
+
+    public List<BasicNurse> SpawnEnemyNurses(List<MissionEnemy> enemies, System.Action onCollideAction)
+    {
+        List<BasicNurse> instantiatedEnemies = new List<BasicNurse>();
+
+        // Instantiate all enemies
+        enemies.ForEach(enemy =>
+        {
+            // We can only spawn a NavMeshAgent on a position close enough to a NavMesh, so we must sample the inputted position first just in case.
+            if (NavMesh.SamplePosition(enemy.spawnPosition, out NavMeshHit closestNavmeshHit, 10.0f, NavMesh.AllAreas))
+            {
+                GameObject spawnedEnemy = Instantiate(enemy.prefab, closestNavmeshHit.position, Quaternion.Euler(enemy.spawnRotation));
+
+                // All enemies will be chasers, so we need to set the target transform for all.
+                BasicNurse enemyComponent = Utils.GetRequiredComponent<BasicNurse>(spawnedEnemy, $"Enemy does not have a BasicNurse component!");
+                enemyComponent.enemy.OnCollideWithPlayer += onCollideAction;
+
+                enemyComponent.patroller.SetPoints(enemy.waypoints);
+                if (enemy.isInitiallyResponding)
+                {
+                    enemyComponent.responder.InitializeResponderParameters(enemy.startResponsePoint);
+                }
+
+                instantiatedEnemies.Add(enemyComponent);
+            }
+            else
+            {
+                Debug.LogError("Could not sample position to spawn enemy for MissionCafeteria1!");
+            }
+        });
+
+        return instantiatedEnemies;
+    }
+
+    public void DestroyEnemyNurses(List<BasicNurse> nurses)
+    {
+        nurses.Where(e => e).Select(e => e.gameObject).ToList().ForEach(o =>
+        {
+            if (o)
+            {
+                Destroy(o);
+            }
         });
     }
 
@@ -274,5 +324,18 @@ public class MissionManager : Singleton<MissionManager>
         {
             Destroy(c);
         });
+    }
+
+    public IEnumerator DisablePlayerMovementDuringCutscene(PlayableDirector cutsceneDirector)
+    {
+        if (GameManager.Instance.skipSettings.allRealtimeCutscenes) yield break;
+
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
+        cutsceneDirector.Play();
+        while (cutsceneDirector.state == PlayState.Playing)
+        {
+            yield return null;
+        }
+        GameManager.Instance.GetPlayerController().EnablePlayerInput = true;
     }
 }

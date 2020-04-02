@@ -25,13 +25,20 @@ namespace NPCs.Components
         
         public event Action OnRotationComplete;
 
-        public void Start()
+        public void Awake()
         {
             // Allows a Patroller given no PatrolWaypoints to simply stay in place
-            curPatrolWaypoint = new PatrolWaypoint();
-            curPatrolWaypoint.position = transform.position;
-            curPatrolWaypoint.rotation = transform.rotation.eulerAngles;
-            curPatrolWaypoint.stayTime = 10.0f;
+            SetDefaultCurPatrolWaypoint();
+        }
+
+        public void SetDefaultCurPatrolWaypoint()
+        {
+            curPatrolWaypoint = new PatrolWaypoint
+            {
+                position = transform.position,
+                rotation = transform.rotation.eulerAngles,
+                stayTime = 10.0f
+            };
         }
 
         public void SetPoints(List<PatrolWaypoint> newWaypoints)
