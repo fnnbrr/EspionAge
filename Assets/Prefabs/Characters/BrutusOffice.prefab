@@ -159,6 +159,18 @@ MonoBehaviour:
   spottedMaterial: {fileID: 2100000, guid: 591bbae291b8d46418017b7250aef0e5, type: 2}
   flashingSpeed: 2
   distanceFromViewPlaneMin: 2.5
+--- !u!114 &2815828652210871094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7990575830780334216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3194969624314837020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,6 +259,7 @@ MonoBehaviour:
   nextState: 0
   standingWaitInterval: 3
   sittingAnimationLoopInterval: 5
+  enemy: {fileID: 0}
   chaser: {fileID: 0}
   responder: {fileID: 0}
   waiter: {fileID: 0}
@@ -272,18 +285,6 @@ MonoBehaviour:
   isRescalable: 0
   isClampToScreen: 0
   extraPadding: 20
---- !u!114 &2815828652210871094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7990575830780334216}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cec637be6cd5d646be7ef6133f223eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &468650244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1451,17 +1452,17 @@ PrefabInstance:
     - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.45
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.45
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 5593216317928565162, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.45
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 6003753275949974235, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
