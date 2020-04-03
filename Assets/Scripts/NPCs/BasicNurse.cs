@@ -62,6 +62,9 @@ namespace NPCs
 
         protected override void SetState(BasicNurseStates newState)
         {
+            // Prevents nurse from being distracted from chasing, unless they can't chase anymore
+            if (currentState == BasicNurseStates.Chasing && agent.hasPath) return;
+            
             prevState = currentState;
             currentState = newState;
             
