@@ -122,7 +122,7 @@ namespace NPCs
             agent.SetDestination(searcher.GetNextSearchPoint());
         }
 
-        private void SetPatrolling()
+        protected virtual void SetPatrolling()
         {
             Vector3 curWaypointPosition = patroller.curPatrolWaypoint.position;
             PatrolWaypoint nextWaypoint = patroller.GetNextPatrolWaypoint();
