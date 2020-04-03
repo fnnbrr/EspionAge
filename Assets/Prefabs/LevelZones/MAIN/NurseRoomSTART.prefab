@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closedDelta: 5
   shakeCameraOnClose: 1
+  startLocked: 0
+  lockedConversation: {fileID: 0}
   DoorSqueak: event:/SFX/DoorSqueak
   DoorSlam: event:/SFX/DoorClose
 --- !u!114 &4080047344266845767
@@ -4958,7 +4960,8 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 589439633817387878, guid: 8403ef09924b0134cacb108ae7d78033, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8403ef09924b0134cacb108ae7d78033, type: 3}
 --- !u!4 &2321721261364585979 stripped
 Transform:
