@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 8927687197770071961}
   - component: {fileID: 5883960508598293369}
   - component: {fileID: 1186067350291011142}
+  - component: {fileID: 3195509989245342230}
   m_Layer: 0
   m_Name: Nurse_Steve_MAZE
   m_TagString: Enemy
@@ -366,8 +367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 488879eb17e80e3499a7f06bed5ef670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 3
-  rotationSpeed: 60
+  movementSpeed: 5
+  rotationSpeed: 120
   curPatrolWaypoint:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
@@ -445,6 +446,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daaa1bb32201e949bb46eeb78d75e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3195509989245342230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f39f1a30a5814531b4625b67046972f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missionsEnum: 3
+  isBrutus: 0
+  isBrutusResponder: 0
+  waitTimeBeforeLost: 3
+  randomBarkTimeRange: {x: 10, y: 30}
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0

@@ -148,7 +148,7 @@ namespace NPCs
         private void SetWaiting()
         {
             ToggleAnimations(false);
-            if (prevState == BasicNurseStates.Patrolling)
+            if (nextState == BasicNurseStates.Patrolling)
             {
                 StartCoroutine(waiter.StartWaiting(patroller.curPatrolWaypoint.stayTime));
             }
