@@ -47,8 +47,8 @@ namespace NPCs.Components
             {
                 throw new UnityException("Cannot set Patroller waypoints using an empty list");
             }
+            
             patrolWaypoints = newWaypoints;
-            curPatrolWaypoint = patrolWaypoints[0];
         }
 
         public IEnumerator StartRotating()
