@@ -35431,7 +35431,6 @@ GameObject:
   - component: {fileID: 3549017113294433746}
   - component: {fileID: 3549017113294433745}
   - component: {fileID: 3549017113294433751}
-  - component: {fileID: 3549017113294433744}
   m_Layer: 11
   m_Name: FreeRoamZone
   m_TagString: Untagged
@@ -35508,25 +35507,6 @@ MonoBehaviour:
   parameter: restrictedZoneActive
   TriggerEvent: 3
   value: 0
---- !u!114 &3549017113294433744
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3549017113294433756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: Player
-  Emitters:
-  - Target: {fileID: 0}
-    Params:
-    - Name: inRoom
-      Value: 0
-  TriggerEvent: 3
 --- !u!1 &3549017113382282844
 GameObject:
   m_ObjectHideFlags: 0
@@ -90131,15 +90111,15 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 720525b0e85ef42efab54fc6287c1bc0, type: 3}
---- !u!4 &7771008749812500160 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6528124939642928890, guid: 720525b0e85ef42efab54fc6287c1bc0,
-    type: 3}
-  m_PrefabInstance: {fileID: 3549017111954077754}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4177921903903090009 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 628904796328926563, guid: 720525b0e85ef42efab54fc6287c1bc0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3549017111954077754}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7771008749812500160 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6528124939642928890, guid: 720525b0e85ef42efab54fc6287c1bc0,
     type: 3}
   m_PrefabInstance: {fileID: 3549017111954077754}
   m_PrefabAsset: {fileID: 0}
@@ -100419,15 +100399,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a81aac58e602d8440b627711393fb3ff, type: 3}
---- !u!4 &6988450854376244554 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5889392491211042612, guid: a81aac58e602d8440b627711393fb3ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 3549017113570290302}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &6988450854376244550 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5889392491211042616, guid: a81aac58e602d8440b627711393fb3ff,
+    type: 3}
+  m_PrefabInstance: {fileID: 3549017113570290302}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6988450854376244554 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5889392491211042612, guid: a81aac58e602d8440b627711393fb3ff,
     type: 3}
   m_PrefabInstance: {fileID: 3549017113570290302}
   m_PrefabAsset: {fileID: 0}
