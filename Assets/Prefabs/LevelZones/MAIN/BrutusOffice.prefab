@@ -333,6 +333,7 @@ GameObject:
   - component: {fileID: 5224451742694004456}
   - component: {fileID: 704536648638815321}
   - component: {fileID: 6112942755538912959}
+  - component: {fileID: 5928268339989944620}
   m_Layer: 0
   m_Name: BrutusOffice
   m_TagString: Untagged
@@ -422,6 +423,25 @@ MonoBehaviour:
   parameter: restrictedZoneActive
   TriggerEvent: 4
   value: 0
+--- !u!114 &5928268339989944620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302542076850448449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 744a208c85da6d04c861d81b992e4ead, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: Player
+  Emitters:
+  - Target: {fileID: 0}
+    Params:
+    - Name: MusicVolume
+      Value: 0
+  TriggerEvent: 3
 --- !u!1 &1302542077240188070
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,17 +736,9 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: f844e5c01f2e4b6aa0d6ea4d4592f6f7
   m_IsSelectable: 1
-  m_SelectedFaces: 00000000
-  m_SelectedEdges:
-  - a: 0
-    b: 0
-  - a: 0
-    b: 0
-  - a: 0
-    b: 0
-  - a: 0
-    b: 0
-  m_SelectedVertices: 00000000000000000000000000000000
+  m_SelectedFaces: 
+  m_SelectedEdges: []
+  m_SelectedVertices: 
 --- !u!64 &1302542077240188072
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2286,15 +2298,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 992c920c43ef0c04ba9b99310a100e92, type: 3}
---- !u!1 &6134583034867167988 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6400519317013028563, guid: 992c920c43ef0c04ba9b99310a100e92,
-    type: 3}
-  m_PrefabInstance: {fileID: 1004686088955194407}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4264008461625689392 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3953476260524910871, guid: 992c920c43ef0c04ba9b99310a100e92,
+    type: 3}
+  m_PrefabInstance: {fileID: 1004686088955194407}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6134583034867167988 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6400519317013028563, guid: 992c920c43ef0c04ba9b99310a100e92,
     type: 3}
   m_PrefabInstance: {fileID: 1004686088955194407}
   m_PrefabAsset: {fileID: 0}
@@ -3099,6 +3111,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4234563217980090331, guid: 955675898aa49704e9914f7dcfc99a25,
+        type: 3}
+      propertyPath: playerChased
+      value: playerCaught
       objectReference: {fileID: 0}
     - target: {fileID: 4420126184629527113, guid: 955675898aa49704e9914f7dcfc99a25,
         type: 3}
@@ -4525,6 +4542,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7528571577536185754, guid: 8403ef09924b0134cacb108ae7d78033,
+        type: 3}
+      propertyPath: m_Name
+      value: WoodenDoor (Brutus Room)
       objectReference: {fileID: 0}
     - target: {fileID: 7611708792212743669, guid: 8403ef09924b0134cacb108ae7d78033,
         type: 3}
