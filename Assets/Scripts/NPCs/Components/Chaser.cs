@@ -16,14 +16,14 @@ namespace NPCs.Components
         public event Action OnLosePlayer;
         public event Action OnReacquireTarget;
 
-        [FMODUnity.ParamRef]
-        public string playerChased;
+        [FMODUnity.ParamRef] private static string playerChased;
 
         private FieldOfVision fieldOfVision;
 
         public static void ResetChaserCount()
         {
             numChasersActive = 0;  // Allows Birdie to spawn with full stealth/no systems aware of her presence
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
         }
 
         private void Start()
