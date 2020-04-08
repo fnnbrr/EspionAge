@@ -23,13 +23,13 @@ namespace NPCs.Components
         public static void ResetChaserCount()
         {
             numChasersActive = 0;  // Allows Birdie to spawn with full stealth/no systems aware of her presence
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("playerCaught", 0f);
         }
 
         private void Start()
         {
             InvokeRepeating(nameof(ReacquireTarget), 0f, reacquireInterval);
-            FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 0f);
+            FMODUnity.RuntimeManager.StudioSystem.setParameterByName("playerCaught", 0f);
 
             fieldOfVision = GetComponent<FieldOfVision>();
             if (fieldOfVision)
@@ -48,7 +48,7 @@ namespace NPCs.Components
                 if (numChasersActive == 1)
                 {
                     // This means that the current chaser is the 1st to begin chasing Birdie
-                    FMODUnity.RuntimeManager.StudioSystem.setParameterByName(playerChased, 1f);
+                    FMODUnity.RuntimeManager.StudioSystem.setParameterByName("playerCaught", 1f);
                 }
                 
                 OnSeePlayer?.Invoke();
