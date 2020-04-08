@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using NaughtyAttributes;
@@ -69,6 +70,8 @@ public class NPCInteractable : Interactable
     private Vector3 originPosition;
     private Vector3 previousOriginPosition;
 
+    private Quaternion originRotation;
+
 
     protected override void Start()
     {
@@ -77,6 +80,8 @@ public class NPCInteractable : Interactable
 
         SetOriginPosition(transform.position);
         previousOriginPosition = transform.position;
+
+        SetOriginRotation(transform.rotation);
 
         LoadConversation();
     }
@@ -188,7 +193,7 @@ public class NPCInteractable : Interactable
             {
                 NPCFacePlayer();
             }
-
+            DialogueManager.Instance.OnFinishConversation += NPCFaceOriginalRotation;
             DialogueManager.Instance.StartConversation(conversation);
             base.OnInteract();
         }
@@ -321,6 +326,11 @@ public class NPCInteractable : Interactable
         agent.SetDestination(originPosition);
     }
 
+    public void SetOriginRotation(Quaternion rotation)
+	{
+        originRotation = rotation;
+	}
+
     protected void TriggerFollow(GameObject target)
     {
         targetObject = target;
@@ -357,6 +367,21 @@ public class NPCInteractable : Interactable
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
         StartCoroutine(RotateAnimation(gameObject, rotation, GameManager.Instance.GetMovementController().turnSpeed));
+    }
+
+    public void NPCFaceOriginalRotation(Conversation finishedConvo)
+	{
+        if (finishedConvo != conversation) return;
+
+        DialogueManager.Instance.OnFinishConversation -= NPCFaceOriginalRotation;
+        StopAllCoroutines();
+        StartCoroutine(RotateToOriginal(1.0f));
+	}
+
+    private IEnumerator RotateToOriginal(float waitTime)
+	{
+        yield return new WaitForSeconds(waitTime);
+        StartCoroutine(RotateAnimation(gameObject, originRotation, GameManager.Instance.GetMovementController().turnSpeed));
     }
 
     private bool IsGreaterEqualThanInteractRadius(float value)
