@@ -62,6 +62,9 @@ namespace NPCs
 
         protected override void SetState(BasicNurseStates newState)
         {
+            // Prevents nurse from being distracted from chasing, unless they can't chase anymore
+            if (currentState == BasicNurseStates.Chasing && agent.hasPath) return;
+            
             prevState = currentState;
             currentState = newState;
             
@@ -122,7 +125,7 @@ namespace NPCs
             agent.SetDestination(searcher.GetNextSearchPoint());
         }
 
-        private void SetPatrolling()
+        protected virtual void SetPatrolling()
         {
             Vector3 curWaypointPosition = patroller.curPatrolWaypoint.position;
             PatrolWaypoint nextWaypoint = patroller.GetNextPatrolWaypoint();
@@ -148,7 +151,7 @@ namespace NPCs
         private void SetWaiting()
         {
             ToggleAnimations(false);
-            if (prevState == BasicNurseStates.Patrolling)
+            if (nextState == BasicNurseStates.Patrolling)
             {
                 StartCoroutine(waiter.StartWaiting(patroller.curPatrolWaypoint.stayTime));
             }

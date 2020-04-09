@@ -24,7 +24,7 @@ namespace NPCs.Components
         {
             if (!other.gameObject.CompareTag(Constants.TAG_PLAYER)) return;
             
-            Chaser.numChasersActive = 0;
+            Chaser.ResetChaserCount();
             OnCollideWithPlayer?.Invoke();
         }
 

@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 8073768096790006290}
   - component: {fileID: 2450668294617206675}
   - component: {fileID: 4186571339833994720}
-  - component: {fileID: 5638750586541568652}
+  - component: {fileID: 7320278302346134519}
   - component: {fileID: 8399060607170567938}
   - component: {fileID: 8040559180144460867}
   - component: {fileID: -7711432056760366613}
@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 8927687197770071961}
   - component: {fileID: 5883960508598293369}
   - component: {fileID: 1186067350291011142}
+  - component: {fileID: 3195509989245342230}
   m_Layer: 0
   m_Name: Nurse_Steve_MAZE
   m_TagString: Enemy
@@ -273,7 +274,7 @@ MonoBehaviour:
   m_UseImpactDirection: 0
   m_ScaleImpactWithMass: 0
   m_ScaleImpactWithSpeed: 0
---- !u!114 &5638750586541568652
+--- !u!114 &7320278302346134519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -282,11 +283,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3862208129692031431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bbd1dc618b965549a3f827dce25aa6a, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cebf9209c7671c45b04e3f018ee6b2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  prevState: 0
+  prevState: 3
   currentState: 3
   nextState: 3
   chaser: {fileID: 0}
@@ -366,8 +367,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 488879eb17e80e3499a7f06bed5ef670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 3
-  rotationSpeed: 60
+  movementSpeed: 5
+  rotationSpeed: 120
   curPatrolWaypoint:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
@@ -445,6 +446,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9daaa1bb32201e949bb46eeb78d75e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3195509989245342230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862208129692031431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f39f1a30a5814531b4625b67046972f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  missionsEnum: 3
+  isBrutus: 0
+  isBrutusResponder: 0
+  waitTimeBeforeLost: 3
+  randomBarkTimeRange: {x: 10, y: 30}
 --- !u!1 &4848029577287680884
 GameObject:
   m_ObjectHideFlags: 0
@@ -902,7 +920,7 @@ PrefabInstance:
     - target: {fileID: 5044315525422898052, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5044315525422898052, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
@@ -922,7 +940,7 @@ PrefabInstance:
     - target: {fileID: 5044315525422898052, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
       propertyPath: m_text
-      value: Chef
+      value: Nurse
       objectReference: {fileID: 0}
     - target: {fileID: 5593216316980992145, guid: c819a38dde8924f49a4bf8b5448e832a,
         type: 3}
