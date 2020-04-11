@@ -75,6 +75,8 @@ public class RegionManager : Singleton<RegionManager>
 
     public void ReportPlayerEnterZone(CameraZone zone)
     {
+        if (currentPlayerZones.Contains(zone)) return;
+
         currentPlayerZones.Add(zone);
         // OnPlayerEnterZone will be called after camera blending is done within HandleCurentZone
 
@@ -83,6 +85,8 @@ public class RegionManager : Singleton<RegionManager>
 
     public void ReportPlayerExitZone(CameraZone zone)
     {
+        if (!currentPlayerZones.Contains(zone)) return;
+
         currentPlayerZones.Remove(zone);
         OnPlayerExitZone?.Invoke(zone);
 
@@ -126,18 +130,16 @@ public class RegionManager : Singleton<RegionManager>
 
     public void ReportTrackedObjectEnterZone(GameObject trackedObject, CameraZone zone)
     {
-        if (trackedObjectZones.ContainsKey(trackedObject))
+        if (trackedObjectZones.ContainsKey(trackedObject) && !trackedObjectZones[trackedObject].Contains(zone))
         {
-            Debug.Log($"Tracked object {trackedObject.name} entered zone {zone.name}");
             trackedObjectZones[trackedObject].Add(zone);
         }
     }
 
     public void ReportTrackedObjectExitZone(GameObject trackedObject, CameraZone zone)
     {
-        if (trackedObjectZones.ContainsKey(trackedObject))
+        if (trackedObjectZones.ContainsKey(trackedObject) && trackedObjectZones[trackedObject].Contains(zone))
         {
-            Debug.Log($"Tracked object {trackedObject.name} exited zone {zone.name}");
             trackedObjectZones[trackedObject].Remove(zone);
         }
     }
@@ -182,14 +184,16 @@ public class RegionManager : Singleton<RegionManager>
 
     public void ReportPlayerEnterRegion(RegionTrigger region)
     {
-        Debug.Log($"Entered region {region.name}");
+        if (currentPlayerRegions.Contains(region)) return;
+
         currentPlayerRegions.Add(region);
         OnPlayerEnterRegion?.Invoke(region);
     }
 
     public void ReportPlayerExitRegion(RegionTrigger region)
     {
-        Debug.Log($"Exited region {region.name}");
+        if (!currentPlayerRegions.Contains(region)) return;
+
         currentPlayerRegions.Remove(region);
         OnPlayerExitRegion?.Invoke(region);
     }
@@ -201,18 +205,16 @@ public class RegionManager : Singleton<RegionManager>
 
     public void ReportTrackedObjectEnterRegion(GameObject trackedObject, RegionTrigger region)
     {
-        if (trackedObjectRegions.ContainsKey(trackedObject))
+        if (trackedObjectRegions.ContainsKey(trackedObject) && !trackedObjectRegions[trackedObject].Contains(region))
         {
-            Debug.Log($"Tracked object {trackedObject.name} entered region {region.name}");
             trackedObjectRegions[trackedObject].Add(region);
         }
     }
 
     public void ReportTrackedObjectExitRegion(GameObject trackedObject, RegionTrigger region)
     {
-        if (trackedObjectRegions.ContainsKey(trackedObject))
+        if (trackedObjectRegions.ContainsKey(trackedObject) && trackedObjectRegions[trackedObject].Contains(region))
         {
-            Debug.Log($"Tracked object {trackedObject.name} exited region {region.name}");
             trackedObjectRegions[trackedObject].Remove(region);
         }
     }
