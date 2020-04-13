@@ -69,7 +69,7 @@ public class MissionBrutusOfficeSneak : AMission
         Initialize();
         RegionManager.Instance.OnPlayerEnterZone -= HandlePlayerEnterOffice;
 
-        MissionManager.Instance.RestartMission(MissionsEnum.HedgeMaze);
+        MissionManager.Instance.RestartMission(MissionsEnum.BrutusOfficeSneak);
 
         yield return UIManager.Instance.FadeIn();
 

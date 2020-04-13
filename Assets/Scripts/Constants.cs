@@ -76,6 +76,11 @@ public static class Constants
     
     public const string CHEATS_ADD_MEDICINE_BOTTLES = "Cheats/Throwables/License to Pill";
 
+    public const string CHEATS_MISC_TIME_SLOWMOTION = "Cheats/Misc/Time/0.5";
+    public const string CHEATS_MISC_TIME_REGULAR = "Cheats/Misc/Time/1";
+    public const string CHEATS_MISC_TIME_DOUBLE = "Cheats/Misc/Time/2";
+    public const string CHEATS_MISC_TIME_TRIPLE = "Cheats/Misc/Time/3";
+
     public const string SCENE_MAINMENU = "main_menu";
     public const string SCENE_MAIN = "MAIN";
 

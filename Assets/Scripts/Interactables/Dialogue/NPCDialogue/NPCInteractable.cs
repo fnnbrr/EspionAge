@@ -190,7 +190,7 @@ public class NPCInteractable : Interactable
             }
 
             DialogueManager.Instance.StartConversation(conversation);
-            base.OnInteract();
+            TriggerOnInteractEnd();
         }
     }
 

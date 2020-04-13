@@ -499,6 +499,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4010126820519274023}
+  - component: {fileID: 6733982428778794010}
+  - component: {fileID: 8195392243402592864}
+  - component: {fileID: 7736146542191889212}
   m_Layer: 0
   m_Name: Garden
   m_TagString: Untagged
@@ -522,6 +525,47 @@ Transform:
   m_Father: {fileID: 4010126819802262121}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6733982428778794010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010126820519274022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c9c363a902ae1545ab7b018224b7574, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  regionName: The Maze
+  isRestricted: 1
+--- !u!65 &8195392243402592864
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010126820519274022}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 69.04821, y: 10.063474, z: 67.77583}
+  m_Center: {x: 6.4185143, y: 2.6573882, z: 3.3627625}
+--- !u!65 &7736146542191889212
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010126820519274022}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 40.407784, y: 10.063474, z: 29.96003}
+  m_Center: {x: 20.738728, y: 2.6573882, z: 52.24354}
 --- !u!1 &4239055333301904541
 GameObject:
   m_ObjectHideFlags: 0

@@ -59,6 +59,9 @@ public class MissionKitchen1 : AMission
     public List<MissionCriticalInteractable> missionCriticalInteractables;
     public List<MissionObject> missionObjects;
 
+    [Header("NPC")]
+    public Interactable npcMissionGiver;
+
     private List<GameObject> instantiatedMissionInteractables;
     private List<BasicNurse> instantiatedEnemies;
     private int interactedCount = 0;
@@ -84,9 +87,21 @@ public class MissionKitchen1 : AMission
 
         SpawnObjects(missionObjects);
         SpawnInteractables(missionCriticalInteractables);
-        instantiatedEnemies.AddRange(MissionManager.Instance.SpawnEnemyNurses(startEnemies, OnCollideWithPlayer));
+        SpawnStartEnemies(startEnemies);
 
         RegionManager.Instance.OnPlayerEnterZone += HandleEnterKitchen;
+    }
+
+    private void SpawnStartEnemies(List<MissionEnemy> enemies)
+    {
+        if (denturesCollected)
+        {
+            enemies.ForEach(e =>
+            {
+                e.spawnPosition = e.waypoints.First().position;
+            });
+        }
+        instantiatedEnemies.AddRange(MissionManager.Instance.SpawnEnemyNurses(startEnemies, OnCollideWithPlayer));
     }
 
     protected override void Cleanup()
@@ -173,15 +188,12 @@ public class MissionKitchen1 : AMission
     private void OnCollideWithPlayer()
     {
         if (isRestarting) return;
-
         isRestarting = true;
 
         // Possible things we can look into the future:
         // - maybe some UI like "Oops! You got caught!"
         // - or even start some simple "caught" dialog with the person who caught you
-
-        UIManager.Instance.OnFadingComplete += OnFadingCompleteRestartMission;
-        UIManager.Instance.FadeOut();
+        StartCoroutine(RestartMission());
 
         // Tell any listeners (looking at you ProgressManager) that we need to reset whatever mission status
         if (!denturesCollected)  // if we already collected the dentures, we arent technically reseting the mission status
@@ -190,11 +202,11 @@ public class MissionKitchen1 : AMission
         }
     }
 
-    private void OnFadingCompleteRestartMission()
+    private IEnumerator RestartMission()
     {
-        UIManager.Instance.OnFadingComplete -= OnFadingCompleteRestartMission;
-
         bool alreadyPlayedCutscene = startCutscenePlayed;
+
+        yield return UIManager.Instance.FadeOut();
 
         // Cleanup and Initialize again, easiest way to make sure conditions are as close as possible as mission restart
         Cleanup();
@@ -275,6 +287,8 @@ public class MissionKitchen1 : AMission
             SpawnFinalEnemyWave(instantiatedMissionInteractables.IndexOf(interactable.gameObject));
 
             LoadNewBarks(ReactiveBarkType.IdleBark, BarkEvent.KitchenLunchTimeRushIdleBark);
+
+            WorldObjectivePointer.Instance.PointTo(npcMissionGiver.transform, npcMissionGiver);
 
             StartCoroutine(HandleDenturesCollectedCutscene());
 
