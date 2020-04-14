@@ -247,6 +247,7 @@ public class NPCReactiveBark : MonoBehaviour
                 reactiveNoiseBark = BarkEvent.BrutusOfficeNoiseReaction;
                 break;
             case MissionsEnum.HedgeMaze:
+                MissionManager.Instance.GetMissionFromEnum(missionEnum).GetComponent<MissionHedgeMaze>().OnFinalCutscene += TurnOffBark;
                 if (isBrutus)
                 {
                     idleBark = BarkEvent.BrutusHedgeMazeIdleBark;
