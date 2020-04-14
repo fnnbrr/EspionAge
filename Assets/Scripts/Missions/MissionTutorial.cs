@@ -494,6 +494,9 @@ public class MissionTutorial : AMission
 
     private IEnumerator VaseCutsceneCoroutine(GameObject focusObject)
     {
+        RegionManager.Instance.hallwayToHedgeMazeDoor1.SetLocked(true);
+        RegionManager.Instance.hallwayToHedgeMazeDoor2.SetLocked(true);
+
         GameManager.Instance.GetPlayerController().EnablePlayerInput = false;
         UIManager.Instance.CanPause = false;
         UIManager.Instance.staminaBar.overrideValue = true;
@@ -684,6 +687,8 @@ public class MissionTutorial : AMission
         if (RegionManager.Instance)
         {
             RegionManager.Instance.nurseRoomDoor.SetLocked(false);
+            RegionManager.Instance.hallwayToHedgeMazeDoor1.SetLocked(false);
+            RegionManager.Instance.hallwayToHedgeMazeDoor2.SetLocked(false);
         }
 
         // Handle the cutscene event handlers

@@ -195,7 +195,7 @@ public class NPCInteractable : Interactable
             }
             DialogueManager.Instance.OnFinishConversation += NPCFaceOriginalRotation;
             DialogueManager.Instance.StartConversation(conversation);
-            base.OnInteract();
+            TriggerOnInteractEnd();
         }
     }
 

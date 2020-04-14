@@ -5,6 +5,7 @@ using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using NPCs;
 using NaughtyAttributes;
+using NPCs.Components;
 
 public class MissionHedgeMaze : AMission
 {
@@ -186,6 +187,8 @@ public class MissionHedgeMaze : AMission
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(respawnRotation);
 
         DestroyAllEnemies();
+        
+        Chaser.ResetChaserCount();
 
         SpawnBrutusResponser();
         SpawnSurroundingEnemies();

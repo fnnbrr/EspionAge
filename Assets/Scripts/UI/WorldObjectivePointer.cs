@@ -9,7 +9,15 @@ public class WorldObjectivePointer : Singleton<WorldObjectivePointer>
 
     private bool isPointing = false;
     private Vector3 currentPointPosition;
+    private Transform currentPointTransform;
     private RegionTrigger waitForRegion;
+
+    private enum PointType
+    {
+        Position,
+        Transform
+    }
+    private PointType pointType;
 
     private void Awake()
     {
@@ -20,9 +28,17 @@ public class WorldObjectivePointer : Singleton<WorldObjectivePointer>
     {
         if (isPointing)
         {
+            Vector3 pointPosition = currentPointPosition;
+            switch (pointType)
+            {
+                case PointType.Transform:
+                    pointPosition = currentPointTransform.position;
+                    break;
+            }
+
             Quaternion targetRotation = Quaternion.RotateTowards(
                 pointer.transform.rotation,
-                LookRotation(currentPointPosition),
+                LookRotation(pointPosition),
                 rotationSmoothness);
 
             Vector3 onlyYRotation = new Vector3(0f, targetRotation.eulerAngles.y, 0f);
@@ -36,11 +52,29 @@ public class WorldObjectivePointer : Singleton<WorldObjectivePointer>
         return Quaternion.LookRotation(worldPosition - pointer.transform.position);
     }
 
+    public void PointTo(Transform pointToTransform, Interactable stopOnEndInteract = null)
+    {
+        currentPointTransform = pointToTransform;
+        pointType = PointType.Transform;
+        LookOppositeToPosition(pointToTransform.position);
+        Activate();
+
+        if (stopOnEndInteract)
+        {
+            stopOnEndInteract.OnInteractEnd += HandleInteractEnd;
+        }
+    }
+
+    private void HandleInteractEnd(Interactable source)
+    {
+        Deactivate();
+    }
+
     public void PointTo(Vector3 worldPosition, RegionTrigger stopOnEnterRegion = null)
     {
         currentPointPosition = worldPosition;
-        // Set the current rotation to be directly opposite from our desired rotation, this gives a nice rotation effect on display
-        pointer.transform.rotation = LookRotation(currentPointPosition) * Quaternion.Euler(0, 180f, 0);
+        pointType = PointType.Position;
+        LookOppositeToPosition(currentPointPosition);
         Activate();
 
         if (stopOnEnterRegion)
@@ -58,13 +92,19 @@ public class WorldObjectivePointer : Singleton<WorldObjectivePointer>
         }
     }
 
+    private void LookOppositeToPosition(Vector3 position)
+    {
+        // Set the current rotation to be directly opposite from our desired rotation, this gives a nice rotation effect on display
+        pointer.transform.rotation = LookRotation(position) * Quaternion.Euler(0, 180f, 0);
+    }
+
     private void Activate()
     {
         isPointing = true;
         pointer.SetActive(true);
     }
 
-    private void Deactivate()
+    public void Deactivate()
     {
         isPointing = false;
         pointer.SetActive(false);
