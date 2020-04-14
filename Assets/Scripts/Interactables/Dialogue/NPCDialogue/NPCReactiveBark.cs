@@ -171,6 +171,8 @@ public class NPCReactiveBark : MonoBehaviour
     {
         if (missionsEnumValue != missionsEnum) return;
 
+        MissionManager.Instance.OnMissionRestart -= MissionRestart;
+
         StopAllCoroutines();
         timeLastHiddenBark = Time.time;
     }
@@ -248,7 +250,6 @@ public class NPCReactiveBark : MonoBehaviour
                 reactiveNoiseBark = BarkEvent.BrutusOfficeNoiseReaction;
                 break;
             case MissionsEnum.HedgeMaze:
-                MissionManager.Instance.GetMissionFromEnum(missionEnum).GetComponent<MissionHedgeMaze>().OnFinalCutscene += TurnOffBark;
                 if (isBrutus)
                 {
                     idleBark = BarkEvent.BrutusHedgeMazeIdleBark;
