@@ -30,6 +30,7 @@ public class NPCReactiveBark : MonoBehaviour
     public bool isBrutus = false;
     [ValidateInput("isBrutusTrue", "isBrutus must also be checked is isBrutusResponder is checked")]
     public bool isBrutusResponder = false;
+    private bool canBark = true;
     private float timeLostVision;
     private float timeLastHiddenBark;
 
@@ -58,6 +59,9 @@ public class NPCReactiveBark : MonoBehaviour
 
         randomBarkTime = Random.Range(randomBarkTimeRange.x, randomBarkTimeRange.y);
         SetPlayerStatusHidden();
+
+
+        MissionManager.Instance.OnMissionRestart += MissionRestart;
     }
 
     private void Update()
@@ -114,7 +118,8 @@ public class NPCReactiveBark : MonoBehaviour
 
     private void StartBark(BarkEvent barkEvent)
     {
-        Debug.Log("trying to start bark for: " + gameObject.name);
+        if (!canBark) return;
+
         // Barks only play when player is in all of the same zones as the character
         List<CameraZone> characterZones = RegionManager.Instance.GetCharacterCurrentZones(gameObject);
         foreach(CameraZone cz in characterZones)
@@ -160,6 +165,19 @@ public class NPCReactiveBark : MonoBehaviour
     {
         playerStatus = PlayerDetectionStatus.Hidden;
         timeLastHiddenBark = Time.time;
+    }
+
+    private void MissionRestart(MissionsEnum missionsEnumValue)
+    {
+        if (missionsEnumValue != missionsEnum) return;
+
+        StopAllCoroutines();
+        timeLastHiddenBark = Time.time;
+    }
+
+    public void TurnOffBark()
+    {
+        canBark = false;
     }
 
     private void LoadAIState(bool isBrutus)

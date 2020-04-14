@@ -39,6 +39,9 @@ public class MissionManager : Singleton<MissionManager>
     private HashSet<MissionsEnum> activeMissions;
     private List<GameObject> camerasToCleanUp;
 
+    public delegate void MissionRestartEvent(MissionsEnum missionEnumValue);
+    public event MissionRestartEvent OnMissionRestart;
+
     private void Awake()
     {
         InitializeMissionMapping();
@@ -132,6 +135,7 @@ public class MissionManager : Singleton<MissionManager>
 
         SetObjectiveTextForList(missionEnumValue);
         Chaser.ResetChaserCount();
+        OnMissionRestart?.Invoke(missionEnumValue);
     }
 
     public void CompleteMissionObjective(MissionsEnum missionEnumValue)

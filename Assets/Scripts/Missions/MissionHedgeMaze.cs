@@ -123,6 +123,9 @@ public class MissionHedgeMaze : AMission
 
         DialogueManager.Instance.OnFinishConversation -= WaitForFinalConversationEnd;
 
+        //Turn off Brutus Barks
+        brutusResponser.spawnedInstance.gameObject.GetComponent<NPCReactiveBark>().TurnOffBark();
+
         StartCoroutine(StartFinalSequence());
     }
 
