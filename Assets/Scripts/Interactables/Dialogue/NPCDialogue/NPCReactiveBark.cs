@@ -177,6 +177,7 @@ public class NPCReactiveBark : MonoBehaviour
 
     public void TurnOffBark()
     {
+        StopAllCoroutines();
         canBark = false;
     }
 
