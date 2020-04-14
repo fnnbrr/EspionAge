@@ -361,12 +361,13 @@ public class NPCInteractable : Interactable
 
     public void NPCFacePlayer()
     {
+        StopAllCoroutines();
         Vector3 dirToFace = player.transform.position - transform.position;
         dirToFace.y = 0f;
 
         Quaternion rotation = Quaternion.LookRotation(dirToFace);
 
-        StartCoroutine(RotateAnimation(gameObject, rotation, GameManager.Instance.GetMovementController().turnSpeed));
+        StartCoroutine(RotateAnimation(gameObject, rotation, Constants.NPC_TURN_PLAYER_SPEED));
     }
 
     public void NPCFaceOriginalRotation(Conversation finishedConvo)
@@ -381,7 +382,7 @@ public class NPCInteractable : Interactable
     private IEnumerator RotateToOriginal(float waitTime)
 	{
         yield return new WaitForSeconds(waitTime);
-        StartCoroutine(RotateAnimation(gameObject, originRotation, GameManager.Instance.GetMovementController().turnSpeed));
+        StartCoroutine(RotateAnimation(gameObject, originRotation, Constants.NPC_TURN_BACK_SPEED));
     }
 
     private bool IsGreaterEqualThanInteractRadius(float value)

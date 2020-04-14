@@ -96,5 +96,8 @@ public static class Constants
     public const float MAX_SCALE_SPEECHBUBBLE = 1f;
     public const float MIN_SCALE_SPEECHBUBBLE = 0.8f;
 
+    public const float NPC_TURN_BACK_SPEED = 0.75f;
+    public const float NPC_TURN_PLAYER_SPEED = 2f;
+
     public const string SHADER_NAME_SHAKE = "PlateShake";
 }
