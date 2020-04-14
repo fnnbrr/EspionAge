@@ -14,6 +14,7 @@ public class UIManager : Singleton<UIManager>
     public GameObject pressAPrompt;
     public Animator pauseDisabledPrompt;
     public ZoneText zoneText;
+    public Credits credits;
 
     [Header("Fading Settings")]
     public Image fader;
