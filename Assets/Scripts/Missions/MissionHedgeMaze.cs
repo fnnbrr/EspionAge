@@ -50,6 +50,9 @@ public class MissionHedgeMaze : AMission
     public List<MissionEnemy> hedgeMazeEnemies;
     private List<BasicNurse> spawnedHedgeMazeEnemies;
 
+    public delegate void FinalCutsceneEvent();
+    public event FinalCutsceneEvent OnFinalCutscene;
+
     private bool isRestarting;
 
     protected override void Initialize()
@@ -122,6 +125,9 @@ public class MissionHedgeMaze : AMission
         if (conversation != finalConversation) return;
 
         DialogueManager.Instance.OnFinishConversation -= WaitForFinalConversationEnd;
+
+        //Turn off Brutus Barks
+        OnFinalCutscene?.Invoke();
 
         StartCoroutine(StartFinalSequence());
     }
