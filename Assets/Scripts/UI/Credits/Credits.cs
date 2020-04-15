@@ -25,17 +25,8 @@ public class Credits : MonoBehaviour
     public Coroutine Show(bool toggle)
     {
         text.gameObject.SetActive(toggle);
-        if (toggle)
-        {
-            UIManager.Instance.FadeOut();
-        }
-        else
-        {
-            UIManager.Instance.FadeIn();
-        }
 
         StopAllCoroutines();
-        //text.maxVisibleCharacters = creditsText.text.Length;
         text.firstVisibleCharacter = 0;
 
         if (toggle)
@@ -63,15 +54,19 @@ public class Credits : MonoBehaviour
         return Random.Range(charTypeSpeedMin, charTypeSpeedMax);
     }
 
+
+    // DEBUG BUTTONS
     [Button("Force Show")]
     private void ForceShow()
     {
+        UIManager.Instance.FadeOut();
         Show(true);
     }
 
     [Button("Force Hide")]
     private void ForceHide()
     {
+        UIManager.Instance.FadeIn();
         Show(false);
     }
 }
