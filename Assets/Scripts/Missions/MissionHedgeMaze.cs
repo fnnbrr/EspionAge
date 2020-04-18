@@ -184,6 +184,8 @@ public class MissionHedgeMaze : AMission
         yield return MissionManager.Instance.DisablePlayerMovementDuringCutscene(gameOverCutscene);
         Time.timeScale = 1f;
 
+        yield return UIManager.Instance.credits.Show(true);
+
         SceneManager.LoadScene(Constants.SCENE_MAINMENU);
     }
 
