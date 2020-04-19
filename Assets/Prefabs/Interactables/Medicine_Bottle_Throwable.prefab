@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3658902531811208855}
   - component: {fileID: 6998355294730622540}
   - component: {fileID: 836580982558548202}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Medicine_Bottle_Throwable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,6 +68,7 @@ MonoBehaviour:
   interactableAnim: {fileID: 3658902532567942418}
   interactTransform: {fileID: 3658902532567942419}
   interactRadius: 10
+  doRaycastCheck: 1
   throwableSFX: event:/SFX/Pill Bottle
   pickUpSFX: event:/SFX/ItemGet
 --- !u!65 &3658902531811208855

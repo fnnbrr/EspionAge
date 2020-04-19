@@ -207,8 +207,11 @@ public class MissionHedgeMaze : AMission
     {
         yield return UIManager.Instance.FadeOut();
 
+        UIManager.Instance.staminaBar.ResetAwakeness();
+
         GameManager.Instance.GetPlayerTransform().position = respawnPosition;
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(respawnRotation);
+        GameManager.Instance.GetMovementController().ResetVelocity();
 
         DestroyAllEnemies();
         
