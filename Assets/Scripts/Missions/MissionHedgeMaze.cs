@@ -157,6 +157,7 @@ public class MissionHedgeMaze : AMission
         brutusResponderAI.transform.rotation = Quaternion.Euler(finalSequenceBrutusRotation);
         brutusResponderAI.ForceChasing();
         brutusResponderAI.agent.speed = 0.9f;
+        brutusResponderAI.enemy.OnCollideWithPlayer -= RestartMission;  // so we dont deal with restarting mission at the end
 
         // Now, we open the window
         escapeWindow.transform.position = windowPosition;
