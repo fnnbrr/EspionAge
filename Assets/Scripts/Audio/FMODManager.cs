@@ -24,6 +24,8 @@ public class FMODManager : MonoBehaviour
     [ParamRef]
     public string pnoVolume;
     [ParamRef]
+    public string startChase;
+    [ParamRef]
     public string endChase;
     [ParamRef]
     public string killAudio;
@@ -53,6 +55,8 @@ public class FMODManager : MonoBehaviour
     public void Stinger()
     {
         RuntimeManager.StudioSystem.setParameterByName(pnoVolume, 0f);
+        RuntimeManager.StudioSystem.setParameterByName(startChase, 0f);
+        RuntimeManager.StudioSystem.setParameterByName(endChase, 0f);
         ChaseMusic.start();
     }
 
