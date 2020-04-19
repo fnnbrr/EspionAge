@@ -50,6 +50,9 @@ public class MissionHedgeMaze : AMission
     public List<MissionEnemy> hedgeMazeEnemies;
     private List<BasicNurse> spawnedHedgeMazeEnemies;
 
+    [Header("FMODManager")]
+    public FMODManager fmod;
+
     private bool isRestarting;
 
     protected override void Initialize()
@@ -128,6 +131,7 @@ public class MissionHedgeMaze : AMission
         StartCoroutine(StartFinalSequence());
     }
 
+
     private void TurnOffAllBarks()
     {
         foreach (BasicNurse enemy in spawnedHedgeMazeEnemies)
@@ -153,6 +157,7 @@ public class MissionHedgeMaze : AMission
         brutusResponderAI.transform.rotation = Quaternion.Euler(finalSequenceBrutusRotation);
         brutusResponderAI.ForceChasing();
         brutusResponderAI.agent.speed = 0.9f;
+        brutusResponderAI.enemy.OnCollideWithPlayer -= RestartMission;  // so we dont deal with restarting mission at the end
 
         // Now, we open the window
         escapeWindow.transform.position = windowPosition;
@@ -184,6 +189,9 @@ public class MissionHedgeMaze : AMission
         yield return MissionManager.Instance.DisablePlayerMovementDuringCutscene(gameOverCutscene);
         Time.timeScale = 1f;
 
+        yield return UIManager.Instance.credits.Show(true);
+
+        fmod.KillAllAudio();
         SceneManager.LoadScene(Constants.SCENE_MAINMENU);
     }
 
@@ -200,8 +208,11 @@ public class MissionHedgeMaze : AMission
     {
         yield return UIManager.Instance.FadeOut();
 
+        UIManager.Instance.staminaBar.ResetAwakeness();
+
         GameManager.Instance.GetPlayerTransform().position = respawnPosition;
         GameManager.Instance.GetPlayerTransform().rotation = Quaternion.Euler(respawnRotation);
+        GameManager.Instance.GetMovementController().ResetVelocity();
 
         DestroyAllEnemies();
         
