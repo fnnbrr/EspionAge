@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6865462128423233841}
   - component: {fileID: 9169831305350154760}
+  - component: {fileID: 1113547240857812139}
   m_Layer: 0
   m_Name: FMODAudio
   m_TagString: Untagged
@@ -44,3 +45,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parameter: awakeMeter
+--- !u!114 &1113547240857812139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6865462128423233843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee6031ae607b8bb41babcdc80ec5ccde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  siren: event:/SFX/Sirens
+  stinger: event:/SFX/Stinger
+  chaseMusic: event:/Music/Tutorial Music
+  creditsMusic: event:/Music/Main Theme
+  brutus: event:/Characters/BrutusNPC 2D
+  pnoVolume: PnoVolume
+  startChase: ChaseStarts
+  endChase: ChaseEnd
+  killAudio: killAudio
