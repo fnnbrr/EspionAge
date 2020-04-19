@@ -50,6 +50,9 @@ public class MissionHedgeMaze : AMission
     public List<MissionEnemy> hedgeMazeEnemies;
     private List<BasicNurse> spawnedHedgeMazeEnemies;
 
+    [Header("FMODManager")]
+    public FMODManager fmod;
+
     private bool isRestarting;
 
     protected override void Initialize()
@@ -128,6 +131,7 @@ public class MissionHedgeMaze : AMission
         StartCoroutine(StartFinalSequence());
     }
 
+
     private void TurnOffAllBarks()
     {
         foreach (BasicNurse enemy in spawnedHedgeMazeEnemies)
@@ -186,6 +190,7 @@ public class MissionHedgeMaze : AMission
 
         yield return UIManager.Instance.credits.Show(true);
 
+        fmod.KillAllAudio();
         SceneManager.LoadScene(Constants.SCENE_MAINMENU);
     }
 
